@@ -1,5 +1,5 @@
 {
-  "name": "@~/projects/cooquoi-ts/source",
+  "name": "@cooquoi/monorepo",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {},
