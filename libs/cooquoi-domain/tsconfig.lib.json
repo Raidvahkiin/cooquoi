@@ -1,5 +1,16 @@
 {
-  "extends": "./tsconfig.json",
-  "files": [],
-  "references": []
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+    "outDir": "dist",
+		"paths": {
+			"@core/share": ["../share/src/index.ts"]
+		}
+	},
+  "include": ["**/*.ts", "**/*.tsx"],
+	"files": [],
+	"references": [
+    {
+      "path": "../share/tsconfig.lib.json"
+    }
+  ]
 }

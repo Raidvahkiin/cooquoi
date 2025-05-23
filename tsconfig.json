@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./libs/cooquoi-domain"
+    },
+    {
+      "path": "./libs/share"
     }
   ]
 }

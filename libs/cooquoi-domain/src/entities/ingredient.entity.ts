@@ -1,14 +1,11 @@
-export class Ingredient {
-    private _id : string;
+import { Entity } from '@core/share';
+
+export class Ingredient extends Entity {
     private _name : string;
 
     constructor(id: string, name: string) {
-        this._id = id;
+        super(id);
         this._name = name;
-    }
-
-    get id(): string {
-        return this._id;
     }
     
     get name(): string {
