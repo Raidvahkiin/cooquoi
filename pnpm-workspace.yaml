@@ -1,5 +1,6 @@
 packages:
   - libs/*
+  - apps/*
 onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@swc/core'

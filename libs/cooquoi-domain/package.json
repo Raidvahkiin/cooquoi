@@ -3,5 +3,11 @@
     "version": "0.0.0",
     "dependencies": {
         "@core/share": "workspace:*"
+    },
+    "exports": {
+        ".": {
+            "import": "./src/index.ts",
+            "require": "./src/index.ts"
+        }
     }
 }

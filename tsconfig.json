@@ -8,6 +8,9 @@
     },
     {
       "path": "./libs/share"
+    },
+    {
+      "path": "./apps/cooquoi-cli"
     }
   ]
 }
