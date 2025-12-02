@@ -1,16 +1,16 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compileOnSave": false,
-  "files": [],
-  "references": [
+	"extends": "./tsconfig.base.json",
+	"compileOnSave": false,
+	"files": [],
+	"references": [
     {
       "path": "./libs/cooquoi-domain"
     },
     {
-      "path": "./libs/share"
+      "path": "./apps/cooquoi-webapp"
     },
     {
-      "path": "./apps/cooquoi-cli"
+      "path": "./libs/core"
     }
   ]
 }

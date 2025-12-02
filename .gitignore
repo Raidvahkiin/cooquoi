@@ -71,3 +71,6 @@ logs
 # Misc
 .cache/
 .eslintcache
+test-output
+
+vitest.config.*.timestamp*

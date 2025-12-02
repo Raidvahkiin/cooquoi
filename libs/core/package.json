@@ -1,0 +1,14 @@
+{
+	"name": "@libs/core",
+	"version": "0.0.0",
+	"private": true,
+	"types": "./src/index.ts",
+	"main": "./src/index.ts",
+	"exports": {
+		".": {
+			"import": "./src/index.ts",
+			"require": "./src/index.ts"
+		},
+		"./package.json": "./package.json"
+	}
+}
