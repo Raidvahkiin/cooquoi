@@ -1,11 +1,17 @@
 {
-  "extends": "../../tsconfig.base.json",
-  "references": [
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {
+		"baseUrl": ".",
+		"paths": {
+			"src/*": ["./src/*"]
+		}
+	},
+	"references": [
     {
-      "path": "../share"
+      "path": "../core"
     },
     {
       "path": "./tsconfig.lib.json"
     }
-  ],
+  ]
 }

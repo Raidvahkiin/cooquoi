@@ -83,7 +83,11 @@ importers:
         specifier: ^19.1.5
         version: 19.2.7
 
-  libs/cooquoi-domain: {}
+  libs/cooquoi-domain:
+    dependencies:
+      '@libs/core':
+        specifier: workspace:*
+        version: link:../core
 
   libs/core: {}
 

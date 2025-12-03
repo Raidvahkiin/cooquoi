@@ -1,16 +1,33 @@
 {
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
-    "outDir": "dist",
-		"paths": {
-			"@core/share": ["../share/src/index.ts"]
-		}
+		"outDir": "dist",
+		"rootDir": "src",
+		"emitDeclarationOnly": true,
+		"declaration": true,
+		"tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
 	},
-  "include": ["**/*.ts", "**/*.tsx"],
-	"files": [],
-	"references": [
+	"include": ["src/**/*.ts"],
+	"exclude": [
+		"dist",
+		"jest.config.ts",
+		"jest.config.cts",
+		"src/**/*.spec.ts",
+		"src/**/*.test.ts",
+		"vite.config.ts",
+		"vite.config.mts",
+		"vitest.config.ts",
+		"vitest.config.mts",
+		"src/**/*.test.tsx",
+		"src/**/*.spec.tsx",
+		"src/**/*.test.js",
+		"src/**/*.spec.js",
+		"src/**/*.test.jsx",
+		"src/**/*.spec.jsx"
+  ],
+  "references": [
     {
-      "path": "../share/tsconfig.lib.json"
+      "path": "../core/tsconfig.lib.json"
     }
   ]
 }

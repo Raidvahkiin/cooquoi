@@ -2,8 +2,6 @@ packages:
   - libs/*
   - apps/*
 
-ignoredBuiltDependencies: null
-
 onlyBuiltDependencies:
   - '@biomejs/biome'
   - '@swc/core'
