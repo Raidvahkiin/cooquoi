@@ -4,7 +4,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig(() => ({
 	root: __dirname,
-	cacheDir: "../../node_modules/.vite/libs/core",
+	cacheDir: "../../node_modules/.vite/libs/cooquoi",
 	plugins: [tsconfigPaths()],
 	// Uncomment this if you are using workers.
 	// worker: {

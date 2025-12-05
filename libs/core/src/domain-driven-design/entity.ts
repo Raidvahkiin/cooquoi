@@ -1,19 +1,29 @@
-import { DatetimeProvider } from "src/datetime";
+import { DatetimeProvider, SystemDatetimeProvider } from "../datetime";
 import { v4 as uuidv4 } from "uuid";
+
+export interface EntityProps {
+	id?: string;
+	createdAt?: Date;
+	updatedAt?: Date;
+}
+
+export interface EntityUpdateOptions {
+	datetimeProvider: DatetimeProvider;
+}
 
 export abstract class Entity<T extends Entity<T>> {
 	private _id: string;
 	private _createdAt: Date;
 	private _updatedAt: Date;
 
-	constructor(
-		id?: string,
-		createdAt?: Date,
-		updatedAt?: Date,
-		datetimeProvider?: DatetimeProvider,
-	) {
+	constructor(props?: EntityProps, options?: EntityUpdateOptions) {
+		const { datetimeProvider = new SystemDatetimeProvider() } = options ?? {};
+		const { id, createdAt, updatedAt } = props ?? {};
+
+		const initialTimestamp = datetimeProvider.now();
+
 		this._id = id ?? uuidv4();
-		const initialTimestamp = datetimeProvider?.now() ?? new Date();
+
 		this._createdAt = createdAt ?? initialTimestamp;
 		this._updatedAt = updatedAt ?? initialTimestamp;
 	}

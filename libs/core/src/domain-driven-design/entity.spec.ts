@@ -1,5 +1,5 @@
-import { DatetimeProvider } from "src/datetime";
-import { mockPartial } from "src/test-utils";
+import { DatetimeProvider } from "../datetime";
+import { mockPartial } from "../test-utils";
 import { describe, expect, it, vi } from "vitest";
 import { Entity } from "./entity";
 
@@ -110,11 +110,11 @@ describe("Entity", () => {
 			const updatedAt = new Date("2023-06-01T00:00:00Z");
 
 			// Act
-			const entity = new (class extends Entity<any> {})(
+			const entity = new (class extends Entity<any> {})({
 				id,
 				createdAt,
 				updatedAt,
-			);
+			});
 
 			// Assert
 			expect(entity.id).toBe(id);
@@ -128,7 +128,7 @@ describe("Entity", () => {
 			const beforeCreation = new Date();
 
 			// Act
-			const entity = new (class extends Entity<any> {})(id);
+			const entity = new (class extends Entity<any> {})({ id });
 
 			const afterCreation = new Date();
 
