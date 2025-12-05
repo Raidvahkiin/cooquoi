@@ -24,10 +24,10 @@
 		"src/**/*.spec.js",
 		"src/**/*.test.jsx",
 		"src/**/*.spec.jsx"
-  ],
-  "references": [
-    {
-      "path": "../core/tsconfig.lib.json"
-    }
-  ]
+	],
+	"references": [
+		{
+			"path": "../core/tsconfig.lib.json"
+		}
+	]
 }

@@ -7,7 +7,7 @@
 			"path": "./libs/core"
 		},
 		{
-			"path": "./libs/cooquoi"
+			"path": "./libs/cooquoi-domain"
 		},
 		{
 			"path": "./apps/cooquoi-webapp"

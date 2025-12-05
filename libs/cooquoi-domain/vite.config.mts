@@ -11,7 +11,7 @@ export default defineConfig(() => ({
 	//  plugins: [],
 	// },
 	test: {
-		name: "@libs/core",
+		name: "@libs/cooquoi-domain",
 		watch: false,
 		globals: true,
 		environment: "jsdom",
