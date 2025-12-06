@@ -1,0 +1,18 @@
+name: cooquoi
+services:
+  cooquoi_db:
+    image: mongo:7
+    container_name: cooquoi-admin-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_MONGO_USERNAME:-cooquoiuser}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_MONGO_PASSWORD:-cooquoipassword}
+      MONGO_INITDB_DATABASE: ${DB_MONGO_DB_NAME:-cooquoi}
+    volumes:
+      - cooquoi_db_data:/data/db
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+
+volumes:
+  cooquoi_db_data:
