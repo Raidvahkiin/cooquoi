@@ -1,0 +1,21 @@
+{
+	"name": "@libs/nest-extension",
+	"version": "0.0.0",
+	"private": true,
+	"types": "./src/index.ts",
+	"main": "./src/index.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"import": "./src/index.ts",
+			"default": "./src/index.ts"
+		},
+		"./package.json": "./package.json"
+	},
+	"dependencies": {
+		"@libs/core": "workspace:*"
+	},
+	"nx": {
+		"tags": ["scope:core", "type:lib", "layer:external", "platform:backend"]
+	}
+}

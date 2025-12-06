@@ -1,0 +1,19 @@
+{
+	"name": "@cooquoi/api-admin",
+	"version": "0.0.0",
+	"private": true,
+	"main": "./src/main.ts",
+	"scripts": {
+		"serve": "node --require @swc-node/register --watch src/main.ts",
+		"start": "node dist/main.js"
+	},
+	"dependencies": {
+		"@cooquoi/presentation": "workspace:*",
+		"@cooquoi/infrastructure": "workspace:*",
+		"@libs/core": "workspace:*",
+		"@libs/nest-extension": "workspace:*"
+	},
+	"nx": {
+		"tags": ["scope:cooquoi", "type:app", "layer:api", "platform:nest"]
+	}
+}

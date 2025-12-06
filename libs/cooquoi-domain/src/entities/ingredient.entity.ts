@@ -9,7 +9,7 @@ export class Ingredient extends Entity<Ingredient> {
 	private _name: string;
 	private _description: string | null;
 
-	constructor(props: IngredientProps, options: EntityUpdateOptions) {
+	constructor(props: IngredientProps, options?: EntityUpdateOptions) {
 		super(props, options);
 		this._name = props.name;
 		this._description = props.description ?? null;

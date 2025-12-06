@@ -21,6 +21,9 @@
 		"enabled": true,
 		"rules": {
 			"recommended": true,
+			"complexity": {
+				"noStaticOnlyClass": "off"
+			},
 			"style": {
 				"useImportType": "off"
 			}
@@ -44,6 +47,9 @@
 		}
 	],
 	"javascript": {
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		},
 		"formatter": {
 			"quoteStyle": "double",
 			"trailingCommas": "all"

@@ -1,0 +1,21 @@
+{
+	"extends": "../../tsconfig.base.json",
+	"compilerOptions": {},
+	"references": [
+		{
+			"path": "../../libs/core"
+		},
+		{
+			"path": "../../libs/nest-extension"
+		},
+		{
+			"path": "../../libs/cooquoi-presentation"
+		},
+		{
+			"path": "../../libs/cooquoi-infrastructure"
+		},
+		{
+			"path": "./tsconfig.app.json"
+		}
+	]
+}

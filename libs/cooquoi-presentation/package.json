@@ -1,5 +1,5 @@
 {
-	"name": "@cooquoi/infrastructure",
+	"name": "@cooquoi/presentation",
 	"version": "0.0.0",
 	"private": true,
 	"types": "./src/index.ts",
@@ -14,15 +14,14 @@
 	"dependencies": {
 		"@cooquoi/application": "workspace:*",
 		"@cooquoi/domain": "workspace:*",
-		"@libs/core": "workspace:*",
-		"@nestjs/mongoose": "^11.0.3",
-		"mongoose": "^8.20.2"
+		"@cooquoi/infrastructure": "workspace:*",
+		"@libs/core": "workspace:*"
 	},
 	"nx": {
 		"tags": [
 			"scope:cooquoi",
 			"type:lib",
-			"layer:infrastructure",
+			"layer:presentation",
 			"platform:shared"
 		]
 	}
