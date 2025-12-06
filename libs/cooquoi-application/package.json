@@ -1,0 +1,26 @@
+{
+	"name": "@cooquoi/application",
+	"version": "0.0.0",
+	"private": true,
+	"types": "./src/index.ts",
+	"main": "./src/index.ts",
+	"exports": {
+		".": {
+			"types": "./src/index.ts",
+			"import": "./src/index.ts",
+			"default": "./src/index.ts"
+		}
+	},
+	"dependencies": {
+		"@libs/core": "workspace:*",
+		"@cooquoi/domain": "workspace:*"
+	},
+	"nx": {
+		"tags": [
+			"scope:cooquoi",
+			"type:lib",
+			"layer:application",
+			"platform:shared"
+		]
+	}
+}

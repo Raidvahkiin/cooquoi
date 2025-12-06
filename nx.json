@@ -29,7 +29,8 @@
 			"plugin": "@nx/vitest",
 			"options": {
 				"testTargetName": "test"
-			}
+			},
+			"exclude": ["vitest.config.ts"]
 		}
 	],
 	"targetDefaults": {

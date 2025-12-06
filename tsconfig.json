@@ -3,14 +3,17 @@
 	"compileOnSave": false,
 	"files": [],
 	"references": [
-		{
-			"path": "./libs/core"
-		},
-		{
-			"path": "./libs/cooquoi-domain"
-		},
-		{
-			"path": "./apps/cooquoi-webapp"
-		}
-	]
+    {
+      "path": "./libs/core"
+    },
+    {
+      "path": "./libs/cooquoi-domain"
+    },
+    {
+      "path": "./libs/cooquoi-application"
+    },
+    {
+      "path": "./libs/cooquoi-infrastructure"
+    }
+  ]
 }

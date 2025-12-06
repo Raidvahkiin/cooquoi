@@ -1,0 +1,36 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"rootDir": "src",
+		"emitDeclarationOnly": true,
+		"declaration": true,
+		"tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
+	},
+	"include": ["src/**/*.ts"],
+	"exclude": [
+		"dist",
+		"jest.config.ts",
+		"jest.config.cts",
+		"src/**/*.spec.ts",
+		"src/**/*.test.ts",
+		"vite.config.ts",
+		"vite.config.mts",
+		"vitest.config.ts",
+		"vitest.config.mts",
+		"src/**/*.test.tsx",
+		"src/**/*.spec.tsx",
+		"src/**/*.test.js",
+		"src/**/*.spec.js",
+		"src/**/*.test.jsx",
+		"src/**/*.spec.jsx"
+	],
+	"references": [
+		{
+			"path": "../core/tsconfig.lib.json"
+		},
+		{
+			"path": "../cooquoi-domain/tsconfig.lib.json"
+		}
+	]
+}
