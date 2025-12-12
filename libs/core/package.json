@@ -12,6 +12,9 @@
 		},
 		"./package.json": "./package.json"
 	},
+	"scripts": {
+		"typecheck": "tsgo --project tsconfig.lib.json --noEmit"
+	},
 	"nx": {
 		"tags": ["scope:core", "type:lib", "layer:external", "platform:shared"]
 	}

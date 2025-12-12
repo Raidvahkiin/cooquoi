@@ -26,14 +26,17 @@
 		"src/**/*.spec.jsx"
 	],
 	"references": [
-		{
-			"path": "../core/tsconfig.lib.json"
-		},
-		{
-			"path": "../cooquoi-domain/tsconfig.lib.json"
-		},
-		{
-			"path": "../cooquoi-application/tsconfig.lib.json"
-		}
-	]
+    {
+      "path": "../core/tsconfig.lib.json"
+    },
+    {
+      "path": "../cooquoi-infrastructure/tsconfig.lib.json"
+    },
+    {
+      "path": "../cooquoi-domain/tsconfig.lib.json"
+    },
+    {
+      "path": "../cooquoi-application/tsconfig.lib.json"
+    }
+  ]
 }

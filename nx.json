@@ -14,9 +14,6 @@
 		{
 			"plugin": "@nx/js/typescript",
 			"options": {
-				"typecheck": {
-					"targetName": "typecheck"
-				},
 				"build": {
 					"targetName": "build",
 					"configName": "tsconfig.lib.json",
@@ -40,6 +37,18 @@
 		"@nx/vitest:test": {
 			"cache": true,
 			"inputs": ["default", "^production"]
+		},
+		"typecheck": {
+			"cache": true,
+			"inputs": ["default", "^production"]
+		}
+	},
+	"tasksRunnerOptions": {
+		"default": {
+			"runner": "nx/tasks-runners/default",
+			"options": {
+				"cacheableOperations": ["typecheck", "test", "build"]
+			}
 		}
 	},
 	"@nx/enforce-module-boundaries": [

@@ -2,20 +2,23 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {},
 	"references": [
-		{
-			"path": "../core"
-		},
-		{
-			"path": "../cooquoi-domain"
-		},
-		{
-			"path": "../cooquoi-application"
-		},
-		{
-			"path": "./tsconfig.lib.json"
-		},
-		{
-			"path": "./tsconfig.spec.json"
-		}
-	]
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../cooquoi-infrastructure"
+    },
+    {
+      "path": "../cooquoi-domain"
+    },
+    {
+      "path": "../cooquoi-application"
+    },
+    {
+      "path": "./tsconfig.lib.json"
+    },
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
 }

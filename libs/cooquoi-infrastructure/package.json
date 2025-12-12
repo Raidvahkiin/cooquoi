@@ -11,6 +11,9 @@
 			"default": "./src/index.ts"
 		}
 	},
+	"scripts": {
+		"typecheck": "tsgo --project tsconfig.lib.json --noEmit"
+	},
 	"dependencies": {
 		"@cooquoi/application": "workspace:*",
 		"@cooquoi/domain": "workspace:*",

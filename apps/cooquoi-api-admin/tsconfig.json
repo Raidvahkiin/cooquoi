@@ -2,20 +2,26 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {},
 	"references": [
-		{
-			"path": "../../libs/core"
-		},
-		{
-			"path": "../../libs/nest-extension"
-		},
-		{
-			"path": "../../libs/cooquoi-presentation"
-		},
-		{
-			"path": "../../libs/cooquoi-infrastructure"
-		},
-		{
-			"path": "./tsconfig.app.json"
-		}
-	]
+    {
+      "path": "../../libs/cooquoi-domain"
+    },
+    {
+      "path": "../../libs/cooquoi-application"
+    },
+    {
+      "path": "../../libs/nest-extension"
+    },
+    {
+      "path": "../../libs/core"
+    },
+    {
+      "path": "../../libs/cooquoi-infrastructure"
+    },
+    {
+      "path": "../../libs/cooquoi-presentation"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
+  ]
 }

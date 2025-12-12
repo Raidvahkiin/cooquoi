@@ -10,5 +10,30 @@
 		"tsBuildInfoFile": "dist/tsconfig.app.tsbuildinfo"
 	},
 	"include": ["src/**/*.ts"],
-	"exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ],
+  "references": [
+    {
+      "path": "../../libs/cooquoi-domain/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/cooquoi-application/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/nest-extension/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/core/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/cooquoi-infrastructure/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/cooquoi-presentation/tsconfig.lib.json"
+    }
+  ]
 }

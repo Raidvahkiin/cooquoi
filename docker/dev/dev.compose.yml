@@ -1,0 +1,35 @@
+services:
+  n8n-db:
+    image: mongo:7
+    container_name: n8n-mongodb
+    restart: unless-stopped
+    ports:
+      - "27018:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_MONGO_USERNAME:-cooquoiuser}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_MONGO_PASSWORD:-cooquoipassword}
+      MONGO_INITDB_DATABASE: ${DB_MONGO_DB_NAME:-cooquoi}
+    volumes:
+      - n8n_db_data:/data/db
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - DB_TYPE=mongodb
+      - DB_MONGODB_CONNECTION_URL=mongodb://${DB_MONGO_USERNAME:-cooquoiuser}:${DB_MONGO_PASSWORD:-cooquoipassword}@n8n-db:27017/${DB_MONGO_DB_NAME:-cooquoi}?authSource=admin&retryWrites=true&w=majority
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD:-password}
+      - N8N_HOST=${N8N_HOST:-localhost}
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=development
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+volumes:
+  n8n_db_data:
+  n8n_data:
