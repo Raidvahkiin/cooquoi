@@ -73,3 +73,7 @@ logs
 test-output
 
 vitest.config.*.timestamp*
+
+# Next.js
+.next
+out
