@@ -1,10 +1,16 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { CqrsModule } from "@nestjs/cqrs";
-import { MongooseModule } from "@cooquoi/infrastructure";
+import {
+	IngredientModel,
+	IngredientSchema,
+	MongooseModule,
+} from "@cooquoi/infrastructure";
 import { CooquoiModule } from "@cooquoi/presentation";
 import { SystemDatetimeModule } from "@libs/nest-extension";
 import { IngredientsController } from "./controllers";
+import { SeedDb } from "@cooquoi/infrastructure";
+import { OnApplicationBootstrapLifecycle } from "./lifecycle/on-application-bootstrap";
 
 @Module({
 	imports: [
@@ -21,9 +27,16 @@ import { IngredientsController } from "./controllers";
 				uri: configService.get<string>("DB_MONGO_URI"),
 			}),
 		}),
+		MongooseModule.forFeature([
+			{
+				name: IngredientModel.name,
+				schema: IngredientSchema,
+			},
+		]),
 		SystemDatetimeModule,
 		CooquoiModule.register(),
 	],
 	controllers: [IngredientsController],
+	providers: [OnApplicationBootstrapLifecycle, SeedDb],
 })
 export class AppModule {}
