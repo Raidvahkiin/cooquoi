@@ -1,6 +1,7 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	HttpCode,
 	HttpStatus,
@@ -10,7 +11,10 @@ import {
 } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
-import { CreateIngredientCommand } from "@cooquoi/application";
+import {
+	CreateIngredientCommand,
+	DeleteIngredientCommand,
+} from "@cooquoi/application";
 import {
 	GetIngredientQuery,
 	GetManyIngredientsQuery,
@@ -36,6 +40,13 @@ export class IngredientsController {
 			description: dto.description,
 		});
 
+		await this.commandBus.execute(command);
+	}
+
+	@Delete(":id")
+	@HttpCode(HttpStatus.NO_CONTENT)
+	async delete(@Param("id") id: string): Promise<void> {
+		const command = new DeleteIngredientCommand({ id });
 		await this.commandBus.execute(command);
 	}
 

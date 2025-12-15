@@ -19,6 +19,10 @@ export class MongoIngredientRepository implements IngredientRepository {
 		});
 	}
 
+	async deleteById(id: string): Promise<void> {
+		await this.ingredientModel.findByIdAndDelete(id).exec();
+	}
+
 	async findById(id: string): Promise<Ingredient | null> {
 		const model = await this.ingredientModel.findById(id).exec();
 		if (!model) {
