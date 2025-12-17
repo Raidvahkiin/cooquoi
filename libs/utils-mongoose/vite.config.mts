@@ -4,10 +4,10 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineProject(() => ({
 	root: __dirname,
-	cacheDir: "../../node_modules/.vite/libs/core",
+	cacheDir: "../../node_modules/.vite/libs/utils-mongoose",
 	plugins: [tsconfigPaths()],
 	test: {
-		name: "@libs/nest-extension",
+		name: "@libs/utils-mongoose",
 		watch: false,
 		globals: true,
 		environment: "jsdom",

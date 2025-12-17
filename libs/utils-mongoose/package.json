@@ -1,5 +1,5 @@
 {
-	"name": "@libs/nest-extension",
+	"name": "@libs/utils-mongoose",
 	"version": "0.0.0",
 	"private": true,
 	"types": "./src/index.ts",

@@ -19,9 +19,6 @@
       "path": "./libs/cooquoi-presentation"
     },
     {
-      "path": "./libs/nest-extension"
-    },
-    {
       "path": "./apps/cooquoi-api-admin"
     },
     {
@@ -29,6 +26,12 @@
     },
     {
       "path": "./apps/cooquoi-webapp"
+    },
+    {
+      "path": "./libs/utils-mongoose"
+    },
+    {
+      "path": "./libs/utils-nestjs"
     }
   ]
 }

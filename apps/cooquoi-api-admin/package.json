@@ -11,7 +11,7 @@
 		"@cooquoi/presentation": "workspace:*",
 		"@cooquoi/infrastructure": "workspace:*",
 		"@libs/core": "workspace:*",
-		"@libs/nest-extension": "workspace:*"
+		"@libs/utils-nestjs": "workspace:*"
 	},
 	"nx": {
 		"tags": ["scope:cooquoi", "type:app", "layer:api", "platform:nest"]

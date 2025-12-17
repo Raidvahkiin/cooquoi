@@ -9,7 +9,7 @@
       "path": "../../libs/cooquoi-application"
     },
     {
-      "path": "../../libs/nest-extension"
+      "path": "../../libs/utils-nestjs"
     },
     {
       "path": "../../libs/core"

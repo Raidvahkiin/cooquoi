@@ -144,9 +144,9 @@ importers:
       '@libs/core':
         specifier: workspace:*
         version: link:../../libs/core
-      '@libs/nest-extension':
+      '@libs/utils-nestjs':
         specifier: workspace:*
-        version: link:../../libs/nest-extension
+        version: link:../../libs/utils-nestjs
 
   apps/cooquoi-webapp:
     dependencies:
@@ -212,7 +212,13 @@ importers:
 
   libs/core: {}
 
-  libs/nest-extension:
+  libs/utils-mongoose:
+    dependencies:
+      '@libs/core':
+        specifier: workspace:*
+        version: link:../core
+
+  libs/utils-nestjs:
     dependencies:
       '@libs/core':
         specifier: workspace:*

@@ -24,7 +24,7 @@
       "path": "../../libs/cooquoi-application/tsconfig.lib.json"
     },
     {
-      "path": "../../libs/nest-extension/tsconfig.lib.json"
+      "path": "../../libs/utils-nestjs/tsconfig.lib.json"
     },
     {
       "path": "../../libs/core/tsconfig.lib.json"
