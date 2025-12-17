@@ -88,7 +88,19 @@ export const IngredientsClient = () => {
 				sortable: true,
 				filter: "agTextColumnFilter",
 				filterParams: {
-					filterOptions: ["contains"],
+					filterOptions: [
+						{
+							displayKey: "fuzzy",
+							displayName: "Fuzzy",
+							predicate: (filterValue?: string, cellValue?: string) => {
+								const needle = (filterValue ?? "").trim().toLowerCase();
+								const haystack = (cellValue ?? "").toLowerCase();
+								if (needle.length === 0) return true;
+								return haystack.includes(needle);
+							},
+						},
+					],
+					defaultOption: "fuzzy",
 					maxNumConditions: 1,
 				},
 				flex: 1,

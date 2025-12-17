@@ -5,6 +5,10 @@ import {
 	type FilterQuery,
 } from "@cooquoi/infrastructure";
 import { IQueryHandler, Query, QueryHandler } from "@nestjs/cqrs";
+import {
+	buildSetFilterClause,
+	buildTextFilterClause,
+} from "./grid-mongo-filters";
 
 export type SortDirection = "asc" | "desc";
 
@@ -122,62 +126,27 @@ export class GetIngredientsGridQueryHandler
 
 			const text = raw as TextFilter;
 			if (text?.filterType === "text") {
-				if (text.type === "contains") {
-					if (typeof text.filter === "string") {
-						const rawValue = text.filter.trim();
-						if (rawValue.length > 0) {
-							const escaped = rawValue.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-							const pattern =
-								colId === "name"
-									? this.buildFuzzySubsequencePattern(rawValue)
-									: escaped;
-
-							clauses.push({
-								[field]: { $regex: pattern, $options: "i" },
-							} as FilterQuery<IngredientModel>);
-						}
-					}
+				const clause = buildTextFilterClause<IngredientModel>(
+					field,
+					text.type,
+					text.filter,
+				);
+				if (clause) {
+					clauses.push(clause);
 					continue;
 				}
 			}
 
 			const set = raw as SetFilter;
 			if (set?.filterType === "set") {
-				const values = Array.isArray(set.values)
-					? set.values.filter((v) => typeof v === "string")
-					: [];
-				if (values.length > 0) {
-					clauses.push({
-						[field]: { $in: values },
-					} as FilterQuery<IngredientModel>);
-				}
+				const clause = buildSetFilterClause<IngredientModel>(field, set.values);
+				if (clause) clauses.push(clause);
 			}
 		}
 
 		if (clauses.length === 0) return {};
 		if (clauses.length === 1) return clauses[0];
 		return { $and: clauses };
-	}
-
-	private buildFuzzySubsequencePattern(value: string): string {
-		// Turns "tmaTo" into "t.*m.*a.*T.*o" (escaped) for tolerant matching.
-		// Uses case-insensitive matching via $options: "i".
-		const trimmed = value.trim();
-		if (trimmed.length === 0) return "";
-
-		// Guard against overly large/expensive patterns.
-		const maxChars = 64;
-		const slice = trimmed.slice(0, maxChars);
-
-		const parts: string[] = [];
-		for (const ch of slice) {
-			if (ch === " ") continue;
-			parts.push(ch.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-		}
-
-		// If the input was only spaces, fall back to empty.
-		if (parts.length === 0) return "";
-		return parts.join(".*");
 	}
 
 	private mapColIdToModelPath(colId: string): string | null {
