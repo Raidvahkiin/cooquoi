@@ -109,11 +109,12 @@ export const IngredientsClient = () => {
 				valueGetter: () => "",
 				cellRenderer: (params: { data?: IngredientDto }) => {
 					if (!params.data) return null;
+					const id = params.data.id;
 					return (
 						<Button
 							variant="danger"
 							disabled={isPending}
-							onClick={() => onDelete(params.data!.id)}
+							onClick={() => onDelete(id)}
 						>
 							Remove
 						</Button>

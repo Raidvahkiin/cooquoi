@@ -1,6 +1,10 @@
-import { IngredientModel, InjectModel } from "@cooquoi/infrastructure";
+import {
+	IngredientModel,
+	InjectModel,
+	Model,
+	type FilterQuery,
+} from "@cooquoi/infrastructure";
 import { IQueryHandler, Query, QueryHandler } from "@nestjs/cqrs";
-import { Model, type FilterQuery } from "mongoose";
 
 export type SortDirection = "asc" | "desc";
 

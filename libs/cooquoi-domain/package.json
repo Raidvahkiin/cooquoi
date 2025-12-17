@@ -13,7 +13,8 @@
 		"./package.json": "./package.json"
 	},
 	"scripts": {
-		"typecheck": "tsgo --project tsconfig.lib.json --noEmit"
+		"typecheck": "tsgo --project tsconfig.lib.json --noEmit",
+		"build": "tsgo --project tsconfig.lib.json"
 	},
 	"dependencies": {
 		"@libs/core": "workspace:*"

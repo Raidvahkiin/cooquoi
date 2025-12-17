@@ -56,7 +56,7 @@
 			"inputs": ["default", "^production"]
 		},
 		"typecheck": {
-			"dependsOn": ["^typecheck"],
+			"dependsOn": ["^build"],
 			"cache": true,
 			"inputs": ["default", "^production"]
 		}

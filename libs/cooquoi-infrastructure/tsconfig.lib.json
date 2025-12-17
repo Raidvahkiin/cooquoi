@@ -2,6 +2,7 @@
 	"extends": "./tsconfig.json",
 	"compilerOptions": {
 		"outDir": "dist",
+		"declarationDir": "dist",
 		"rootDir": "src",
 		"emitDeclarationOnly": true,
 		"declaration": true,
@@ -26,17 +27,17 @@
 		"src/**/*.spec.jsx"
 	],
 	"references": [
-    {
-      "path": "../utils-mongoose/tsconfig.lib.json"
-    },
-    {
-      "path": "../core/tsconfig.lib.json"
-    },
-    {
-      "path": "../cooquoi-domain/tsconfig.lib.json"
-    },
-    {
-      "path": "../cooquoi-application/tsconfig.lib.json"
-    }
-  ]
+		{
+			"path": "../utils-mongoose/tsconfig.lib.json"
+		},
+		{
+			"path": "../core/tsconfig.lib.json"
+		},
+		{
+			"path": "../cooquoi-domain/tsconfig.lib.json"
+		},
+		{
+			"path": "../cooquoi-application/tsconfig.lib.json"
+		}
+	]
 }
