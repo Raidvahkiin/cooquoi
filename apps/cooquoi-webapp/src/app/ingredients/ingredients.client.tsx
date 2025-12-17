@@ -5,28 +5,36 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Stack } from "@/components/ui/stack";
-import { useMemo, useState, useTransition } from "react";
 
-type Props = {
-	initialIngredients: IngredientDto[];
-};
+import type {
+	ColDef,
+	GridApi,
+	GridReadyEvent,
+	IGetRowsParams,
+	IDatasource,
+} from "ag-grid-community";
+import {
+	AllCommunityModule,
+	ModuleRegistry,
+	themeQuartz,
+} from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react";
+import { useCallback, useMemo, useRef, useState, useTransition } from "react";
 
-export const IngredientsClient = ({ initialIngredients }: Props) => {
-	const [ingredients, setIngredients] =
-		useState<IngredientDto[]>(initialIngredients);
+ModuleRegistry.registerModules([AllCommunityModule]);
+
+export const IngredientsClient = () => {
 	const [name, setName] = useState("");
 	const [description, setDescription] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [isPending, startTransition] = useTransition();
+	const gridApiRef = useRef<GridApi | null>(null);
 
 	const canSubmit = useMemo(() => name.trim().length > 0, [name]);
 
-	const refresh = async () => {
-		const res = await fetch("/api/ingredients", { cache: "no-store" });
-		if (!res.ok) throw new Error("Failed to refresh ingredients");
-		const next = (await res.json()) as IngredientDto[];
-		setIngredients(next);
-	};
+	const refreshGrid = useCallback(() => {
+		gridApiRef.current?.purgeInfiniteCache();
+	}, []);
 
 	const onCreate = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -47,26 +55,110 @@ export const IngredientsClient = ({ initialIngredients }: Props) => {
 				if (!res.ok) throw new Error("Failed to create ingredient");
 				setName("");
 				setDescription("");
-				await refresh();
+				refreshGrid();
 			} catch (err) {
 				setError(err instanceof Error ? err.message : "Unexpected error");
 			}
 		});
 	};
 
-	const onDelete = (id: string) => {
-		setError(null);
-		startTransition(async () => {
-			try {
-				const res = await fetch(`/api/ingredients/${id}`, {
-					method: "DELETE",
-				});
-				if (!res.ok) throw new Error("Failed to delete ingredient");
-				setIngredients((prev) => prev.filter((i) => i.id !== id));
-			} catch (err) {
-				setError(err instanceof Error ? err.message : "Unexpected error");
-			}
-		});
+	const onDelete = useCallback(
+		(id: string) => {
+			setError(null);
+			startTransition(async () => {
+				try {
+					const res = await fetch(`/api/ingredients/${id}`, {
+						method: "DELETE",
+					});
+					if (!res.ok) throw new Error("Failed to delete ingredient");
+					refreshGrid();
+				} catch (err) {
+					setError(err instanceof Error ? err.message : "Unexpected error");
+				}
+			});
+		},
+		[refreshGrid],
+	);
+
+	const columnDefs = useMemo<ColDef<IngredientDto>[]>(
+		() => [
+			{
+				headerName: "Name",
+				field: "name",
+				sortable: true,
+				filter: "agTextColumnFilter",
+				filterParams: {
+					filterOptions: ["contains"],
+					maxNumConditions: 1,
+				},
+				flex: 1,
+			},
+			{
+				headerName: "Description",
+				field: "description",
+				sortable: true,
+				filter: false,
+				flex: 2,
+			},
+			{
+				headerName: "Actions",
+				colId: "actions",
+				sortable: true,
+				filter: false,
+				width: 140,
+				valueGetter: () => "",
+				cellRenderer: (params: { data?: IngredientDto }) => {
+					if (!params.data) return null;
+					return (
+						<Button
+							variant="danger"
+							disabled={isPending}
+							onClick={() => onDelete(params.data!.id)}
+						>
+							Remove
+						</Button>
+					);
+				},
+			},
+		],
+		[isPending, onDelete],
+	);
+
+	const datasource = useMemo<IDatasource>(
+		() => ({
+			getRows: async (params: IGetRowsParams) => {
+				try {
+					const res = await fetch("/api/ingredients/grid", {
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							startRow: params.startRow,
+							endRow: params.endRow,
+							sortModel: params.sortModel,
+							filterModel: params.filterModel,
+						}),
+					});
+					if (!res.ok) {
+						params.failCallback();
+						return;
+					}
+
+					const data = (await res.json()) as {
+						rows: IngredientDto[];
+						lastRow: number;
+					};
+
+					params.successCallback(data.rows, data.lastRow);
+				} catch {
+					params.failCallback();
+				}
+			},
+		}),
+		[],
+	);
+
+	const onGridReady = (event: GridReadyEvent) => {
+		gridApiRef.current = event.api;
 	};
 
 	return (
@@ -129,37 +221,19 @@ export const IngredientsClient = ({ initialIngredients }: Props) => {
 
 			<Stack gap="sm">
 				<h2 className="text-lg font-medium text-gray-900">All ingredients</h2>
-				<Stack gap="sm">
-					{ingredients.length === 0 ? (
-						<Card>
-							<p className="text-sm text-gray-600">No ingredients yet.</p>
-						</Card>
-					) : (
-						ingredients.map((ingredient) => (
-							<Card key={ingredient.id} className="p-4">
-								<Stack direction="row" justify="between" align="start" gap="lg">
-									<Stack gap="xs">
-										<p className="font-medium text-gray-900">
-											{ingredient.name}
-										</p>
-										{ingredient.description ? (
-											<p className="text-sm text-gray-600">
-												{ingredient.description}
-											</p>
-										) : null}
-									</Stack>
-									<Button
-										variant="danger"
-										disabled={isPending}
-										onClick={() => onDelete(ingredient.id)}
-									>
-										Remove
-									</Button>
-								</Stack>
-							</Card>
-						))
-					)}
-				</Stack>
+				<div className="w-full" style={{ height: 520 }}>
+					<AgGridReact<IngredientDto>
+						theme={themeQuartz}
+						columnDefs={columnDefs}
+						defaultColDef={{ resizable: true, sortable: true, filter: false }}
+						rowModelType="infinite"
+						datasource={datasource}
+						cacheBlockSize={50}
+						maxBlocksInCache={5}
+						onGridReady={onGridReady}
+						overlayNoRowsTemplate={"<span>No ingredients yet.</span>"}
+					/>
+				</div>
 			</Stack>
 		</Stack>
 	);

@@ -1,3 +1,3 @@
 export * from "./mongoose";
 export * from "./domain-impl";
-export { MongooseModule } from "@nestjs/mongoose";
+export { MongooseModule, InjectModel } from "@nestjs/mongoose";

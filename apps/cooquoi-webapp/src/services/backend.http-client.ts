@@ -2,6 +2,25 @@ import { appConfig } from "@/config";
 import type { CreateIngredientDto, IngredientDto } from "@/types/ingredient";
 import axios, { AxiosInstance } from "axios";
 
+type AgGridSortDirection = "asc" | "desc";
+
+export type AgGridSortModelItem = {
+	colId: string;
+	sort: AgGridSortDirection;
+};
+
+export type IngredientsGridRequest = {
+	startRow: number;
+	endRow: number;
+	sortModel?: AgGridSortModelItem[];
+	filterModel?: Record<string, unknown>;
+};
+
+export type IngredientsGridResponse = {
+	rows: IngredientDto[];
+	lastRow: number;
+};
+
 class BackendClient {
 	private readonly _httpClient: AxiosInstance;
 
@@ -40,6 +59,22 @@ class BackendClient {
 			const err = error instanceof Error ? error : new Error(String(error));
 			console.error("Error deleting ingredient:", err.message, err.stack);
 			throw err;
+		}
+	}
+
+	async getIngredientsGrid(
+		dto: IngredientsGridRequest,
+	): Promise<IngredientsGridResponse> {
+		try {
+			const response = await this._httpClient.post<IngredientsGridResponse>(
+				"ingredients/grid",
+				dto,
+			);
+			return response.data;
+		} catch (error) {
+			const err = error instanceof Error ? error : new Error(String(error));
+			console.error("Error fetching ingredients grid:", err.message, err.stack);
+			return { rows: [], lastRow: 0 };
 		}
 	}
 }

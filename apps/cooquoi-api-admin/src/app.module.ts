@@ -8,7 +8,10 @@ import {
 } from "@cooquoi/infrastructure";
 import { CooquoiModule } from "@cooquoi/presentation";
 import { SystemDatetimeModule } from "@libs/utils-nestjs";
-import { IngredientsController } from "./controllers";
+import {
+	IngredientsController,
+	IngredientsGridController,
+} from "./controllers";
 import { SeedDb } from "@cooquoi/infrastructure";
 import { OnApplicationBootstrapLifecycle } from "./lifecycle/on-application-bootstrap";
 
@@ -36,7 +39,7 @@ import { OnApplicationBootstrapLifecycle } from "./lifecycle/on-application-boot
 		SystemDatetimeModule,
 		CooquoiModule.register(),
 	],
-	controllers: [IngredientsController],
+	controllers: [IngredientsController, IngredientsGridController],
 	providers: [OnApplicationBootstrapLifecycle, SeedDb],
 })
 export class AppModule {}
