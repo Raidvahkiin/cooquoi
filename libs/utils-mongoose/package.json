@@ -13,7 +13,8 @@
 		"./package.json": "./package.json"
 	},
 	"dependencies": {
-		"@libs/core": "workspace:*"
+		"@libs/core": "workspace:*",
+		"mongoose": "^7.3.4"
 	},
 	"nx": {
 		"tags": ["scope:core", "type:lib", "layer:external", "platform:backend"]

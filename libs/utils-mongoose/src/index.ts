@@ -1,1 +1,1 @@
-export * from "./global-modules";
+export * from "./entity-filter-processor";

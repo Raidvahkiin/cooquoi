@@ -18,6 +18,7 @@
 		"@cooquoi/application": "workspace:*",
 		"@cooquoi/domain": "workspace:*",
 		"@libs/core": "workspace:*",
+		"@libs/utils-mongoose": "workspace:*",
 		"@nestjs/mongoose": "^11.0.3",
 		"mongoose": "^8.20.2"
 	},

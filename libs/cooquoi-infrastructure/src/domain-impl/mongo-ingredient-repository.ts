@@ -1,8 +1,9 @@
 import { Ingredient, IngredientRepository } from "@cooquoi/domain";
+import { EntityFilter } from "@libs/core";
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { IngredientModel } from "../mongoose/models/ingredient.model";
+import { IngredientFilterProcessor, IngredientModel } from "../mongoose";
 
 @Injectable()
 export class MongoIngredientRepository implements IngredientRepository {
@@ -31,9 +32,9 @@ export class MongoIngredientRepository implements IngredientRepository {
 		return IngredientModel.mapper.toEntity(model);
 	}
 
-	async findMany(filters: string[]): Promise<Ingredient[]> {
-		// TODO: implement proper filtering
-		const models = await this.ingredientModel.find().exec();
+	async findMany(filters: EntityFilter<Ingredient>[]): Promise<Ingredient[]> {
+		const query = new IngredientFilterProcessor().process(filters);
+		const models = await this.ingredientModel.find(query).exec();
 		return models.map((model) => IngredientModel.mapper.toEntity(model));
 	}
 }
