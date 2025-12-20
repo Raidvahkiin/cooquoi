@@ -1,4 +1,4 @@
-import type { FilterQuery } from "@cooquoi/infrastructure";
+import type { FilterQuery } from "mongoose";
 
 export function escapeRegexLiteral(value: string): string {
 	return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
