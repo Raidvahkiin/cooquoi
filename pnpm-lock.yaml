@@ -153,6 +153,12 @@ importers:
 
   apps/cooquoi-api-admin:
     dependencies:
+      '@cooquoi/application':
+        specifier: workspace:*
+        version: link:../../libs/cooquoi-application
+      '@cooquoi/domain':
+        specifier: workspace:*
+        version: link:../../libs/cooquoi-domain
       '@cooquoi/infrastructure':
         specifier: workspace:*
         version: link:../../libs/cooquoi-infrastructure

@@ -67,6 +67,9 @@
 			"dependsOn": ["^build"],
 			"cache": true,
 			"inputs": ["default", "^production"]
+		},
+		"build": {
+			"dependsOn": ["^build"]
 		}
 	},
 	"tasksRunnerOptions": {

@@ -4,6 +4,9 @@ packages:
 
 onlyBuiltDependencies:
   - '@biomejs/biome'
+  - '@nestjs/core'
+  - '@parcel/watcher'
+  - '@scarf/scarf'
   - '@swc/core'
   - esbuild
   - nx
