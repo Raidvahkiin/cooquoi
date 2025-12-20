@@ -6,7 +6,9 @@
 		"production": [
 			"default",
 			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-			"!{projectRoot}/tsconfig.spec.json"
+			"!{projectRoot}/tsconfig.spec.json",
+			"!{projectRoot}/.eslintrc.json",
+			"!{projectRoot}/eslint.config.mjs"
 		],
 		"sharedGlobals": []
 	},
@@ -45,6 +47,12 @@
 			"options": {
 				"targetName": "e2e"
 			}
+		},
+		{
+			"plugin": "@nx/eslint/plugin",
+			"options": {
+				"targetName": "lint"
+			}
 		}
 	],
 	"targetDefaults": {
@@ -69,53 +77,6 @@
 			}
 		}
 	},
-	"@nx/enforce-module-boundaries": [
-		"error",
-		{
-			"depConstraints": [
-				{
-					"sourceTag": "layer:domain",
-					"onlyDependOnLibsWithTags": ["layer:standalone"]
-				},
-				{
-					"sourceTag": "layer:application",
-					"onlyDependOnLibsWithTags": ["layer:domain", "layer:standalone"]
-				},
-				{
-					"sourceTag": "layer:infrastructure",
-					"onlyDependOnLibsWithTags": [
-						"layer:application",
-						"layer:domain",
-						"layer:standalone"
-					]
-				},
-				{
-					"sourceTag": "layer:presentation",
-					"onlyDependOnLibsWithTags": [
-						"layer:application",
-						"layer:infrastructure",
-						"layer:standalone"
-					]
-				},
-				{
-					"sourceTag": "platform:backend",
-					"onlyDependOnLibsWithTags": ["platform:backend", "platform:shared"]
-				},
-				{
-					"sourceTag": "platform:frontend",
-					"onlyDependOnLibsWithTags": ["platform:frontend", "platform:shared"]
-				},
-				{
-					"sourceTag": "platform:shared",
-					"onlyDependOnLibsWithTags": ["platform:shared"]
-				},
-				{
-					"sourceTag": "scope:core",
-					"onlyDependOnLibsWithTags": ["scope:core"]
-				}
-			]
-		}
-	],
 	"generators": {
 		"@nx/next": {
 			"application": {

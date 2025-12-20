@@ -12,7 +12,7 @@ services:
       MONGO_INITDB_DATABASE: ${DB_MONGO_DB_NAME:-cooquoi}
     volumes:
       - cooquoi_db_data:/data/db
-      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - ../../scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 
 volumes:
   cooquoi_db_data:
