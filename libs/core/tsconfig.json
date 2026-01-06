@@ -2,8 +2,7 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
-	},
-	"references": [
+	},	"exclude": ["dist/**", "node_modules"],	"references": [
 		{
 			"path": "./tsconfig.lib.json"
 		},

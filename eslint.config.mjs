@@ -18,49 +18,77 @@ export default [
 				{
 					depConstraints: [
 						{
-							sourceTag: 'layer:domain',
-							onlyDependOnLibsWithTags: ['layer:standalone'],
+							sourceTag: 'type:lib',
+							onlyDependOnLibsWithTags: ['type:lib'],
 						},
 						{
-							sourceTag: 'layer:application',
-							onlyDependOnLibsWithTags: ['layer:domain', 'layer:standalone'],
+							sourceTag: 'type:app',
+							onlyDependOnLibsWithTags: ['type:lib', 'type:app'],
 						},
 						{
-							sourceTag: 'layer:infrastructure',
+							sourceTag: "scope:core",
+							onlyDependOnLibsWithTags: ["scope:core",'type:app'],
+						},
+						{
+							sourceTag: 'scope:utility',
+							onlyDependOnLibsWithTags: ['scope:utility', 'scope:core'],
+						},
+						{
+							sourceTag: 'scope:domain-layer',
 							onlyDependOnLibsWithTags: [
-								'layer:application',
-								'layer:domain',
-								'layer:standalone',
+								'scope:core',
+								'scope:utility',
 							],
 						},
 						{
-							sourceTag: 'layer:presentation',
+							sourceTag: 'scope:application-layer',
 							onlyDependOnLibsWithTags: [
-								'layer:domain',
-								'layer:application',
-								'layer:infrastructure',
-								'layer:standalone',
+								'scope:core',
+								'scope:utility',
+								'scope:domain-layer',
 							],
 						},
 						{
-							sourceTag: 'platform:backend',
-							onlyDependOnLibsWithTags: ['platform:backend', 'platform:shared'],
+							sourceTag: 'scope:infrastructure-layer',
+							onlyDependOnLibsWithTags: [
+								'scope:core',
+								'scope:utility',
+								'scope:domain-layer',
+								'scope:application-layer',
+							],
+						},
+
+						{
+							sourceTag: 'scope:presentation-layer',
+							onlyDependOnLibsWithTags: [
+								'scope:core',
+								'scope:utility',
+								'scope:domain-layer',
+								'scope:application-layer',
+								'scope:infrastructure-layer',
+							],	
 						},
 						{
-							sourceTag: 'platform:frontend',
+							sourceTag: 'scope:consumer',
 							onlyDependOnLibsWithTags: [
-								'platform:frontend',
-								'platform:shared',
+								'scope:core',
+								'scope:utility',
+								'scope:presentation-layer',
 							],
 						},
 						{
-							sourceTag: 'platform:shared',
-							onlyDependOnLibsWithTags: ['platform:shared'],
+							sourceTag: 'platform:node',
+							onlyDependOnLibsWithTags: ['platform:node'],	
 						},
 						{
-							sourceTag: 'scope:core',
-							onlyDependOnLibsWithTags: ['scope:core'],
+							sourceTag: 'platform:nestjs',
+							onlyDependOnLibsWithTags: ['platform:nestjs', 'platform:node'],	
 						},
+						{
+							sourceTag: 'platform:nextjs',
+							onlyDependOnLibsWithTags: ['platform:nextjs', 'platform:node'],	
+						}
+						
 					],
 				},
 			],

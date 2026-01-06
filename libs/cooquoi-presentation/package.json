@@ -22,11 +22,6 @@
 		"@libs/core": "workspace:*"
 	},
 	"nx": {
-		"tags": [
-			"scope:cooquoi",
-			"type:lib",
-			"layer:presentation",
-			"platform:shared"
-		]
+		"tags": ["type:lib", "scope:presentation-layer", "platform:node"]
 	}
 }

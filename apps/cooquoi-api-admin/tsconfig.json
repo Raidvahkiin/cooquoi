@@ -3,19 +3,10 @@
 	"compilerOptions": {},
 	"references": [
     {
-      "path": "../../libs/cooquoi-domain"
-    },
-    {
-      "path": "../../libs/cooquoi-application"
-    },
-    {
       "path": "../../libs/utils-nestjs"
     },
     {
       "path": "../../libs/core"
-    },
-    {
-      "path": "../../libs/cooquoi-infrastructure"
     },
     {
       "path": "../../libs/cooquoi-presentation"

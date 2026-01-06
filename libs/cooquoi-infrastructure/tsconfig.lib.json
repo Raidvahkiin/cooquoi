@@ -11,6 +11,7 @@
 	"include": ["src/**/*.ts"],
 	"exclude": [
 		"dist",
+		"dist/**",
 		"jest.config.ts",
 		"jest.config.cts",
 		"src/**/*.spec.ts",

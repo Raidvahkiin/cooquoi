@@ -1,7 +1,7 @@
 import { Ingredient, IngredientRepository } from "@cooquoi/domain";
+import { DatetimeProvider } from "@libs/core";
 import { CommandHandler, ICommandHandler } from "@nestjs/cqrs";
 import { CreateIngredientCommand } from "./create-ingredient.command";
-import { DatetimeProvider } from "@libs/core";
 
 @CommandHandler(CreateIngredientCommand)
 export class CreateIngredientCommandHandler

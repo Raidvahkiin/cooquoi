@@ -20,6 +20,6 @@
 		"@libs/core": "workspace:*"
 	},
 	"nx": {
-		"tags": ["scope:cooquoi", "type:lib", "layer:domain", "platform:shared"]
+		"tags": ["type:lib", "scope:domain-layer", "platform:node"]
 	}
 }

@@ -1,4 +1,10 @@
 import {
+	CreateIngredientCommand,
+	DeleteIngredientCommand,
+	GetIngredientQuery,
+	Ingredient,
+} from "@cooquoi/presentation";
+import {
 	Body,
 	Controller,
 	Delete,
@@ -8,25 +14,10 @@ import {
 	NotFoundException,
 	Param,
 	Post,
-	Query,
 } from "@nestjs/common";
 import { CommandBus, QueryBus } from "@nestjs/cqrs";
-import { ApiBody, ApiQuery, ApiTags } from "@nestjs/swagger";
-import {
-	CreateIngredientCommand,
-	DeleteIngredientCommand,
-} from "@cooquoi/application";
-import {
-	GetIngredientQuery,
-	GetManyIngredientsQuery,
-} from "@cooquoi/presentation";
-import { Ingredient } from "@cooquoi/domain";
-import { EntityPropsFilter } from "@libs/core";
-import {
-	CreateIngredientDto,
-	GetManyIngredientsQueryDto,
-	IngredientResponseDto,
-} from "../dto";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { CreateIngredientDto, IngredientResponseDto } from "../dto";
 
 @ApiTags("Ingredients")
 @Controller("ingredients")
@@ -69,71 +60,5 @@ export class IngredientsController {
 		}
 
 		return new IngredientResponseDto(ingredient);
-	}
-
-	@Get()
-	@ApiQuery({ name: "id", required: false, type: String })
-	@ApiQuery({ name: "idIn", required: false, type: String })
-	@ApiQuery({ name: "name", required: false, type: String })
-	@ApiQuery({ name: "nameIn", required: false, type: String })
-	@ApiQuery({ name: "description", required: false, type: String })
-	@ApiQuery({ name: "descriptionIn", required: false, type: String })
-	async getMany(
-		@Query() queryDto: GetManyIngredientsQueryDto,
-	): Promise<IngredientResponseDto[]> {
-		const splitCsv = (value?: string): string[] | undefined => {
-			if (!value) return undefined;
-			const parts = value
-				.split(",")
-				.map((v) => v.trim())
-				.filter(Boolean);
-			return parts.length > 0 ? parts : undefined;
-		};
-
-		const condition: Record<string, unknown> = {};
-
-		// Exact-match filters take precedence over IN filters for the same field.
-		if (queryDto.id) {
-			condition.id = { value: queryDto.id };
-		} else {
-			const ids = splitCsv(queryDto.idIn);
-			if (ids) {
-				condition.id = { value: ids, condition: "in" };
-			}
-		}
-
-		if (queryDto.name) {
-			condition.name = { value: queryDto.name };
-		} else {
-			const names = splitCsv(queryDto.nameIn);
-			if (names) {
-				condition.name = { value: names, condition: "in" };
-			}
-		}
-
-		if (queryDto.description) {
-			condition.description = { value: queryDto.description };
-		} else {
-			const descriptions = splitCsv(queryDto.descriptionIn);
-			if (descriptions) {
-				condition.description = { value: descriptions, condition: "in" };
-			}
-		}
-
-		const filters =
-			Object.keys(condition).length > 0
-				? [
-						new EntityPropsFilter<Ingredient>(
-							condition as EntityPropsFilter<Ingredient>["condition"],
-						),
-					]
-				: [];
-
-		const query = new GetManyIngredientsQuery({ filters });
-		const ingredients = await this.queryBus.execute(query);
-
-		return ingredients.map(
-			(ingredient) => new IngredientResponseDto(ingredient),
-		);
 	}
 }

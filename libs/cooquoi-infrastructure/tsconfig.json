@@ -3,6 +3,7 @@
 	"compilerOptions": {
 		"tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
 	},
+	"exclude": ["dist/**", "node_modules"],
 	"references": [
 		{
 			"path": "../utils-mongoose"

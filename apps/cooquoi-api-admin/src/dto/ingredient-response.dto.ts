@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Ingredient } from "@cooquoi/domain";
+import { Ingredient } from "@cooquoi/presentation";
 
 export class IngredientResponseDto {
 	@ApiProperty()

@@ -1,18 +1,18 @@
 name: cooquoi
 services:
   cooquoi_db:
-    image: mongo:7
-    container_name: cooquoi-admin-mongodb
+    image: postgis/postgis:16-3.4
+    container_name: cooquoi-admin-postgres
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - "5432:5432"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_MONGO_USERNAME:-cooquoiuser}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_MONGO_PASSWORD:-cooquoipassword}
-      MONGO_INITDB_DATABASE: ${DB_MONGO_DB_NAME:-cooquoi}
+      POSTGRES_USER: ${DB_POSTGRES_USERNAME:-cooquoiuser}
+      POSTGRES_PASSWORD: ${DB_POSTGRES_PASSWORD:-cooquoipassword}
+      POSTGRES_DB: ${DB_POSTGRES_DB_NAME:-cooquoi}
     volumes:
-      - cooquoi_db_data:/data/db
-      - ../../scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+      - cooquoi_db_data:/var/lib/postgresql/data
+      - ../../scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql:ro
 
 volumes:
   cooquoi_db_data:

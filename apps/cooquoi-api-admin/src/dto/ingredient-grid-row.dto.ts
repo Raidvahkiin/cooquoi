@@ -1,12 +1,5 @@
+import { IngredientModel } from "@cooquoi/presentation";
 import { ApiProperty } from "@nestjs/swagger";
-
-type IngredientGridRowModel = {
-	_id: string;
-	name: string;
-	description: string | null;
-	createdAt: Date;
-	updatedAt: Date;
-};
 
 export class IngredientGridRowDto {
 	@ApiProperty()
@@ -24,11 +17,11 @@ export class IngredientGridRowDto {
 	@ApiProperty()
 	updatedAt!: Date;
 
-	static fromModel(model: IngredientGridRowModel): IngredientGridRowDto {
+	static fromModel(model: IngredientModel): IngredientGridRowDto {
 		return {
-			id: model._id,
+			id: model.id,
 			name: model.name,
-			description: model.description,
+			description: model.description ?? null,
 			createdAt: model.createdAt,
 			updatedAt: model.updatedAt,
 		};

@@ -5,17 +5,21 @@
 	"main": "./src/main.ts",
 	"scripts": {
 		"serve": "node --require @swc-node/register --watch src/main.ts",
-		"start": "node dist/main.js"
+		"start": "node dist/main.js",
+		"typecheck": "tsgo --project tsconfig.app.json --noEmit"
 	},
 	"dependencies": {
-		"@cooquoi/domain": "workspace:*",
-		"@cooquoi/application": "workspace:*",
 		"@cooquoi/presentation": "workspace:*",
-		"@cooquoi/infrastructure": "workspace:*",
 		"@libs/core": "workspace:*",
-		"@libs/utils-nestjs": "workspace:*"
+		"@libs/utils-nestjs": "workspace:*",
+		"@nestjs/typeorm": "^11.0.0"
 	},
 	"nx": {
-		"tags": ["scope:cooquoi", "type:app", "platform:backend"]
+		"tags": [
+			"type:app",
+			"scope:consumer",
+			"platform:backend",
+			"platform:nestjs"
+		]
 	}
 }

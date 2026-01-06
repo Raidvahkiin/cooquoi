@@ -27,6 +27,13 @@ export class Quantity implements ValueObject {
 		return new Quantity(newValue < 0 ? 0 : newValue);
 	}
 
+	multiply(factor: number): Quantity {
+		if (factor < 0) {
+			throw new Error("Multiply factor cannot be negative");
+		}
+		return new Quantity(this.value * factor);
+	}
+
 	toString(): string {
 		return this.value.toString();
 	}

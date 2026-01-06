@@ -20,11 +20,6 @@
 		"@cooquoi/domain": "workspace:*"
 	},
 	"nx": {
-		"tags": [
-			"scope:cooquoi",
-			"type:lib",
-			"layer:application",
-			"platform:shared"
-		]
+		"tags": ["type:lib", "scope:application-layer", "platform:node"]
 	}
 }

@@ -13,6 +13,11 @@
 		"react-dom": "^19.0.0"
 	},
 	"nx": {
-		"tags": ["scope:cooquoi", "type:app", "platform:frontend"]
+		"tags": [
+			"type:app",
+			"scope:consumer",
+			"platform:frontend",
+			"platform:nextjs"
+		]
 	}
 }

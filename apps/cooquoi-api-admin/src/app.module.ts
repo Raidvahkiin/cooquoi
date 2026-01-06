@@ -1,45 +1,48 @@
-import { Module } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { DynamicModule, Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { CqrsModule } from "@nestjs/cqrs";
-import {
-  IngredientModel,
-  IngredientSchema,
-  MongooseModule,
-} from "@cooquoi/infrastructure";
-import { CooquoiModule } from "@cooquoi/presentation";
+import { CooquoiModule, cooquoiTypeOrmModels } from "@cooquoi/presentation";
 import { SystemDatetimeModule } from "@libs/utils-nestjs";
 import {
-  IngredientsController,
-  IngredientsGridController,
+	IngredientsController,
+	IngredientsGridController,
 } from "./controllers";
-import { SeedDb } from "@cooquoi/infrastructure";
 import { OnApplicationBootstrapLifecycle } from "./lifecycle/on-application-bootstrap";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { appConfigSchema } from "./config";
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: [".env.local", ".env"],
-    }),
-    CqrsModule.forRoot(),
-    CqrsModule,
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        uri: configService.get<string>("DB_MONGO_URI"),
-      }),
-    }),
-    MongooseModule.forFeature([
-      {
-        name: IngredientModel.name,
-        schema: IngredientSchema,
-      },
-    ]),
-    SystemDatetimeModule,
-    CooquoiModule.register(),
-  ],
-  controllers: [IngredientsController, IngredientsGridController],
-  providers: [OnApplicationBootstrapLifecycle, SeedDb],
+	imports: [
+		ConfigModule.forRoot({
+			isGlobal: true,
+			envFilePath: [".env.local", ".env"],
+		}),
+		CqrsModule.forRoot(),
+		SystemDatetimeModule,
+	],
+	controllers: [IngredientsController, IngredientsGridController],
+	providers: [OnApplicationBootstrapLifecycle],
 })
-export class AppModule {}
+export class AppModule {
+	static register(): DynamicModule {
+		return {
+			module: AppModule,
+			imports: [
+				TypeOrmModule.forRootAsync({
+					useFactory: () => {
+						const config = appConfigSchema.parse({});
+						console.log("config", JSON.stringify(config, null, 2));
+						return {
+							type: "postgres",
+							entities: cooquoiTypeOrmModels,
+							...config.database.postgres,
+						};
+					},
+				}),
+				CooquoiModule.register(),
+			],
+			providers: [],
+			exports: [],
+		};
+	}
+}

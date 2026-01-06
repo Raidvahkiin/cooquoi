@@ -22,6 +22,6 @@
 		"build": "tsgo --project tsconfig.lib.json"
 	},
 	"nx": {
-		"tags": ["scope:core", "type:lib", "layer:standalone", "platform:shared"]
+		"tags": ["type:lib", "scope:core", "platform:node"]
 	}
 }

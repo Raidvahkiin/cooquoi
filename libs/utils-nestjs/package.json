@@ -20,6 +20,6 @@
 		"@libs/core": "workspace:*"
 	},
 	"nx": {
-		"tags": ["scope:core", "type:lib", "layer:standalone", "platform:shared"]
+		"tags": ["type:lib", "scope:utility", "platform:node", "platform:nestjs"]
 	}
 }

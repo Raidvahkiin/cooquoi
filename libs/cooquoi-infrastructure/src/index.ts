@@ -1,3 +1,4 @@
-export * from "./mongoose";
+export * from "./interfaces";
+export * from "./typeorm";
 export * from "./domain-impl";
-export { MongooseModule } from "@nestjs/mongoose";
+export * from "./cooquoi-infrastructure.module";
