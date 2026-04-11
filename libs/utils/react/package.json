@@ -1,0 +1,27 @@
+{
+  "name": "@utils/react",
+  "version": "0.0.0",
+  "private": true,
+  "types": "./src/index.ts",
+  "main": "./src/index.ts",
+  "exports": {
+    "./ui": {
+      "types": "./src/ui/index.ts",
+      "import": "./src/ui/index.ts",
+      "default": "./src/ui/index.ts"
+    },
+    "./ui/*": "./src/ui/*",
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "core": "workspace:*",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "tailwind-merge": "^3.5.0"
+  },
+  "nx": {
+    "tags": ["type:lib", "scope:utility", "platform:react"]
+  }
+}

@@ -52,3 +52,5 @@ Thumbs.db
 out
 
 vitest.config.*.timestamp*
+
+storybook-static

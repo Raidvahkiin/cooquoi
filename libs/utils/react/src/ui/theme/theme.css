@@ -1,0 +1,59 @@
+/*
+ * Shared design tokens.
+ * Imported by each consuming app's global.css and by Storybook's global.css.
+ *
+ * Color palette inspired by:
+ *   Space Indigo #1F2041  |  Magenta Bloom #DA4167
+ *   Porcelain    #FDFFFC  |  Sage Green    #749C75
+ *   Sandy Brown  #FF9B54
+ */
+@theme {
+    /* ── Font Family ── */
+    --font-sans: "Montserrat", sans-serif;
+
+    /* ── Sizing ── */
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+
+    /* ── Surfaces (Porcelain-inspired) ── */
+    --color-surface: #FDFFFC;
+    --color-surface-muted: #F0F2EE;
+    --color-surface-elevated: #FFFFFF;
+
+    /* ── Text (Space Indigo family) ── */
+    --color-text: #1F2041;
+    --color-text-muted: #646585;
+
+    /* ── Borders ── */
+    --color-border: #D5D6E4;
+
+    /* ── Primary (Space Indigo) ── */
+    --color-primary: #3B3D7A;
+    --color-primary-hover: #2D2E65;
+    --color-primary-ring: #6466B5;
+
+    /* ── Secondary (Magenta Bloom) ── */
+    --color-secondary: #DA4167;
+    --color-secondary-hover: #BF3358;
+    --color-secondary-ring: #E8708F;
+
+    /* ── Success (Sage Green) ── */
+    --color-success: #528453;
+    --color-success-hover: #427043;
+    --color-success-ring: #8AB68B;
+
+    /* ── Warning (Sandy Brown) ── */
+    --color-warning: #D77D2D;
+    --color-warning-hover: #BE691E;
+    --color-warning-ring: #FFB27A;
+
+    /* ── Danger / Error (warm crimson) ── */
+    --color-danger: #C82837;
+    --color-danger-hover: #AA202D;
+    --color-danger-ring: #EB6470;
+
+    /* ── Info (indigo-shifted blue) ── */
+    --color-info: #3773DC;
+    --color-info-hover: #285FC3;
+    --color-info-ring: #64A0F5;
+}
