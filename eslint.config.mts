@@ -1,7 +1,7 @@
 import nxPlugin from '@nx/eslint-plugin';
-import tseslint from 'typescript-eslint';
+import tseslint, { type ConfigArray } from 'typescript-eslint';
 
-export default [
+const config: ConfigArray = [
   ...tseslint.configs.recommended,
   {
     plugins: {
@@ -112,3 +112,5 @@ export default [
     ],
   },
 ];
+
+export default config;

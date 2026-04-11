@@ -1,0 +1,14 @@
+{
+  "name": "@cooquoi/api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --config apps/cooquoi-api/vite.config.e2e.mts",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

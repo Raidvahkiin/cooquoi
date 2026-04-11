@@ -1,10 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -69,6 +66,15 @@
       }
     }
   ],
+  "targetDefaults": {
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --config {projectRoot}/vite.config.mts",
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  },
   "analytics": false,
   "cli": {
     "packageManager": "bun"

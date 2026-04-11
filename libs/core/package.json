@@ -1,5 +1,5 @@
 {
-  "name": "core",
+  "name": "@libs/core",
   "version": "0.0.0",
   "private": true,
   "exports": {
