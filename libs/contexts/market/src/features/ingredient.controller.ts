@@ -5,12 +5,16 @@ import {
   NotFoundException,
   Param,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import type { Ingredient } from '../domain';
 import { CreateIngredientCommand } from './commands/create-ingredient/create-ingredient.command';
 import { CreateIngredientDto } from './commands/create-ingredient/create-ingredient.dto';
+import { FilterIngredientsDto } from './queries/filter-ingredients/filter-ingredients.dto';
+import type { FilterIngredientsResult } from './queries/filter-ingredients/filter-ingredients.handler';
+import { FilterIngredientsQuery } from './queries/filter-ingredients/filter-ingredients.query';
 import { GetIngredientQuery } from './queries/get-ingredient/get-ingredient.query';
 
 @ApiTags('ingredients')
@@ -20,6 +24,25 @@ export class IngredientController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
+  @ApiOperation({
+    summary: 'Filter ingredients with pagination and fuzzy search',
+  })
+  @Get()
+  filter(
+    @Query() query: FilterIngredientsDto,
+  ): Promise<FilterIngredientsResult> {
+    return this.queryBus.execute<
+      FilterIngredientsQuery,
+      FilterIngredientsResult
+    >(
+      new FilterIngredientsQuery(
+        query.skip ?? 0,
+        query.take ?? 20,
+        query.search,
+      ),
+    );
+  }
 
   @ApiOperation({ summary: 'Create a new ingredient' })
   @Post()

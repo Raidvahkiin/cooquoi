@@ -7,12 +7,13 @@ import {
 } from './config';
 import {
   CreateIngredientHandler,
+  FilterIngredientsHandler,
   GetIngredientHandler,
   IngredientController,
 } from './features';
 
 const commandHandlers = [CreateIngredientHandler];
-const queryHandlers = [GetIngredientHandler];
+const queryHandlers = [GetIngredientHandler, FilterIngredientsHandler];
 
 @Module({})
 export class MarketModule {
