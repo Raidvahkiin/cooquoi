@@ -8,8 +8,8 @@
     "lib": [
       "es2022"
     ],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
@@ -20,6 +20,8 @@
     "target": "es2022",
     "customConditions": [
       "@org/source"
-    ]
+    ],
+    "experimentalDecorators": true,
+		"emitDecoratorMetadata": true
   }
 }

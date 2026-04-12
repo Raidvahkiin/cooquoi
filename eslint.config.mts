@@ -1,8 +1,19 @@
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import nxPlugin from '@nx/eslint-plugin';
 import tseslint, { type ConfigArray } from 'typescript-eslint';
 
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 const config: ConfigArray = [
   ...tseslint.configs.recommended,
+  {
+    languageOptions: {
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+      },
+    },
+  },
   {
     plugins: {
       '@nx': nxPlugin,
@@ -31,44 +42,17 @@ const config: ConfigArray = [
               sourceTag: 'scope:utility',
               onlyDependOnLibsWithTags: ['scope:utility', 'scope:core'],
             },
-            {
-              sourceTag: 'scope:domain-layer',
-              onlyDependOnLibsWithTags: ['scope:core', 'scope:utility'],
-            },
-            {
-              sourceTag: 'scope:application-layer',
-              onlyDependOnLibsWithTags: [
-                'scope:core',
-                'scope:utility',
-                'scope:domain-layer',
-              ],
-            },
-            {
-              sourceTag: 'scope:infrastructure-layer',
-              onlyDependOnLibsWithTags: [
-                'scope:core',
-                'scope:utility',
-                'scope:domain-layer',
-                'scope:application-layer',
-              ],
-            },
 
             {
-              sourceTag: 'scope:presentation-layer',
-              onlyDependOnLibsWithTags: [
-                'scope:core',
-                'scope:utility',
-                'scope:domain-layer',
-                'scope:application-layer',
-                'scope:infrastructure-layer',
-              ],
+              sourceTag: 'scope:bounded-context',
+              onlyDependOnLibsWithTags: ['scope:core', 'scope:utility'],
             },
             {
               sourceTag: 'scope:consumer',
               onlyDependOnLibsWithTags: [
                 'scope:core',
                 'scope:utility',
-                'scope:presentation-layer',
+                'scope:bounded-context',
               ],
             },
             {

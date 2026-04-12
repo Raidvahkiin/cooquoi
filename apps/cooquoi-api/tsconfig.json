@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "target": "ES2023",
     "lib": ["ES2023"],
     "outDir": "./dist",
@@ -20,5 +20,10 @@
     "incremental": true,
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "types": ["vitest/globals", "node"]
-  }
+  },
+  "references": [
+    {
+      "path": "../../libs/contexts/market"
+    }
+  ]
 }

@@ -8,6 +8,9 @@
     },
     {
       "path": "./libs/utils/react"
+    },
+    {
+      "path": "./libs/contexts/market"
     }
   ]
 }

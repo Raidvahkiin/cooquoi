@@ -1,7 +1,9 @@
+import { MarketModule } from '@cooquoi/market';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { CqrsModule } from '@nestjs/cqrs';
+import 'dotenv/config';
+import { HealthController } from './app.controller';
 
 @Module({
   imports: [
@@ -9,8 +11,11 @@ import { AppService } from './app.service';
       envFilePath: ['.env.local', '.env'],
       isGlobal: true,
     }),
+    CqrsModule.forRoot(),
+    MarketModule.register({
+      database: { url: process.env.DATABASE_URL ?? '' },
+    }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [HealthController],
 })
 export class AppModule {}
