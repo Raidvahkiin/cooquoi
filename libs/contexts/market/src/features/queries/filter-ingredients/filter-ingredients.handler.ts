@@ -20,17 +20,13 @@ export class FilterIngredientsHandler
   async execute(
     query: FilterIngredientsQuery,
   ): Promise<FilterIngredientsResult> {
-    const where = query.search
-      ? ilike(ingredient.name, `%${query.search.split('').join('%')}%`)
+    const { skip, take, search } = query.params;
+    const where = search
+      ? ilike(ingredient.name, `%${search.split('').join('%')}%`)
       : undefined;
 
     const [items, [{ count }]] = await Promise.all([
-      this.db
-        .select()
-        .from(ingredient)
-        .where(where)
-        .offset(query.skip)
-        .limit(query.take),
+      this.db.select().from(ingredient).where(where).offset(skip).limit(take),
       this.db
         .select({ count: sql<number>`cast(count(*) as int)` })
         .from(ingredient)

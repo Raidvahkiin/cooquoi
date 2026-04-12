@@ -1,7 +1,9 @@
+export interface FilterIngredientsQueryParams {
+  skip: number;
+  take: number;
+  search?: string;
+}
+
 export class FilterIngredientsQuery {
-  constructor(
-    public readonly skip: number,
-    public readonly take: number,
-    public readonly search?: string,
-  ) {}
+  constructor(public readonly params: FilterIngredientsQueryParams) {}
 }

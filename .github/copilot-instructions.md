@@ -150,6 +150,7 @@ Features within each context use **NestJS CQRS** (`@nestjs/cqrs`):
 
 ## Code Style
 
+- **Parameter objects**: Functions and constructors with more than 2 parameters must use a single object parameter for readability. Apply this to commands, queries, and any function with 3+ args.
 - **Biome**: 2-space indent, single quotes, `organizeImports` enabled
 - No `useImportType` enforcement (turned off in Biome config)
 - Prefer type imports (`import type`) where applicable

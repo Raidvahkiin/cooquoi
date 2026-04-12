@@ -11,5 +11,11 @@
   },
   "nx": {
     "tags": ["type:lib", "scope:bounded-context", "platform:nestjs"]
+  },
+  "scripts": {
+    "generate:test-schema": "drizzle-kit generate --config=src/__tests__/setup/drizzle.config.ts"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.4.4"
   }
 }

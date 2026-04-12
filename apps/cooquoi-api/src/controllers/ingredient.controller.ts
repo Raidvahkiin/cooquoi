@@ -37,11 +37,11 @@ export class IngredientController {
       FilterIngredientsQuery,
       FilterIngredientsResult
     >(
-      new FilterIngredientsQuery(
-        query.skip ?? 0,
-        query.take ?? 20,
-        query.search,
-      ),
+      new FilterIngredientsQuery({
+        skip: query.skip ?? 0,
+        take: query.take ?? 20,
+        search: query.search,
+      }),
     );
   }
 
