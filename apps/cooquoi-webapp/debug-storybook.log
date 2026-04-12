@@ -1,0 +1,30 @@
+[00:34:26.113] [INFO] storybook v10.3.3
+[00:34:26.530] [DEBUG] Getting package.json info for /home/trung/Dev/cooquoi/package.json...
+[00:34:26.821] [WARN] Could not resolve addon "@storybook/addon-styling-webpack", skipping. Is it installed?
+[00:34:27.116] [WARN] Could not resolve addon "@storybook/addon-styling-webpack", skipping. Is it installed?
+[00:34:27.371] [INFO] Using implicit CSS loaders
+[00:34:27.465] [INFO] Using SWC as compiler
+[00:34:27.561] [INFO] Using default Webpack5 setup
+[00:34:27.568] [INFO] Starting...
+[00:34:27.674] [DEBUG] Starting preview..
+[00:34:27.691] [INFO] Using implicit CSS loaders
+[00:34:27.702] [INFO] Using SWC as compiler
+[00:34:27.707] [INFO] Using default Webpack5 setup
+[00:34:27.979] [DEBUG] Using tsconfig paths for react-docgen
+[00:34:29.606] [ERROR] Failed to build the preview
+[00:34:29.607] [WARN] Force closed preview build
+[00:34:29.608] [ERROR] [38;2;241;97;97mSB_BUILDER-WEBPACK5_0003 (WebpackCompilationError): There were problems when compiling your code with Webpack.
+Run Storybook with --debug-webpack for more information.[39m
+    at starter (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/@storybook+builder-webpack5@10.3.3_@rspack+core@1.6.8_@swc+helpers@0.5.20__@swc+core@1._c41e88f2d1cb5da944e3ef28fa3006e3/node_modules/@storybook/builder-webpack5/dist/index.js:799:11)
+    at starter.next (<anonymous>)
+    at Module.start (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/@storybook+builder-webpack5@10.3.3_@rspack+core@1.6.8_@swc+helpers@0.5.20__@swc+core@1._c41e88f2d1cb5da944e3ef28fa3006e3/node_modules/@storybook/builder-webpack5/dist/index.js:857:34)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async storybookDevServer (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/storybook@10.3.3_@testing-library+dom@10.4.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/core-server/index.js:7502:83)
+    at async buildOrThrow (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/storybook@10.3.3_@testing-library+dom@10.4.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/core-server/index.js:4508:12)
+    at async buildDevStandalone (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/storybook@10.3.3_@testing-library+dom@10.4.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/core-server/index.js:8029:41)
+    at async withTelemetry (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/storybook@10.3.3_@testing-library+dom@10.4.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/_node-chunks/chunk-6PADJQ3N.js:218:12)
+    at async dev (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/storybook@10.3.3_@testing-library+dom@10.4.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/bin/core.js:2736:3)
+    at async _Command.<anonymous> (file:///home/trung/Dev/cooquoi/node_modules/.pnpm/storybook@10.3.3_@testing-library+dom@10.4.1_react-dom@19.2.3_react@19.2.3__react@19.2.3/node_modules/storybook/dist/bin/core.js:2806:92)
+[00:34:29.610] [WARN] Broken build, fix the error above.
+You may need to refresh the browser.
+[00:34:29.611] [WARN] Could not resolve addon "@storybook/addon-styling-webpack", skipping. Is it installed?

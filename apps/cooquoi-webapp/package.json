@@ -1,0 +1,33 @@
+{
+  "name": "@cooquoi/webapp",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "typecheck": "tsc --project tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@utils/react": "workspace:*",
+    "ag-grid-community": "^35.0.0",
+    "ag-grid-react": "^35.0.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "next": "16.1.7",
+    "react": "^ 19.2.4",
+    "react-dom": "^ 19.2.4",
+    "tailwind-merge": "^3.5.0"
+  },
+  "nx": {
+    "tags": [
+      "type:app",
+      "scope:consumer",
+      "platform:frontend",
+      "platform:nextjs"
+    ],
+    "sync": {
+      "disabledSyncGenerators": ["@nx/js:typescript-sync"]
+    }
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.2.2"
+  }
+}
