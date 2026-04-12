@@ -9,7 +9,6 @@ import {
   CreateIngredientHandler,
   FilterIngredientsHandler,
   GetIngredientHandler,
-  IngredientController,
 } from './features';
 
 const commandHandlers = [CreateIngredientHandler];
@@ -31,7 +30,6 @@ export class MarketModule {
         ...commandHandlers,
         ...queryHandlers,
       ],
-      controllers: [IngredientController],
     };
   }
 }

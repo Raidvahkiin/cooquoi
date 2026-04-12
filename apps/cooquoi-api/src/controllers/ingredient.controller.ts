@@ -1,3 +1,11 @@
+import type { FilterIngredientsResult, Ingredient } from '@cooquoi/market';
+import {
+  CreateIngredientCommand,
+  CreateIngredientDto,
+  FilterIngredientsDto,
+  FilterIngredientsQuery,
+  GetIngredientQuery,
+} from '@cooquoi/market';
 import {
   Body,
   Controller,
@@ -9,13 +17,6 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import type { Ingredient } from '../domain';
-import { CreateIngredientCommand } from './commands/create-ingredient/create-ingredient.command';
-import { CreateIngredientDto } from './commands/create-ingredient/create-ingredient.dto';
-import { FilterIngredientsDto } from './queries/filter-ingredients/filter-ingredients.dto';
-import type { FilterIngredientsResult } from './queries/filter-ingredients/filter-ingredients.handler';
-import { FilterIngredientsQuery } from './queries/filter-ingredients/filter-ingredients.query';
-import { GetIngredientQuery } from './queries/get-ingredient/get-ingredient.query';
 
 @ApiTags('ingredients')
 @Controller('ingredients')

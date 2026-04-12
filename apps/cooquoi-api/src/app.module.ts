@@ -3,7 +3,8 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { CqrsModule } from '@nestjs/cqrs';
 import 'dotenv/config';
-import { HealthController } from './app.controller';
+import { HealthController } from './controllers/health.controller';
+import { IngredientController } from './controllers/ingredient.controller';
 
 @Module({
   imports: [
@@ -16,6 +17,6 @@ import { HealthController } from './app.controller';
       database: { url: process.env.DATABASE_URL ?? '' },
     }),
   ],
-  controllers: [HealthController],
+  controllers: [HealthController, IngredientController],
 })
 export class AppModule {}

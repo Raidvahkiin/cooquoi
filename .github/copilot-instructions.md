@@ -83,6 +83,7 @@ Common targets: `build`, `test`, `lint`, `serve`, `storybook`.
 | Test | `.spec.ts` | `entity.spec.ts` |
 | Value Object | `.vo.ts` | `currency.vo.ts` |
 | NestJS Module | `.module.ts` | `market.module.ts` |
+| NestJS Controller | `.controller.ts` | `ingredient.controller.ts` |
 | Storybook | `.stories.tsx` | `button.stories.tsx` |
 | Utility | `.util.ts` | `class-name.util.ts` |
 
@@ -99,10 +100,11 @@ src/
     <feature>/
       <feature>.command.ts   # or .query.ts
       <feature>.handler.ts
-      <feature>.controller.ts (optional, if REST endpoint)
   index.ts      # Public barrel export
   <name>.module.ts
 ```
+
+**Controllers are NOT part of bounded context libraries.** They live in the application layer (`apps/cooquoi-api/src/controllers/`). The bounded context library exports its commands, queries, DTOs, and result types so the app-level controllers can import and use them. The context `DynamicModule` must NOT declare a `controllers` array.
 
 ### market (`@cooquoi/market`)
 CRUD for **ingredients** and **products**. Vendors can attach price offers to products. Provides **price comparison** across vendors.
