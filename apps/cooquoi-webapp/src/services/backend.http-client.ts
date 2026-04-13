@@ -54,6 +54,13 @@ class BackendClient {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json() as Promise<IngredientDto>;
   }
+
+  async deleteIngredient(id: string): Promise<void> {
+    const response = await fetch(this.url(`ingredients/${id}`), {
+      method: 'DELETE',
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  }
 }
 
 const instance = new BackendClient();

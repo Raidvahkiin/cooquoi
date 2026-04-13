@@ -7,6 +7,7 @@ import {
   Modal,
   PlusIcon,
   Stack,
+  TrashIcon,
   useModal,
 } from '@utils/react/ui';
 import type {
@@ -100,8 +101,36 @@ export const IngredientsClient = () => {
         filter: false,
         flex: 2,
       },
+      {
+        headerName: 'actions',
+        cellRenderer: (params: { data?: IngredientDto }) => {
+          return (
+            <Button
+              variant="text"
+              color="primary"
+              onClick={async () => {
+                if (!params.data) return;
+                try {
+                  const res = await fetch(
+                    `/api/ingredients/${params.data.id}`,
+                    {
+                      method: 'DELETE',
+                    },
+                  );
+                  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                  refreshGrid();
+                } catch (err) {
+                  console.error('Failed to delete ingredient:', err);
+                }
+              }}
+            >
+              <TrashIcon />
+            </Button>
+          );
+        },
+      },
     ],
-    [],
+    [refreshGrid],
   );
 
   const datasource = useMemo<IDatasource>(

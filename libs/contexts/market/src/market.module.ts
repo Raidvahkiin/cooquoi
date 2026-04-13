@@ -7,11 +7,15 @@ import {
 } from './config';
 import {
   CreateIngredientHandler,
+  DeleteIngredientCommandHandler,
   FilterIngredientsHandler,
   GetIngredientHandler,
 } from './features';
 
-const commandHandlers = [CreateIngredientHandler];
+const commandHandlers = [
+  CreateIngredientHandler,
+  DeleteIngredientCommandHandler,
+];
 const queryHandlers = [GetIngredientHandler, FilterIngredientsHandler];
 
 @Module({})

@@ -2,6 +2,7 @@ import type { FilterIngredientsResult, Ingredient } from '@cooquoi/market';
 import {
   CreateIngredientCommand,
   CreateIngredientDto,
+  DeleteIngredientCommand,
   FilterIngredientsDto,
   FilterIngredientsQuery,
   GetIngredientQuery,
@@ -9,6 +10,7 @@ import {
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -66,5 +68,11 @@ export class IngredientController {
 
     if (!result) throw new NotFoundException(`Ingredient ${id} not found`);
     return result;
+  }
+
+  @ApiOperation({ summary: 'Delete an ingredient by ID' })
+  @Delete(':id')
+  async deleteById(@Param('id') id: string): Promise<void> {
+    await this.commandBus.execute(new DeleteIngredientCommand(id));
   }
 }
