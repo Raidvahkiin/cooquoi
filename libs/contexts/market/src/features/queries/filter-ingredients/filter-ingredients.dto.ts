@@ -12,4 +12,13 @@ export class FilterIngredientsDto {
 
   @ApiPropertyOptional({ example: 20, default: 20 })
   take?: number;
+
+  @ApiPropertyOptional({
+    example: 'name',
+    enum: ['name', 'createdAt', 'updatedAt'],
+  })
+  sortField?: string;
+
+  @ApiPropertyOptional({ example: 'asc', enum: ['asc', 'desc'] })
+  sortOrder?: 'asc' | 'desc';
 }

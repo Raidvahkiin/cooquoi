@@ -9,6 +9,8 @@ export type FilterIngredientsRequest = {
   skip: number;
   take: number;
   search?: string;
+  sortField?: string;
+  sortOrder?: 'asc' | 'desc';
 };
 
 class BackendClient {
@@ -31,6 +33,8 @@ class BackendClient {
         take: String(params.take),
       });
       if (params.search) query.set('search', params.search);
+      if (params.sortField) query.set('sortField', params.sortField);
+      if (params.sortOrder) query.set('sortOrder', params.sortOrder);
       const response = await fetch(`${this.url('ingredients')}?${query}`);
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.json() as Promise<FilterIngredientsResult>;

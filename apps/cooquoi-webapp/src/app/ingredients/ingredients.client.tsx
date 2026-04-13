@@ -1,7 +1,14 @@
 'use client';
 
 import type { CreateIngredientDto, IngredientDto } from '@/types/ingredient';
-import { Button, Input, Modal, Stack, useModal } from '@utils/react/ui';
+import {
+  Button,
+  Input,
+  Modal,
+  PlusIcon,
+  Stack,
+  useModal,
+} from '@utils/react/ui';
 import type {
   ColDef,
   GridApi,
@@ -89,7 +96,7 @@ export const IngredientsClient = () => {
       {
         headerName: 'Description',
         field: 'description',
-        sortable: true,
+        sortable: false,
         filter: false,
         flex: 2,
       },
@@ -142,7 +149,7 @@ export const IngredientsClient = () => {
           <p className="text-sm text-gray-600">Manage your ingredients list.</p>
         </Stack>
         <Button variant="contained" color="primary" onClick={openModal}>
-          Add Ingredient
+          <PlusIcon />
         </Button>
       </Stack>
 

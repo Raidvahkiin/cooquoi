@@ -3,10 +3,16 @@ import { NextResponse } from 'next/server';
 
 type AgGridFilterModel = Record<string, { filter?: string }>;
 
+type AgGridSortModelItem = {
+  colId: string;
+  sort: 'asc' | 'desc';
+};
+
 type AgGridGridRequest = {
   startRow: number;
   endRow: number;
   filterModel?: AgGridFilterModel;
+  sortModel?: AgGridSortModelItem[];
 };
 
 export async function POST(request: Request) {
@@ -28,11 +34,14 @@ export async function POST(request: Request) {
 
   const search = body.filterModel?.name?.filter;
   const take = endRow - startRow;
+  const firstSort = body.sortModel?.[0];
 
   const result = await backendClient.filterIngredients({
     skip: startRow,
     take,
     search,
+    sortField: firstSort?.colId,
+    sortOrder: firstSort?.sort,
   });
 
   return NextResponse.json({

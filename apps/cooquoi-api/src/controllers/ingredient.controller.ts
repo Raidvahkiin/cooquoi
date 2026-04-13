@@ -41,6 +41,9 @@ export class IngredientController {
         skip: query.skip ?? 0,
         take: query.take ?? 20,
         search: query.search,
+        sort: query.sortField
+          ? { field: query.sortField, order: query.sortOrder ?? 'asc' }
+          : undefined,
       }),
     );
   }
