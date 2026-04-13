@@ -22,6 +22,7 @@
   },
   "dependencies": {
     "@cooquoi/market": "workspace:*",
+    "@utils/nestjs": "workspace:*",
     "@nestjs/config": "^4.0.4",
     "@nestjs/platform-fastify": "^11.0.1"
   },

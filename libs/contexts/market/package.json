@@ -15,6 +15,9 @@
   "scripts": {
     "generate:test-schema": "drizzle-kit generate --config=src/__tests__/setup/drizzle.config.ts"
   },
+  "dependencies": {
+    "@utils/nestjs": "workspace:*"
+  },
   "devDependencies": {
     "@electric-sql/pglite": "^0.4.4"
   }

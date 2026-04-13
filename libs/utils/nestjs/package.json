@@ -1,0 +1,21 @@
+{
+  "name": "@utils/nestjs",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./cqrs": {
+      "types": "./src/cqrs/index.ts",
+      "import": "./src/cqrs/index.ts",
+      "default": "./src/cqrs/index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "nx": {
+    "tags": ["type:lib", "scope:utility", "platform:nestjs"]
+  }
+}
