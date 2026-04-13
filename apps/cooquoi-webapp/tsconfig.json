@@ -49,5 +49,10 @@
     "**/*.stories.tsx",
     "**/*.stories.js",
     "**/*.stories.jsx"
+  ],
+  "references": [
+    {
+      "path": "../../libs/utils/react"
+    }
   ]
 }

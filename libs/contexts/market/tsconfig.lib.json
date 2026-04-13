@@ -26,5 +26,10 @@
 		"**/*.spec.js",
 		"**/*.test.jsx",
 		"**/*.spec.jsx"
-	]
+  ],
+  "references": [
+    {
+      "path": "../../utils/nestjs/tsconfig.lib.json"
+    }
+  ]
 }

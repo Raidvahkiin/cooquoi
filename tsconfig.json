@@ -11,6 +11,12 @@
     },
     {
       "path": "./libs/contexts/market"
+    },
+    {
+      "path": "./apps/cooquoi-webapp"
+    },
+    {
+      "path": "./libs/utils/nestjs"
     }
   ]
 }
