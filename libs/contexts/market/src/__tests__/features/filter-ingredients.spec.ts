@@ -1,44 +1,23 @@
-import type { NestApplication } from '@nestjs/core';
-import { CqrsModule, QueryBus } from '@nestjs/cqrs';
-import { Test } from '@nestjs/testing';
-import { DATABASE_TOKEN } from '../../config';
 import type { FilterIngredientsResult } from '../../features';
 import { FilterIngredientsQuery } from '../../features';
-import { MarketModule } from '../../market.module';
-import { type PgliteDb, createPgliteDb } from '../helpers/pglite';
+import { getTestSuit } from '../setup';
 
 describe('FilterIngredients feature', () => {
-  let app: NestApplication;
-  let db: PgliteDb;
-  let queryBus: QueryBus;
+  let testSuit: Awaited<ReturnType<typeof getTestSuit>>;
 
   beforeAll(async () => {
-    db = await createPgliteDb();
-
-    const module = await Test.createTestingModule({
-      imports: [
-        CqrsModule,
-        MarketModule.register({
-          database: { url: 'postgresql://localhost/test' },
-        }),
-      ],
-    })
-      .overrideProvider(DATABASE_TOKEN)
-      .useValue(db)
-      .compile();
-
-    app = module.createNestApplication();
-    await app.init();
-
-    queryBus = module.get(QueryBus);
+    testSuit = await getTestSuit();
   });
 
   afterAll(async () => {
-    await app.close();
+    await testSuit?.app?.close();
   });
 
   beforeEach(async () => {
-    await db.execute('TRUNCATE TABLE ingredient RESTART IDENTITY');
+    const { db, clearDb } = testSuit;
+
+    // seed some data for testing
+    await clearDb();
     await db.execute(`
       INSERT INTO ingredient (name, description) VALUES
         ('salt', 'common seasoning'),
@@ -49,6 +28,7 @@ describe('FilterIngredients feature', () => {
   });
 
   it('should returns all ingredients when no search term', async () => {
+    const { queryBus } = testSuit;
     const result = await queryBus.execute<
       FilterIngredientsQuery,
       FilterIngredientsResult
@@ -59,6 +39,7 @@ describe('FilterIngredients feature', () => {
   });
 
   it('should find "salt" with fuzzy search "slt"', async () => {
+    const { queryBus } = testSuit;
     const result = await queryBus.execute<
       FilterIngredientsQuery,
       FilterIngredientsResult
@@ -69,6 +50,7 @@ describe('FilterIngredients feature', () => {
   });
 
   it('should find both "shallot" and "salmon" with "sl"', async () => {
+    const { queryBus } = testSuit;
     const result = await queryBus.execute<
       FilterIngredientsQuery,
       FilterIngredientsResult
@@ -81,6 +63,7 @@ describe('FilterIngredients feature', () => {
   });
 
   it('should return empty when no match', async () => {
+    const { queryBus } = testSuit;
     const result = await queryBus.execute<
       FilterIngredientsQuery,
       FilterIngredientsResult
@@ -91,6 +74,7 @@ describe('FilterIngredients feature', () => {
   });
 
   it('should respect skip/take pagination', async () => {
+    const { queryBus } = testSuit;
     const result = await queryBus.execute<
       FilterIngredientsQuery,
       FilterIngredientsResult
@@ -101,6 +85,7 @@ describe('FilterIngredients feature', () => {
   });
 
   it('should return correct total even when paginated', async () => {
+    const { queryBus } = testSuit;
     const result = await queryBus.execute<
       FilterIngredientsQuery,
       FilterIngredientsResult

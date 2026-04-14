@@ -15,9 +15,6 @@
   "references": [
     {
       "path": "../../libs/utils/nestjs/tsconfig.lib.json"
-    },
-    {
-      "path": "../../libs/contexts/market/tsconfig.lib.json"
     }
   ]
 }

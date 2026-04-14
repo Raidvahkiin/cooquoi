@@ -13,9 +13,10 @@
     "tags": ["type:lib", "scope:bounded-context", "platform:nestjs"]
   },
   "scripts": {
-    "generate:test-schema": "drizzle-kit generate --config=src/__tests__/setup/drizzle.config.ts"
+    "generate:test-schema": "rimraf src/__tests__/setup/drizzle && drizzle-kit generate --config=drizzle-test.config.ts"
   },
   "dependencies": {
+    "@libs/core": "workspace:*",
     "@utils/nestjs": "workspace:*"
   },
   "devDependencies": {

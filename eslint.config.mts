@@ -61,7 +61,7 @@ const config: ConfigArray = [
             },
             {
               sourceTag: 'platform:nestjs',
-              onlyDependOnLibsWithTags: ['platform:nestjs', 'platform:node'],
+              onlyDependOnLibsWithTags: ['platform:nestjs', 'platform:node', 'platform:all'],
             },
             {
               sourceTag: 'platform:nextjs',

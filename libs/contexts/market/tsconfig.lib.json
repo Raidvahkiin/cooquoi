@@ -30,6 +30,9 @@
   "references": [
     {
       "path": "../../utils/nestjs/tsconfig.lib.json"
+    },
+    {
+      "path": "../../core/tsconfig.lib.json"
     }
   ]
 }
