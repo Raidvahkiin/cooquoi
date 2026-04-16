@@ -1,6 +1,6 @@
 import { date, pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
 
-export const ingredient = pgTable('ingredient', {
+export const ingredients = pgTable('ingredients', {
   id: uuid('id').primaryKey().defaultRandom(),
   name: varchar('name', { length: 255 }).notNull().unique(),
   description: text('description'),
@@ -11,7 +11,7 @@ export const ingredient = pgTable('ingredient', {
     .$onUpdateFn(() => new Date().toISOString()),
 });
 
-export type Ingredient = typeof ingredient.$inferSelect;
+export type Ingredient = typeof ingredients.$inferSelect;
 
 export class IngredientEntity {
   constructor(private readonly _state: Ingredient) {}

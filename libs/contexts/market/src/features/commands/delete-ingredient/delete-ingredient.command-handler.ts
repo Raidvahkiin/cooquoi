@@ -3,7 +3,7 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm/sql/expressions/conditions';
 import { DATABASE_TOKEN } from '../../../config';
-import { ingredient } from '../../../domain';
+import { ingredients } from '../../../domain';
 import { DeleteIngredientCommand } from './delete-ingredient.command';
 
 @CommandHandler(DeleteIngredientCommand)
@@ -14,6 +14,6 @@ export class DeleteIngredientCommandHandler
 
   async execute(command: DeleteIngredientCommand): Promise<void> {
     const { id } = command;
-    await this.db.delete(ingredient).where(eq(ingredient.id, id));
+    await this.db.delete(ingredients).where(eq(ingredients.id, id));
   }
 }

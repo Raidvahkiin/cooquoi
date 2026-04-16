@@ -1,24 +1,17 @@
-import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { PGlite } from '@electric-sql/pglite';
 import { drizzle } from 'drizzle-orm/pglite';
+import { PgliteDatabase } from 'drizzle-orm/pglite';
+import { migrate } from 'drizzle-orm/pglite/migrator';
+import { relations } from '../../domain/entities/relations';
 
-const MIGRATIONS_DIR = join(import.meta.dirname, '../setup/drizzle');
+export type PgliteDb = PgliteDatabase<Record<string, never>, typeof relations>;
 
-function loadMigrationsSql(): string {
-  const journal = JSON.parse(
-    readFileSync(join(MIGRATIONS_DIR, 'meta/_journal.json'), 'utf-8'),
-  ) as { entries: { tag: string }[] };
+export async function createPgliteDb(): Promise<PgliteDb> {
+  const db = drizzle({ connection: 'memory://', relations });
 
-  return journal.entries
-    .map(({ tag }) => readFileSync(join(MIGRATIONS_DIR, `${tag}.sql`), 'utf-8'))
-    .join('\n');
+  await migrate(db, {
+    migrationsFolder: join(import.meta.dirname, './drizzle'),
+  });
+
+  return db as PgliteDb;
 }
-
-export async function createPgliteDb() {
-  const client = new PGlite();
-  await client.exec(loadMigrationsSql());
-  return drizzle(client);
-}
-
-export type PgliteDb = Awaited<ReturnType<typeof createPgliteDb>>;

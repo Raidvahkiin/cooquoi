@@ -3,7 +3,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { eq } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DATABASE_TOKEN } from '../../../config';
-import { type Ingredient, ingredient } from '../../../domain';
+import { type Ingredient, ingredients } from '../../../domain';
 import { GetIngredientQuery } from './get-ingredient.query';
 
 @QueryHandler(GetIngredientQuery)
@@ -15,8 +15,8 @@ export class GetIngredientHandler
   async execute(query: GetIngredientQuery): Promise<Ingredient | null> {
     const [row] = await this.db
       .select()
-      .from(ingredient)
-      .where(eq(ingredient.id, query.id));
+      .from(ingredients)
+      .where(eq(ingredients.id, query.id));
 
     return row ?? null;
   }

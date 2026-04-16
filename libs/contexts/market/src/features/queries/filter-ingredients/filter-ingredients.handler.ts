@@ -3,7 +3,7 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { asc, desc, ilike, sql } from 'drizzle-orm';
 import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DATABASE_TOKEN } from '../../../config';
-import { type Ingredient, ingredient } from '../../../domain';
+import { type Ingredient, ingredients } from '../../../domain';
 import { FilterIngredientsQuery } from './filter-ingredients.query';
 
 export interface FilterIngredientsResult {
@@ -12,10 +12,10 @@ export interface FilterIngredientsResult {
 }
 
 const SORTABLE_COLUMNS = {
-  name: ingredient.name,
-  description: ingredient.description,
-  createdAt: ingredient.createdAt,
-  updatedAt: ingredient.updatedAt,
+  name: ingredients.name,
+  description: ingredients.description,
+  createdAt: ingredients.createdAt,
+  updatedAt: ingredients.updatedAt,
 } as const;
 
 type SortableField = keyof typeof SORTABLE_COLUMNS;
@@ -31,7 +31,7 @@ export class FilterIngredientsHandler
   ): Promise<FilterIngredientsResult> {
     const { skip, take, search, sort } = query.params;
     const where = search
-      ? ilike(ingredient.name, `%${search.split('').join('%')}%`)
+      ? ilike(ingredients.name, `%${search.split('').join('%')}%`)
       : undefined;
 
     const orderBy =
@@ -39,19 +39,19 @@ export class FilterIngredientsHandler
         ? sort.order === 'desc'
           ? desc(SORTABLE_COLUMNS[sort.field as SortableField])
           : asc(SORTABLE_COLUMNS[sort.field as SortableField])
-        : asc(ingredient.name);
+        : asc(ingredients.name);
 
     const [items, [{ count }]] = await Promise.all([
       this.db
         .select()
-        .from(ingredient)
+        .from(ingredients)
         .where(where)
         .orderBy(orderBy)
         .offset(skip)
         .limit(take),
       this.db
         .select({ count: sql<number>`cast(count(*) as int)` })
-        .from(ingredient)
+        .from(ingredients)
         .where(where),
     ]);
 

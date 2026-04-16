@@ -14,17 +14,8 @@ describe('FilterIngredients feature', () => {
   });
 
   beforeEach(async () => {
-    const { db, clearDb } = testSuit;
-
-    // seed some data for testing
-    await clearDb();
-    await db.execute(`
-      INSERT INTO ingredient (name, description) VALUES
-        ('salt', 'common seasoning'),
-        ('shallot', 'a mild onion'),
-        ('salmon', null),
-        ('pepper', 'spicy seasoning')
-    `);
+    const { resetDb } = testSuit;
+    await resetDb();
   });
 
   it('should returns all ingredients when no search term', async () => {

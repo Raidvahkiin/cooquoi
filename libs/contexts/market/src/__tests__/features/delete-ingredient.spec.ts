@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { ingredient } from '../../domain';
+import { ingredients } from '../../domain';
 import { DeleteIngredientCommand } from '../../features';
 import { getTestSuit } from '../setup';
 
@@ -15,17 +15,8 @@ describe('DeleteIngredient feature', () => {
   });
 
   beforeEach(async () => {
-    const { db, clearDb } = testSuit;
-
-    // seed some data for testing
-    await clearDb();
-    await db.execute(`
-      INSERT INTO ingredient (name, description) VALUES
-        ('salt', 'common seasoning'),
-        ('shallot', 'a mild onion'),
-        ('salmon', null),
-        ('pepper', 'spicy seasoning')
-    `);
+    const { resetDb } = testSuit;
+    await resetDb();
   });
 
   it('should delete an ingredient', async () => {
@@ -35,8 +26,8 @@ describe('DeleteIngredient feature', () => {
     const id = (
       await db
         .select()
-        .from(ingredient)
-        .where(eq(ingredient.name, ingredientToDelete))
+        .from(ingredients)
+        .where(eq(ingredients.name, ingredientToDelete))
     )[0].id;
 
     // act
@@ -45,8 +36,8 @@ describe('DeleteIngredient feature', () => {
     // assert
     const rows = await db
       .select()
-      .from(ingredient)
-      .where(eq(ingredient.id, id));
+      .from(ingredients)
+      .where(eq(ingredients.id, id));
 
     expect(rows).toHaveLength(0);
   });
@@ -60,7 +51,7 @@ describe('DeleteIngredient feature', () => {
     await commandBus.execute(new DeleteIngredientCommand(nonExistentId));
 
     // assert - should not throw and all existing ingredients should remain
-    const rows = await db.select().from(ingredient);
+    const rows = await db.select().from(ingredients);
     expect(rows).toHaveLength(4);
   });
 });
