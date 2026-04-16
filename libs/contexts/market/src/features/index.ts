@@ -1,8 +1,13 @@
+// commands
 export * from './commands/create-ingredient/create-ingredient.command';
 export * from './commands/create-ingredient/create-ingredient.dto';
 export * from './commands/create-ingredient/create-ingredient.handler';
 export * from './commands/delete-ingredient/delete-ingredient.command';
 export * from './commands/delete-ingredient/delete-ingredient.command-handler';
+export * from './commands/create-product/create-product.command';
+export * from './commands/create-product/create-product.command-handler';
+
+// queries
 export * from './queries/get-ingredient/get-ingredient.query';
 export * from './queries/get-ingredient/get-ingredient.handler';
 export * from './queries/filter-ingredients/filter-ingredients.query';

@@ -7,6 +7,7 @@ import {
 } from './config';
 import {
   CreateIngredientHandler,
+  CreateProductCommandHandler,
   DeleteIngredientCommandHandler,
   FilterIngredientsHandler,
   GetIngredientHandler,
@@ -15,6 +16,7 @@ import {
 const commandHandlers = [
   CreateIngredientHandler,
   DeleteIngredientCommandHandler,
+  CreateProductCommandHandler,
 ];
 const queryHandlers = [GetIngredientHandler, FilterIngredientsHandler];
 

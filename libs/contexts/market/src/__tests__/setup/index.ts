@@ -5,7 +5,7 @@ import { ingredients } from '../../domain';
 import { products } from '../../domain/entities/product.entity';
 import { productIngredients } from '../../domain/entities/relations';
 import { MarketModule } from '../../market.module';
-import { createPgliteDb, PgliteDb } from './pglite';
+import { PgliteDb, createPgliteDb } from './pglite';
 
 export async function getTestSuit() {
   const db: PgliteDb = await createPgliteDb();
@@ -67,5 +67,5 @@ export async function getTestSuit() {
     ]);
   }
 
-  return { db, module, commandBus, queryBus, clearDb, resetDb };
+  return { app, db, module, commandBus, queryBus, clearDb, resetDb };
 }
