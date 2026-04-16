@@ -2,7 +2,7 @@ import { Command } from '@nestjs/cqrs';
 import { EnableLogging } from '@utils/nestjs/cqrs';
 import { Product } from '../../../domain';
 
-interface CreateProductCommandPayload {
+export interface CreateProductCommandPayload {
   name: string;
   description?: string;
   ingredients: string[];

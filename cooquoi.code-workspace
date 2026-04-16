@@ -1,0 +1,32 @@
+{
+	"folders": [
+		{
+			"name": ".github",
+			"path": ".github"
+		},
+		{
+			"name": "docker",
+			"path": "docker"
+		},
+		{
+			"name": "scripts",
+			"path": "scripts"
+		},
+		{
+			"name": "apps",
+			"path": "apps"
+		},
+		{
+			"name": "contexts",
+			"path": "libs/contexts"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"**/node_modules": false,
+			"**/dist": true,
+			"**/tsconfig*.json": true,
+			"**/vite.config.mts": true
+		}
+	}
+}

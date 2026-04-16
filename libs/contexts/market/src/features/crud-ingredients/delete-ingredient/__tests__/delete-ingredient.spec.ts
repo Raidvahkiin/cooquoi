@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
-import { ingredients } from '../../domain';
-import { DeleteIngredientCommand } from '../../features';
-import { getTestSuit } from '../setup';
+import { getTestSuit } from '../../../../__tests__/setup';
+import { ingredients } from '../../../../domain';
+import { DeleteIngredientCommand } from '../delete-ingredient.command';
 
 describe('DeleteIngredient feature', () => {
   let testSuit: Awaited<ReturnType<typeof getTestSuit>>;

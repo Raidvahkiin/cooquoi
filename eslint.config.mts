@@ -69,6 +69,7 @@ const config: ConfigArray = [
                 'platform:nextjs',
                 'platform:node',
                 'platform:react',
+                'platform:all',
               ],
             },
           ],

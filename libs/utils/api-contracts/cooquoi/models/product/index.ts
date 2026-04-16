@@ -1,0 +1,13 @@
+export type Product = {
+  id: string;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type CreateProductBody = {
+  name: string;
+  description?: string;
+  ingredients: string[];
+};

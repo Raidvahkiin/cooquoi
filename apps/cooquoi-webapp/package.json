@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "@utils/react": "workspace:*",
+    "@utils/api-contracts": "workspace:*",
     "ag-grid-community": "^35.0.0",
     "ag-grid-react": "^35.0.0",
     "class-variance-authority": "^0.7.1",

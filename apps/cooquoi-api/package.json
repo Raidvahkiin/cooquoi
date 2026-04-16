@@ -22,9 +22,14 @@
   },
   "dependencies": {
     "@cooquoi/market": "workspace:*",
+    "@utils/api-contracts": "workspace:*",
     "@utils/nestjs": "workspace:*",
+    "@nestjs/common": "^11.1.19",
     "@nestjs/config": "^4.0.4",
-    "@nestjs/platform-fastify": "^11.0.1"
+    "@nestjs/core": "^11.1.19",
+    "@nestjs/cqrs": "^11.0.3",
+    "@nestjs/platform-fastify": "^11.0.1",
+    "@nestjs/swagger": "^11.3.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^11.0.0",

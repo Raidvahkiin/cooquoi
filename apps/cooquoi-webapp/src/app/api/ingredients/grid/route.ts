@@ -1,4 +1,4 @@
-import { backendClient } from '@/services';
+import { cooquoiClient } from '@/services';
 import { NextResponse } from 'next/server';
 
 type AgGridFilterModel = Record<string, { filter?: string }>;
@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   const take = endRow - startRow;
   const firstSort = body.sortModel?.[0];
 
-  const result = await backendClient.filterIngredients({
+  const result = await cooquoiClient.ingredients.getMany({
     skip: startRow,
     take,
     search,

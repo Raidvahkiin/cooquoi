@@ -1,4 +1,4 @@
-import { backendClient } from '@/services';
+import { cooquoiClient } from '@/services';
 import type { CreateIngredientDto } from '@/types/ingredient';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,7 +8,11 @@ export async function GET(request: NextRequest) {
   const take = Number(searchParams.get('take') ?? 20);
   const search = searchParams.get('search') ?? undefined;
 
-  const result = await backendClient.filterIngredients({ skip, take, search });
+  const result = await cooquoiClient.ingredients.getMany({
+    skip,
+    take,
+    search,
+  });
   return NextResponse.json(result);
 }
 
@@ -19,7 +23,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'name is required' }, { status: 400 });
   }
 
-  const created = await backendClient.createIngredient({
+  const created = await cooquoiClient.ingredients.create({
     name: dto.name.trim(),
     description: dto.description,
   });

@@ -1,12 +1,14 @@
 import { Controller, Get } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  HealthEndpoints,
+  HealthStatus,
+  HealthStatusResponse,
+} from '@utils/api-contracts/cooquoi';
 
-@ApiTags('health')
 @Controller('health')
-export class HealthController {
-  @ApiOperation({ summary: 'Health check' })
+export class HealthController implements HealthEndpoints {
   @Get()
-  check(): { status: string } {
-    return { status: 'ok' };
+  async status(): Promise<HealthStatusResponse> {
+    return { status: HealthStatus.OK };
   }
 }

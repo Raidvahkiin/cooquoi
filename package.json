@@ -6,7 +6,9 @@
     "nx:typecheck": "nx run-many --target=typecheck",
     "nx:lint": "nx run-many --target=lint",
     "nx:test": "nx run-many --target=test",
-    "nx:format": "biome format . --write"
+    "nx:format": "biome format . --write",
+    "dev:api": "nx run @cooquoi/api:start:dev",
+    "dev:webapp": "nx dev @cooquoi/webapp"
   },
   "private": true,
   "dependencies": {

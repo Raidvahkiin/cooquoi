@@ -1,0 +1,30 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"outDir": "dist",
+		"emitDeclarationOnly": true,
+		"declaration": true,
+		"tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo"
+	},
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+		"dist",
+		"dist/**",
+		"jest.config.ts",
+		"jest.config.cts",
+		"**/*.spec.ts",
+		"**/*.test.ts",
+		"vite.config.ts",
+		"vite.config.mts",
+		"vitest.config.ts",
+		"vitest.config.mts",
+		"**/*.test.tsx",
+		"**/*.spec.tsx",
+		"**/*.test.js",
+		"**/*.spec.js",
+		"**/*.test.jsx",
+		"**/*.spec.jsx"
+	]
+}

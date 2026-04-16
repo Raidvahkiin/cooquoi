@@ -1,0 +1,15 @@
+{
+  "name": "@utils/api-contracts",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    "./cooquoi": {
+      "types": "./cooquoi/index.ts",
+      "import": "./cooquoi/index.ts",
+      "default": "./cooquoi/index.ts"
+    }
+  },
+  "nx": {
+    "tags": ["type:lib", "scope:utility", "platform:all"]
+  }
+}

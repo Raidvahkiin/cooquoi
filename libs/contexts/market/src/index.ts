@@ -1,12 +1,14 @@
 export { MarketModule } from './market.module';
 export type { ModuleConfig } from './config';
-export type { Ingredient } from './domain';
+export type { Ingredient, Product } from './domain';
 export {
-  DeleteIngredientCommand,
   CreateIngredientCommand,
-  CreateIngredientDto,
+  type CreateIngredientDto,
   GetIngredientQuery,
   FilterIngredientsQuery,
   FilterIngredientsDto,
+  DeleteIngredientCommand,
   type FilterIngredientsResult,
+  CreateProductCommand,
+  type CreateProductCommandPayload,
 } from './features';
