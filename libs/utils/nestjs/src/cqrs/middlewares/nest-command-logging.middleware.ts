@@ -8,6 +8,7 @@ import {
   ICommandMiddlewareHandler,
 } from './command-handler.middleware';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function maskSensitiveData(obj: any, sensitiveKeys: string[]) {
   if (typeof obj === 'object' && obj !== null) {
     for (const key in obj) {

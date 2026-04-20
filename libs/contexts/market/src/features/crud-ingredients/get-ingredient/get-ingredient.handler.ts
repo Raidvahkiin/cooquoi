@@ -1,8 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { eq } from 'drizzle-orm';
-import type { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { DATABASE_TOKEN } from '../../../config';
+import { DATABASE_TOKEN, type MarketDatabase } from '../../../config';
 import { type Ingredient, ingredients } from '../../../domain';
 import { GetIngredientQuery } from './get-ingredient.query';
 
@@ -10,7 +9,7 @@ import { GetIngredientQuery } from './get-ingredient.query';
 export class GetIngredientHandler
   implements IQueryHandler<GetIngredientQuery, Ingredient | null>
 {
-  constructor(@Inject(DATABASE_TOKEN) private readonly db: NodePgDatabase) {}
+  constructor(@Inject(DATABASE_TOKEN) private readonly db: MarketDatabase) {}
 
   async execute(query: GetIngredientQuery): Promise<Ingredient | null> {
     const [row] = await this.db

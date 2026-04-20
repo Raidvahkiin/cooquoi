@@ -15,6 +15,8 @@ export const productIngredients = pgTable('product_ingredients', {
 
 export type ProductIngredient = typeof productIngredients.$inferSelect;
 
+export const schema = { products, ingredients, offers, productIngredients };
+
 export const relations = defineRelations(
   {
     products,

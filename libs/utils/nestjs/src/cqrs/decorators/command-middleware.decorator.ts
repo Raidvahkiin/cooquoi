@@ -1,4 +1,4 @@
-import { Type, InjectableOptions, Injectable } from '@nestjs/common';
+import { Injectable, InjectableOptions, Type } from '@nestjs/common';
 import { ICommand } from '@nestjs/cqrs';
 
 import { CommandMiddlewareMetadata } from './command-middleware.decorator.metadata';
@@ -18,6 +18,7 @@ export function CommandMiddleware<TCommand extends ICommand>(
   type: Type<TCommand>,
   options?: InjectableOptions,
 ): ClassDecorator {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (target: any) => {
     const metadata: CommandMiddlewareMetadata<TCommand> = {
       type,

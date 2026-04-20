@@ -1,8 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { inArray } from 'drizzle-orm';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres/driver';
-import { DATABASE_TOKEN } from '../../../config';
+import { DATABASE_TOKEN, type MarketDatabase } from '../../../config';
 import {
   Product,
   ingredients,
@@ -15,7 +14,7 @@ import { CreateProductCommand } from './create-product.command';
 export class CreateProductCommandHandler
   implements ICommandHandler<CreateProductCommand, Product>
 {
-  constructor(@Inject(DATABASE_TOKEN) private readonly db: NodePgDatabase) {}
+  constructor(@Inject(DATABASE_TOKEN) private readonly db: MarketDatabase) {}
 
   async execute(command: CreateProductCommand): Promise<Product> {
     const { name, description, ingredients: ingredientsIds } = command;

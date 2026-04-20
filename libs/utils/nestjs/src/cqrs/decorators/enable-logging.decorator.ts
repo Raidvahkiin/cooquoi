@@ -5,6 +5,7 @@ export interface EnableLoggingConfig {
 }
 
 export function EnableLogging(config?: EnableLoggingConfig): ClassDecorator {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (target: any) => {
     Reflect.defineMetadata(
       EnableLoggingDecoratorMetadata,

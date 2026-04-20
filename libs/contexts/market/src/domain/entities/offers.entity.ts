@@ -8,7 +8,6 @@ export const offers = pgTable(
     productId: uuid('product_id').notNull(),
     vendor: varchar('vendor', { length: 255 }).notNull(),
     price: priceColumn('price').notNull(),
-    ingredients: uuid('ingredients').array(),
     createdAt: date('created_at').notNull().defaultNow(),
     updatedAt: date('updated_at')
       .$onUpdateFn(() => new Date().toISOString())

@@ -3,10 +3,11 @@ import { ICommand } from '@nestjs/cqrs';
 
 import { _ICommandMiddlewareHandler } from '../middlewares';
 
-import { CommandMiddlewareMetadata } from './command-middleware.decorator.metadata';
 import { COMMAND_MIDDLEWARE } from './command-middleware.decorator';
+import { CommandMiddlewareMetadata } from './command-middleware.decorator.metadata';
 
 export const _getMiddlewareMetadata = <TCommand extends ICommand>(
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   ctor: Function,
 ): CommandMiddlewareMetadata<TCommand> | undefined => {
   return Reflect.getMetadata(COMMAND_MIDDLEWARE, ctor);

@@ -5,6 +5,7 @@ import {
   type ModuleConfig,
   moduleConfigSchema,
 } from './config';
+import { schema } from './domain';
 import {
   CreateIngredientHandler,
   CreateProductCommandHandler,
@@ -31,7 +32,7 @@ export class MarketModule {
       providers: [
         {
           provide: DATABASE_TOKEN,
-          useValue: drizzle(parsed.database.url),
+          useValue: drizzle(parsed.database.url, { schema }),
         },
         ...commandHandlers,
         ...queryHandlers,
