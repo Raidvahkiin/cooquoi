@@ -1,0 +1,214 @@
+{
+  "ingredients": [
+    { "name": "sel", "description": "Sel de mer commun" },
+    { "name": "sucre", "description": "Sucre de canne blanc" },
+    { "name": "farine de blé", "description": "Farine de blé T55" },
+    { "name": "beurre", "description": "Beurre doux de lait de vache" },
+    { "name": "chocolat noir", "description": "Cacao minimum 64%" },
+    { "name": "lait entier", "description": "Lait de vache entier pasteurisé" },
+    { "name": "œufs", "description": "Œufs de poules élevées en plein air" },
+    {
+      "name": "huile de tournesol",
+      "description": "Huile végétale de tournesol"
+    },
+    { "name": "levure chimique", "description": "Poudre à lever" },
+    { "name": "vanille", "description": "Extrait naturel de vanille bourbon" },
+    {
+      "name": "cacao en poudre",
+      "description": "Cacao maigre en poudre non sucré"
+    },
+    { "name": "noisette", "description": "Noisettes entières grillées" },
+    {
+      "name": "lait de coco",
+      "description": "Lait de coco 18% de matières grasses"
+    },
+    { "name": "poivre noir", "description": "Poivre noir moulu" }
+  ],
+  "products": [
+    {
+      "name": "Beurre Président Doux 250g",
+      "description": "Beurre doux AOP Normandie, issu de lait de vaches normandes",
+      "ingredients": ["beurre"],
+      "offers": [
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "2.49",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Carrefour Le Plessis-Pâté",
+          "priceAmount": "2.19",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Leclerc Villejuif",
+          "priceAmount": "1.99",
+          "priceCurrency": "EUR"
+        }
+      ]
+    },
+    {
+      "name": "Sucre Cristallisé Daddy 1kg",
+      "description": "Sucre cristallisé de canne, idéal pour la pâtisserie",
+      "ingredients": ["sucre"],
+      "offers": [
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "1.29",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Franprix Paris 13e",
+          "priceAmount": "1.39",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Leclerc Villejuif",
+          "priceAmount": "1.09",
+          "priceCurrency": "EUR"
+        }
+      ]
+    },
+    {
+      "name": "Tablette Chocolat Noir Lindt 70% 100g",
+      "description": "Chocolat noir intense 70% cacao, origine Équateur",
+      "ingredients": ["chocolat noir", "sucre", "beurre", "vanille"],
+      "offers": [
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "2.99",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Carrefour Le Plessis-Pâté",
+          "priceAmount": "2.79",
+          "priceCurrency": "EUR"
+        }
+      ]
+    },
+    {
+      "name": "Farine de Blé T55 Francine 1kg",
+      "description": "Farine fluide type 55, pour toutes vos pâtisseries et pains maison",
+      "ingredients": ["farine de blé"],
+      "offers": [
+        {
+          "vendor": "Leclerc Villejuif",
+          "priceAmount": "0.89",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "0.99",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Franprix Paris 13e",
+          "priceAmount": "1.05",
+          "priceCurrency": "EUR"
+        }
+      ]
+    },
+    {
+      "name": "Pâte à Tartiner Noisettes Nutella 400g",
+      "description": "Pâte à tartiner aux noisettes et au cacao, l'originale",
+      "ingredients": [
+        "sucre",
+        "huile de tournesol",
+        "noisette",
+        "cacao en poudre",
+        "lait entier",
+        "œufs",
+        "vanille"
+      ],
+      "offers": [
+        {
+          "vendor": "Carrefour Le Plessis-Pâté",
+          "priceAmount": "3.49",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "3.79",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Leclerc Villejuif",
+          "priceAmount": "3.19",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Franprix Paris 13e",
+          "priceAmount": "3.89",
+          "priceCurrency": "EUR"
+        }
+      ]
+    },
+    {
+      "name": "Lait Demi-Écrémé Lactel 1L",
+      "description": "Lait demi-écrémé stérilisé UHT, apport en calcium",
+      "ingredients": ["lait entier"],
+      "offers": [
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "1.05",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Carrefour Le Plessis-Pâté",
+          "priceAmount": "0.99",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Leclerc Villejuif",
+          "priceAmount": "0.89",
+          "priceCurrency": "EUR"
+        }
+      ]
+    },
+    {
+      "name": "Curry de Lentilles Corail au Lait de Coco Bio 300g",
+      "description": "Plat cuisiné bio lentilles corail, lait de coco et épices douces",
+      "ingredients": ["lait de coco", "sel", "poivre noir"],
+      "offers": [
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "3.99",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Franprix Paris 13e",
+          "priceAmount": "4.29",
+          "priceCurrency": "EUR"
+        }
+      ]
+    },
+    {
+      "name": "Mélange Spécial Gâteau Moelleux au Chocolat Alsa 290g",
+      "description": "Préparation pour gâteau moelleux au chocolat, prêt en 30 minutes",
+      "ingredients": [
+        "farine de blé",
+        "sucre",
+        "cacao en poudre",
+        "levure chimique",
+        "sel"
+      ],
+      "offers": [
+        {
+          "vendor": "Leclerc Villejuif",
+          "priceAmount": "2.29",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Monoprix Vitry",
+          "priceAmount": "2.49",
+          "priceCurrency": "EUR"
+        },
+        {
+          "vendor": "Carrefour Le Plessis-Pâté",
+          "priceAmount": "2.39",
+          "priceCurrency": "EUR"
+        }
+      ]
+    }
+  ]
+}

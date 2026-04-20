@@ -13,6 +13,7 @@ import {
   FilterIngredientsHandler,
   FilterProductsHandler,
   GetIngredientHandler,
+  MarketSeederService,
 } from './features';
 
 const commandHandlers = [
@@ -41,7 +42,9 @@ export class MarketModule {
         },
         ...commandHandlers,
         ...queryHandlers,
+        MarketSeederService,
       ],
+      exports: [MarketSeederService],
     };
   }
 }

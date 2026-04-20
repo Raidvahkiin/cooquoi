@@ -16,3 +16,7 @@ export * from './crud-ingredients/filter-ingredients/filter-ingredients.handler'
 export * from './crud-products/filter-products/filter-products.query';
 export * from './crud-products/filter-products/filter-products.dto';
 export * from './crud-products/filter-products/filter-products.handler';
+
+// seeding
+export * from './seeding/market-seeder.service';
+export * from './seeding/market-seeder.types';

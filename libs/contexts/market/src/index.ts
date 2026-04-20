@@ -1,6 +1,6 @@
 export { MarketModule } from './market.module';
 export type { ModuleConfig } from './config';
-export type { Ingredient, Product } from './domain';
+export type { Ingredient, Offer, Product } from './domain';
 export {
   CreateIngredientCommand,
   type CreateIngredientDto,
@@ -15,4 +15,6 @@ export {
   FilterProductsDto,
   type FilterProductsResult,
   type ProductWithOffers,
+  MarketSeederService,
+  type SeedData,
 } from './features';
