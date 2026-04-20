@@ -17,9 +17,8 @@ export const COMMAND_MIDDLEWARE = Symbol('CommandMiddleware');
 export function CommandMiddleware<TCommand extends ICommand>(
   type: Type<TCommand>,
   options?: InjectableOptions,
-): ClassDecorator {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return (target: any) => {
+): (target: object) => void {
+  return (target: object) => {
     const metadata: CommandMiddlewareMetadata<TCommand> = {
       type,
     };
@@ -27,6 +26,6 @@ export function CommandMiddleware<TCommand extends ICommand>(
     // Define metadata for the command pipeline processor.
     Reflect.defineMetadata(COMMAND_MIDDLEWARE, metadata, target);
 
-    return Injectable(options)(target);
+    Injectable(options)(target as new (...args: unknown[]) => unknown);
   };
 }

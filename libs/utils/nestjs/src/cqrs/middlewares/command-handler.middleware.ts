@@ -20,7 +20,7 @@ export interface CommandMiddlewareContext<TCommand extends ICommand> {
  *
  * This interface defines the structure of a command middleware handler.
  */
-export type _ICommandMiddlewareHandler = {};
+export type _ICommandMiddlewareHandler = object;
 
 /**
  * {@link ICommandMiddlewareHandler} class

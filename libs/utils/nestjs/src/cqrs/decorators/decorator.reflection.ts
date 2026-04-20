@@ -7,8 +7,7 @@ import { COMMAND_MIDDLEWARE } from './command-middleware.decorator';
 import { CommandMiddlewareMetadata } from './command-middleware.decorator.metadata';
 
 export const _getMiddlewareMetadata = <TCommand extends ICommand>(
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-  ctor: Function,
+  ctor: object,
 ): CommandMiddlewareMetadata<TCommand> | undefined => {
   return Reflect.getMetadata(COMMAND_MIDDLEWARE, ctor);
 };
@@ -33,6 +32,6 @@ export const getMiddlewareMetadata = (
   return metadata;
 };
 
-export const middlewareMetadataExists = (ctor: Function): boolean => {
+export const middlewareMetadataExists = (ctor: object): boolean => {
   return Boolean(_getMiddlewareMetadata(ctor));
 };

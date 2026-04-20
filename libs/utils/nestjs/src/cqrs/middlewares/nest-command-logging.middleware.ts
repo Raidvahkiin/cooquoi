@@ -8,22 +8,21 @@ import {
   ICommandMiddlewareHandler,
 } from './command-handler.middleware';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function maskSensitiveData(obj: any, sensitiveKeys: string[]) {
+function maskSensitiveData(obj: unknown, sensitiveKeys: string[]): void {
   if (typeof obj === 'object' && obj !== null) {
-    for (const key in obj) {
-      if (Object.hasOwn(obj, key)) {
+    const record = obj as Record<string, unknown>;
+    for (const key in record) {
+      if (Object.hasOwn(record, key)) {
         if (
           sensitiveKeys.map((k) => k.toLowerCase()).includes(key.toLowerCase())
         ) {
-          obj[key] = '***';
-        } else if (typeof obj[key] === 'object' && obj[key] !== null) {
-          maskSensitiveData(obj[key], sensitiveKeys);
+          record[key] = '***';
+        } else if (typeof record[key] === 'object' && record[key] !== null) {
+          maskSensitiveData(record[key], sensitiveKeys);
         }
       }
     }
   }
-  return obj;
 }
 
 @CommandMiddleware(Command)
@@ -37,12 +36,12 @@ export class NestCommandLoggerMiddleware
     const command = ctx.command;
 
     if (EnableLoggingDecorator.existIn(command)) {
-      const commandDetail = JSON.stringify(
-        maskSensitiveData(
-          structuredClone(command),
-          EnableLoggingDecorator.getConfigFrom(command).ignore ?? [],
-        ),
+      const clonedCommand = structuredClone(command);
+      maskSensitiveData(
+        clonedCommand,
+        EnableLoggingDecorator.getConfigFrom(command).ignore ?? [],
       );
+      const commandDetail = JSON.stringify(clonedCommand);
       Logger.debug(
         `[${ctx.id} - ${command.constructor.name}] Executing with params: ${commandDetail}}`,
       );
