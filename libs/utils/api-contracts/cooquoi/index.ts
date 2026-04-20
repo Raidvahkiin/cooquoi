@@ -4,7 +4,7 @@ export type {
   CreateIngredientBody,
   CreateIngredientResponse,
 } from './models';
-export type { Product, CreateProductBody } from './models';
+export type { Product, ProductWithOffers, CreateProductBody } from './models';
 export type { FilterResult, FilterParams } from './models';
 export { HealthStatus, type HealthStatusResponse } from './models';
 

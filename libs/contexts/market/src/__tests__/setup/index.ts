@@ -1,7 +1,7 @@
 import { CommandBus, CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 import { DATABASE_TOKEN } from '../../config';
-import { ingredients } from '../../domain';
+import { ingredients, offers } from '../../domain';
 import { products } from '../../domain/entities/product.entity';
 import { productIngredients } from '../../domain/entities/relations';
 import { MarketModule } from '../../market.module';
@@ -30,7 +30,7 @@ export async function getTestSuit() {
 
   async function clearDb() {
     await db.execute(
-      'TRUNCATE TABLE product_ingredients, ingredients, products CASCADE',
+      'TRUNCATE TABLE product_ingredients, offers, ingredients, products CASCADE',
     );
   }
 
@@ -64,6 +64,39 @@ export async function getTestSuit() {
       { productId: greaterSalmon.id, ingredientId: byName.salmon.id },
       { productId: greaterSalmon.id, ingredientId: byName.shallot.id },
       { productId: spicyPepper.id, ingredientId: byName.pepper.id },
+    ]);
+
+    await db.insert(offers).values([
+      {
+        productId: superSalmon.id,
+        vendor: 'VendorA',
+        priceAmount: '12.99',
+        priceCurrency: 'EUR',
+      },
+      {
+        productId: superSalmon.id,
+        vendor: 'VendorB',
+        priceAmount: '9.99',
+        priceCurrency: 'EUR',
+      },
+      {
+        productId: superSalmon.id,
+        vendor: 'VendorC',
+        priceAmount: '15.00',
+        priceCurrency: 'EUR',
+      },
+      {
+        productId: greaterSalmon.id,
+        vendor: 'VendorA',
+        priceAmount: '8.50',
+        priceCurrency: 'EUR',
+      },
+      {
+        productId: greaterSalmon.id,
+        vendor: 'VendorB',
+        priceAmount: '11.00',
+        priceCurrency: 'EUR',
+      },
     ]);
   }
 

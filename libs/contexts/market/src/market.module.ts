@@ -11,6 +11,7 @@ import {
   CreateProductCommandHandler,
   DeleteIngredientCommandHandler,
   FilterIngredientsHandler,
+  FilterProductsHandler,
   GetIngredientHandler,
 } from './features';
 
@@ -19,7 +20,11 @@ const commandHandlers = [
   DeleteIngredientCommandHandler,
   CreateProductCommandHandler,
 ];
-const queryHandlers = [GetIngredientHandler, FilterIngredientsHandler];
+const queryHandlers = [
+  GetIngredientHandler,
+  FilterIngredientsHandler,
+  FilterProductsHandler,
+];
 
 @Module({})
 export class MarketModule {

@@ -11,4 +11,8 @@ export {
   type FilterIngredientsResult,
   CreateProductCommand,
   type CreateProductCommandPayload,
+  FilterProductsQuery,
+  FilterProductsDto,
+  type FilterProductsResult,
+  type ProductWithOffers,
 } from './features';

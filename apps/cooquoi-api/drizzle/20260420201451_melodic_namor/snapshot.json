@@ -1,14 +1,20 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "a098edcd-daab-4b05-aeb0-72ea78b6f895",
+  "id": "490a577c-c369-49c7-8605-1fdba72fa918",
   "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
+    "b1f7989b-1559-421b-ac59-476dcaceeb81"
   ],
   "ddl": [
     {
       "isRlsEnabled": false,
       "name": "ingredients",
+      "entityType": "tables",
+      "schema": "public"
+    },
+    {
+      "isRlsEnabled": false,
+      "name": "offers",
       "entityType": "tables",
       "schema": "public"
     },
@@ -88,6 +94,97 @@
       "entityType": "columns",
       "schema": "public",
       "table": "ingredients"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "gen_random_uuid()",
+      "generated": null,
+      "identity": null,
+      "name": "id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "offers"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "product_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "offers"
+    },
+    {
+      "type": "varchar(255)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "vendor",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "offers"
+    },
+    {
+      "type": "numeric(12,2)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "price_amount",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "offers"
+    },
+    {
+      "type": "varchar(3)",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "price_currency",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "offers"
+    },
+    {
+      "type": "date",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "created_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "offers"
+    },
+    {
+      "type": "date",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "name": "updated_at",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "offers"
     },
     {
       "type": "uuid",
@@ -229,10 +326,32 @@
         "id"
       ],
       "nameExplicit": false,
+      "name": "offers_pkey",
+      "schema": "public",
+      "table": "offers",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
       "name": "products_pkey",
       "schema": "public",
       "table": "products",
       "entityType": "pks"
+    },
+    {
+      "nameExplicit": true,
+      "columns": [
+        "product_id",
+        "vendor"
+      ],
+      "nullsNotDistinct": false,
+      "name": "offers_product_vendor_unique",
+      "entityType": "uniques",
+      "schema": "public",
+      "table": "offers"
     },
     {
       "nameExplicit": false,
@@ -257,5 +376,7 @@
       "entityType": "uniques"
     }
   ],
-  "renames": []
+  "renames": [
+    "public.offers.price->public.offers.price_currency"
+  ]
 }

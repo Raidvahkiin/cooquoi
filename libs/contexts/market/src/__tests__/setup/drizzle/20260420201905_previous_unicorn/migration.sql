@@ -6,6 +6,17 @@ CREATE TABLE "ingredients" (
 	"updated_at" date DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
+CREATE TABLE "offers" (
+	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+	"product_id" uuid NOT NULL,
+	"vendor" varchar(255) NOT NULL,
+	"price_amount" numeric(12,2) NOT NULL,
+	"price_currency" varchar(3) NOT NULL,
+	"created_at" date DEFAULT now() NOT NULL,
+	"updated_at" date DEFAULT now() NOT NULL,
+	CONSTRAINT "offers_product_vendor_unique" UNIQUE("product_id","vendor")
+);
+--> statement-breakpoint
 CREATE TABLE "products" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"name" varchar(255) NOT NULL UNIQUE,
@@ -20,4 +31,5 @@ CREATE TABLE "product_ingredients" (
 );
 --> statement-breakpoint
 ALTER TABLE "product_ingredients" ADD CONSTRAINT "product_ingredients_product_id_products_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE;--> statement-breakpoint
-ALTER TABLE "product_ingredients" ADD CONSTRAINT "product_ingredients_ingredient_id_ingredients_id_fkey" FOREIGN KEY ("ingredient_id") REFERENCES "ingredients"("id") ON DELETE CASCADE;
+ALTER TABLE "product_ingredients" ADD CONSTRAINT "product_ingredients_ingredient_id_ingredients_id_fkey" FOREIGN KEY ("ingredient_id") REFERENCES "ingredients"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "offers" ADD CONSTRAINT "offers_product_id_products_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE;
