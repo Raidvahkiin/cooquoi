@@ -1,5 +1,5 @@
 import { ComponentPropsWithoutRef } from 'react';
-import { cn } from '../../utlis/class-name.util';
+import { cn } from '../../utils/class-name.util';
 
 export type TrashIconProps = ComponentPropsWithoutRef<'svg'>;
 

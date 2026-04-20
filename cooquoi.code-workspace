@@ -19,14 +19,19 @@
 		{
 			"name": "contexts",
 			"path": "libs/contexts"
+		},
+		{
+			"path": "libs/utils"
 		}
 	],
 	"settings": {
 		"files.exclude": {
-			"**/node_modules": false,
+			"**/node_modules": true,
 			"**/dist": true,
 			"**/tsconfig*.json": true,
-			"**/vite.config.mts": true
+			"**/vite.config.*": true,
+			"**/.storybook": true,
+			"**/out-tsc": true,
 		}
 	}
 }
