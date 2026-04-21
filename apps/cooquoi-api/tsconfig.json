@@ -22,9 +22,4 @@
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "types": ["vitest/globals", "node"]
   },
-  "references": [
-    {
-      "path": "../../libs/utils/nestjs"
-    }
-  ]
 }

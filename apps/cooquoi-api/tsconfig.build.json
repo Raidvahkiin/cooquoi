@@ -12,9 +12,4 @@
     "vite.config.ts",
     "vite.config.e2e.mts"
   ],
-  "references": [
-    {
-      "path": "../../libs/utils/nestjs/tsconfig.lib.json"
-    }
-  ]
 }
