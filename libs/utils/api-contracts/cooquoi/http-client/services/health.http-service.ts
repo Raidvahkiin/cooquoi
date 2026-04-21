@@ -1,12 +1,11 @@
-import type { HealthEndpoints } from '../../interfaces';
-import { HealthStatus, HealthStatusResponse } from '../../models/health';
+import { HealthStatus } from '../../models/health';
 
-export class HealthClient implements HealthEndpoints {
+export class HealthClient {
   constructor(private readonly baseUrl: string) {}
 
-  async status(): Promise<HealthStatusResponse> {
+  async status(): Promise<HealthStatus> {
     const res = await fetch(`${this.baseUrl}/health`);
     const data = (await res.json()) as { status: string };
-    return { status: new HealthStatus(data.status) };
+    return HealthStatus.fromString(data.status);
   }
 }

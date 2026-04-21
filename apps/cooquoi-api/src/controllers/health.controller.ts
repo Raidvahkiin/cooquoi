@@ -9,6 +9,6 @@ import {
 export class HealthController implements HealthEndpoints {
   @Get()
   async status(): Promise<HealthStatusResponse> {
-    return { status: HealthStatus.OK };
+    return { status: HealthStatus.OK.value };
   }
 }
