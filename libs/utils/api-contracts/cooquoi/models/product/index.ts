@@ -16,7 +16,10 @@ export type Product = {
   updatedAt: string;
 };
 
-export type ProductWithOffers = Product & { offers: Offer[] };
+export type ProductWithOffers = Product & {
+  offers: Offer[];
+  ingredients: string[];
+};
 
 export type CreateProductBody = {
   name: string;

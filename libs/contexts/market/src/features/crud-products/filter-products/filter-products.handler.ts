@@ -22,7 +22,10 @@ import {
 } from '../../../domain';
 import { FilterProductsQuery } from './filter-products.query';
 
-export type ProductWithOffers = Product & { offers: Offer[] };
+export type ProductWithOffers = Product & {
+  offers: Offer[];
+  ingredients: string[];
+};
 
 export interface FilterProductsResult {
   items: ProductWithOffers[];
@@ -113,6 +116,27 @@ export class FilterProductsHandler
       return { items: [], total: count };
     }
 
+    const productIds = productRows.map((p) => p.id);
+
+    const ingredientRows = await this.db
+      .select({
+        productId: productIngredients.productId,
+        name: ingredients.name,
+      })
+      .from(productIngredients)
+      .innerJoin(
+        ingredients,
+        eq(productIngredients.ingredientId, ingredients.id),
+      )
+      .where(inArray(productIngredients.productId, productIds));
+
+    const ingredientsByProductId = new Map<string, string[]>();
+    for (const row of ingredientRows) {
+      const list = ingredientsByProductId.get(row.productId) ?? [];
+      list.push(row.name);
+      ingredientsByProductId.set(row.productId, list);
+    }
+
     const offerRows =
       maxOffers !== undefined
         ? await this.db
@@ -120,10 +144,7 @@ export class FilterProductsHandler
             .from(offers)
             .where(
               and(
-                inArray(
-                  offers.productId,
-                  productRows.map((p) => p.id),
-                ),
+                inArray(offers.productId, productIds),
                 sql`(
                   SELECT COUNT(*) FROM ${offers} o2
                   WHERE o2.product_id = ${offers.productId}
@@ -148,6 +169,7 @@ export class FilterProductsHandler
     const items: ProductWithOffers[] = productRows.map((p) => ({
       ...p,
       offers: offersByProductId.get(p.id) ?? [],
+      ingredients: ingredientsByProductId.get(p.id) ?? [],
     }));
 
     return { items, total: count };
