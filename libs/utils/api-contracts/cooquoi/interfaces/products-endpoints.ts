@@ -10,4 +10,5 @@ export interface ProductsEndpoints {
   getMany(
     params?: FilterParams & { maxOffers?: number },
   ): Promise<FilterResult<ProductWithOffers>>;
+  delete(id: string): Promise<void>;
 }

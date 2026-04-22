@@ -8,6 +8,7 @@ import {
 import 'dotenv/config';
 import { HealthController } from './controllers/health.controller';
 import { IngredientsController } from './controllers/ingredients.controller';
+import { OffersController } from './controllers/offers.controller';
 import { ProductsController } from './controllers/products.controller';
 import { SeedingService } from './seeding/seeding.service';
 
@@ -24,7 +25,12 @@ import { SeedingService } from './seeding/seeding.service';
       database: { url: process.env.DATABASE_URL ?? '' },
     }),
   ],
-  controllers: [HealthController, IngredientsController, ProductsController],
+  controllers: [
+    HealthController,
+    IngredientsController,
+    OffersController,
+    ProductsController,
+  ],
   providers: [SeedingService],
 })
 export class AppModule {}

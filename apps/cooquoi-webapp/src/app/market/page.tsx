@@ -2,6 +2,7 @@ import { cooquoiClient } from '@/services/backend.http-client';
 import { Suspense } from 'react';
 import { SearchInput } from './_components/search-input';
 import { ProductList } from './_components/product-list';
+import { AddProductButton } from './_components/add-product-button';
 
 type PageProps = {
   searchParams: Promise<{ search?: string }>;
@@ -35,6 +36,7 @@ export default async function MarketPage({ searchParams }: PageProps) {
     <div className="max-w-7xl mx-auto flex flex-col gap-4 min-h-screen p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-neutral-800">Market</h1>
+        <AddProductButton />
       </div>
       <Suspense>
         <SearchInput />

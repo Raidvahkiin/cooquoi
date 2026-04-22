@@ -1,13 +1,22 @@
 import {
   CreateProductCommand,
   type CreateProductCommandPayload,
+  DeleteProductCommand,
   FilterProductsDto,
   FilterProductsQuery,
   type FilterProductsResult,
   type Product,
   type ProductWithOffers,
 } from '@cooquoi/market';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
   type FilterResult,
@@ -43,5 +52,10 @@ export class ProductsController implements ProductsEndpoints {
           : undefined,
       }),
     );
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: string): Promise<void> {
+    await this.commandBus.execute(new DeleteProductCommand(id));
   }
 }

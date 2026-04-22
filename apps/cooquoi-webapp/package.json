@@ -6,8 +6,9 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@utils/react": "workspace:*",
+    "@hookform/resolvers": "^5.2.2",
     "@utils/api-contracts": "workspace:*",
+    "@utils/react": "workspace:*",
     "ag-grid-community": "^35.0.0",
     "ag-grid-react": "^35.0.0",
     "class-variance-authority": "^0.7.1",
@@ -15,7 +16,9 @@
     "next": "16.1.7",
     "react": "^ 19.2.4",
     "react-dom": "^ 19.2.4",
-    "tailwind-merge": "^3.5.0"
+    "react-hook-form": "^7.73.1",
+    "tailwind-merge": "^3.5.0",
+    "zod": "^4.3.6"
   },
   "nx": {
     "tags": [

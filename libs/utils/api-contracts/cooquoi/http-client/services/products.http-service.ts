@@ -31,4 +31,8 @@ export class ProductsClient implements ProductsEndpoints {
     const res = await fetch(`${this.baseUrl}/products${query}`);
     return res.json() as Promise<FilterResult<ProductWithOffers>>;
   }
+
+  async delete(id: string): Promise<void> {
+    await fetch(`${this.baseUrl}/products/${id}`, { method: 'DELETE' });
+  }
 }

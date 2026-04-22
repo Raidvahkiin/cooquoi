@@ -22,6 +22,10 @@ export const endpointPaths = {
     },
     delete: (id: string) => `/products/${id}`,
   },
+  offers: {
+    createOrUpdate: () => '/offers',
+    delete: (id: string) => `/offers/${id}`,
+  },
 };
 
 function buildQueryString(params: FilterParams) {
