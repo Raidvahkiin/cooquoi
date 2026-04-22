@@ -8,6 +8,7 @@ import {
 import { schema } from './domain';
 import {
   CreateIngredientHandler,
+  CreateOrUpdateOfferHandler,
   CreateProductCommandHandler,
   DeleteIngredientCommandHandler,
   FilterIngredientsHandler,
@@ -20,6 +21,7 @@ const commandHandlers = [
   CreateIngredientHandler,
   DeleteIngredientCommandHandler,
   CreateProductCommandHandler,
+  CreateOrUpdateOfferHandler,
 ];
 const queryHandlers = [
   GetIngredientHandler,

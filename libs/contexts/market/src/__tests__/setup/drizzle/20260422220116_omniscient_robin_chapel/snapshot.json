@@ -1,7 +1,7 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "fc3bf820-85d8-4106-9a7a-ef86f5cf8711",
+  "id": "39e2efa0-46d5-4d49-8873-d9217db43bd2",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -276,6 +276,23 @@
       "entityType": "columns",
       "schema": "public",
       "table": "product_ingredients"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "product_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "products",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "name": "offers_product_id_products_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "offers"
     },
     {
       "nameExplicit": false,
