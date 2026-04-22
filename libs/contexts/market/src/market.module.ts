@@ -12,6 +12,7 @@ import {
   CreateProductCommandHandler,
   DeleteIngredientCommandHandler,
   DeleteOfferHandler,
+  DeleteProductHandler,
   FilterIngredientsHandler,
   FilterProductsHandler,
   GetIngredientHandler,
@@ -22,6 +23,7 @@ const commandHandlers = [
   CreateIngredientHandler,
   DeleteIngredientCommandHandler,
   CreateProductCommandHandler,
+  DeleteProductHandler,
   CreateOrUpdateOfferHandler,
   DeleteOfferHandler,
 ];

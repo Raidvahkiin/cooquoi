@@ -10,6 +10,8 @@ export * from './crud-ingredients/delete-ingredient/delete-ingredient.command';
 export * from './crud-ingredients/delete-ingredient/delete-ingredient.command-handler';
 export * from './crud-products/create-product/create-product.command';
 export * from './crud-products/create-product/create-product.command-handler';
+export * from './crud-products/delete-product/delete-product.command';
+export * from './crud-products/delete-product/delete-product.handler';
 
 // queries
 export * from './crud-ingredients/get-ingredient/get-ingredient.query';
