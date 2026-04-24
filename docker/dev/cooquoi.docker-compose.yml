@@ -27,5 +27,16 @@ services:
     depends_on:
       - cooquoi_db
 
+  cooquoi_webapp:
+    image: cooquoi-webapp:latest
+    container_name: cooquoi-webapp
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      API_BASE_URL: http://cooquoi_api:3000
+    depends_on:
+      - cooquoi_api
+
 volumes:
   cooquoi_db_data:
