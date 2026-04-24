@@ -14,5 +14,18 @@ services:
       - cooquoi_db_data:/var/lib/postgresql/data
       - ../../scripts/init-postgres.sql:/docker-entrypoint-initdb.d/init-postgres.sql:ro
 
+  cooquoi_api:
+    image: cooquoi-api:latest
+    container_name: cooquoi-api
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://${DB_POSTGRES_USERNAME:-appinstance}:${DB_POSTGRES_PASSWORD:-azerty}@cooquoi_db:5432/${DB_POSTGRES_DB_NAME:-cooquoi}
+      DATABASE_SEEDING_ENABLED: "false"
+    depends_on:
+      - cooquoi_db
+
 volumes:
   cooquoi_db_data:

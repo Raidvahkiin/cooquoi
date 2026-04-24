@@ -1,0 +1,46 @@
+node_modules
+.git
+.github
+.nx
+dist
+tmp
+.next
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Environment secrets
+**/.env.local
+**/.env.*.local
+
+# Test & dev artifacts
+**/coverage
+**/__tests__
+**/test
+**/*.spec.ts
+**/*.test.ts
+**/*.spec.tsx
+**/*.test.tsx
+**/vite.config.*.mts
+**/vitest.config.*
+**/drizzle-test.config.ts
+
+# Docker
+docker/
+
+# Storybook
+**/.storybook
+**/*.stories.*
+
+# Misc
+*.md
+LICENSE
+biome.json
+eslint.config.mts
+opencode.json
+AGENTS.md
+CLAUDE.md
+scripts/
