@@ -18,6 +18,7 @@ services:
     image: cooquoi-api:latest
     container_name: cooquoi-api
     restart: unless-stopped
+    profiles: [api, all]
     ports:
       - "3001:3000"
     environment:
@@ -31,6 +32,7 @@ services:
     image: cooquoi-webapp:latest
     container_name: cooquoi-webapp
     restart: unless-stopped
+    profiles: [webapp, all]
     ports:
       - "3000:3000"
     environment:
