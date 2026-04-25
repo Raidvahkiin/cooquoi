@@ -1,16 +1,8 @@
 {
 	"folders": [
 		{
-			"name": ".github",
-			"path": ".github"
-		},
-		{
-			"name": "docker",
-			"path": "docker"
-		},
-		{
-			"name": "scripts",
-			"path": "scripts"
+			"name": "root",
+			"path": "."
 		},
 		{
 			"name": "apps",
@@ -26,6 +18,8 @@
 	],
 	"settings": {
 		"files.exclude": {
+			"libs": true,
+			"apps":true,
 			"**/node_modules": true,
 			"**/dist": true,
 			"**/tsconfig*.json": true,
