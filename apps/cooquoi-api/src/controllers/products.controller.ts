@@ -1,6 +1,5 @@
 import {
   CreateProductCommand,
-  type CreateProductCommandPayload,
   DeleteProductCommand,
   FilterProductsDto,
   FilterProductsQuery,
@@ -19,6 +18,7 @@ import {
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import {
+  type CreateProductBody,
   type FilterResult,
   type ProductsEndpoints,
 } from '@utils/api-contracts/cooquoi';
@@ -31,7 +31,7 @@ export class ProductsController implements ProductsEndpoints {
   ) {}
 
   @Post()
-  create(@Body() body: CreateProductCommandPayload): Promise<Product> {
+  create(@Body() body: CreateProductBody): Promise<Product> {
     return this.commandBus.execute<CreateProductCommand, Product>(
       new CreateProductCommand(body),
     );

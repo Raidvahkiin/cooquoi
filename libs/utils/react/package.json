@@ -10,6 +10,11 @@
       "import": "./src/ui/index.ts",
       "default": "./src/ui/index.ts"
     },
+    "./hooks": {
+      "types": "./src/hooks/index.ts",
+      "import": "./src/hooks/index.ts",
+      "default": "./src/hooks/index.ts"
+    },
     "./ui/*": "./src/ui/*",
     "./package.json": "./package.json"
   },

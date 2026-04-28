@@ -1,20 +1,19 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Button, Input, Modal, PlusIcon, useModal } from '@utils/react/ui';
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import { useDebounce } from '@utils/react/hooks';
 import {
-  Button,
-  Input,
-  Modal,
-  PlusIcon,
-  TrashIcon,
-  useModal,
-} from '@utils/react/ui';
-import { useCallback, useEffect, useRef, useState, useTransition } from 'react';
+  checkProductNameExists,
+  createOffers,
+  createProduct,
+} from '@/actions/market.actions';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { z } from 'zod';
-
-const CURRENCIES = ['EUR', 'USD', 'GBP'] as const;
+import { IngredientPicker } from './ingredient-picker';
+import { CURRENCIES, OfferFields } from './offer-fields';
 
 const offerSchema = z.object({
   vendor: z.string().min(1, 'Vendor is required'),
@@ -28,6 +27,7 @@ const offerSchema = z.object({
 const schema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().optional(),
+  ingredientIds: z.array(z.string()),
   offers: z.array(offerSchema).superRefine((offers, ctx) => {
     const vendors = offers.map((o) => o.vendor.trim().toLowerCase());
     offers.forEach((offer, i) => {
@@ -52,7 +52,6 @@ export function AddProductButton() {
   const [nameExists, setNameExists] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const {
     register,
@@ -60,39 +59,33 @@ export function AddProductButton() {
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors, isValid },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', description: '', offers: [] },
+    defaultValues: { name: '', description: '', ingredientIds: [], offers: [] },
     mode: 'onTouched',
   });
 
   const { fields, append, remove } = useFieldArray({ control, name: 'offers' });
 
   const nameValue = watch('name');
+  const selectedIngredientIds = watch('ingredientIds');
+  const debouncedName = useDebounce(nameValue, 400);
 
   // Debounced async name uniqueness check (kept outside Zod — it's async/side-effectful)
   useEffect(() => {
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    const trimmed = nameValue?.trim();
+    const trimmed = debouncedName?.trim();
     if (!trimmed) {
       setNameExists(false);
       setCheckingName(false);
       return;
     }
     setCheckingName(true);
-    debounceRef.current = setTimeout(async () => {
-      try {
-        const res = await fetch(
-          `/api/products/check-name?name=${encodeURIComponent(trimmed)}`,
-        );
-        const data = await res.json();
-        setNameExists(data.exists);
-      } finally {
-        setCheckingName(false);
-      }
-    }, 400);
-  }, [nameValue]);
+    checkProductNameExists(trimmed)
+      .then((exists) => setNameExists(exists))
+      .finally(() => setCheckingName(false));
+  }, [debouncedName]);
 
   const handleClose = useCallback(() => {
     reset();
@@ -106,37 +99,20 @@ export function AddProductButton() {
     setSubmitError(null);
     startTransition(async () => {
       try {
-        const productRes = await fetch('/api/products', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: values.name.trim(),
-            description: values.description?.trim() || undefined,
-            ingredients: [],
-          }),
+        const product = await createProduct({
+          name: values.name.trim(),
+          description: values.description?.trim() || undefined,
+          ingredients: values.ingredientIds,
         });
-        if (!productRes.ok) {
-          const data = await productRes.json();
-          throw new Error(data.message ?? 'Failed to create product');
-        }
-        const product = await productRes.json();
 
         if (values.offers.length > 0) {
-          const offerRes = await fetch('/api/offers', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(
-              values.offers.map((offer) => ({
-                productId: product.id,
-                vendor: offer.vendor.trim(),
-                price: { amount: offer.amount, currency: offer.currency },
-              })),
-            ),
-          });
-          if (!offerRes.ok) {
-            const data = await offerRes.json();
-            throw new Error(data.message ?? 'Failed to create offers');
-          }
+          await createOffers(
+            values.offers.map((offer) => ({
+              productId: product.id,
+              vendor: offer.vendor.trim(),
+              price: { amount: offer.amount, currency: offer.currency },
+            })),
+          );
         }
 
         handleClose();
@@ -230,89 +206,18 @@ export function AddProductButton() {
             />
           </div>
 
-          {/* Offers */}
-          <div className="flex flex-col gap-2">
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-neutral-700">
-                Offers
-              </span>
-              <button
-                type="button"
-                onClick={() =>
-                  append({ vendor: '', amount: '', currency: 'EUR' })
-                }
-                className="flex items-center gap-1 text-xs text-primary hover:text-primary-hover font-medium"
-              >
-                <PlusIcon className="size-3.5" />
-                Add offer
-              </button>
-            </div>
+          <IngredientPicker
+            selectedIds={selectedIngredientIds}
+            onChange={(ids) => setValue('ingredientIds', ids)}
+          />
 
-            {fields.length === 0 && (
-              <p className="text-xs text-neutral-400">
-                No offers yet — optional.
-              </p>
-            )}
-
-            {fields.map((field, index) => (
-              <div
-                key={field.id}
-                className={`flex flex-col gap-1.5 rounded-lg border p-2 ${
-                  errors.offers?.[index]
-                    ? 'border-red-400'
-                    : 'border-neutral-200'
-                }`}
-              >
-                {/* Row 1: vendor name + remove button */}
-                <div className="flex items-center gap-2">
-                  <Input
-                    placeholder="Vendor name"
-                    className="flex-1 min-w-0"
-                    {...register(`offers.${index}.vendor`)}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => remove(index)}
-                    className="shrink-0 rounded p-1 text-neutral-400 hover:text-red-500 transition-colors"
-                    aria-label="Remove offer"
-                  >
-                    <TrashIcon className="size-4" />
-                  </button>
-                </div>
-                {errors.offers?.[index]?.vendor && (
-                  <p className="text-xs text-red-500">
-                    {errors.offers[index].vendor?.message}
-                  </p>
-                )}
-                {/* Row 2: price amount + currency */}
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="number"
-                    placeholder="Price"
-                    min="0"
-                    step="0.01"
-                    className="flex-1 min-w-0"
-                    {...register(`offers.${index}.amount`)}
-                  />
-                  <select
-                    className="rounded-md border border-border bg-surface px-2 py-2 text-sm text-text focus:outline-none focus:ring-2 focus:ring-primary-ring"
-                    {...register(`offers.${index}.currency`)}
-                  >
-                    {CURRENCIES.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                {errors.offers?.[index]?.amount && (
-                  <p className="text-xs text-red-500">
-                    {errors.offers[index].amount?.message}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
+          <OfferFields
+            fields={fields}
+            errors={errors.offers}
+            register={register as never}
+            onAppend={() => append({ vendor: '', amount: '', currency: 'EUR' })}
+            onRemove={remove}
+          />
 
           {submitError && (
             <p className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-600">
