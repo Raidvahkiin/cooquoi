@@ -1,21 +1,21 @@
 'use server';
 
 import { cooquoiClient } from '@/services';
-import type { IngredientDto } from '@/types/ingredient';
+import type { CreateIngredientDto, IngredientDto } from '@/types/ingredient';
 
 export async function searchIngredients(
   filter: string,
-  { take = 20 }: { take?: number } = {},
-): Promise<IngredientDto[]> {
+  { skip = 0, take = 20 }: { skip?: number; take?: number } = {},
+): Promise<{ items: IngredientDto[]; total: number }> {
   const trimmed = filter.trim();
   const result = await cooquoiClient.ingredients.getMany({
-    skip: 0,
+    skip,
     take,
     search: trimmed || undefined,
     sortField: 'name',
     sortOrder: 'asc',
   });
-  return result.items;
+  return { items: result.items, total: result.total };
 }
 
 export async function checkProductNameExists(name: string): Promise<boolean> {
@@ -52,4 +52,17 @@ export async function createOffers(
       }),
     ),
   );
+}
+
+export async function deleteIngredient(id: string): Promise<void> {
+  await cooquoiClient.ingredients.delete(id);
+}
+
+export async function createIngredient(
+  dto: CreateIngredientDto,
+): Promise<IngredientDto> {
+  return cooquoiClient.ingredients.create({
+    name: dto.name.trim(),
+    description: dto.description,
+  });
 }
