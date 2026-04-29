@@ -6,7 +6,7 @@ import { Pagination } from './_components/pagination';
 import { Stack } from '@utils/react/ui';
 import { Header } from './_components/header';
 
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 10;
 
 type PageProps = {
   searchParams: Promise<{ search?: string; page?: string }>;

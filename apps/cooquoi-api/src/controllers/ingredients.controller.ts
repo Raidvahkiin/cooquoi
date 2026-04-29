@@ -2,7 +2,6 @@ import type { FilterIngredientsResult } from '@cooquoi/market';
 import {
   CreateIngredientCommand,
   DeleteIngredientCommand,
-  FilterIngredientsDto,
   FilterIngredientsQuery,
   GetIngredientQuery,
 } from '@cooquoi/market';
@@ -17,6 +16,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { GetIngredientsRequestDto } from './dtos/get-ingredients-request.dto';
 import type {
   CreateIngredientBody,
   CreateIngredientResponse,
@@ -55,7 +55,7 @@ export class IngredientsController implements IngredientsEndpoints {
 
   @Get()
   getMany(
-    @Query() query: FilterIngredientsDto,
+    @Query() query: GetIngredientsRequestDto,
   ): Promise<FilterIngredientsResult> {
     return this.queryBus.execute<
       FilterIngredientsQuery,

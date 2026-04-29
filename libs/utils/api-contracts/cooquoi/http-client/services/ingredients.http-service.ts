@@ -27,6 +27,7 @@ export class IngredientsClient implements IngredientsEndpoints {
             .map(([k, v]) => [k, String(v)]),
         ).toString()}`
       : '';
+      console.log('Fetching ingredients with query:', query);
     const res = await fetch(`${this.baseUrl}/ingredients${query}`);
     return res.json() as Promise<FilterResult<Ingredient>>;
   }
