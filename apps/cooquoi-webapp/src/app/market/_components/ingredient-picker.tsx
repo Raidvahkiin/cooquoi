@@ -30,8 +30,10 @@ export function IngredientPicker({
     }
     (async () => {
       try {
-        const rows = await searchIngredients(trimmed);
-        setResults(rows.filter((r) => !selectedIds.includes(r.id)));
+        const searchResult = await searchIngredients(trimmed);
+        setResults(
+          searchResult.items.filter((item) => !selectedIds.includes(item.id)),
+        );
       } catch {
         // silently fail
       }
