@@ -1,4 +1,12 @@
-import { date, pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+  type AnyPgColumn,
+  date,
+  pgTable,
+  primaryKey,
+  text,
+  uuid,
+  varchar,
+} from 'drizzle-orm/pg-core';
 
 export const ingredients = pgTable('ingredients', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -11,28 +19,22 @@ export const ingredients = pgTable('ingredients', {
     .$onUpdateFn(() => new Date().toISOString()),
 });
 
+export const ingredientComponents = pgTable(
+  'ingredient_components',
+  {
+    parentIngredientId: uuid('parent_ingredient_id')
+      .notNull()
+      .references((): AnyPgColumn => ingredients.id, { onDelete: 'cascade' }),
+    componentIngredientId: uuid('component_ingredient_id')
+      .notNull()
+      .references((): AnyPgColumn => ingredients.id, { onDelete: 'cascade' }),
+  },
+  (t) => [
+    primaryKey({
+      columns: [t.parentIngredientId, t.componentIngredientId],
+    }),
+  ],
+);
+
 export type Ingredient = typeof ingredients.$inferSelect;
-
-export class IngredientEntity {
-  constructor(private readonly _state: Ingredient) {}
-
-  get id(): string {
-    return this._state.id;
-  }
-
-  get name(): string {
-    return this._state.name;
-  }
-
-  get description(): string | null {
-    return this._state.description;
-  }
-
-  get createdAt(): Date {
-    return new Date(this._state.createdAt);
-  }
-
-  get updatedAt(): Date {
-    return new Date(this._state.updatedAt);
-  }
-}
+export type IngredientComponent = typeof ingredientComponents.$inferSelect;

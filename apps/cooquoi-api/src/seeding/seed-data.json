@@ -1,34 +1,47 @@
 {
   "ingredients": [
-    { "name": "sel", "description": "Sel de mer commun" },
-    { "name": "sucre", "description": "Sucre de canne blanc" },
-    { "name": "farine de blé", "description": "Farine de blé T55" },
-    { "name": "beurre", "description": "Beurre doux de lait de vache" },
-    { "name": "chocolat noir", "description": "Cacao minimum 64%" },
-    { "name": "lait entier", "description": "Lait de vache entier pasteurisé" },
-    { "name": "œufs", "description": "Œufs de poules élevées en plein air" },
+    { "name": "salt", "description": "Common sea salt" },
+    { "name": "sugar", "description": "White cane sugar" },
+    { "name": "wheat flour", "description": "T55 wheat flour" },
+    { "name": "butter", "description": "Unsalted cow's milk butter" },
+    { "name": "dark chocolate", "description": "Cocoa minimum 64%" },
+    { "name": "whole milk", "description": "Pasteurized whole cow's milk" },
     {
-      "name": "huile de tournesol",
-      "description": "Huile végétale de tournesol"
+      "name": "egg yolk",
+      "description": "Yellow inner part of a hen's egg, rich in fat and protein"
     },
-    { "name": "levure chimique", "description": "Poudre à lever" },
-    { "name": "vanille", "description": "Extrait naturel de vanille bourbon" },
     {
-      "name": "cacao en poudre",
-      "description": "Cacao maigre en poudre non sucré"
+      "name": "egg white",
+      "description": "Clear liquid surrounding the yolk, mostly water and protein"
     },
-    { "name": "noisette", "description": "Noisettes entières grillées" },
     {
-      "name": "lait de coco",
-      "description": "Lait de coco 18% de matières grasses"
+      "name": "egg shell",
+      "description": "Hard outer calcium-carbonate shell of a hen's egg"
     },
-    { "name": "poivre noir", "description": "Poivre noir moulu" }
+    {
+      "name": "egg",
+      "description": "Whole free-range hen's egg",
+      "components": ["egg yolk", "egg white", "egg shell"]
+    },
+    { "name": "sunflower oil", "description": "Sunflower vegetable oil" },
+    { "name": "baking powder", "description": "Chemical leavening powder" },
+    { "name": "vanilla", "description": "Natural Bourbon vanilla extract" },
+    {
+      "name": "cocoa powder",
+      "description": "Unsweetened low-fat cocoa powder"
+    },
+    { "name": "hazelnut", "description": "Whole roasted hazelnuts" },
+    {
+      "name": "coconut milk",
+      "description": "Coconut milk with 18% fat content"
+    },
+    { "name": "black pepper", "description": "Ground black pepper" }
   ],
   "products": [
     {
-      "name": "Beurre Président Doux 250g",
-      "description": "Beurre doux AOP Normandie, issu de lait de vaches normandes",
-      "ingredients": ["beurre"],
+      "name": "Président Unsalted Butter 250g",
+      "description": "Unsalted PDO Normandy butter, made from Normande cow's milk",
+      "ingredients": ["butter"],
       "offers": [
         {
           "vendor": "Monoprix Vitry",
@@ -48,9 +61,9 @@
       ]
     },
     {
-      "name": "Sucre Cristallisé Daddy 1kg",
-      "description": "Sucre cristallisé de canne, idéal pour la pâtisserie",
-      "ingredients": ["sucre"],
+      "name": "Daddy Granulated Sugar 1kg",
+      "description": "Granulated cane sugar, ideal for baking",
+      "ingredients": ["sugar"],
       "offers": [
         {
           "vendor": "Monoprix Vitry",
@@ -70,9 +83,9 @@
       ]
     },
     {
-      "name": "Tablette Chocolat Noir Lindt 70% 100g",
-      "description": "Chocolat noir intense 70% cacao, origine Équateur",
-      "ingredients": ["chocolat noir", "sucre", "beurre", "vanille"],
+      "name": "Lindt 70% Dark Chocolate Bar 100g",
+      "description": "Intense 70% cocoa dark chocolate, Ecuador origin",
+      "ingredients": ["dark chocolate", "sugar", "butter", "vanilla"],
       "offers": [
         {
           "vendor": "Monoprix Vitry",
@@ -87,9 +100,9 @@
       ]
     },
     {
-      "name": "Farine de Blé T55 Francine 1kg",
-      "description": "Farine fluide type 55, pour toutes vos pâtisseries et pains maison",
-      "ingredients": ["farine de blé"],
+      "name": "Francine T55 Wheat Flour 1kg",
+      "description": "Smooth T55 flour, suitable for all your home baking and bread",
+      "ingredients": ["wheat flour"],
       "offers": [
         {
           "vendor": "Leclerc Villejuif",
@@ -109,16 +122,16 @@
       ]
     },
     {
-      "name": "Pâte à Tartiner Noisettes Nutella 400g",
-      "description": "Pâte à tartiner aux noisettes et au cacao, l'originale",
+      "name": "Nutella Hazelnut Spread 400g",
+      "description": "The original hazelnut and cocoa spread",
       "ingredients": [
-        "sucre",
-        "huile de tournesol",
-        "noisette",
-        "cacao en poudre",
-        "lait entier",
-        "œufs",
-        "vanille"
+        "sugar",
+        "sunflower oil",
+        "hazelnut",
+        "cocoa powder",
+        "whole milk",
+        "egg",
+        "vanilla"
       ],
       "offers": [
         {
@@ -144,9 +157,9 @@
       ]
     },
     {
-      "name": "Lait Demi-Écrémé Lactel 1L",
-      "description": "Lait demi-écrémé stérilisé UHT, apport en calcium",
-      "ingredients": ["lait entier"],
+      "name": "Lactel Semi-Skimmed Milk 1L",
+      "description": "UHT semi-skimmed milk, source of calcium",
+      "ingredients": ["whole milk"],
       "offers": [
         {
           "vendor": "Monoprix Vitry",
@@ -166,9 +179,9 @@
       ]
     },
     {
-      "name": "Curry de Lentilles Corail au Lait de Coco Bio 300g",
-      "description": "Plat cuisiné bio lentilles corail, lait de coco et épices douces",
-      "ingredients": ["lait de coco", "sel", "poivre noir"],
+      "name": "Organic Red Lentil Curry with Coconut Milk 300g",
+      "description": "Organic ready meal with red lentils, coconut milk and mild spices",
+      "ingredients": ["coconut milk", "salt", "black pepper"],
       "offers": [
         {
           "vendor": "Monoprix Vitry",
@@ -183,14 +196,14 @@
       ]
     },
     {
-      "name": "Mélange Spécial Gâteau Moelleux au Chocolat Alsa 290g",
-      "description": "Préparation pour gâteau moelleux au chocolat, prêt en 30 minutes",
+      "name": "Alsa Soft Chocolate Cake Mix 290g",
+      "description": "Soft chocolate cake baking mix, ready in 30 minutes",
       "ingredients": [
-        "farine de blé",
-        "sucre",
-        "cacao en poudre",
-        "levure chimique",
-        "sel"
+        "wheat flour",
+        "sugar",
+        "cocoa powder",
+        "baking powder",
+        "salt"
       ],
       "offers": [
         {

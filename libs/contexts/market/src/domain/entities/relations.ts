@@ -1,6 +1,6 @@
 import { defineRelations } from 'drizzle-orm';
 import { pgTable, uuid } from 'drizzle-orm/pg-core';
-import { ingredients } from './ingredient.entity';
+import { ingredientComponents, ingredients } from './ingredient.entity';
 import { offers } from './offers.entity';
 import { products } from './product.entity';
 
@@ -19,6 +19,7 @@ export const relations = defineRelations(
   {
     products,
     ingredients,
+    ingredientComponents,
     offers,
     productIngredients,
   },
@@ -33,6 +34,26 @@ export const relations = defineRelations(
         to: r.offers.productId,
       }),
     },
+    ingredients: {
+      components: r.many.ingredients({
+        from: r.ingredients.id.through(
+          r.ingredientComponents.parentIngredientId,
+        ),
+        to: r.ingredients.id.through(
+          r.ingredientComponents.componentIngredientId,
+        ),
+        alias: 'ingredient_components',
+      }),
+      composedIn: r.many.ingredients({
+        from: r.ingredients.id.through(
+          r.ingredientComponents.componentIngredientId,
+        ),
+        to: r.ingredients.id.through(
+          r.ingredientComponents.parentIngredientId,
+        ),
+        alias: 'ingredient_composed_in',
+      }),
+    },
     offers: {
       product: r.one.products({
         from: r.offers.productId,
@@ -45,6 +66,7 @@ export const relations = defineRelations(
 export const schema = {
   products,
   ingredients,
+  ingredientComponents,
   offers,
   productIngredients,
   relations,

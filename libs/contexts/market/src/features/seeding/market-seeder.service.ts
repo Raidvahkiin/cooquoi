@@ -2,6 +2,7 @@ import { Inject, Injectable, Logger } from '@nestjs/common';
 import { sql } from 'drizzle-orm';
 import { DATABASE_TOKEN, type MarketDatabase } from '../../config';
 import {
+  ingredientComponents,
   ingredients,
   offers,
   productIngredients,
@@ -18,18 +19,45 @@ export class MarketSeederService {
   async seed(data: SeedData): Promise<void> {
     this.logger.log('Resetting database...');
     await this.db.execute(
-      sql`TRUNCATE TABLE product_ingredients, offers, ingredients, products CASCADE`,
+      sql`TRUNCATE TABLE ingredient_components, product_ingredients, offers, ingredients, products CASCADE`,
     );
 
     this.logger.log(`Seeding ${data.ingredients.length} ingredients...`);
     const insertedIngredients = await this.db
       .insert(ingredients)
-      .values(data.ingredients)
+      .values(
+        data.ingredients.map(({ name, description }) => ({
+          name,
+          description,
+        })),
+      )
       .returning();
 
     const ingredientByName = new Map(
       insertedIngredients.map((i) => [i.name, i]),
     );
+
+    const componentLinks = data.ingredients.flatMap((seedIngredient) => {
+      const parent = ingredientByName.get(seedIngredient.name);
+      if (!parent || !seedIngredient.components?.length) {
+        return [];
+      }
+
+      return seedIngredient.components
+        .map((componentName) => ingredientByName.get(componentName)?.id)
+        .filter((id): id is string => id !== undefined)
+        .map((componentIngredientId) => ({
+          parentIngredientId: parent.id,
+          componentIngredientId,
+        }));
+    });
+
+    if (componentLinks.length > 0) {
+      this.logger.log(
+        `Seeding ${componentLinks.length} ingredient composition links...`,
+      );
+      await this.db.insert(ingredientComponents).values(componentLinks);
+    }
 
     this.logger.log(`Seeding ${data.products.length} products...`);
     for (const seedProduct of data.products) {
