@@ -20,7 +20,6 @@ export * from './crud-ingredients/filter-ingredients/filter-ingredients.query';
 export * from './crud-ingredients/filter-ingredients/filter-ingredients.dto';
 export * from './crud-ingredients/filter-ingredients/filter-ingredients.handler';
 export * from './crud-products/filter-products/filter-products.query';
-export * from './crud-products/filter-products/filter-products.dto';
 export * from './crud-products/filter-products/filter-products.handler';
 
 // seeding

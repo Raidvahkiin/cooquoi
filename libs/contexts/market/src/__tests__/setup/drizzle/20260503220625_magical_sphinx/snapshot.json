@@ -1,11 +1,17 @@
 {
   "version": "8",
   "dialect": "postgres",
-  "id": "39e2efa0-46d5-4d49-8873-d9217db43bd2",
+  "id": "46ad15c0-db7f-4371-bfca-96e6be00091c",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
   "ddl": [
+    {
+      "isRlsEnabled": false,
+      "name": "ingredient_components",
+      "entityType": "tables",
+      "schema": "public"
+    },
     {
       "isRlsEnabled": false,
       "name": "ingredients",
@@ -29,6 +35,32 @@
       "name": "product_ingredients",
       "entityType": "tables",
       "schema": "public"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "parent_ingredient_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "ingredient_components"
+    },
+    {
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "name": "component_ingredient_id",
+      "entityType": "columns",
+      "schema": "public",
+      "table": "ingredient_components"
     },
     {
       "type": "uuid",
@@ -280,6 +312,40 @@
     {
       "nameExplicit": false,
       "columns": [
+        "parent_ingredient_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "ingredients",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "name": "ingredient_components_parent_ingredient_id_ingredients_id_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "ingredient_components"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
+        "component_ingredient_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "ingredients",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "name": "ingredient_components_C2DEt5a1olON_fkey",
+      "entityType": "fks",
+      "schema": "public",
+      "table": "ingredient_components"
+    },
+    {
+      "nameExplicit": false,
+      "columns": [
         "product_id"
       ],
       "schemaTo": "public",
@@ -327,6 +393,17 @@
       "entityType": "fks",
       "schema": "public",
       "table": "product_ingredients"
+    },
+    {
+      "columns": [
+        "parent_ingredient_id",
+        "component_ingredient_id"
+      ],
+      "nameExplicit": false,
+      "name": "ingredient_components_pkey",
+      "entityType": "pks",
+      "schema": "public",
+      "table": "ingredient_components"
     },
     {
       "columns": [

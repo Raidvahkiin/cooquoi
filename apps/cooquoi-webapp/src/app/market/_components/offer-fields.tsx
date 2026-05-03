@@ -5,7 +5,7 @@ const CURRENCIES = ['EUR', 'USD', 'GBP'] as const;
 
 type OfferValue = {
   vendor: string;
-  amount: string;
+  amount: number;
   currency: (typeof CURRENCIES)[number];
 };
 

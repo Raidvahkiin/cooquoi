@@ -40,7 +40,7 @@ export async function createOffers(
   offers: {
     productId: string;
     vendor: string;
-    price: { amount: string; currency: string };
+    price: { amount: number; currency: string };
   }[],
 ): Promise<void> {
   await Promise.all(
@@ -48,7 +48,7 @@ export async function createOffers(
       cooquoiClient.offers.createOrUpdate({
         productId: o.productId,
         vendor: o.vendor.trim(),
-        price: { amount: o.price.amount, currency: o.price.currency },
+        price: o.price,
       }),
     ),
   );

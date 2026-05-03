@@ -3,6 +3,7 @@ import {
   type CreateOrUpdateOfferCommandPayload,
   DeleteOfferCommand,
   type Offer,
+  Price,
 } from '@cooquoi/market';
 import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
 import { CommandBus } from '@nestjs/cqrs';
@@ -20,7 +21,7 @@ export class OffersController implements OffersEndpoints {
     const payload: CreateOrUpdateOfferCommandPayload = {
       productId: body.productId,
       vendor: body.vendor,
-      price: body.price,
+      price: Price.create(body.price),
     };
     return this.commandBus.execute<CreateOrUpdateOfferCommand, Offer>(
       new CreateOrUpdateOfferCommand(payload),

@@ -1,3 +1,9 @@
+CREATE TABLE "ingredient_components" (
+	"parent_ingredient_id" uuid,
+	"component_ingredient_id" uuid,
+	CONSTRAINT "ingredient_components_pkey" PRIMARY KEY("parent_ingredient_id","component_ingredient_id")
+);
+--> statement-breakpoint
 CREATE TABLE "ingredients" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"name" varchar(255) NOT NULL UNIQUE,
@@ -10,8 +16,8 @@ CREATE TABLE "offers" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid(),
 	"product_id" uuid NOT NULL,
 	"vendor" varchar(255) NOT NULL,
-	"price" varchar NOT NULL,
-	"ingredients" uuid[],
+	"price_amount" numeric(12,2) NOT NULL,
+	"price_currency" varchar(3) NOT NULL,
 	"created_at" date DEFAULT now() NOT NULL,
 	"updated_at" date DEFAULT now() NOT NULL,
 	CONSTRAINT "offers_product_vendor_unique" UNIQUE("product_id","vendor")
@@ -30,5 +36,8 @@ CREATE TABLE "product_ingredients" (
 	"ingredient_id" uuid NOT NULL
 );
 --> statement-breakpoint
+ALTER TABLE "ingredient_components" ADD CONSTRAINT "ingredient_components_parent_ingredient_id_ingredients_id_fkey" FOREIGN KEY ("parent_ingredient_id") REFERENCES "ingredients"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "ingredient_components" ADD CONSTRAINT "ingredient_components_C2DEt5a1olON_fkey" FOREIGN KEY ("component_ingredient_id") REFERENCES "ingredients"("id") ON DELETE CASCADE;--> statement-breakpoint
+ALTER TABLE "offers" ADD CONSTRAINT "offers_product_id_products_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "product_ingredients" ADD CONSTRAINT "product_ingredients_product_id_products_id_fkey" FOREIGN KEY ("product_id") REFERENCES "products"("id") ON DELETE CASCADE;--> statement-breakpoint
 ALTER TABLE "product_ingredients" ADD CONSTRAINT "product_ingredients_ingredient_id_ingredients_id_fkey" FOREIGN KEY ("ingredient_id") REFERENCES "ingredients"("id") ON DELETE CASCADE;

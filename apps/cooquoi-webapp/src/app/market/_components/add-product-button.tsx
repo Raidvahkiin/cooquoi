@@ -17,10 +17,7 @@ import { CURRENCIES, OfferFields } from './offer-fields';
 
 const offerSchema = z.object({
   vendor: z.string().min(1, 'Vendor is required'),
-  amount: z
-    .string()
-    .min(1, 'Amount is required')
-    .refine((v) => Number(v) > 0, { message: 'Must be greater than 0' }),
+  amount: z.number().nonnegative(),
   currency: z.enum(CURRENCIES),
 });
 
@@ -214,8 +211,8 @@ export function AddProductButton() {
           <OfferFields
             fields={fields}
             errors={errors.offers}
-            register={register as never}
-            onAppend={() => append({ vendor: '', amount: '', currency: 'EUR' })}
+            register={register}
+            onAppend={() => append({ vendor: '', amount: 0, currency: 'EUR' })}
             onRemove={remove}
           />
 

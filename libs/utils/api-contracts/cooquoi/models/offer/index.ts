@@ -2,7 +2,7 @@ export type CreateOrUpdateOfferBody = {
   productId: string;
   vendor: string;
   price: {
-    amount: string;
+    amount: number;
     currency: string;
   };
 };

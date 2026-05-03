@@ -18,13 +18,13 @@ export class CreateOrUpdateOfferHandler
       .values({
         productId,
         vendor,
-        priceAmount: price.amount,
+        priceAmount: `${price.amount}`,
         priceCurrency: price.currency,
       })
       .onConflictDoUpdate({
         target: [offers.productId, offers.vendor],
         set: {
-          priceAmount: price.amount,
+          priceAmount: `${price.amount}`,
           priceCurrency: price.currency,
         },
       })

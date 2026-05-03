@@ -1,7 +1,6 @@
 import {
   CreateProductCommand,
   DeleteProductCommand,
-  FilterProductsDto,
   FilterProductsQuery,
   type FilterProductsResult,
   type Product,
@@ -17,10 +16,11 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import {
-  type CreateProductBody,
-  type FilterResult,
-  type ProductsEndpoints,
+import type {
+  CreateProductBody,
+  FilterResult,
+  ProductsEndpoints,
+  FilterParams,
 } from '@utils/api-contracts/cooquoi';
 
 @Controller('products')
@@ -39,7 +39,7 @@ export class ProductsController implements ProductsEndpoints {
 
   @Get()
   getMany(
-    @Query() query: FilterProductsDto,
+    @Query() query: FilterParams & { maxOffers?: number },
   ): Promise<FilterResult<ProductWithOffers>> {
     return this.queryBus.execute<FilterProductsQuery, FilterProductsResult>(
       new FilterProductsQuery({

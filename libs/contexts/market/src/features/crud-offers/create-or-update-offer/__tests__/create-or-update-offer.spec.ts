@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { getTestSuit } from '../../../../__tests__/setup';
-import { offers, products } from '../../../../domain';
+import { offers, Price, products } from '../../../../domain';
 import { CreateOrUpdateOfferCommand } from '../create-or-update-offer.command';
 
 describe('CreateOrUpdateOffer feature', () => {
@@ -34,7 +34,7 @@ describe('CreateOrUpdateOffer feature', () => {
       new CreateOrUpdateOfferCommand({
         productId: product.id,
         vendor: newVendor,
-        price: { amount: '5.00', currency: 'EUR' },
+        price: Price.create({ amount: 5.0, currency: 'EUR' }),
       }),
     );
 
@@ -65,7 +65,7 @@ describe('CreateOrUpdateOffer feature', () => {
       new CreateOrUpdateOfferCommand({
         productId: product.id,
         vendor: 'VendorA',
-        price: { amount: '19.99', currency: 'USD' },
+        price: Price.create({ amount: 19.99, currency: 'USD' }),
       }),
     );
 
@@ -100,7 +100,7 @@ describe('CreateOrUpdateOffer feature', () => {
         new CreateOrUpdateOfferCommand({
           productId: nonExistentProductId,
           vendor: 'VendorA',
-          price: { amount: '10.00', currency: 'EUR' },
+          price: Price.create({ amount: 10.0, currency: 'EUR' }),
         }),
       ),
     ).rejects.toMatchObject({
