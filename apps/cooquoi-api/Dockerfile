@@ -7,7 +7,7 @@ WORKDIR /app
 # Lockfile needs all workspace package.json files for resolution
 COPY . .
 
-RUN bun install --frozen-lockfile --production
+RUN bun install --frozen-lockfile
 
 # ---- Stage 2: Production image ----
 FROM oven/bun:1-slim AS production
@@ -29,7 +29,6 @@ COPY apps/cooquoi-api/ ./apps/cooquoi-api/
 COPY libs/contexts/market/ ./libs/contexts/market/
 COPY libs/utils/nestjs/ ./libs/utils/nestjs/
 COPY libs/utils/api-contracts/ ./libs/utils/api-contracts/
-COPY libs/core/ ./libs/core/
 
 ENV NODE_ENV=production
 ENV PORT=3001
