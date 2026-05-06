@@ -14,21 +14,8 @@ FROM oven/bun:1-slim AS production
 
 WORKDIR /app
 
-# Copy installed node_modules from deps stage
-COPY --from=deps /app/node_modules ./node_modules
-
-# Copy workspace root config
-COPY package.json ./
-COPY tsconfig.base.json ./
-COPY tsconfig.json ./
-
-# Copy app source + default .env
-COPY apps/cooquoi-api/ ./apps/cooquoi-api/
-
-# Copy workspace lib sources (Bun runs .ts natively)
-COPY libs/contexts/market/ ./libs/contexts/market/
-COPY libs/utils/nestjs/ ./libs/utils/nestjs/
-COPY libs/utils/api-contracts/ ./libs/utils/api-contracts/
+# Copy everything from deps (node_modules at all levels + source)
+COPY --from=deps /app ./
 
 ENV NODE_ENV=production
 ENV PORT=3001
