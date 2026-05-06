@@ -22,4 +22,4 @@ ENV PORT=3001
 
 EXPOSE 3001
 
-CMD ["bun", "run", "apps/cooquoi-api/src/main.ts"]
+CMD ["sh", "-c", "cd /app/apps/cooquoi-api && bun run db:migrate && cd /app && bun run apps/cooquoi-api/src/main.ts"]
