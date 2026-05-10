@@ -30,6 +30,8 @@ tmp
 
 # Docker
 docker/
+**/Dockerfile
+**/*.Dockerfile
 
 # Storybook
 **/.storybook

@@ -3,6 +3,8 @@ import { config } from 'dotenv';
 
 config({ path: '.env.local' });
 
+console.log('Using database URL:', process.env.DATABASE_URL);
+
 export default defineConfig({
   dialect: 'postgresql',
   schema: [

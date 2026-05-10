@@ -1,34 +1,27 @@
 {
 	"folders": [
 		{
-			"name": ".github",
-			"path": ".github"
+			"name": "root",
+			"path": "."
 		},
-		{
-			"name": "apps",
-			"path": "apps"
-		},
-		{
-			"name": "contexts",
-			"path": "libs/contexts"
-		},
-		{
-			"path": "libs/utils"
-		},
-		{
-			"path": "docker"
-		}
 	],
 	"settings": {
 		"files.exclude": {
-			"libs": true,
-			"apps":true,
 			"**/node_modules": true,
 			"**/dist": true,
 			"**/tsconfig*.json": true,
 			"**/vite.config.*": true,
 			"**/.storybook": true,
 			"**/out-tsc": true,
+			".agents": true,
+			".vscode": true,
+			".claude": true,
+			".codex": true,
+			".idea": true,
+			".nx": true,
+			".gemini": true,
+			".opencode": true,
+			".cursor": true,
 		}
 	}
 }

@@ -1,9 +1,10 @@
-name: cooquoi
+name: cooquoi-dev
 services:
   cooquoi_db:
     image: postgis/postgis:16-3.4
-    container_name: cooquoi
+    container_name: database
     restart: unless-stopped
+    profiles: [ api, all, db, webapp ]
     ports:
       - "5432:5432"
     environment:
@@ -16,9 +17,9 @@ services:
 
   cooquoi_api:
     image: cooquoi-api:latest
-    container_name: cooquoi-api
+    container_name: api
     restart: unless-stopped
-    profiles: [api, all]
+    profiles: [ api, all ]
     ports:
       - "3001:3000"
     environment:
@@ -30,15 +31,13 @@ services:
 
   cooquoi_webapp:
     image: cooquoi-webapp:latest
-    container_name: cooquoi-webapp
+    container_name: webapp
     restart: unless-stopped
-    profiles: [webapp, all]
+    profiles: [ webapp, all ]
     ports:
       - "3000:3000"
     environment:
-      API_BASE_URL: http://cooquoi_api:3000
-    depends_on:
-      - cooquoi_api
+      API_BASE_URL: http://localhost:3001
 
 volumes:
   cooquoi_db_data:

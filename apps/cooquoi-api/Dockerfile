@@ -9,8 +9,10 @@ COPY . .
 
 RUN bun install --frozen-lockfile
 
+
 # ---- Stage 2: Production image ----
-FROM oven/bun:1-slim AS production
+# Use full image (not slim) to ensure bash/sh is available for Coolify terminal
+FROM oven/bun:1 AS production
 
 WORKDIR /app
 
@@ -22,4 +24,4 @@ ENV PORT=3001
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "cd /app/apps/cooquoi-api && bun run db:migrate && cd /app && bun run apps/cooquoi-api/src/main.ts"]
+CMD ["sh", "-c", "cd /app && bunx nx run @cooquoi/api:db:migrate && bunx nx run @cooquoi/api:start"]

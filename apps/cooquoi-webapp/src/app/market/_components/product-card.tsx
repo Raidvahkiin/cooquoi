@@ -26,9 +26,13 @@ function formatPrice(offer: Offer) {
 }
 
 function lowestOffer(offers: Offer[]) {
-  return offers.reduce((best, o) =>
-    o.price.amount < best.price.amount ? o : best,
-  );
+  console.log('offers', offers);
+  return offers.reduce((best: Offer | undefined, o: Offer) => {
+    if (best === undefined) {
+      return o;
+    }
+    return o.price.amount < best.price.amount ? o : best;
+  }, undefined);
 }
 
 export function ProductCard({
@@ -65,7 +69,7 @@ export function ProductCard({
             {product.name}
           </p>
           <p className="mt-0.5 text-base font-bold text-emerald-600">
-            {formatPrice(best)}
+            {best ? formatPrice(best) : ''}
           </p>
           <p className="text-xs text-neutral-400">
             {product.offers.length === 1
@@ -110,7 +114,7 @@ export function ProductCard({
                   key={offer.id}
                   className={cn(
                     'flex items-center justify-between rounded-lg px-3 py-2 text-sm',
-                    offer.id === best.id
+                    offer.id === best?.id
                       ? 'bg-emerald-50 ring-1 ring-emerald-200'
                       : 'bg-neutral-50',
                   )}
@@ -121,7 +125,7 @@ export function ProductCard({
                   <span
                     className={cn(
                       'font-semibold',
-                      offer.id === best.id
+                      offer.id === best?.id
                         ? 'text-emerald-600'
                         : 'text-neutral-600',
                     )}
