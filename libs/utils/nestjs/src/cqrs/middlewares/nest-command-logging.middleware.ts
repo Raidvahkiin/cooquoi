@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Inject, Optional } from '@nestjs/common';
 import { Command } from '@nestjs/cqrs';
 import { CommandMiddleware, EnableLoggingDecorator } from '../decorators';
 
@@ -7,6 +7,9 @@ import {
   CommandMiddlewareNext,
   ICommandMiddlewareHandler,
 } from './command-handler.middleware';
+import type { ILogger } from '../logging/logger';
+import { MIDDLEWARE_LOGGER } from '../logging/logger';
+import { NestJsLogger } from '../logging/nestjs-logger';
 
 function maskSensitiveData(obj: unknown, sensitiveKeys: string[]): void {
   if (typeof obj === 'object' && obj !== null) {
@@ -29,6 +32,16 @@ function maskSensitiveData(obj: unknown, sensitiveKeys: string[]): void {
 export class NestCommandLoggerMiddleware
   implements ICommandMiddlewareHandler<Command<void>, void>
 {
+  private readonly loggers: ILogger[] = [new NestJsLogger()];
+
+  constructor(
+    @Optional() @Inject(MIDDLEWARE_LOGGER) loggers?: ILogger[] | undefined,
+  ) {
+    if (loggers && loggers.length > 0) {
+      this.loggers = loggers;
+    }
+  }
+
   async process(
     ctx: CommandMiddlewareContext<Command<void>>,
     next: CommandMiddlewareNext<Command<void>, void>,
@@ -42,11 +55,11 @@ export class NestCommandLoggerMiddleware
         EnableLoggingDecorator.getConfigFrom(command).ignore ?? [],
       );
       const commandDetail = JSON.stringify(clonedCommand);
-      Logger.debug(
+      this.debug(
         `[${ctx.id} - ${command.constructor.name}] Executing with params: ${commandDetail}}`,
       );
     } else {
-      Logger.debug(`[${ctx.id} - ${command.constructor.name}] Executing.`);
+      this.debug(`[${ctx.id} - ${command.constructor.name}] Executing.`);
     }
 
     const now = new Date();
@@ -54,16 +67,28 @@ export class NestCommandLoggerMiddleware
       return await next(ctx);
     } catch (error) {
       const err = error instanceof Error ? error : new Error(`${error}`);
-      Logger.error(
+      this.error(
         `[${ctx.id} - ${command.constructor.name}] Error: ${err.message}. Stack: ${err.stack}`,
       );
       throw error;
     } finally {
       const end = new Date();
       const diff = end.getTime() - now.getTime();
-      Logger.debug(
+      this.debug(
         `[${ctx.id} - ${command.constructor.name}] Finish execution. Took ${diff}ms`,
       );
+    }
+  }
+
+  private debug(message: string): void {
+    for (const logger of this.loggers) {
+      logger.debug?.(message);
+    }
+  }
+
+  private error(message: string): void {
+    for (const logger of this.loggers) {
+      logger.error?.(message);
     }
   }
 }

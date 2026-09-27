@@ -1,8 +1,9 @@
-import { ConfigurableModuleBuilder, Type } from '@nestjs/common';
+import { ConfigurableModuleBuilder, Provider, Type } from '@nestjs/common';
 
 import { CqrsModuleOptions } from '@nestjs/cqrs';
 
 import { _ICommandMiddlewareHandler } from './middlewares';
+import { type ILogger } from './logging/logger';
 
 export const { OPTIONS_TYPE, MODULE_OPTIONS_TOKEN, ConfigurableModuleClass } =
   new ConfigurableModuleBuilder<{
@@ -14,6 +15,7 @@ export const { OPTIONS_TYPE, MODULE_OPTIONS_TOKEN, ConfigurableModuleClass } =
      * List of command middlewares {@link _ICommandMiddlewareHandler}
      */
     middlewares: Type<_ICommandMiddlewareHandler>[];
+    loggers?: Array<Provider<Type<ILogger>>>;
   }>()
     .setClassMethodName('forRoot')
     .build();

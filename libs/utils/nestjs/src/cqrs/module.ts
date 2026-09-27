@@ -9,6 +9,7 @@ import {
   MODULE_OPTIONS_TOKEN,
   OPTIONS_TYPE,
 } from './config';
+import { ILogger, MIDDLEWARE_LOGGER } from './logging/logger';
 
 /**
  * {@link MediatorModule} class
@@ -18,7 +19,7 @@ import {
  */
 export class MediatorModule extends ConfigurableModuleClass {
   static override forRoot(options: typeof OPTIONS_TYPE): DynamicModule {
-    const mediatorModule = super.forRoot(options);
+    const mediatorModule = ConfigurableModuleClass.forRoot(options);
 
     if (!mediatorModule.imports) {
       mediatorModule.imports = [];
@@ -28,31 +29,38 @@ export class MediatorModule extends ConfigurableModuleClass {
       mediatorModule.providers = [];
     }
 
-    // Add the CqrsModule to the imports of the MediatorModule
-    {
-      const cqrsModule = CqrsModule.forRoot(options?.cqrs);
+    const cqrsModule = CqrsModule.forRoot(options?.cqrs);
 
-      cqrsModule.providers?.push(
-        {
-          provide: ICommandPipeline,
-          useClass: CommandPipeline,
-        },
-        {
-          provide: CommandBus,
-          useClass: Mediator,
-        },
-        {
-          provide: MODULE_OPTIONS_TOKEN,
-          useValue: options,
-        },
+    cqrsModule.providers?.push(
+      {
+        provide: ICommandPipeline,
+        useClass: CommandPipeline,
+      },
+      {
+        provide: CommandBus,
+        useClass: Mediator,
+      },
+      {
+        provide: MODULE_OPTIONS_TOKEN,
+        useValue: options,
+      },
+    );
+
+    mediatorModule.imports.push(cqrsModule);
+
+    mediatorModule.providers.push(...options.middlewares);
+
+    if (options.loggers && options.loggers.length > 0) {
+      mediatorModule.providers.push(
+        ...[
+          {
+            provide: MIDDLEWARE_LOGGER,
+            useFactory: (...loggers: ILogger[]) => loggers,
+            inject: [...options.loggers] as Type<ILogger>[],
+          },
+          ...options.loggers,
+        ],
       );
-
-      mediatorModule.imports.push(cqrsModule);
-    }
-
-    // Add the MediatorModule to the providers of the MediatorModule
-    {
-      mediatorModule.providers.push(...options.middlewares);
     }
 
     return mediatorModule;
