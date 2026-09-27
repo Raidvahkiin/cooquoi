@@ -2,7 +2,7 @@ import { CommandBus, CqrsModule, QueryBus } from '@nestjs/cqrs';
 import { Test } from '@nestjs/testing';
 import { DATABASE_TOKEN } from '../../config';
 import { ingredients, offers } from '../../domain';
-import { products } from '../../domain/entities/product.entity';
+import { products } from '../../domain/entities/product.aggregate';
 import { productIngredients } from '../../domain/entities/relations';
 import { MarketModule } from '../../market.module';
 import { PgliteDb, createPgliteDb } from './pglite';

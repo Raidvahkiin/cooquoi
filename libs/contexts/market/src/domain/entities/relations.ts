@@ -1,8 +1,8 @@
 import { defineRelations } from 'drizzle-orm';
 import { pgTable, uuid } from 'drizzle-orm/pg-core';
-import { ingredientComponents, ingredients } from './ingredient.entity';
+import { ingredientComponents, ingredients } from './ingredient.aggregate';
 import { offers } from './offers.entity';
-import { products } from './product.entity';
+import { products } from './product.aggregate';
 
 export const productIngredients = pgTable('product_ingredients', {
   productId: uuid('product_id')
@@ -48,9 +48,7 @@ export const relations = defineRelations(
         from: r.ingredients.id.through(
           r.ingredientComponents.componentIngredientId,
         ),
-        to: r.ingredients.id.through(
-          r.ingredientComponents.parentIngredientId,
-        ),
+        to: r.ingredients.id.through(r.ingredientComponents.parentIngredientId),
         alias: 'ingredient_composed_in',
       }),
     },
