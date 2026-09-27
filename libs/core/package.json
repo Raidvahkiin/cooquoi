@@ -13,6 +13,11 @@
       "import": "./src/common/index.ts",
       "default": "./src/common/index.ts"
     },
+    "./error": {
+      "types": "./src/error/index.ts",
+      "import": "./src/error/index.ts",
+      "default": "./src/error/index.ts"
+    },
     "./package.json": "./package.json"
   },
   "nx": {

@@ -2,7 +2,7 @@
 import { defineProject } from "vitest/config";
 
 export default defineProject(() => ({
-	root: __dirname,
+	root: import.meta.dirname,
 	cacheDir: "node_modules/.vite/libs/core",
 	resolve: {
 		tsconfigPaths: true,

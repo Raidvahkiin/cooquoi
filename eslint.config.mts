@@ -1,16 +1,13 @@
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+/// <reference types="node" />
 import nxPlugin from '@nx/eslint-plugin';
 import tseslint, { type ConfigArray } from 'typescript-eslint';
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const config: ConfigArray = [
   ...tseslint.configs.recommended,
   {
     languageOptions: {
       parserOptions: {
-        tsconfigRootDir: __dirname,
+        tsconfigRootDir: import.meta.dirname,
       },
     },
   },
@@ -61,7 +58,11 @@ const config: ConfigArray = [
             },
             {
               sourceTag: 'platform:nestjs',
-              onlyDependOnLibsWithTags: ['platform:nestjs', 'platform:node', 'platform:all'],
+              onlyDependOnLibsWithTags: [
+                'platform:nestjs',
+                'platform:node',
+                'platform:all',
+              ],
             },
             {
               sourceTag: 'platform:nextjs',

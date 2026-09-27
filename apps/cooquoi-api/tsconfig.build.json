@@ -12,4 +12,15 @@
     "vite.config.ts",
     "vite.config.e2e.mts"
   ],
+  "references": [
+    {
+      "path": "../../libs/utils/nestjs/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/utils/api-contracts/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/contexts/market/tsconfig.lib.json"
+    }
+  ],
 }

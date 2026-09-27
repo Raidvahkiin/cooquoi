@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 import { defineProject } from 'vitest/config';
 
 export default defineProject(() => ({
-  root: __dirname,
+  root: import.meta.dirname,
   cacheDir: '../../../node_modules/.vite/libs/utils-react',
   resolve: {
     tsconfigPaths: true,

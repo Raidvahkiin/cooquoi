@@ -44,12 +44,10 @@ export class IngredientsController implements IngredientsEndpoints {
 
   @Get(':id')
   async getOneById(@Param('id') id: string): Promise<Ingredient> {
-    const result = await this.queryBus.execute<
-      GetIngredientQuery,
-      Ingredient | null
-    >(new GetIngredientQuery(id));
-
-    if (!result) throw new NotFoundException(`Ingredient ${id} not found`);
+    const result = await this.queryBus.execute(new GetIngredientQuery(id));
+    if (!result) {
+      throw new NotFoundException(`Ingredient ${id} not found`);
+    }
     return result;
   }
 

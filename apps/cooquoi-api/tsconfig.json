@@ -22,4 +22,15 @@
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
     "types": ["vitest/globals", "node"]
   },
+  "references": [
+    {
+      "path": "../../libs/utils/nestjs"
+    },
+    {
+      "path": "../../libs/utils/api-contracts"
+    },
+    {
+      "path": "../../libs/contexts/market"
+    }
+  ],
 }

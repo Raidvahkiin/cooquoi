@@ -50,4 +50,12 @@
     "**/*.stories.js",
     "**/*.stories.jsx"
   ],
+  "references": [
+    {
+      "path": "../../libs/utils/react"
+    },
+    {
+      "path": "../../libs/utils/api-contracts"
+    }
+  ],
 }
