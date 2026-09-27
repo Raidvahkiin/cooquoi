@@ -6,7 +6,9 @@ import {
   CommandBus,
   type CqrsModuleOptions,
 } from '@nestjs/cqrs';
-import { CQRS_MODULE_OPTIONS } from '@nestjs/cqrs/dist/constants';
+
+// Not in the public exports map of @nestjs/cqrs — use the string token directly
+const CQRS_MODULE_OPTIONS = 'CQRS_MODULE_OPTIONS';
 
 import { ICommandPipeline } from './pipeline';
 
