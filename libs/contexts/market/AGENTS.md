@@ -200,7 +200,7 @@ describe('CreateIngredient feature', () => {
 ### Running tests
 
 ```bash
-bun nx run market:test
+bun nx run @cooquoi/market:test
 ```
 
 ---
@@ -212,4 +212,4 @@ bun nx run market:test
 - **No barrel re-export of internals**: `src/index.ts` exports only what app-level code needs (commands, queries, DTOs, result types, `MarketModule`).
 - **No controllers inside the library**: dispatch happens from `apps/cooquoi-api/src/controllers/` via `CommandBus` / `QueryBus`.
 - **Handlers are thin**: business logic belongs in domain methods or value objects, not in handlers.
-- **Biome** enforces formatting (2-space indent, single quotes). Run `bun nx run market:lint` before committing.
+- **Biome** enforces formatting (2-space indent, single quotes). Run `bun nx run @cooquoi/market:lint` before committing.

@@ -22,5 +22,78 @@
 
 <!-- nx configuration end-->
 
-## package mananger
-bun
+# Cooquoi
+
+Food/ingredient management platform: browse and compare ingredient/product prices across vendors, and later manage inventories, recipes and sharing between users. A Next.js web app talks to a NestJS REST API.
+
+## Tooling
+
+- **Package manager: bun.** Run everything as `bun nx ...` (CI uses `bunx nx`). Install with `bun install`.
+- Nx 23 monorepo, TypeScript 6 (`strict`), Vitest everywhere, Biome for formatting and ESLint (with `@nx/enforce-module-boundaries`) for linting.
+- Common commands:
+
+```bash
+bun nx run <project>:<target>          # e.g. bun nx run @cooquoi/market:test
+bun nx run-many -t lint typecheck test # what CI runs
+bun nx affected -t test
+bun run dev:api                         # @cooquoi/api:start:dev
+bun run dev:webapp                      # @cooquoi/webapp:dev
+bun run compose:dev up -d               # local Postgres etc. (docker/dev.docker-compose.yml)
+bun run nx:format                       # biome format --write
+```
+
+Project names are the full package names (`@cooquoi/market`, not `market`).
+
+## Projects
+
+| Project | Path | Tags | What it is |
+|---|---|---|---|
+| `@cooquoi/api` | `apps/cooquoi-api` | `type:app`, `scope:consumer`, `platform:nestjs` | NestJS REST API (Fastify adapter). Controllers, seeding, Drizzle migrations (`db:generate`, `db:migrate`, `db:push`, `db:studio`) |
+| `@cooquoi/webapp` | `apps/cooquoi-webapp` | `type:app`, `scope:consumer`, `platform:nextjs` | Next.js 16 + React 19 + Tailwind v4 (App Router, server actions in `src/actions/`) |
+| `@cooquoi/market` | `libs/contexts/market` | `type:lib`, `scope:bounded-context`, `platform:nestjs` | Market bounded context: ingredients, products, vendor offers, price comparison. **See [libs/contexts/market/AGENTS.md](libs/contexts/market/AGENTS.md)** |
+| `@libs/core` | `libs/core` | `type:lib`, `scope:core`, `platform:all` | Framework-free primitives: `Entity`, `ValueObject`s (`Quantity`, `Unit`, `Currency`), `DomainError`, `Enumeration`, `EntityFilter`, `DatetimeProvider`, `mockPartial` test util |
+| `@utils/nestjs` | `libs/utils/nestjs` | `type:lib`, `scope:utility`, `platform:nestjs` | CQRS `Mediator` (extends `CommandBus` with a middleware pipeline), `MediatorModule.forRoot()`, `@EnableLogging()`, pluggable loggers (`ILogger`, `MIDDLEWARE_LOGGER`, `NestJsLogger`) |
+| `@utils/api-contracts` | `libs/utils/api-contracts` | `type:lib`, `scope:utility`, `platform:all` | Shared API models/endpoint interfaces and the typed `CooquoiClient` HTTP client used by the webapp |
+| `@utils/react` | `libs/utils/react` | `type:lib`, `scope:utility`, `platform:react` | Shared React UI components + Storybook |
+
+Only the `market` context exists today. Planned contexts (not created yet): `stock` (inventory, expiry), `recipes`, `authority` (users, sharing).
+
+### Dependency rules (enforced by ESLint)
+
+- `scope:core` → only `scope:core`
+- `scope:utility` → `scope:utility`, `scope:core`
+- `scope:bounded-context` → `scope:core`, `scope:utility` (contexts never import each other)
+- `scope:consumer` (apps) → core, utility, bounded-context
+- libs never depend on apps
+
+## Architecture
+
+- **DDD + Vertical Slice Architecture + CQRS** (`@nestjs/cqrs`, dispatched through the `Mediator` from `@utils/nestjs`).
+- Each bounded context is a NestJS library under `libs/contexts/<name>/` exposing a `DynamicModule` via `static register()`.
+- One folder per use case under `src/features/<group>/<use-case>/` containing `*.command.ts` or `*.query.ts`, `*.handler.ts`, optional `*.dto.ts`, and `__tests__/*.spec.ts`.
+- Persistence is **Drizzle ORM** (Postgres). Drizzle `pgTable` definitions in `src/domain/entities/` are the domain entities — no separate ORM entity or repository layer.
+- **Controllers never live in a context library.** They live in `apps/cooquoi-api/src/controllers/` and import commands/queries/result types from the context's public `index.ts`. A context module must not declare `controllers`.
+- Handlers stay thin; business rules belong in value objects / domain code.
+- Add `@EnableLogging()` on commands that should go through the logging middleware.
+
+## Conventions
+
+- TypeScript: `module: esnext`, `moduleResolution: bundler`, `strict`, `noUnusedLocals`, `noImplicitReturns`, `noImplicitOverride`, decorators + metadata enabled.
+- `customConditions: ["@org/source"]` — workspace packages resolve to TS source, no build needed in dev. Local deps use `workspace:*`.
+- Each lib has `tsconfig.json`, `tsconfig.lib.json`, `tsconfig.spec.json`.
+- File suffixes: `.command.ts`, `.query.ts`, `.handler.ts`, `.dto.ts`, `.entity.ts`, `.vo.ts`, `.module.ts`, `.controller.ts`, `.spec.ts`, `.stories.tsx`, `.util.ts`.
+- Public API only through `index.ts` barrels; don't export internals.
+- Functions/constructors with 3+ parameters take a single typed object parameter.
+- Biome: 2-space indent, single quotes, organized imports. Prefer `import type` where applicable.
+- React: `clsx` + `tailwind-merge` for class names, CVA for variants.
+
+## Testing
+
+- Vitest with `globals: true`; specs sit next to the code (`*.spec.ts`, or `__tests__/` inside a feature slice).
+- Context tests are integration tests against in-memory **PGlite** (no DB mocks) — see the market AGENTS.md for the test suite helpers.
+- Use `mockPartial<T>()` from `@libs/core` test utils for typed partial mocks; inject a stub `DatetimeProvider` for time-dependent logic.
+- NestJS tests use `Test.createTestingModule()`.
+
+## Environment
+
+API env vars: `DATABASE_URL` (required), `PORT` (default `3001`), `DATABASE_SEEDING_ENABLED` (default `false`). Docker images are built per app (`bun nx docker-build <project>`) and pushed to GHCR by CI on `v*` tags.
