@@ -35,6 +35,8 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0006](architecture/adr/0006-cicd-github-actions-coolify.md) | CI/CD: GitHub Actions + Coolify on a VPS | Accepted |
 | [0007](architecture/adr/0007-mobile-strategy.md) | Mobile: PWA first, Flutter as the future native target | Accepted |
 | [0008](architecture/adr/0008-web-ui-astryx.md) | Web UI: Astryx design system | Accepted |
+| [0009](architecture/adr/0009-api-contract-typespec.md) | API contract: TypeSpec contract-first, typed list queries | Accepted |
+| [0010](architecture/adr/0010-modular-monolith-persistence.md) | Modular monolith and persistence | Accepted |
 
 ## Conventions
 

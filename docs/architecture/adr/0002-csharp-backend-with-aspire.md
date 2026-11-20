@@ -22,5 +22,5 @@ The first backend was written in NestJS/TypeScript. In practice it drifted towar
 
 - Rich domain models are the natural path (encapsulation, records, structural equality).
 - Two toolchains (bun and dotnet): Nx runs their tasks, Aspire runs their services.
-- End-to-end TypeScript types are lost; the API contract is generated instead (TypeSpec contract-first, to be confirmed in a dedicated ADR).
+- End-to-end TypeScript types are lost; the API contract is generated instead (TypeSpec contract-first, see [ADR 0009](0009-api-contract-typespec.md)).
 - Modern C# style is required to keep boilerplate low (primary constructors, records, minimal APIs, file-scoped namespaces).
