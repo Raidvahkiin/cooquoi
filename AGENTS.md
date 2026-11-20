@@ -24,7 +24,11 @@
 
 # Cooquoi
 
-Food/ingredient management platform: browse and compare ingredient/product prices across vendors, and later manage inventories, recipes and sharing between users. A Next.js web app talks to a NestJS REST API.
+Daily-comfort food app: helps a household decide what to cook and what to buy from what is in the fridge, preferred markets and budget, with AI recipe suggestions as the core domain. A Next.js web app talks to a REST API (legacy NestJS today, being replaced by a C# backend orchestrated with Aspire).
+
+## Documentation
+
+Business and architecture docs live in [`docs/`](docs/README.md): [vision](docs/business/vision.md), [glossary](docs/business/glossary.md) (use its terms in code), [context map](docs/business/context-map.md) and [ADRs](docs/architecture/adr/). Read the relevant ones before designing a feature; record new architecture decisions as ADRs.
 
 ## Tooling
 
@@ -53,7 +57,7 @@ Top-level folders are split by **toolchain**, not by frontend/backend:
 | `ts/` | bun + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, React UI, API client |
 | `dotnet/` *(planned)* | .NET + `Cooquoi.slnx` | C# backend (DDD bounded contexts) and the Aspire AppHost |
 | `contracts/` *(planned)* | TypeSpec | API contract, source of truth for all generated clients |
-| `mobile/` *(planned)* | Flutter | Mobile app |
+| `mobile/` *(future)* | Flutter | Native mobile app. Until then the webapp is a **PWA** ([ADR 0007](docs/architecture/adr/0007-mobile-strategy.md)) |
 | `apps/`, `libs/` *(legacy)* | bun + Nx | NestJS backend (`@cooquoi/api`, `@cooquoi/market`, `@utils/nestjs`, `@libs/core`), kept until the C# backend replaces it |
 
 Nx stays at the root and orchestrates every folder.
@@ -99,7 +103,7 @@ Only the `market` context exists today. Planned contexts (not created yet): `sto
 - Public API only through `index.ts` barrels; don't export internals.
 - Functions/constructors with 3+ parameters take a single typed object parameter.
 - Biome: 2-space indent, single quotes, organized imports. Prefer `import type` where applicable.
-- React: `clsx` + `tailwind-merge` for class names, CVA for variants.
+- Web UI: **Astryx** design system ([ADR 0008](docs/architecture/adr/0008-web-ui-astryx.md)). Use Astryx components and tokens only — no hard-coded px or hex colours; spacing via `gap`/`padding` props or `--spacing-*`, text via `Heading`/`Text` types. Custom styles go in CSS Modules using Astryx tokens. Tailwind is being removed with the redesign — don't add new Tailwind code.
 
 ## Testing
 
