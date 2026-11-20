@@ -37,6 +37,8 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0008](architecture/adr/0008-web-ui-astryx.md) | Web UI: Astryx design system | Accepted |
 | [0009](architecture/adr/0009-api-contract-typespec.md) | API contract: TypeSpec contract-first, typed list queries | Accepted |
 | [0010](architecture/adr/0010-modular-monolith-persistence.md) | Modular monolith and persistence | Accepted |
+| [0011](architecture/adr/0011-webapp-api-auth.md) | Webapp ↔ API: Next.js as backend-for-frontend, bearer-only API | Accepted |
+| [0012](architecture/adr/0012-internationalization.md) | Internationalization: English, French, Vietnamese | Accepted |
 
 ## Conventions
 

@@ -16,7 +16,8 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | Term | Definition |
 |---|---|
 | **Foodpedia** | The shared reference knowledge about food: ingredients, units, conversions, shelf life. Read by every other context. |
-| **Ingredient** | A generic food concept ("salmon", "egg", "flour"), independent of brand or packaging. Seeded and maintained by curators. |
+| **Ingredient** | A generic food concept ("salmon", "egg", "flour"), independent of brand or packaging. Seeded and maintained by curators. Identified by a language-neutral **code**; its names are translations. |
+| **Localized name** | The primary name of an ingredient in one locale (`en`, `fr`, `vi`), plus optional **synonyms** in that locale. Missing translations fall back to English. |
 | **Base unit** | The single unit in which an ingredient is normalized: **gram** (solids), **millilitre** (liquids) or **piece** (countables). |
 | **Unit** | A unit a quantity can be expressed in: g, kg, ml, l, piece, and ingredient-specific ones like pack, fillet, slice. |
 | **Dimension** | The kind of measure a unit belongs to: mass, volume or count. |
