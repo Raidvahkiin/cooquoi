@@ -1,12 +1,12 @@
 {
   "name": "@cooquoi/webapp",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "targets": {
     "docker-build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "docker build -f apps/cooquoi-webapp/Dockerfile -t cooquoi-webapp:{args.tag} .",
+        "command": "docker build -f ts/apps/cooquoi-webapp/Dockerfile -t cooquoi-webapp:{args.tag} .",
         "cwd": "{workspaceRoot}"
       }
     }

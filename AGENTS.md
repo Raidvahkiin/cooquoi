@@ -44,17 +44,31 @@ bun run nx:format                       # biome format --write
 
 Project names are the full package names (`@cooquoi/market`, not `market`).
 
+## Repository layout
+
+Top-level folders are split by **toolchain**, not by frontend/backend:
+
+| Folder | Toolchain | Content |
+|---|---|---|
+| `ts/` | bun + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, React UI, API client |
+| `dotnet/` *(planned)* | .NET + `Cooquoi.slnx` | C# backend (DDD bounded contexts) and the Aspire AppHost |
+| `contracts/` *(planned)* | TypeSpec | API contract, source of truth for all generated clients |
+| `mobile/` *(planned)* | Flutter | Mobile app |
+| `apps/`, `libs/` *(legacy)* | bun + Nx | NestJS backend (`@cooquoi/api`, `@cooquoi/market`, `@utils/nestjs`, `@libs/core`), kept until the C# backend replaces it |
+
+Nx stays at the root and orchestrates every folder.
+
 ## Projects
 
 | Project | Path | Tags | What it is |
 |---|---|---|---|
 | `@cooquoi/api` | `apps/cooquoi-api` | `type:app`, `scope:consumer`, `platform:nestjs` | NestJS REST API (Fastify adapter). Controllers, seeding, Drizzle migrations (`db:generate`, `db:migrate`, `db:push`, `db:studio`) |
-| `@cooquoi/webapp` | `apps/cooquoi-webapp` | `type:app`, `scope:consumer`, `platform:nextjs` | Next.js 16 + React 19 + Tailwind v4 (App Router, server actions in `src/actions/`) |
+| `@cooquoi/webapp` | `ts/apps/cooquoi-webapp` | `type:app`, `scope:consumer`, `platform:nextjs` | Next.js 16 + React 19 + Tailwind v4 (App Router, server actions in `src/actions/`) |
 | `@cooquoi/market` | `libs/contexts/market` | `type:lib`, `scope:bounded-context`, `platform:nestjs` | Market bounded context: ingredients, products, vendor offers, price comparison. **See [libs/contexts/market/AGENTS.md](libs/contexts/market/AGENTS.md)** |
 | `@libs/core` | `libs/core` | `type:lib`, `scope:core`, `platform:all` | Framework-free primitives: `Entity`, `ValueObject`s (`Quantity`, `Unit`, `Currency`), `DomainError`, `Enumeration`, `EntityFilter`, `DatetimeProvider`, `mockPartial` test util |
 | `@utils/nestjs` | `libs/utils/nestjs` | `type:lib`, `scope:utility`, `platform:nestjs` | CQRS `Mediator` (extends `CommandBus` with a middleware pipeline), `MediatorModule.forRoot()`, `@EnableLogging()`, pluggable loggers (`ILogger`, `MIDDLEWARE_LOGGER`, `NestJsLogger`) |
-| `@utils/api-contracts` | `libs/utils/api-contracts` | `type:lib`, `scope:utility`, `platform:all` | Shared API models/endpoint interfaces and the typed `CooquoiClient` HTTP client used by the webapp |
-| `@utils/react` | `libs/utils/react` | `type:lib`, `scope:utility`, `platform:react` | Shared React UI components + Storybook |
+| `@utils/api-contracts` | `ts/libs/utils/api-contracts` | `type:lib`, `scope:utility`, `platform:all` | Shared API models/endpoint interfaces and the typed `CooquoiClient` HTTP client used by the webapp |
+| `@utils/react` | `ts/libs/utils/react` | `type:lib`, `scope:utility`, `platform:react` | Shared React UI components + Storybook |
 
 Only the `market` context exists today. Planned contexts (not created yet): `stock` (inventory, expiry), `recipes`, `authority` (users, sharing).
 

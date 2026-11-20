@@ -54,7 +54,7 @@ jobs:
             dockerfile: apps/cooquoi-api/Dockerfile
           - app: cooquoi-webapp
             context: .
-            dockerfile: apps/cooquoi-webapp/Dockerfile
+            dockerfile: ts/apps/cooquoi-webapp/Dockerfile
     steps:
       - uses: actions/checkout@v6
 

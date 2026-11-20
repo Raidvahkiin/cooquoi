@@ -89,7 +89,26 @@
         "tsconfig-paths": "^4.2.0",
       },
     },
-    "apps/cooquoi-webapp": {
+    "libs/contexts/market": {
+      "name": "@cooquoi/market",
+      "version": "0.0.0",
+      "dependencies": {
+        "@libs/core": "workspace:*",
+        "@utils/nestjs": "workspace:*",
+      },
+      "devDependencies": {
+        "@electric-sql/pglite": "^0.5.8",
+      },
+    },
+    "libs/core": {
+      "name": "@libs/core",
+      "version": "0.0.0",
+    },
+    "libs/utils/nestjs": {
+      "name": "@utils/nestjs",
+      "version": "0.0.0",
+    },
+    "ts/apps/cooquoi-webapp": {
       "name": "@cooquoi/webapp",
       "version": "0.0.1",
       "dependencies": {
@@ -109,30 +128,11 @@
         "@tailwindcss/postcss": "^4.2.2",
       },
     },
-    "libs/contexts/market": {
-      "name": "@cooquoi/market",
-      "version": "0.0.0",
-      "dependencies": {
-        "@libs/core": "workspace:*",
-        "@utils/nestjs": "workspace:*",
-      },
-      "devDependencies": {
-        "@electric-sql/pglite": "^0.5.8",
-      },
-    },
-    "libs/core": {
-      "name": "@libs/core",
-      "version": "0.0.0",
-    },
-    "libs/utils/api-contracts": {
+    "ts/libs/utils/api-contracts": {
       "name": "@utils/api-contracts",
       "version": "0.0.0",
     },
-    "libs/utils/nestjs": {
-      "name": "@utils/nestjs",
-      "version": "0.0.0",
-    },
-    "libs/utils/react": {
+    "ts/libs/utils/react": {
       "name": "@utils/react",
       "version": "0.0.0",
       "dependencies": {
@@ -443,7 +443,7 @@
 
     "@cooquoi/market": ["@cooquoi/market@workspace:libs/contexts/market"],
 
-    "@cooquoi/webapp": ["@cooquoi/webapp@workspace:apps/cooquoi-webapp"],
+    "@cooquoi/webapp": ["@cooquoi/webapp@workspace:ts/apps/cooquoi-webapp"],
 
     "@cspotcode/source-map-support": ["@cspotcode/source-map-support@0.8.1", "", { "dependencies": { "@jridgewell/trace-mapping": "0.3.9" } }, "sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw=="],
 
@@ -1251,11 +1251,11 @@
 
     "@unrs/resolver-binding-win32-x64-msvc": ["@unrs/resolver-binding-win32-x64-msvc@1.12.2", "", { "os": "win32", "cpu": "x64" }, "sha512-nAB74NfSNKknqQ1RrYj6uz8FcXEomu/MATJZxh/x+BArzN2U3JbOYC0APYzUIGhVY3m5hRxA8VPNdPBoG8txlA=="],
 
-    "@utils/api-contracts": ["@utils/api-contracts@workspace:libs/utils/api-contracts"],
+    "@utils/api-contracts": ["@utils/api-contracts@workspace:ts/libs/utils/api-contracts"],
 
     "@utils/nestjs": ["@utils/nestjs@workspace:libs/utils/nestjs"],
 
-    "@utils/react": ["@utils/react@workspace:libs/utils/react"],
+    "@utils/react": ["@utils/react@workspace:ts/libs/utils/react"],
 
     "@vitejs/plugin-react": ["@vitejs/plugin-react@4.7.0", "", { "dependencies": { "@babel/core": "^7.28.0", "@babel/plugin-transform-react-jsx-self": "^7.27.1", "@babel/plugin-transform-react-jsx-source": "^7.27.1", "@rolldown/pluginutils": "1.0.0-beta.27", "@types/babel__core": "^7.20.5", "react-refresh": "^0.17.0" }, "peerDependencies": { "vite": "^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0" } }, "sha512-gUu9hwfWvvEDBBmgtAowQCojwZmJ5mcLn3aufeCsitijs3+f2NsrPtlAWIR6OPiqljl96GVCUbLe0HyqIpVaoA=="],
 

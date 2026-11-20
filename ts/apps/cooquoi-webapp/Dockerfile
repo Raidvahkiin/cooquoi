@@ -33,12 +33,12 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 
 # Copy standalone server
-COPY --from=builder /app/apps/cooquoi-webapp/.next/standalone ./
+COPY --from=builder /app/ts/apps/cooquoi-webapp/.next/standalone ./
 # Copy static assets
-COPY --from=builder /app/apps/cooquoi-webapp/.next/static ./apps/cooquoi-webapp/.next/static
+COPY --from=builder /app/ts/apps/cooquoi-webapp/.next/static ./ts/apps/cooquoi-webapp/.next/static
 # Copy public folder
-COPY --from=builder /app/apps/cooquoi-webapp/public ./apps/cooquoi-webapp/public
+COPY --from=builder /app/ts/apps/cooquoi-webapp/public ./ts/apps/cooquoi-webapp/public
 
 EXPOSE 3000
 
-CMD ["node", "apps/cooquoi-webapp/server.js"]
+CMD ["node", "ts/apps/cooquoi-webapp/server.js"]

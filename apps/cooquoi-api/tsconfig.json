@@ -27,7 +27,7 @@
       "path": "../../libs/utils/nestjs"
     },
     {
-      "path": "../../libs/utils/api-contracts"
+      "path": "../../ts/libs/utils/api-contracts"
     },
     {
       "path": "../../libs/contexts/market"
