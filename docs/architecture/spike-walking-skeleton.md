@@ -42,11 +42,13 @@ The smallest domain, but every layer: Aspire, Keycloak, API, domain, persistence
 
 **Done when**: `aspire run` starts everything; signing in with Keycloak creates a profile and a household; the webapp shows the user's name; tests pass.
 
-**Status (2026-11-21)**: built and verified end to end under Aspire. Remaining: tests, then recording these findings in the ADRs.
+**Status (2026-11-21)**: built, verified end to end under Aspire, and tested. Remaining: recording these findings in the ADRs (after the spike).
 
-- **Verified**: Keycloak login from the webapp → `/account` calls `GET /v1/me` with the bearer token → profile and personal household created on first call, same ids afterwards; no token → 401 `ProblemDetails`; token locale wins over `Accept-Language`.
-- **Not done**: domain tests (xUnit v3 + Shouldly) in a mirrored `dotnet/tests/Cooquoi.Context.Household.Tests`; integration tests (Alba + Testcontainers: first sign-in, repeat call, concurrent first sign-in with row counts, 401); webapp auth route tests; Astryx `AppShell` (deferred to phase 4); Google brokering (identity provider in the realm, disabled).
-- **Known gaps**: after login the user always lands on `/` (the original page is not passed back); token refresh in `proxy.ts` not verified with an expired token; the `Version` bump covers the aggregate root row only, not owned children (memberships); Wolverine transaction middleware not used yet (the endpoint calls `SaveChangesAsync` itself, decided in phase 2 with the outbox).
+- **Verified**: Keycloak login from the webapp → `/account` calls `GET /v1/me` with the bearer token → profile and personal household created on first call, same ids afterwards; token locale wins over `Accept-Language`.
+- **Tests**: domain (xUnit v3 + Shouldly) and integration (Alba + Testcontainers Postgres) in `dotnet/tests/Cooquoi.Context.Household.Tests` — first sign-in, repeat sign-in refreshes the name, locale from token / `Accept-Language`, 8 concurrent first sign-ins → 1 profile + 1 household, 401 `ProblemDetails`. Webapp (Vitest Node + MSW for Keycloak): login (PKCE, state, safe `returnTo`), callback (code exchange, state mismatch, no login in progress), logout (back-channel end session), `proxy.ts` refresh (expired, within margin, valid, refused).
+- **Fixed by the tests**: 401 had an empty body although the contract declares `ProblemDetails` → JwtBearer `OnChallenge` writes `common.unauthorized` through the shared `ProblemWriter`. `proxy.ts` refreshed the cookie for the browser only: iron-session's `(request, response)` form appends a raw `Set-Cookie`, which Next.js does not pass to the page of the same request, so that page still called the API with the expired token → the session now writes through `response.cookies` (`x-middleware-set-cookie`).
+- **Not done**: Astryx `AppShell` (deferred to phase 4); Google brokering (identity provider in the realm, disabled); webapp browser-mode project (added with the first component in phase 4); the webapp `typecheck` target excludes test files (phase 5 tooling).
+- **Known gaps**: after login the user always lands on `/` (the original page is not passed back); the refreshed-token handoff is proven against Next's header contract in a unit test, not yet with an expired token in the running app; the `Version` bump covers the aggregate root row only, not owned children (memberships); Wolverine transaction middleware not used yet (the endpoint calls `SaveChangesAsync` itself, decided in phase 2 with the outbox).
 
 **Answers so far**
 
@@ -56,10 +58,11 @@ The smallest domain, but every layer: Aspire, Keycloak, API, domain, persistence
 - **Logout**: without the ID token Keycloak shows a confirmation page and keeps the SSO session → back-channel POST to the end-session endpoint with the refresh token.
 - **JWT**: JwtBearer with `MapInboundClaims = false`, audience `cooquoi-api` via a client mapper; works.
 - **Wolverine 6**: needs `WolverineFx.RuntimeCompilation` in development (production should use pre-generated code); injected types must be public (`CurrentUser`); register DbContext options as singleton (`optionsLifetime: ServiceLifetime.Singleton`) or codegen falls back to service location.
-- **Concurrent first sign-in**: unique index `ux_user_profiles_identity` + retry on unique violation implemented; not yet proven by a test.
+- **Concurrent first sign-in**: unique index `ux_user_profiles_identity` + retry on unique violation works: 8 parallel first requests → 7 unique violations recovered, one profile and one household (the household insert rolls back with the profile). Each lost race logs an EF Core error — noisy, acceptable for a rare event.
 - **Contract chain**: TypeSpec → `contracts/generated/openapi.yaml` → Hey API 0.99 client in `ts/libs/api-client`; usable from Server Components with `throwOnError: true` per call (the typed client option did not narrow the types).
 - **Next.js 16**: Server Components cannot write cookies → token refresh lives in `src/proxy.ts`.
 - **.NET tooling**: `global.json` at the repo root (SDK 10.0.100, `latestFeature`); NuGet's latest are .NET 11 packages, so 10.x versions are pinned in `Directory.Packages.props`; `IDE0005` needs `GenerateDocumentationFile` (+ `NoWarn CS1591`); EF migrations break the strict analyzers → `generated_code = true` for `**/Migrations/*.cs` in `.editorconfig`; `CA1716` rejects a type named `Me` (→ `MeResponse`).
+- **Tests**: xunit v3 4.x runs only on Microsoft Testing Platform → `"test": { "runner": "Microsoft.Testing.Platform" }` in `global.json`, no VSTest packages, `dotnet test --project …`. Alba's `JwtSecurityStub` validates real JWTs (add `iss`); `RemoveClaim` only removes baseline claims, not ones the scenario added. `CA1707` off for `tests/` (sentence-style names). MSW 3 renamed `onUnhandledRequest` → `onUnhandledFrame`. The Nx Vitest plugin infers `test` from `vite.config.mts`.
 - **Dev loop**: `aspire start` from `aspire/Cooquoi.AppHost` (dashboard on 15149, webapp 3000, API 5281); `dotnet tool restore` for `dotnet-ef`.
 ### Phase 2 — Foodpedia backend
 

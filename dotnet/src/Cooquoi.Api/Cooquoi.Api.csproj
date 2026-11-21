@@ -9,4 +9,8 @@
     <ProjectReference Include="../Cooquoi.Platform/Cooquoi.Platform.csproj" />
     <ProjectReference Include="../Cooquoi.ServiceDefaults/Cooquoi.ServiceDefaults.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- Integration tests host the API through its Program (Alba). -->
+    <InternalsVisibleTo Include="Cooquoi.Context.Household.Tests" />
+  </ItemGroup>
 </Project>

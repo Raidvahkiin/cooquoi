@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <PackageReference Include="Alba" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
+    <ProjectReference Include="../../src/Cooquoi.Api/Cooquoi.Api.csproj" />
+    <ProjectReference Include="../../src/Cooquoi.Context.Household/Cooquoi.Context.Household.csproj" />
+  </ItemGroup>
+</Project>

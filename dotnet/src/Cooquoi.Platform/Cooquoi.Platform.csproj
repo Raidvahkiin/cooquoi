@@ -2,6 +2,7 @@
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <ProjectReference Include="../BuildingBlocks/Raidvahkiin.Ddd.AspNetCore/Raidvahkiin.Ddd.AspNetCore.csproj" />
     <ProjectReference Include="../BuildingBlocks/Raidvahkiin.Ddd/Raidvahkiin.Ddd.csproj" />
   </ItemGroup>
 </Project>

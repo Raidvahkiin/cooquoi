@@ -36,6 +36,7 @@
     }
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "catalog:"
+    "@tailwindcss/postcss": "catalog:",
+    "msw": "catalog:"
   }
 }

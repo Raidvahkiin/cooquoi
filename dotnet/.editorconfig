@@ -15,3 +15,7 @@ csharp_style_var_when_type_is_apparent = true:suggestion
 [**/Migrations/*.cs]
 generated_code = true
 dotnet_analyzer_diagnostic.severity = none
+
+# Test names read as sentences: Method_does_something_when_condition.
+[tests/**/*.cs]
+dotnet_diagnostic.CA1707.severity = none

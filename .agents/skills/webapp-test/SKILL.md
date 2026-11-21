@@ -33,7 +33,7 @@ Never `vi.mock` the generated API client and never stub `fetch` by hand: that sk
 
 - Vitest config with **two projects**: `node` (`**/*.test.ts`) and `browser` (`**/*.test.tsx`, Playwright provider, Chromium).
 - `msw/handlers/<feature>.ts` — default handlers per feature, built from fixtures; shared by both projects.
-- `msw/node.ts` — `setupServer(...handlers)` for the Node project (`onUnhandledRequest: 'error'`).
+- `msw/node.ts` — `setupServer(...handlers)` for the Node project (`onUnhandledFrame: 'error'`, MSW 3).
 - `msw/browser.ts` — `setupWorker(...handlers)` for the browser project.
 - `fixtures/<feature>.ts` — typed with API types from `@cooquoi/api-client`.
 - `render.tsx` — renders with next-intl (English messages) and the Astryx `Theme`.

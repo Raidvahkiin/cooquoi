@@ -10,5 +10,8 @@
     <Project Path="src/BuildingBlocks/Raidvahkiin.Ddd.AspNetCore/Raidvahkiin.Ddd.AspNetCore.csproj" />
     <Project Path="src/BuildingBlocks/Raidvahkiin.Ddd/Raidvahkiin.Ddd.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Cooquoi.Context.Household.Tests/Cooquoi.Context.Household.Tests.csproj" />
+  </Folder>
   <Project Path="../aspire/Cooquoi.AppHost/Cooquoi.AppHost.csproj" />
 </Solution>

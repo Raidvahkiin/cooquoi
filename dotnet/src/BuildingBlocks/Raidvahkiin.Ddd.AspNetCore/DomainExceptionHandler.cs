@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -6,8 +5,8 @@ using Microsoft.Extensions.Logging;
 namespace Raidvahkiin.Ddd.AspNetCore;
 
 /// <summary>
-/// The single place where errors become ProblemDetails (code, params, traceId).
-/// Unknown exceptions return 500 without internal details.
+/// Turns exceptions into problems: a <see cref="DomainException"/> keeps its code and kind;
+/// anything else returns 500 without internal details.
 /// </summary>
 public sealed partial class DomainExceptionHandler(IProblemDetailsService problemDetails, ILogger<DomainExceptionHandler> logger)
     : IExceptionHandler
@@ -16,37 +15,19 @@ public sealed partial class DomainExceptionHandler(IProblemDetailsService proble
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
-        var (status, code, detail, parameters) = exception is DomainException domain
-            ? (domain.Error.Kind.ToStatusCode(), domain.Error.Code, domain.Message, domain.Parameters)
-            : (StatusCodes.Status500InternalServerError, UnexpectedCode, null, null);
+        var problem = exception is DomainException domain
+            ? new Problem(domain.Error.Kind.ToStatusCode(), domain.Error.Code, domain.Message, domain.Parameters)
+            : new Problem(StatusCodes.Status500InternalServerError, UnexpectedCode);
 
-        LogFailure(exception, code, status);
-        httpContext.Response.StatusCode = status;
-        return await problemDetails.TryWriteAsync(new ProblemDetailsContext
-        {
-            HttpContext = httpContext,
-            Exception = exception,
-            ProblemDetails =
-            {
-                Status = status,
-                Type = $"https://cooquoi.com/errors/{code}",
-                Title = code,
-                Detail = detail,
-                Extensions =
-                {
-                    ["code"] = code,
-                    ["params"] = parameters,
-                    ["traceId"] = Activity.Current?.Id ?? httpContext.TraceIdentifier,
-                },
-            },
-        });
+        LogFailure(exception, problem);
+        return await problemDetails.TryWriteAsync(httpContext, problem);
     }
 
-    private void LogFailure(Exception exception, string code, int status)
+    private void LogFailure(Exception exception, Problem problem)
     {
         if (exception is DomainException)
         {
-            LogExpected(code, status);
+            LogExpected(problem.Code, problem.Status);
         }
         else
         {
