@@ -1,10 +1,9 @@
 using Cooquoi.Context.Household.Domain.Households;
 using Cooquoi.Context.Household.Domain.Users;
-using HouseholdAggregate = Cooquoi.Context.Household.Domain.Households.Household;
 
 namespace Cooquoi.Context.Household.Tests.Domain.Households;
 
-public sealed class HouseholdTests
+public sealed class HouseholdAggregateTests
 {
     [Fact]
     public void CreatePersonal_makes_the_user_its_only_owner()
@@ -16,7 +15,9 @@ public sealed class HouseholdTests
 
         household.Id.ShouldBe(id);
         household.Name.ShouldBeNull();
-        household.Memberships.ShouldBe([new Membership(owner, MembershipRole.Owner)]);
+        var membership = household.Memberships.ShouldHaveSingleItem();
+        membership.Id.ShouldBe(owner);
+        membership.Role.ShouldBe(MembershipRole.Owner);
     }
 
     [Fact]

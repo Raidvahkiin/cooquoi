@@ -4,7 +4,7 @@ using Cooquoi.SharedKernel;
 
 namespace Cooquoi.Context.Household.Tests.Domain.Users;
 
-public sealed class UserProfileTests
+public sealed class UserProfileAggregateTests
 {
     private static readonly DateTimeOffset FirstSignIn = new(2026, 11, 21, 8, 0, 0, TimeSpan.Zero);
 
@@ -22,7 +22,7 @@ public sealed class UserProfileTests
     {
         var request = NewProfile();
 
-        var profile = UserProfile.Create(request);
+        var profile = UserProfileAggregate.Create(request);
 
         profile.Id.ShouldBe(request.UserId);
         profile.Identity.ShouldBe(request.Identity);
@@ -36,7 +36,7 @@ public sealed class UserProfileTests
     [Fact]
     public void RecordSignIn_follows_the_identity_provider_for_name_and_email()
     {
-        var profile = UserProfile.Create(NewProfile());
+        var profile = UserProfileAggregate.Create(NewProfile());
         var later = FirstSignIn.AddDays(3);
 
         profile.RecordSignIn(new SignInDetails("Alice Martin", null, later));
@@ -50,7 +50,7 @@ public sealed class UserProfileTests
     public void RecordSignIn_keeps_the_users_locale_and_default_household()
     {
         var request = NewProfile();
-        var profile = UserProfile.Create(request);
+        var profile = UserProfileAggregate.Create(request);
 
         profile.RecordSignIn(new SignInDetails("Alice", "alice@example.com", FirstSignIn.AddDays(1)));
 

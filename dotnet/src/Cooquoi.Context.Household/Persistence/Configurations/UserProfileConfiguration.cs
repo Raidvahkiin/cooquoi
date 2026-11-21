@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cooquoi.Context.Household.Persistence.Configurations;
 
-internal sealed class UserProfileConfiguration : IEntityTypeConfiguration<UserProfile>
+internal sealed class UserProfileConfiguration : IEntityTypeConfiguration<UserProfileAggregate>
 {
-    public void Configure(EntityTypeBuilder<UserProfile> builder)
+    public void Configure(EntityTypeBuilder<UserProfileAggregate> builder)
     {
         builder.ToTable("user_profiles");
         builder.HasKey(profile => profile.Id);

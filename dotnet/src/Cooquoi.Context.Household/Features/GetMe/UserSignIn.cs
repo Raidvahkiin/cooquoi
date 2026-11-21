@@ -6,7 +6,6 @@ using Cooquoi.Platform.Authentication;
 using Cooquoi.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
-using HouseholdAggregate = Cooquoi.Context.Household.Domain.Households.Household;
 
 namespace Cooquoi.Context.Household.Features.GetMe;
 
@@ -16,7 +15,7 @@ namespace Cooquoi.Context.Household.Features.GetMe;
 /// </summary>
 internal static class UserSignIn
 {
-    public static async Task<UserProfile> RecordAsync(SignInRequest request, CancellationToken cancellationToken)
+    public static async Task<UserProfileAggregate> RecordAsync(SignInRequest request, CancellationToken cancellationToken)
     {
         var identity = new IdentityRef(request.User.Issuer, request.User.Subject);
         var existing = await request.Db.UserProfiles.FindByIdentityAsync(identity, cancellationToken);
@@ -40,11 +39,11 @@ internal static class UserSignIn
         }
     }
 
-    private static async Task<UserProfile> CreateAsync(SignInRequest request, IdentityRef identity, CancellationToken cancellationToken)
+    private static async Task<UserProfileAggregate> CreateAsync(SignInRequest request, IdentityRef identity, CancellationToken cancellationToken)
     {
         var userId = UserId.New();
         var household = HouseholdAggregate.CreatePersonal(HouseholdId.New(), userId);
-        var profile = UserProfile.Create(new NewUserProfile(
+        var profile = UserProfileAggregate.Create(new NewUserProfile(
             userId,
             identity,
             request.User.DisplayName,

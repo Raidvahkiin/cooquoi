@@ -23,7 +23,7 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Households.Household", b =>
+            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Households.HouseholdAggregate", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -45,7 +45,7 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                     b.ToTable("households", "household");
                 });
 
-            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Users.UserProfile", b =>
+            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Users.UserProfileAggregate", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
@@ -87,15 +87,15 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                     b.ToTable("user_profiles", "household");
                 });
 
-            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Households.Household", b =>
+            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Households.HouseholdAggregate", b =>
                 {
-                    b.OwnsMany("Cooquoi.Context.Household.Domain.Households.Membership", "Memberships", b1 =>
+                    b.OwnsMany("Cooquoi.Context.Household.Domain.Households.MembershipEntity", "Memberships", b1 =>
                         {
                             b1.Property<Guid>("household_id")
                                 .HasColumnType("uuid")
                                 .HasColumnName("household_id");
 
-                            b1.Property<Guid>("UserId")
+                            b1.Property<Guid>("Id")
                                 .HasColumnType("uuid")
                                 .HasColumnName("user_id");
 
@@ -105,10 +105,10 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("role");
 
-                            b1.HasKey("household_id", "UserId")
+                            b1.HasKey("household_id", "Id")
                                 .HasName("pk_memberships");
 
-                            b1.HasIndex("UserId")
+                            b1.HasIndex("Id")
                                 .HasDatabaseName("ix_memberships_user_id");
 
                             b1.ToTable("memberships", "household");
@@ -121,11 +121,11 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                     b.Navigation("Memberships");
                 });
 
-            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Users.UserProfile", b =>
+            modelBuilder.Entity("Cooquoi.Context.Household.Domain.Users.UserProfileAggregate", b =>
                 {
                     b.OwnsOne("Cooquoi.Context.Household.Domain.Users.IdentityRef", "Identity", b1 =>
                         {
-                            b1.Property<Guid>("UserProfileId")
+                            b1.Property<Guid>("UserProfileAggregateId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("id");
 
@@ -141,7 +141,7 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                                 .HasColumnType("character varying(200)")
                                 .HasColumnName("identity_subject");
 
-                            b1.HasKey("UserProfileId");
+                            b1.HasKey("UserProfileAggregateId");
 
                             b1.HasIndex("Issuer", "Subject")
                                 .IsUnique()
@@ -150,7 +150,7 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                             b1.ToTable("user_profiles", "household");
 
                             b1.WithOwner()
-                                .HasForeignKey("UserProfileId")
+                                .HasForeignKey("UserProfileAggregateId")
                                 .HasConstraintName("fk_user_profiles_user_profiles_id");
                         });
 

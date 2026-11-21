@@ -5,9 +5,9 @@ using Raidvahkiin.Ddd;
 namespace Cooquoi.Context.Household.Domain.Users;
 
 /// <summary>What Cooquoi stores about a user (ADR 0015).</summary>
-public sealed class UserProfile : AggregateRoot<UserId>
+public sealed class UserProfileAggregate : AggregateRoot<UserId>
 {
-    private UserProfile() { }
+    private UserProfileAggregate() { }
 
     public IdentityRef Identity { get; private set; } = null!;
     public string DisplayName { get; private set; } = string.Empty;
@@ -16,7 +16,7 @@ public sealed class UserProfile : AggregateRoot<UserId>
     public HouseholdId DefaultHouseholdId { get; private set; }
     public DateTimeOffset LastSignInAt { get; private set; }
 
-    public static UserProfile Create(NewUserProfile request) => new()
+    public static UserProfileAggregate Create(NewUserProfile request) => new()
     {
         Id = request.UserId,
         Identity = request.Identity,
@@ -35,14 +35,3 @@ public sealed class UserProfile : AggregateRoot<UserId>
         LastSignInAt = details.SignedInAt;
     }
 }
-
-public sealed record NewUserProfile(
-    UserId UserId,
-    IdentityRef Identity,
-    string DisplayName,
-    string? Email,
-    Locale Locale,
-    HouseholdId DefaultHouseholdId,
-    DateTimeOffset SignedInAt);
-
-public sealed record SignInDetails(string DisplayName, string? Email, DateTimeOffset SignedInAt);

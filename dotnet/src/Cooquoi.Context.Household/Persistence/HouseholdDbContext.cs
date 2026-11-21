@@ -1,7 +1,7 @@
+using Cooquoi.Context.Household.Domain.Households;
 using Cooquoi.Context.Household.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Raidvahkiin.Ddd;
-using HouseholdAggregate = Cooquoi.Context.Household.Domain.Households.Household;
 
 namespace Cooquoi.Context.Household.Persistence;
 
@@ -10,7 +10,7 @@ public sealed class HouseholdDbContext(DbContextOptions<HouseholdDbContext> opti
 {
     public const string Schema = "household";
 
-    public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
+    public DbSet<UserProfileAggregate> UserProfiles => Set<UserProfileAggregate>();
     public DbSet<HouseholdAggregate> Households => Set<HouseholdAggregate>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -1,13 +1,12 @@
 using Cooquoi.Context.Household.Domain.Households;
 using Cooquoi.Context.Household.Domain.Users;
-using HouseholdAggregate = Cooquoi.Context.Household.Domain.Households.Household;
 
 namespace Cooquoi.Context.Household.Features.GetMe;
 
 /// <summary>Response of <c>GET /v1/me</c>, matching the contract (contracts/contexts/household).</summary>
 public sealed record MeResponse(MeProfile Profile, IReadOnlyList<MeHousehold> Households)
 {
-    public static MeResponse From(UserProfile profile, IEnumerable<HouseholdAggregate> households) =>
+    public static MeResponse From(UserProfileAggregate profile, IEnumerable<HouseholdAggregate> households) =>
         new(
             new MeProfile(profile.Id.Value, profile.DisplayName, profile.Email, profile.Locale.Code, profile.DefaultHouseholdId.Value),
             [.. households.Select(household => MeHousehold.From(household, profile.Id))]);
