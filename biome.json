@@ -15,6 +15,7 @@
       "!**/*.md",
       "!**/pnpm-lock.yaml",
       "!**/next-env.d.ts",
+      "!legacy",
       "!**/.agents",
       "!**/.cursor",
       "!**/.github/skills",

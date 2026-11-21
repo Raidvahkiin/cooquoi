@@ -28,8 +28,10 @@ tmp
 **/vitest.config.*
 **/drizzle-test.config.ts
 
+# Old NestJS backend, reference only
+legacy/
+
 # Docker
-docker/
 **/Dockerfile
 **/*.Dockerfile
 

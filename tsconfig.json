@@ -4,19 +4,7 @@
   "files": [],
   "references": [
     {
-      "path": "./libs/core"
-    },
-    {
-      "path": "./libs/contexts/market"
-    },
-    {
       "path": "./ts/apps/cooquoi-webapp"
-    },
-    {
-      "path": "./libs/utils/nestjs"
-    },
-    {
-      "path": "./ts/libs/utils/api-contracts"
     }
   ]
 }

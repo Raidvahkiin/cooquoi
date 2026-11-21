@@ -24,11 +24,11 @@
 
 # Cooquoi
 
-Daily-comfort food app: helps a household decide what to cook and what to buy from what is in the fridge, preferred markets and budget, with AI recipe suggestions as the core domain. A Next.js web app talks to a REST API (legacy NestJS today, being replaced by a C# backend orchestrated with Aspire).
+Daily-comfort food app: helps a household decide what to cook and what to buy from what is in the fridge, preferred markets and budget, with AI recipe suggestions as the core domain. A Next.js webapp (backend-for-frontend) talks to a C# REST API; Aspire runs the whole system with Postgres and Keycloak.
 
 ## Documentation
 
-Business and architecture docs live in [`docs/`](docs/README.md): [vision](docs/business/vision.md), [glossary](docs/business/glossary.md) (use its terms in code), [context map](docs/business/context-map.md) and [ADRs](docs/architecture/adr/). Read the relevant ones before designing a feature; record new architecture decisions as ADRs.
+Business and architecture docs live in [`docs/`](docs/README.md): [vision](docs/business/vision.md), [glossary](docs/business/glossary.md) (use its terms in code), [context map](docs/business/context-map.md) and [ADRs](docs/architecture/adr/). Read the relevant ones before designing a feature; record new architecture decisions as ADRs. Current work: [spike plan](docs/architecture/spike-walking-skeleton.md).
 
 ## Project skills
 
@@ -44,91 +44,43 @@ Repo skills live in `.agents/skills/` (linked from `.claude/skills/`):
 | `webapp-review` | Review webapp changes |
 
 Webapp conventions: [ts/apps/cooquoi-webapp/AGENTS.md](ts/apps/cooquoi-webapp/AGENTS.md).
-Backend conventions (draft): [dotnet/AGENTS.md](dotnet/AGENTS.md).
-
-## Tooling
-
-- **Package manager: pnpm** (version pinned in `package.json` `packageManager`, enabled with `corepack enable pnpm`). **Node** pinned in `.node-version`, the same in local, CI and Docker. Run everything as `pnpm nx ...`. Install with `pnpm install`. Shared dependency versions live in the `catalog:` of `pnpm-workspace.yaml` ([ADR 0016](docs/architecture/adr/0016-package-manager-and-runtime.md)).
-- **TypeScript**: `tsc` is TypeScript 7 (fast native compiler, used by typecheck); the `typescript` package is aliased to TypeScript 6 for tools that need its API (Nx, typescript-eslint, Next.js).
-- Nx 23 monorepo, TypeScript 6 (`strict`), Vitest everywhere, Biome for formatting and ESLint (with `@nx/enforce-module-boundaries`) for linting.
-- Common commands:
-
-```bash
-pnpm nx run <project>:<target>          # e.g. pnpm nx run @cooquoi/market:test
-pnpm nx run-many -t lint typecheck test # what CI runs
-pnpm nx affected -t test
-pnpm run dev:api                         # @cooquoi/api:start:dev
-pnpm run dev:webapp                      # @cooquoi/webapp:dev
-pnpm run compose:dev up -d               # local Postgres etc. (docker/dev.docker-compose.yml)
-pnpm run nx:format                       # biome format --write
-```
-
-Project names are the full package names (`@cooquoi/market`, not `market`).
+Backend conventions: [dotnet/AGENTS.md](dotnet/AGENTS.md).
 
 ## Repository layout
 
-Top-level folders are split by **toolchain**, not by frontend/backend:
+Top-level folders are split by **toolchain**, not by frontend/backend ([ADR 0001](docs/architecture/adr/0001-toolchain-folder-layout.md)):
 
 | Folder | Toolchain | Content |
 |---|---|---|
-| `ts/` | pnpm + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, generated API client |
-| `aspire/` *(planned)* | .NET (Aspire AppHost) | Runtime orchestration of the whole system: Postgres, Keycloak, API, webapp. `aspire run` starts everything |
-| `dotnet/` *(conventions drafted, no code yet)* | .NET + `Cooquoi.slnx` | C# backend (DDD bounded contexts) and the Aspire AppHost — see [dotnet/AGENTS.md](dotnet/AGENTS.md) |
-| `contracts/` *(planned)* | TypeSpec | API contract, source of truth for all generated clients |
-| `mobile/` *(future)* | Flutter | Native mobile app. Until then the webapp is a **PWA** ([ADR 0007](docs/architecture/adr/0007-mobile-strategy.md)) |
-| `apps/`, `libs/` *(legacy)* | pnpm + Nx (runs on Node) | NestJS backend (`@cooquoi/api`, `@cooquoi/market`, `@utils/nestjs`, `@libs/core`), kept until the C# backend replaces it |
+| `ts/` | pnpm + Nx | `@cooquoi/webapp` (`ts/apps/cooquoi-webapp`, Next.js 16 + React 19, BFF) and `@cooquoi/api-client` (`ts/libs/api-client`, generated Hey API client) |
+| `contracts/` | TypeSpec | `@cooquoi/contracts`: the API contract, source of truth for the OpenAPI file and every generated client |
+| `dotnet/` | .NET 10 + `Cooquoi.slnx` | C# backend: API host, bounded contexts (`Cooquoi.Context.<Name>`), `Raidvahkiin.*` building blocks |
+| `aspire/` | .NET (Aspire AppHost) | Runs the whole system: Postgres, Keycloak, API, webapp |
+| `mobile/` *(future)* | Flutter | Until then the webapp is a **PWA** ([ADR 0007](docs/architecture/adr/0007-mobile-strategy.md)) |
+| `legacy/` | — | Old NestJS backend, **reference only**: not installed, built, linted or tested. Read it only when asked. See [legacy/README.md](legacy/README.md) |
 
-Nx stays at the root and orchestrates every folder.
+Nx stays at the root and orchestrates every TypeScript and TypeSpec project.
 
-## Projects
+## Tooling
 
-| Project | Path | Tags | What it is |
-|---|---|---|---|
-| `@cooquoi/api` | `apps/cooquoi-api` | `type:app`, `scope:consumer`, `platform:nestjs` | NestJS REST API (Fastify adapter). Controllers, seeding, Drizzle migrations (`db:generate`, `db:migrate`, `db:push`, `db:studio`) |
-| `@cooquoi/webapp` | `ts/apps/cooquoi-webapp` | `type:app`, `scope:consumer`, `platform:nextjs` | Next.js 16 + React 19 (App Router), BFF of the C# API. UI rebuilt from scratch with Astryx (phase 4) |
-| `@cooquoi/market` | `libs/contexts/market` | `type:lib`, `scope:bounded-context`, `platform:nestjs` | Market bounded context: ingredients, products, vendor offers, price comparison. **See [libs/contexts/market/AGENTS.md](libs/contexts/market/AGENTS.md)** |
-| `@libs/core` | `libs/core` | `type:lib`, `scope:core`, `platform:all` | Framework-free primitives: `Entity`, `ValueObject`s (`Quantity`, `Unit`, `Currency`), `DomainError`, `Enumeration`, `EntityFilter`, `DatetimeProvider`, `mockPartial` test util |
-| `@utils/nestjs` | `libs/utils/nestjs` | `type:lib`, `scope:utility`, `platform:nestjs` | CQRS `Mediator` (extends `CommandBus` with a middleware pipeline), `MediatorModule.forRoot()`, `@EnableLogging()`, pluggable loggers (`ILogger`, `MIDDLEWARE_LOGGER`, `NestJsLogger`) |
-| `@utils/api-contracts` | `ts/libs/utils/api-contracts` | `type:lib`, `scope:utility`, `platform:all` | Shared API models/endpoint interfaces and the typed `CooquoiClient` HTTP client of the legacy NestJS API (no longer used by the webapp; removed with the legacy backend) |
+- **Package manager: pnpm** (version pinned in `package.json` `packageManager`, enabled with `corepack enable pnpm`). **Node** pinned in `.node-version`, the same in local, CI and Docker. Shared dependency versions live in the `catalog:` of `pnpm-workspace.yaml` ([ADR 0016](docs/architecture/adr/0016-package-manager-and-runtime.md)).
+- **TypeScript**: `tsc` is TypeScript 7 (fast native compiler, used by typecheck); the `typescript` package is aliased to TypeScript 6 for tools that need its API (Nx, typescript-eslint, Next.js).
+- Nx 24, Vitest, Biome for formatting, ESLint (with `@nx/enforce-module-boundaries`) for linting.
+- Project names are the full package names (`@cooquoi/webapp`, not `webapp`).
 
-Only the `market` context exists today. Planned contexts (not created yet): `stock` (inventory, expiry), `recipes`, `authority` (users, sharing).
+```bash
+pnpm nx run-many -t lint typecheck test  # what CI runs (TypeScript)
+pnpm nx run <project>:<target>           # e.g. pnpm nx run @cooquoi/webapp:test
+pnpm run nx:format                        # biome format --write
+dotnet build dotnet/Cooquoi.slnx          # C# (see dotnet/AGENTS.md)
+dotnet test --project dotnet/tests/<Project>
+aspire run                                # from aspire/Cooquoi.AppHost: everything
+```
 
-### Dependency rules (enforced by ESLint)
+## TypeScript conventions
 
-- `scope:core` → only `scope:core`
-- `scope:utility` → `scope:utility`, `scope:core`
-- `scope:bounded-context` → `scope:core`, `scope:utility` (contexts never import each other)
-- `scope:consumer` (apps) → core, utility, bounded-context
-- libs never depend on apps
-
-## Architecture
-
-- **DDD + Vertical Slice Architecture + CQRS** (`@nestjs/cqrs`, dispatched through the `Mediator` from `@utils/nestjs`).
-- Each bounded context is a NestJS library under `libs/contexts/<name>/` exposing a `DynamicModule` via `static register()`.
-- One folder per use case under `src/features/<group>/<use-case>/` containing `*.command.ts` or `*.query.ts`, `*.handler.ts`, optional `*.dto.ts`, and `__tests__/*.spec.ts`.
-- Persistence is **Drizzle ORM** (Postgres). Drizzle `pgTable` definitions in `src/domain/entities/` are the domain entities — no separate ORM entity or repository layer.
-- **Controllers never live in a context library.** They live in `apps/cooquoi-api/src/controllers/` and import commands/queries/result types from the context's public `index.ts`. A context module must not declare `controllers`.
-- Handlers stay thin; business rules belong in value objects / domain code.
-- Add `@EnableLogging()` on commands that should go through the logging middleware.
-
-## Conventions
-
-- TypeScript: `module: esnext`, `moduleResolution: bundler`, `strict`, `noUnusedLocals`, `noImplicitReturns`, `noImplicitOverride`, decorators + metadata enabled.
-- `customConditions: ["@org/source"]` — workspace packages resolve to TS source, no build needed in dev. Local deps use `workspace:*`.
-- Each lib has `tsconfig.json`, `tsconfig.lib.json`, `tsconfig.spec.json`.
-- File suffixes: `.command.ts`, `.query.ts`, `.handler.ts`, `.dto.ts`, `.entity.ts`, `.vo.ts`, `.module.ts`, `.controller.ts`, `.spec.ts`, `.stories.tsx`, `.util.ts`.
+- `strict`, `noUnusedLocals`, `noImplicitReturns`, `noImplicitOverride`; `customConditions: ["@org/source"]` so workspace packages resolve to TS source. Local deps use `workspace:*`.
 - Public API only through `index.ts` barrels; don't export internals.
-- Functions/constructors with 3+ parameters take a single typed object parameter.
-- Biome: 2-space indent, single quotes, organized imports. Prefer `import type` where applicable.
-- Web UI: **Astryx** design system ([ADR 0008](docs/architecture/adr/0008-web-ui-astryx.md)). Use Astryx components and tokens only — no hard-coded px or hex colours; spacing via `gap`/`padding` props or `--spacing-*`, text via `Heading`/`Text` types. Custom styles go in CSS Modules using Astryx tokens. No Tailwind (removed with the old UI).
-
-## Testing
-
-- Vitest with `globals: true`; specs sit next to the code (`*.spec.ts`, or `__tests__/` inside a feature slice).
-- Context tests are integration tests against in-memory **PGlite** (no DB mocks) — see the market AGENTS.md for the test suite helpers.
-- Use `mockPartial<T>()` from `@libs/core` test utils for typed partial mocks; inject a stub `DatetimeProvider` for time-dependent logic.
-- NestJS tests use `Test.createTestingModule()`.
-
-## Environment
-
-API env vars: `DATABASE_URL` (required), `PORT` (default `3001`), `DATABASE_SEEDING_ENABLED` (default `false`). Docker images are built per app (`pnpm nx docker-build <project>`) and pushed to GHCR by CI on `v*` tags.
+- Functions with 3+ parameters take a single typed object parameter.
+- Biome: 2-space indent, single quotes, organized imports. Prefer `import type`.
+- Web UI: **Astryx** ([ADR 0008](docs/architecture/adr/0008-web-ui-astryx.md)) — components and tokens only, no px or hex, CSS Modules for custom styles, no Tailwind.

@@ -54,9 +54,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - app: cooquoi-api
-            context: .
-            dockerfile: apps/cooquoi-api/Dockerfile
           - app: cooquoi-webapp
             context: .
             dockerfile: ts/apps/cooquoi-webapp/Dockerfile

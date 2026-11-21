@@ -1,29 +1,27 @@
-# Cooquoi Monorepo
+# Cooquoi
 
-## Docker
+Helps a household decide what to cook and what to buy from what is in the fridge, preferred markets and budget.
 
-### Build the API image
+## Run everything locally
 
-```bash
-nx docker-build @cooquoi/api --args="--tag=latest"
-```
-
-Or directly:
+Requires the .NET 10 SDK, Node (see `.node-version`) with pnpm via corepack, Docker, and the Aspire CLI.
 
 ```bash
-docker build -f apps/cooquoi-api/Dockerfile -t cooquoi-api:latest .
+pnpm install
+dotnet tool restore
+cd aspire/Cooquoi.AppHost && aspire run
 ```
 
-### Run the API container
+Aspire starts Postgres, Keycloak, the C# API and the Next.js webapp, and prints the dashboard URL. The dev user is `dev@cooquoi.local`; its generated password is the `dev-user-password` parameter in the dashboard.
+
+## Checks
 
 ```bash
-docker run -p 3001:3001 -e DATABASE_URL=postgres://user:pass@host:5432/cooquoi cooquoi-api:latest
+pnpm nx run-many -t lint typecheck test
+dotnet build dotnet/Cooquoi.slnx
+dotnet test --project dotnet/tests/Cooquoi.Context.Household.Tests
 ```
 
-### Environment variables
+## Where things are
 
-| Variable | Default | Description |
-|---|---|---|
-| `DATABASE_URL` | *(empty)* | PostgreSQL connection string (required) |
-| `PORT` | `3001` | HTTP listen port |
-| `DATABASE_SEEDING_ENABLED` | `false` | Seed database on startup |
+See [AGENTS.md](AGENTS.md) for the repository layout and conventions, and [docs/](docs/README.md) for the vision, glossary and architecture decisions. The old NestJS backend is kept for reference only in [legacy/](legacy/README.md).
