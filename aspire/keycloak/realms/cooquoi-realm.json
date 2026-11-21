@@ -11,11 +11,7 @@
   "verifyEmail": false,
   "rememberMe": true,
   "internationalizationEnabled": true,
-  "supportedLocales": [
-    "en",
-    "fr",
-    "vi"
-  ],
+  "supportedLocales": ["en", "fr", "vi"],
   "defaultLocale": "en",
   "accessTokenLifespan": 300,
   "ssoSessionIdleTimeout": 2592000,
@@ -55,12 +51,8 @@
       "directAccessGrantsEnabled": false,
       "implicitFlowEnabled": false,
       "serviceAccountsEnabled": false,
-      "redirectUris": [
-        "${COOQUOI_WEBAPP_URL}/auth/callback"
-      ],
-      "webOrigins": [
-        "${COOQUOI_WEBAPP_URL}"
-      ],
+      "redirectUris": ["${COOQUOI_WEBAPP_URL}/auth/callback"],
+      "webOrigins": ["${COOQUOI_WEBAPP_URL}"],
       "attributes": {
         "pkce.code.challenge.method": "S256",
         "post.logout.redirect.uris": "${COOQUOI_WEBAPP_URL}/*",

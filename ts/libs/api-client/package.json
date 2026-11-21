@@ -18,13 +18,24 @@
     "@hey-api/openapi-ts": "catalog:"
   },
   "nx": {
-    "tags": ["type:lib", "scope:utility", "platform:all"],
+    "tags": [
+      "type:lib",
+      "scope:utility",
+      "platform:all"
+    ],
     "targets": {
       "generate": {
         "cache": true,
-        "dependsOn": ["@cooquoi/contracts:compile"],
-        "inputs": ["{workspaceRoot}/contracts/generated/openapi.yaml", "{projectRoot}/openapi-ts.config.ts"],
-        "outputs": ["{projectRoot}/src/generated"]
+        "dependsOn": [
+          "@cooquoi/contracts:compile"
+        ],
+        "inputs": [
+          "{workspaceRoot}/contracts/generated/openapi.yaml",
+          "{projectRoot}/openapi-ts.config.ts"
+        ],
+        "outputs": [
+          "{projectRoot}/src/generated"
+        ]
       }
     }
   }

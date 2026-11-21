@@ -13,12 +13,21 @@
     "@typespec/openapi3": "catalog:"
   },
   "nx": {
-    "tags": ["type:contract", "scope:contract", "platform:all"],
+    "tags": [
+      "type:contract",
+      "scope:contract",
+      "platform:all"
+    ],
     "targets": {
       "compile": {
         "cache": true,
-        "inputs": ["{projectRoot}/**/*.tsp", "{projectRoot}/tspconfig.yaml"],
-        "outputs": ["{projectRoot}/generated"]
+        "inputs": [
+          "{projectRoot}/**/*.tsp",
+          "{projectRoot}/tspconfig.yaml"
+        ],
+        "outputs": [
+          "{projectRoot}/generated"
+        ]
       }
     }
   }

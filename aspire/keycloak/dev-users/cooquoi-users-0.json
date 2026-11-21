@@ -10,7 +10,11 @@
       "enabled": true,
       "attributes": { "locale": ["en"] },
       "credentials": [
-        { "type": "password", "value": "${COOQUOI_DEV_USER_PASSWORD}", "temporary": false }
+        {
+          "type": "password",
+          "value": "${COOQUOI_DEV_USER_PASSWORD}",
+          "temporary": false
+        }
       ],
       "realmRoles": ["default-roles-cooquoi", "catalog-curator"]
     }
