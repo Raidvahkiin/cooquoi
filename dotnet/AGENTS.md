@@ -1,154 +1,146 @@
 # Backend (`dotnet/`)
 
-C# modular monolith: one API host, one project per bounded context, one Postgres database with a schema per context. Event-driven, **not** event-sourced. Decisions: [ADR 0002](../docs/architecture/adr/0002-csharp-backend-with-aspire.md), [0003 (Wolverine)](../docs/architecture/adr/0003-wolverine.md), [0009 (contract)](../docs/architecture/adr/0009-api-contract-typespec.md), [0010 (persistence)](../docs/architecture/adr/0010-modular-monolith-persistence.md), [0014 (structure — full rationale)](../docs/architecture/adr/0014-backend-structure.md).
+C# modular monolith: one API host, one project per bounded context, one Postgres database with a schema per context. Event-driven, **not** event-sourced. Decisions: [ADR 0002](../docs/architecture/adr/0002-csharp-backend-with-aspire.md), [0003 (Wolverine)](../docs/architecture/adr/0003-wolverine.md), [0009 (contract)](../docs/architecture/adr/0009-api-contract-typespec.md), [0010 (persistence)](../docs/architecture/adr/0010-modular-monolith-persistence.md), [0014 (structure — full rationale)](../docs/architecture/adr/0014-backend-structure.md). What the spike confirmed or changed: [spike plan](../docs/architecture/spike-walking-skeleton.md) (phases 1–2).
 
-> **Draft.** Nothing is implemented yet. Items marked *(spike)* are confirmed by the walking skeleton; update this file from the real code before writing the backend skills.
+Domain docs per context: [`docs/contexts/`](../docs/contexts/). Use the [glossary](../docs/business/glossary.md) terms in code. Reference implementation: **`Cooquoi.Context.Foodpedia`** — copy its shapes.
 
-Domain docs per context: [`docs/contexts/`](../docs/contexts/). Use the [glossary](../docs/business/glossary.md) terms in code.
+## Skills
+
+| Skill | Use |
+|---|---|
+| `dotnet-domain` | Aggregates, value objects, events, errors |
+| `dotnet-feature` | A use case end to end: endpoint, persistence, migration, tests |
+| `dotnet-test` | Domain, integration (Alba + Testcontainers) and architecture tests |
+| `dotnet-review` | Review C# changes; self-check at the end of `dotnet-feature` |
+| `refactor` | After every change (C# and TypeScript) |
 
 ## Layout
 
-Naming: contexts are `Cooquoi.Context.<Name>` (project + root namespace), tests `Cooquoi.Context.<Name>.Tests`; building blocks `Raidvahkiin.*`.
-
-The Aspire **AppHost lives at the repo root in `aspire/Cooquoi.AppHost/`** (runs the whole system): short `Program.cs` + one file per resource in `Resources/`.
-
 ```
 dotnet/
-├─ Cooquoi.slnx  global.json  Directory.Build.props  Directory.Packages.props  .editorconfig
+├─ Cooquoi.slnx  Directory.Build.props  Directory.Packages.props  .editorconfig   (global.json at the repo root)
 ├─ src/
-│  ├─ BuildingBlocks/
-│  │  ├─ Raidvahkiin.Ddd/                      # Entity, AggregateRoot, ids, Enumeration, errors, Ensure
-│  │  ├─ Raidvahkiin.Ddd.EntityFrameworkCore/  # id converters, paging, sorting, constraint mapping
-│  │  └─ Raidvahkiin.Ddd.AspNetCore/           # errors → ProblemDetails
+│  ├─ BuildingBlocks/                       # product-neutral, never reference Cooquoi.*
+│  │  ├─ Raidvahkiin.Ddd/                   # AggregateRoot, Entity, IAggregateRoot, DomainError, CommonError, Ensure, ErrorKind
+│  │  ├─ Raidvahkiin.Ddd.EntityFrameworkCore/  # UseSchemaNpgsql, Paged<T>/ToPageAsync, SortMap<T>, interceptors (version + audit, constraints)
+│  │  └─ Raidvahkiin.Ddd.AspNetCore/        # DomainExceptionHandler, Problem, ProblemWriter, FieldError
 │  ├─ Cooquoi.ServiceDefaults/
-│  ├─ Cooquoi.SharedKernel/      # Quantity, Unit, Money
-│  ├─ Cooquoi.Platform/          # auth setup, current user and household
-│  ├─ Cooquoi.Api/               # host only
+│  ├─ Cooquoi.SharedKernel/                 # Locale, Unit, Dimension
+│  ├─ Cooquoi.Platform/                     # auth + curator policy, CurrentUser, IfMatch, idempotency, concurrency retry,
+│  │                                        # audit actors, validation problem shape, PlatformDbContext (schema platform)
+│  ├─ Cooquoi.Api/                          # host only: Program.cs, DevelopmentDatabase
 │  └─ Cooquoi.Context.<Name>/
-│     ├─ Domain/<Aggregate>/     # pure domain
-│     ├─ Features/<UseCase>/     # application: commands, queries, event handlers
-│     ├─ Persistence/            # DbContext, Configurations/, Lookups/, Projections/, Migrations/
-│     ├─ Integration/            # ports (consumer-defined) + adapters to other contexts / externals
-│     ├─ PublicApi/              # what other contexts may use, published events
-│     └─ <Context>Module.cs      # registration, endpoints, event routing
+│     ├─ Domain/<Aggregate>/                # pure domain
+│     ├─ Features/<UseCase>/                # request + validator, endpoint
+│     ├─ Persistence/                       # DbContext, factory, Configurations/, Lookups/, Projections/, Seed/, Migrations/
+│     ├─ Integration/  PublicApi/           # when another context needs them
+│     └─ <Context>Module.cs                 # Add<Context>Context(), migrate (+ seed) for development
 └─ tests/
-   ├─ Raidvahkiin.Ddd.Tests/
-   ├─ Cooquoi.Context.<Name>.Tests/   # Domain/ (unit) + Features/ (integration)
-   ├─ Cooquoi.Api.Tests/
+   ├─ Cooquoi.Testing/                      # TestApi (Alba + Testcontainers), Callers, Problems — shared library
+   ├─ Cooquoi.Context.<Name>.Tests/         # Domain/ (unit), Features/ + Persistence/ (integration), Support/
+   ├─ Cooquoi.Platform.Tests/
    └─ Cooquoi.Architecture.Tests/
 ```
 
-## Hard rules (architecture tests)
+Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Cooquoi.Context.<Name>.Tests`. A test namespace named like a type clashes with it (`…Tests.Features.CreateIngredient` vs `CreateIngredient`): alias the type (`using CreateIngredientRequest = …;`).
+
+## Hard rules (architecture tests in `Cooquoi.Architecture.Tests`)
 
 - `Domain/` uses only `Raidvahkiin.Ddd` and `Cooquoi.SharedKernel`.
-- `Raidvahkiin.*` never references `Cooquoi.*`.
-- Another context's `PublicApi` is used **only from `Integration/`**; never reference another context's `Domain/`, `Features/` or `Persistence/`.
-- No `ExecuteUpdate` / `ExecuteDelete` in `Features/` — writes go through aggregates.
-- Domain names match their kind: `…Aggregate` ⇔ `AggregateRoot<TId>`, `…Entity` ⇔ `Entity<TId>`; every other `Domain/` type is immutable.
-- No use case calls another use case. Share logic through the domain or `Persistence/Lookups/`; trigger follow-up work with events or cascading messages.
-- Writes to another context only through events.
+- `Raidvahkiin.*` never references `Cooquoi.*`; `SharedKernel` depends only on `Raidvahkiin.Ddd`.
+- Contexts never reference each other (later: only `Integration/` → another context's `PublicApi`).
+- No `ExecuteUpdate` / `ExecuteDelete` in `Features/` (source scan) — writes go through aggregates.
+- `…Aggregate` ⇔ derives `AggregateRoot<TId>`, `…Entity` ⇔ `Entity<TId>`; every other `Domain/` type is immutable (enums excepted).
+- A class with a `Handle`/`Consume` method is named `…Handler`/`…Consumer` — **Wolverine discovers handlers by name only and silently ignores others** (events then go "to no subscribers").
+- No use case calls another use case. Share logic through the domain or `Persistence/Lookups/`; trigger follow-up work with events.
 
 ## Use cases (`Features/<UseCase>/`)
 
 | File | Content |
 |---|---|
-| `<UseCase>.cs` | Request record + FluentValidation validator (shape only) |
-| `<UseCase>Endpoint.cs` | Wolverine.HTTP endpoint = handler *(spike)*: `Load` / `Validate` (not found, forbidden) → domain method → done. No `SaveChanges` (Wolverine transaction). |
-| `<Reaction>Handler.cs` | Event-triggered use case (e.g. `OnBaseUnitChanged/`) |
-| Query | `AsNoTracking` → projection → typed filters → whitelisted sort → `ToPageAsync` |
+| `<UseCase>.cs` | Request record (+ nested input records) and its FluentValidation validator — shape only |
+| `<UseCase>Endpoint.cs` | `static class` with the Wolverine.HTTP method (`[WolverineGet/Post]`, `OperationId`, `[Authorize(...)]`); optional `LoadAsync` |
+| Response DTOs | One record per file, plain glossary names (`IngredientDetail`, not `…Aggregate`) |
+
+- **Endpoint = handler.** `LoadAsync(Guid id, …)` loads the aggregate and throws `CommonError.NotFound` (one error path, never return `ProblemDetails`). The handler calls one domain method.
+- **Never call `SaveChanges`.** Wolverine's transactional middleware (Lightweight mode) saves after the endpoint; events go to the outbox in that same save. Exception: an endpoint that needs its own transaction (Household first sign-in, advisory lock).
+- **Queries** project straight from the `DbContext` (`AsNoTracking`, `Select` into a row type), filter explicitly, sort through a `SortMap<T>` whitelist, page with `ToPageAsync`. Never load aggregates to read.
+- Query strings: a positional record with `[FromQuery(Name = "…")]` parameters bound by `[AsParameters]` (init-only members break Wolverine codegen). Paging fields nullable, defaulted in the endpoint.
+- Locale: `Locale.FromTagOrDefault(request.Headers.AcceptLanguage.FirstOrDefault())`, English fallback.
+- Curator-only: `[Authorize(Policy = CooquoiPolicies.Curator)]` (realm role `catalog-curator` from `realm_access.roles`).
+
+## Responses and HTTP semantics
+
+| Operation | Response |
+|---|---|
+| Read one | 200 + DTO with `version`; `IfMatch.SetETag(response, version)` |
+| List | 200 `Paged<T>` (`items`, `page`, `pageSize`, `totalCount`) |
+| Create | `TypedResults.Created(location, new Created<Name>(id))` (a `Created<Name>` record, e.g. `CreatedIngredient`) → 201 + `Location` |
+| Action (`POST /…/{id}:verb`) | `[EmptyResponse]` → 204; `IfMatch.SetETagAfterSave(httpContext, aggregate)` (the version is bumped during the save, after the handler) |
+
+- **Replace-style actions** call `IfMatch.Require(request, aggregate)` first: missing → 428 `common.if-match-required`, stale → 412 `common.version-mismatch`. Intent actions (`:consume`) do not.
+- **Concurrency**: every root has `Version`, bumped by `AggregateSaveInterceptor` when its row or any owned child changes. A lost race is re-run by `ConcurrencyRetryMiddleware` (3 attempts, fresh `DbContext`), then 409 `common.concurrency-conflict`.
+- **Idempotency**: every authenticated `POST` needs `Idempotency-Key` (UUID). Claimed by the middleware, marked committed inside the command's own save (`IdempotencyCommitInterceptor` — every context `DbContext` calls `MapIdempotencyCommits()`), response stored for replay; 7-day cleanup. Nothing to write per endpoint.
 
 ## Persistence
 
-- `DbContext` = unit of work; **no repository interfaces**.
-- Aggregates load whole (owned types / auto-include) — no `Include` in handlers.
-- Reusable lookups: extension methods in `Persistence/Lookups/` (`ForHousehold`, `ByCode`).
-- **Queries never load aggregates**: query use cases in `Features/` project straight from the `DbContext` to the response DTO. Other contexts' data through a port, batched.
+- `DbContext` per context = unit of work, schema `<context>`, **no repositories**. `OnModelCreating`: `HasDefaultSchema`, `ApplyConfigurationsFromAssembly`, then `AddAggregateAudit()` and `MapIdempotencyCommits()`.
+- Registration in `<Context>Module`: `UseSchemaNpgsql(connectionString, Schema)` + `AddCooquoiInterceptors(services, uniqueConstraints)`; singleton options lifetime (Wolverine builds the `DbContext` in generated code). Contexts publishing events use `AddDbContextWithWolverineIntegration`.
+- One configuration class per aggregate in `Configurations/`. Mapping by need (Foodpedia):
 
-## Household isolation
+  | Shape | Mapping | When |
+  |---|---|---|
+  | Collection queried or constrained | `OwnsMany` child table, key `(owner_id, natural key)` | names (search, F3 by key, F4 index) |
+  | Collection always read whole | jsonb via a `ValueConverter` to a private row record | conversions |
+  | Set of codes filtered with `ANY` | `PrimitiveCollection(...).ElementType(e => e.HasConversion(...))` → `text[]` | tags |
+  | Optional small value | `OwnsOne` columns on the root | shelf life |
+  | Strongly typed id / value object | `HasConversion(...)` (static converters in `Configurations/`) | ids, codes, units, locales |
 
-- Route-scoped: `/v1/households/{householdId}/…`; membership checked once in `Validate` (shared check in `Cooquoi.Platform`).
-- Every query and load: `.ForHousehold(householdId)`; commands also check `aggregate.HouseholdId`.
-- Another household's resource → **404**, never 403.
-- **Every endpoint has an isolation test** (shared helper: another household's member gets 404 on every operation).
-- Read models maintained by handlers in `Persistence/Projections/`.
+- Version: `IsConcurrencyToken()`; `Ignore(DomainEvents)`. Audit `created_at/by`, `updated_at/by` are shadow properties — never declare them.
+- **Uniqueness**: use-case pre-check (`Persistence/Lookups/`) + a unique index named `ux_…`, mapped to its `DomainError` in the module's `UniqueConstraints`. A rule that depends on another table (F4 "among active") gets a copied column kept by an interceptor + a partial index.
+- Read models in `Persistence/Projections/`: a `…Handler` that rebuilds from current state (naturally idempotent). Seeds call the same rebuild directly (no outbox outside a handler).
+- **Migrations**: `dotnet ef migrations add <Name> --project src/<Project> --startup-project src/<Project> --context <X>DbContext --output-dir Persistence/Migrations` (`dotnet tool restore` first). Never edit the snapshot. Hand-written SQL (functions, extensions SQL) goes in the migration with a comment and a matching `Down`. A migration not yet committed is regenerated rather than stacked. Development applies migrations and seeds in `DevelopmentDatabase` (hosted service); production applies a bundle.
 
 ## Domain
 
 | Concept | Convention |
 |---|---|
-| Naming by kind | Aggregate root `<Concept>Aggregate` (derives `AggregateRoot<TId>`), entity `<Concept>Entity` (derives `Entity<TId>`), value object unmarked (`Locale`). DTOs and contract models keep the plain term. ADR 0014 §7. |
-| Aggregate | `sealed class`, private setters, private ctor for EF Core, static `Create(...)`, behaviour methods. Small: a consistency boundary. |
-| Entity | Identity inside its aggregate; never loaded or saved alone. |
-| Methods | **Check every rule first, then change state.** No half-changed aggregates. |
-| Value object | Immutable record, validated on creation; collections with rules are value objects (`ConversionTable`) |
-| Domain service | Pure function |
-| Id | `readonly record struct <Name>Id(Guid Value)`, UUID v7 |
-| Event | Immutable record, `Raise(...)` in the aggregate; published by Wolverine outbox *(spike)* |
-| Infrastructure-dependent rule | Pre-check in the use case + DB constraint; a domain port as method argument only if unavoidable; **never inject services into aggregates** |
-| Time | `TimeProvider` |
+| Aggregate | `sealed class <X>Aggregate : AggregateRoot<<X>Id>`, private ctor for EF, `static Create(New<X>)`, behaviour methods; ≤ 200 lines |
+| Entity | `<X>Entity : Entity<TId>`, only inside its aggregate |
+| Value object | immutable `sealed record` validated in its constructor (`Ensure.That`); collections with rules are value objects (`ConversionTable`) |
+| Id | `readonly record struct <X>Id(Guid Value)` with `New()` = UUID v7 |
+| Event | `sealed record <Fact>(…) : IDomainEvent`, one per file, `Raise(...)` in every behaviour |
+| Errors | `static class <X>Error` of `DomainError(code, kind, template)`; codes `<context>.<kebab>`; `common.*` in `CommonError` |
+| Rule ids | the domain doc's id (F7) in a comment on the guard and in the test name |
 
-Rule ids from the domain docs (F1…) appear in a comment on the guard and in the test name.
-
-## Concurrency
-
-- Every aggregate root has a `Version` column (bumped on any change to the aggregate); EF Core checks it on save; conflicts are retried automatically, then 409 `common.concurrency-conflict`.
-- Read DTOs include `version`. **Replace-style commands** require `If-Match` (412 on mismatch, 428 if missing); intent commands (`:consume`, `:restock`) do not.
-
-## Idempotency
-
-- Every `POST` requires `Idempotency-Key` (client UUID per user action). The Platform middleware stores key + request hash + response in the command's transaction for 7 days; a repeat returns the stored response.
-- Event handlers: naturally idempotent when possible, otherwise record the processed `EventId` in the same transaction.
-
-## Audit
-
-- Business dates (`AddedOn`, `ExpiresOn`…) are explicit domain fields.
-- `CreatedAt/By`, `UpdatedAt/By` are EF shadow properties set by an interceptor — never declare them in domain classes. Event handlers write as `system:<context>.<handler>`.
-
-## Configuration
-
-- One options record per module, validated with `ValidateOnStart()`; never inject `IConfiguration` into handlers.
-- Secrets: never in git or `appsettings*.json`. Locally as AppHost secret parameters; in production as Coolify env vars with the same names Aspire uses.
-
-## Events
-
-- **Domain events** (`Domain/<Aggregate>/<Aggregate>Events.cs`): internal to the context, may use domain types.
-- **Integration events** (`PublicApi/Events/`): the contract with other contexts — primitives and `PublicApi` DTOs only, fixed message identity `<context>.<event>.v<n>`, additive changes only, new `.v<n+1>` for breaking changes.
-- Translation in `Integration/Outgoing/` (domain → integration), only for events another context needs.
-- Consumers: `Features/On<Event>/`. Handlers are idempotent and tolerate out-of-order delivery.
+Methods **check every rule first, then change state**. Rules needing other aggregates: use-case pre-check + DB constraint. Never inject services into aggregates. Time: `TimeProvider`.
 
 ## Errors
 
-- `ErrorKind` (plain enum): `Validation` 400 · `Forbidden` 403 · `NotFound` 404 · `Conflict` 409 · `PreconditionFailed` 412/428 · `BusinessRule` 422.
-- Error definitions: a smart enum per aggregate (`IngredientError.NameTaken`) with code `<context>.<error>`, kind and message template; `ToException(params)`.
-- Never build error responses in endpoints (except `Load`/`Validate` not found / forbidden). The `Raidvahkiin.Ddd.AspNetCore` handler maps everything to `ProblemDetails` with `code`, `params`, `errors[]`, `traceId`.
-- No generic `Result<T>`. An expected alternative outcome with domain meaning is a specific domain type.
+`ErrorKind` → HTTP in `Raidvahkiin.Ddd.AspNetCore`: `Validation` 400 · `Forbidden` 403 · `NotFound` 404 · `Conflict` 409 · `PreconditionFailed` 412 · `PreconditionRequired` 428 · `BusinessRule` 422 · anything else 500 (`common.unexpected`, no details). Every response is RFC 9457 with `code`, `params`, `traceId` (+ `errors[]` with JSON paths and `validation.*` codes for 400 — `ContractProblemDetailSource`). Endpoints never build error responses. New codes must be added to the contract (`contracts/`).
 
-## Code rules
+## Audit and actors
 
-- One top-level type per file. Size thresholds (review, not build failure): aggregate root ≤ 200 lines (300 = refactor), value object / service ≤ 100, use-case files ≤ 80, method ≤ 30.
-- ≤ 2 parameters on domain/helper methods, otherwise a parameter record (injected handler dependencies exempt).
-- File-scoped namespaces, primary constructors, records. No `partial` to hide size.
-- Nullable on, warnings are errors, unused code is an error.
+`user:<sub>` for HTTP callers; `system:<context>.<handler>` inside message handlers (`SystemActorPolicy` adds it to generated code); background jobs and seeds call `SystemActor.Enter("system:<context>.<job>")`.
+
+## Configuration
+
+One options record per module, `ValidateOnStart()`; never `IConfiguration` in handlers. Secrets only as AppHost parameters (`~/.aspire/secrets/cooquoi-apphost/`) or production env vars. Hosted jobs wait one interval before their first run and log failures — never stop the host.
+
+## Wolverine code generation
+
+Development compiles at runtime; elsewhere `TypeLoadMode.Auto` uses pre-generated code: `dotnet run --project src/Cooquoi.Api -- codegen write` before publishing (no database needed; output git-ignored). `Program` ends with `RunJasperFxCommands(args)`.
 
 ## Tests
 
-- **Domain**: unit tests per invariant and behaviour (xUnit v3 + Shouldly).
-- **Features**: integration tests on the real host (Alba) against real Postgres (Testcontainers).
-- **Architecture**: ArchUnitNET (hard rules above).
-- **Contract**: OpenAPI vs TypeSpec (`oasdiff`), error catalogue vs contract and translations.
-- **Mirrored layout**: `src/Cooquoi.Context.<Name>/<path>/X.cs` → `tests/Cooquoi.Context.<Name>.Tests/<path>/XTests.cs`. CI checks every `Domain/` aggregate and value object and every `Features/` use case has a test file.
-- No mocks of our own code; never change production code for testability.
+See the `dotnet-test` skill. Domain: xUnit v3 + Shouldly, rule ids in names. Integration: Alba + Testcontainers through `Cooquoi.Testing` (Docker must run). Mirrored layout: `src/…/X.cs` → `tests/…/XTests.cs`. No mocks of our own code; production code is never changed for testability.
 
-## Skills
-
-- `refactor` applies to C# now.
-- `contract`, `dotnet-feature`, `dotnet-test`, `dotnet-review`: written after the spike, from real code.
-
-## Commands *(spike: Nx targets for .NET)*
+## Commands
 
 ```bash
 dotnet build dotnet/Cooquoi.slnx
-dotnet test dotnet/Cooquoi.slnx
+dotnet test --solution dotnet/Cooquoi.slnx            # Microsoft Testing Platform
+dotnet test --project dotnet/tests/<Project>
 dotnet format dotnet/Cooquoi.slnx --verify-no-changes
-aspire run   # from aspire/Cooquoi.AppHost — starts the whole system
+aspire start                                           # from aspire/Cooquoi.AppHost; dashboard :15149, API :5281, webapp :3000
 ```

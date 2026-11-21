@@ -42,6 +42,10 @@ Repo skills live in `.agents/skills/` (linked from `.claude/skills/`):
 | `webapp-test` | Webapp tests (MSW, vi.mock, Testing Library) |
 | `api-client-sync` | Adapt the webapp after a contract change |
 | `webapp-review` | Review webapp changes |
+| `dotnet-domain` | C# aggregates, value objects, events, errors (rule ids from the domain docs) |
+| `dotnet-feature` | Implement a backend use case: endpoint, persistence, migration, tests |
+| `dotnet-test` | C# tests (xUnit + Shouldly, Alba + Testcontainers, architecture) |
+| `dotnet-review` | Review backend changes |
 
 Webapp conventions: [ts/apps/cooquoi-webapp/AGENTS.md](ts/apps/cooquoi-webapp/AGENTS.md).
 Backend conventions: [dotnet/AGENTS.md](dotnet/AGENTS.md).

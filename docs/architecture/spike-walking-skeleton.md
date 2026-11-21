@@ -169,8 +169,8 @@ The smallest domain, but every layer: Aspire, Keycloak, API, domain, persistence
 ## After the spike
 
 1. Update ADRs 0003, 0009, 0010, 0011, 0013, 0014, 0015 with what changed; mark *(spike)* items confirmed.
-2. Update `dotnet/AGENTS.md` and the webapp `AGENTS.md` from the real code.
-3. Write the skills from real code: `contract`, `dotnet-feature`, `dotnet-test`, `dotnet-review`.
+2. Update `dotnet/AGENTS.md` and the webapp `AGENTS.md` from the real code. *(`dotnet/AGENTS.md` done after phase 2.)*
+3. Write the skills from real code: `contract`, `dotnet-feature`, `dotnet-test`, `dotnet-review`. *(The four .NET skills — `dotnet-domain` added — written after phase 2; `contract` with phase 3, once its templates exist.)*
 4. Decide what to keep: the spike code becomes the base of the Household and Foodpedia contexts.
 
 ## Risks
