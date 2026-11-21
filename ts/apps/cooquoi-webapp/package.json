@@ -8,18 +8,12 @@
   },
   "dependencies": {
     "@cooquoi/api-client": "workspace:*",
-    "@hookform/resolvers": "catalog:",
-    "@utils/api-contracts": "workspace:*",
-    "@utils/react": "workspace:*",
-    "clsx": "catalog:",
     "iron-session": "catalog:",
     "next": "catalog:",
     "openid-client": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
-    "react-hook-form": "catalog:",
     "server-only": "catalog:",
-    "tailwind-merge": "catalog:",
     "zod": "catalog:"
   },
   "nx": {
@@ -36,7 +30,6 @@
     }
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "catalog:",
     "msw": "catalog:"
   }
 }

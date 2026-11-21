@@ -2,7 +2,7 @@
 
 Next.js App Router webapp, backend-for-frontend of the C# API. Decisions: [ADR 0008 (Astryx)](../../../docs/architecture/adr/0008-web-ui-astryx.md), [0011 (auth/BFF)](../../../docs/architecture/adr/0011-webapp-api-auth.md), [0012 (i18n)](../../../docs/architecture/adr/0012-internationalization.md), [0013 (structure)](../../../docs/architecture/adr/0013-webapp-structure.md).
 
-> **Rebuild in progress.** Code currently in `src/` predates these conventions. New code follows this document; old code is replaced, not extended.
+> **Rebuild in progress.** The old UI was removed; `src/` only holds code that follows this document (auth, household). Screens are rebuilt from scratch with Astryx.
 
 **Business logic lives in the API, never here.** The webapp loads data, sends actions, maps API data for screens, validates forms and renders UI.
 
@@ -123,7 +123,7 @@ export const consumeStockItem = defineAction(consumeStockItemSchema, async (inpu
 
 ## UI, styling, text
 
-- Astryx components and tokens only; CSS Modules with Astryx tokens for the rest. No px, no hex, no Tailwind in new code. Details: `webapp-ui` skill.
+- Astryx components and tokens only; CSS Modules with Astryx tokens for the rest. No px, no hex, no Tailwind. Details: `webapp-ui` skill.
 - No literal user-facing strings: `useTranslations('<feature>')` / `getTranslations`. Keys added to `en`, `fr` and `vi`.
 - Format dates, numbers and money with `Intl` / next-intl formatters.
 

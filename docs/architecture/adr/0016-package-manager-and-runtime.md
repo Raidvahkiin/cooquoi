@@ -50,7 +50,7 @@ Move fully to TypeScript 7 once its API is released and the tools above support 
 
 ### 4. Tooling versions at the time of this decision
 
-Nx 24 (migrated from 23 with `nx migrate`), Vitest 5, Biome 2 (respects `.gitignore`; Markdown and the lockfile excluded from formatting; Tailwind directives enabled while Tailwind remains), Vite 8, Next.js 16.4, drizzle 1.0 release candidate.
+Nx 24 (migrated from 23 with `nx migrate`), Vitest 5, Biome 2 (respects `.gitignore`; Markdown and the lockfile excluded from formatting), Vite 8, Next.js 16.4, drizzle 1.0 release candidate.
 
 ## Consequences
 

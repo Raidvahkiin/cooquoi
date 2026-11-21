@@ -93,8 +93,6 @@ const config: ConfigArray = [
       '**/.next',
       '**/coverage',
       '**/next.config.js',
-      '**/postcss.config.js',
-      '**/tailwind.config.js',
     ],
   },
 ];

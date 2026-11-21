@@ -1,14 +1,9 @@
-export default function Index() {
-  /*
-   * Replace the elements below with your own.
-   *
-   * Note: The corresponding styles are in the ./index.tailwind file.
-   */
+// Spike: plain markup until the Astryx rebuild (phase 4).
+export default function HomePage() {
   return (
-    <div>
-      <div className="wrapper">
-        <div className="container">helloworld</div>
-      </div>
-    </div>
+    <main>
+      <h1>Cooquoi</h1>
+      <a href="/account">Open my account</a>
+    </main>
   );
 }

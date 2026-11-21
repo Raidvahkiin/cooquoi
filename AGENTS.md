@@ -71,7 +71,7 @@ Top-level folders are split by **toolchain**, not by frontend/backend:
 
 | Folder | Toolchain | Content |
 |---|---|---|
-| `ts/` | pnpm + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, React UI, API client |
+| `ts/` | pnpm + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, generated API client |
 | `aspire/` *(planned)* | .NET (Aspire AppHost) | Runtime orchestration of the whole system: Postgres, Keycloak, API, webapp. `aspire run` starts everything |
 | `dotnet/` *(conventions drafted, no code yet)* | .NET + `Cooquoi.slnx` | C# backend (DDD bounded contexts) and the Aspire AppHost — see [dotnet/AGENTS.md](dotnet/AGENTS.md) |
 | `contracts/` *(planned)* | TypeSpec | API contract, source of truth for all generated clients |
@@ -85,12 +85,11 @@ Nx stays at the root and orchestrates every folder.
 | Project | Path | Tags | What it is |
 |---|---|---|---|
 | `@cooquoi/api` | `apps/cooquoi-api` | `type:app`, `scope:consumer`, `platform:nestjs` | NestJS REST API (Fastify adapter). Controllers, seeding, Drizzle migrations (`db:generate`, `db:migrate`, `db:push`, `db:studio`) |
-| `@cooquoi/webapp` | `ts/apps/cooquoi-webapp` | `type:app`, `scope:consumer`, `platform:nextjs` | Next.js 16 + React 19 + Tailwind v4 (App Router, server actions in `src/actions/`) |
+| `@cooquoi/webapp` | `ts/apps/cooquoi-webapp` | `type:app`, `scope:consumer`, `platform:nextjs` | Next.js 16 + React 19 (App Router), BFF of the C# API. UI rebuilt from scratch with Astryx (phase 4) |
 | `@cooquoi/market` | `libs/contexts/market` | `type:lib`, `scope:bounded-context`, `platform:nestjs` | Market bounded context: ingredients, products, vendor offers, price comparison. **See [libs/contexts/market/AGENTS.md](libs/contexts/market/AGENTS.md)** |
 | `@libs/core` | `libs/core` | `type:lib`, `scope:core`, `platform:all` | Framework-free primitives: `Entity`, `ValueObject`s (`Quantity`, `Unit`, `Currency`), `DomainError`, `Enumeration`, `EntityFilter`, `DatetimeProvider`, `mockPartial` test util |
 | `@utils/nestjs` | `libs/utils/nestjs` | `type:lib`, `scope:utility`, `platform:nestjs` | CQRS `Mediator` (extends `CommandBus` with a middleware pipeline), `MediatorModule.forRoot()`, `@EnableLogging()`, pluggable loggers (`ILogger`, `MIDDLEWARE_LOGGER`, `NestJsLogger`) |
-| `@utils/api-contracts` | `ts/libs/utils/api-contracts` | `type:lib`, `scope:utility`, `platform:all` | Shared API models/endpoint interfaces and the typed `CooquoiClient` HTTP client used by the webapp |
-| `@utils/react` | `ts/libs/utils/react` | `type:lib`, `scope:utility`, `platform:react` | Shared React UI components + Storybook |
+| `@utils/api-contracts` | `ts/libs/utils/api-contracts` | `type:lib`, `scope:utility`, `platform:all` | Shared API models/endpoint interfaces and the typed `CooquoiClient` HTTP client of the legacy NestJS API (no longer used by the webapp; removed with the legacy backend) |
 
 Only the `market` context exists today. Planned contexts (not created yet): `stock` (inventory, expiry), `recipes`, `authority` (users, sharing).
 
@@ -121,7 +120,7 @@ Only the `market` context exists today. Planned contexts (not created yet): `sto
 - Public API only through `index.ts` barrels; don't export internals.
 - Functions/constructors with 3+ parameters take a single typed object parameter.
 - Biome: 2-space indent, single quotes, organized imports. Prefer `import type` where applicable.
-- Web UI: **Astryx** design system ([ADR 0008](docs/architecture/adr/0008-web-ui-astryx.md)). Use Astryx components and tokens only — no hard-coded px or hex colours; spacing via `gap`/`padding` props or `--spacing-*`, text via `Heading`/`Text` types. Custom styles go in CSS Modules using Astryx tokens. Tailwind is being removed with the redesign — don't add new Tailwind code.
+- Web UI: **Astryx** design system ([ADR 0008](docs/architecture/adr/0008-web-ui-astryx.md)). Use Astryx components and tokens only — no hard-coded px or hex colours; spacing via `gap`/`padding` props or `--spacing-*`, text via `Heading`/`Text` types. Custom styles go in CSS Modules using Astryx tokens. No Tailwind (removed with the old UI).
 
 ## Testing
 

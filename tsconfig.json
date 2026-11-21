@@ -7,9 +7,6 @@
       "path": "./libs/core"
     },
     {
-      "path": "./ts/libs/utils/react"
-    },
-    {
       "path": "./libs/contexts/market"
     },
     {
