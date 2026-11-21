@@ -22,7 +22,9 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | **Unit** | A unit a quantity can be expressed in: g, kg, ml, l, piece, and ingredient-specific ones like pack, fillet, slice. |
 | **Dimension** | The kind of measure a unit belongs to: mass, volume or count. |
 | **Conversion** | A rule turning one unit into another. **Universal** within a dimension (1 kg = 1000 g); **ingredient-specific** across dimensions or for custom units (1 egg ≈ 60 g, 1 fillet of salmon ≈ 200 g). |
-| **Shelf life** | The default number of days an ingredient keeps, used to propose an expiry date. |
+| **Shelf life** | The default number of days an ingredient keeps, with a **recommended storage** (fridge, freezer, room). Used to propose an expiry date and a pantry. |
+| **Tag** | A namespaced label classifying ingredients: `category:` (UI grouping, at least one per ingredient), `season:`, `diet:`, `allergen:`, `family:` (links variants such as salmon and smoked salmon). Curated, with translated labels. |
+| **Variant** | A distinct ingredient close to another (smoked salmon / salmon, brown rice / white rice), linked by a `family:` tag. |
 | **Household-private ingredient** *(after MVP)* | An ingredient created by a household when it is missing from Foodpedia; visible only to that household until a curator promotes it. |
 
 ## Pantry
@@ -34,6 +36,7 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | **Entered quantity** | The quantity exactly as the user typed it (amount + unit, e.g. "2 packs"). Never overwritten. |
 | **Normalized quantity** | The entered quantity converted to the ingredient's base unit, when a conversion is known. |
 | **Unnormalized** | A stock item whose entered unit has no known conversion yet. It is visible but not summed with others. |
+| **Household conversion** | A conversion confirmed by a household for its own products ("1 fillet ≈ 180 g"). Applied before Foodpedia's default conversions. |
 | **Conversion proposal** | A suggested conversion ("1 fillet ≈ 200 g?") offered to the user when an unknown unit is entered; the user confirms or adjusts it. |
 | **Expiry date** | The date a stock item should be consumed by. Defaults from shelf life, adjustable manually. |
 | **Threshold** | Optional per-ingredient levels set by the household: **low** and **over**, expressed in the base unit. |

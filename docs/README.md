@@ -15,7 +15,7 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 
 | Context | Status |
 |---|---|
-| Foodpedia | Next |
+| [Foodpedia](contexts/foodpedia/domain-model.md) | Reviewed ([use cases](contexts/foodpedia/use-cases.md)) |
 | Pantry | Next |
 | Market | Exists in legacy NestJS — to be revised |
 | Cookbook | Later |
