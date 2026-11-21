@@ -1,53 +1,260 @@
 {
-  "version": "8",
+  "type": "base",
+  "version": "10",
   "dialect": "postgres",
   "id": "ff075774-86f4-4be4-8cd8-15329fa6493d",
-  "prevIds": ["00000000-0000-0000-0000-000000000000"],
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "footprints": [
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ingredient_components"
+      ],
+      "writes": [
+        "s|tbl|public.ingredient_components",
+        "n|tbl|public.ingredient_components",
+        "e|tbl|public.ingredient_components",
+        "n|rel|public.ingredient_components",
+        "n|type|public.ingredient_components",
+        "n|rel|public.ingredient_components_pkey"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "ingredients"
+      ],
+      "writes": [
+        "s|tbl|public.ingredients",
+        "n|tbl|public.ingredients",
+        "e|tbl|public.ingredients",
+        "n|rel|public.ingredients",
+        "n|type|public.ingredients",
+        "n|rel|public.ingredients_pkey",
+        "n|rel|public.ingredients_name_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "offers"
+      ],
+      "writes": [
+        "s|tbl|public.offers",
+        "n|tbl|public.offers",
+        "e|tbl|public.offers",
+        "n|rel|public.offers",
+        "n|type|public.offers",
+        "n|rel|public.offers_pkey",
+        "n|rel|public.offers_product_vendor_unique"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "products"
+      ],
+      "writes": [
+        "s|tbl|public.products",
+        "n|tbl|public.products",
+        "e|tbl|public.products",
+        "n|rel|public.products",
+        "n|type|public.products",
+        "n|rel|public.products_pkey",
+        "n|rel|public.products_name_key"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_table",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_ingredients"
+      ],
+      "writes": [
+        "s|tbl|public.product_ingredients",
+        "n|tbl|public.product_ingredients",
+        "e|tbl|public.product_ingredients",
+        "n|rel|public.product_ingredients",
+        "n|type|public.product_ingredients"
+      ],
+      "reads": [
+        "n|sch|public"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "ingredient_components"
+      ],
+      "writes": [
+        "s|fk|public.ingredient_components.ingredient_components_parent_ingredient_id_ingredients_id_fkey",
+        "n|fk|public.ingredient_components.ingredient_components_parent_ingredient_id_ingredients_id_fkey",
+        "e|fk|public.ingredient_components.ingredient_components_parent_ingredient_id_ingredients_id_fkey",
+        "n|con|public.ingredient_components.ingredient_components_parent_ingredient_id_ingredients_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.ingredient_components",
+        "n|sch|public",
+        "n|tbl|public.ingredients",
+        "n|sch|public",
+        "n|col|public.ingredient_components.parent_ingredient_id",
+        "n|col|public.ingredients.id",
+        "e|uniqueness|public.ingredients.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "ingredient_components"
+      ],
+      "writes": [
+        "s|fk|public.ingredient_components.ingredient_components_C2DEt5a1olON_fkey",
+        "n|fk|public.ingredient_components.ingredient_components_C2DEt5a1olON_fkey",
+        "e|fk|public.ingredient_components.ingredient_components_C2DEt5a1olON_fkey",
+        "n|con|public.ingredient_components.ingredient_components_C2DEt5a1olON_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.ingredient_components",
+        "n|sch|public",
+        "n|tbl|public.ingredients",
+        "n|sch|public",
+        "n|col|public.ingredient_components.component_ingredient_id",
+        "n|col|public.ingredients.id",
+        "e|uniqueness|public.ingredients.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "offers"
+      ],
+      "writes": [
+        "s|fk|public.offers.offers_product_id_products_id_fkey",
+        "n|fk|public.offers.offers_product_id_products_id_fkey",
+        "e|fk|public.offers.offers_product_id_products_id_fkey",
+        "n|con|public.offers.offers_product_id_products_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.offers",
+        "n|sch|public",
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.offers.product_id",
+        "n|col|public.products.id",
+        "e|uniqueness|public.products.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_ingredients"
+      ],
+      "writes": [
+        "s|fk|public.product_ingredients.product_ingredients_product_id_products_id_fkey",
+        "n|fk|public.product_ingredients.product_ingredients_product_id_products_id_fkey",
+        "e|fk|public.product_ingredients.product_ingredients_product_id_products_id_fkey",
+        "n|con|public.product_ingredients.product_ingredients_product_id_products_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.product_ingredients",
+        "n|sch|public",
+        "n|tbl|public.products",
+        "n|sch|public",
+        "n|col|public.product_ingredients.product_id",
+        "n|col|public.products.id",
+        "e|uniqueness|public.products.id"
+      ]
+    },
+    {
+      "statementType": "create_fk",
+      "statementTarget": [
+        "table",
+        "public",
+        "product_ingredients"
+      ],
+      "writes": [
+        "s|fk|public.product_ingredients.product_ingredients_ingredient_id_ingredients_id_fkey",
+        "n|fk|public.product_ingredients.product_ingredients_ingredient_id_ingredients_id_fkey",
+        "e|fk|public.product_ingredients.product_ingredients_ingredient_id_ingredients_id_fkey",
+        "n|con|public.product_ingredients.product_ingredients_ingredient_id_ingredients_id_fkey"
+      ],
+      "reads": [
+        "n|tbl|public.product_ingredients",
+        "n|sch|public",
+        "n|tbl|public.ingredients",
+        "n|sch|public",
+        "n|col|public.product_ingredients.ingredient_id",
+        "n|col|public.ingredients.id",
+        "e|uniqueness|public.ingredients.id"
+      ]
+    }
+  ],
   "ddl": [
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "ingredient_components",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "ingredients",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "offers",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "isRlsEnabled": false,
+      "schema": "public",
       "name": "products",
-      "entityType": "tables",
-      "schema": "public"
-    },
-    {
       "isRlsEnabled": false,
+      "entityType": "tables"
+    },
+    {
+      "schema": "public",
       "name": "product_ingredients",
-      "entityType": "tables",
-      "schema": "public"
+      "isRlsEnabled": false,
+      "entityType": "tables"
     },
     {
-      "type": "uuid",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": null,
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "ingredient_components",
       "name": "parent_ingredient_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "ingredient_components"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -55,12 +262,25 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "component_ingredient_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "ingredient_components"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "ingredient_components",
+      "name": "component_ingredient_id",
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "ingredients",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -68,12 +288,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "ingredients"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "ingredients",
+      "name": "name",
       "type": "varchar(255)",
       "typeSchema": null,
       "notNull": true,
@@ -81,12 +301,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "ingredients"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "ingredients",
+      "name": "description",
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -94,25 +314,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "ingredients"
+      "entityType": "columns"
     },
     {
-      "type": "date",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "ingredients",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "ingredients"
-    },
-    {
       "type": "date",
       "typeSchema": null,
       "notNull": true,
@@ -120,12 +327,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "ingredients"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "ingredients",
+      "name": "updated_at",
+      "type": "date",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "offers",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -133,12 +353,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "offers"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "offers",
+      "name": "product_id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -146,12 +366,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "product_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "offers"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "offers",
+      "name": "vendor",
       "type": "varchar(255)",
       "typeSchema": null,
       "notNull": true,
@@ -159,12 +379,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "vendor",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "offers"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "offers",
+      "name": "price_amount",
       "type": "numeric(12,2)",
       "typeSchema": null,
       "notNull": true,
@@ -172,12 +392,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "price_amount",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "offers"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "offers",
+      "name": "price_currency",
       "type": "varchar(3)",
       "typeSchema": null,
       "notNull": true,
@@ -185,25 +405,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "price_currency",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "offers"
+      "entityType": "columns"
     },
     {
-      "type": "date",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "offers",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "offers"
-    },
-    {
       "type": "date",
       "typeSchema": null,
       "notNull": true,
@@ -211,12 +418,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
-      "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "offers"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "offers",
+      "name": "updated_at",
+      "type": "date",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": "now()",
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "products",
+      "name": "id",
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -224,12 +444,12 @@
       "default": "gen_random_uuid()",
       "generated": null,
       "identity": null,
-      "name": "id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "products"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "products",
+      "name": "name",
       "type": "varchar(255)",
       "typeSchema": null,
       "notNull": true,
@@ -237,12 +457,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "name",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "products"
+      "entityType": "columns"
     },
     {
+      "schema": "public",
+      "table": "products",
+      "name": "description",
       "type": "text",
       "typeSchema": null,
       "notNull": false,
@@ -250,25 +470,12 @@
       "default": null,
       "generated": null,
       "identity": null,
-      "name": "description",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "products"
+      "entityType": "columns"
     },
     {
-      "type": "date",
-      "typeSchema": null,
-      "notNull": true,
-      "dimensions": 0,
-      "default": "now()",
-      "generated": null,
-      "identity": null,
+      "schema": "public",
+      "table": "products",
       "name": "created_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "products"
-    },
-    {
       "type": "date",
       "typeSchema": null,
       "notNull": true,
@@ -276,25 +483,25 @@
       "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "products",
       "name": "updated_at",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "products"
-    },
-    {
-      "type": "uuid",
+      "type": "date",
       "typeSchema": null,
       "notNull": true,
       "dimensions": 0,
-      "default": null,
+      "default": "now()",
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "product_ingredients",
       "name": "product_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "product_ingredients"
-    },
-    {
       "type": "uuid",
       "typeSchema": null,
       "notNull": true,
@@ -302,135 +509,180 @@
       "default": null,
       "generated": null,
       "identity": null,
+      "entityType": "columns"
+    },
+    {
+      "schema": "public",
+      "table": "product_ingredients",
       "name": "ingredient_id",
-      "entityType": "columns",
-      "schema": "public",
-      "table": "product_ingredients"
+      "type": "uuid",
+      "typeSchema": null,
+      "notNull": true,
+      "dimensions": 0,
+      "default": null,
+      "generated": null,
+      "identity": null,
+      "entityType": "columns"
     },
     {
-      "nameExplicit": false,
-      "columns": ["parent_ingredient_id"],
-      "schemaTo": "public",
-      "tableTo": "ingredients",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
+      "schema": "public",
+      "table": "ingredient_components",
       "name": "ingredient_components_parent_ingredient_id_ingredients_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "ingredient_components"
-    },
-    {
       "nameExplicit": false,
-      "columns": ["component_ingredient_id"],
+      "columns": [
+        "parent_ingredient_id"
+      ],
       "schemaTo": "public",
       "tableTo": "ingredients",
-      "columnsTo": ["id"],
+      "columnsTo": [
+        "id"
+      ],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "ingredient_components",
       "name": "ingredient_components_C2DEt5a1olON_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "ingredient_components"
-    },
-    {
       "nameExplicit": false,
-      "columns": ["product_id"],
-      "schemaTo": "public",
-      "tableTo": "products",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "offers_product_id_products_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "offers"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["product_id"],
-      "schemaTo": "public",
-      "tableTo": "products",
-      "columnsTo": ["id"],
-      "onUpdate": "NO ACTION",
-      "onDelete": "CASCADE",
-      "name": "product_ingredients_product_id_products_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "product_ingredients"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["ingredient_id"],
+      "columns": [
+        "component_ingredient_id"
+      ],
       "schemaTo": "public",
       "tableTo": "ingredients",
-      "columnsTo": ["id"],
+      "columnsTo": [
+        "id"
+      ],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
-      "name": "product_ingredients_ingredient_id_ingredients_id_fkey",
-      "entityType": "fks",
-      "schema": "public",
-      "table": "product_ingredients"
+      "entityType": "fks"
     },
     {
-      "columns": ["parent_ingredient_id", "component_ingredient_id"],
-      "nameExplicit": false,
-      "name": "ingredient_components_pkey",
-      "entityType": "pks",
-      "schema": "public",
-      "table": "ingredient_components"
-    },
-    {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "ingredients_pkey",
-      "schema": "public",
-      "table": "ingredients",
-      "entityType": "pks"
-    },
-    {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "offers_pkey",
       "schema": "public",
       "table": "offers",
+      "name": "offers_product_id_products_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "product_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "products",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "product_ingredients",
+      "name": "product_ingredients_product_id_products_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "product_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "products",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "product_ingredients",
+      "name": "product_ingredients_ingredient_id_ingredients_id_fkey",
+      "nameExplicit": false,
+      "columns": [
+        "ingredient_id"
+      ],
+      "schemaTo": "public",
+      "tableTo": "ingredients",
+      "columnsTo": [
+        "id"
+      ],
+      "onUpdate": "NO ACTION",
+      "onDelete": "CASCADE",
+      "entityType": "fks"
+    },
+    {
+      "schema": "public",
+      "table": "ingredient_components",
+      "name": "ingredient_components_pkey",
+      "columns": [
+        "parent_ingredient_id",
+        "component_ingredient_id"
+      ],
+      "nameExplicit": false,
       "entityType": "pks"
     },
     {
-      "columns": ["id"],
-      "nameExplicit": false,
-      "name": "products_pkey",
-      "schema": "public",
-      "table": "products",
-      "entityType": "pks"
-    },
-    {
-      "nameExplicit": true,
-      "columns": ["product_id", "vendor"],
-      "nullsNotDistinct": false,
-      "name": "offers_product_vendor_unique",
-      "entityType": "uniques",
-      "schema": "public",
-      "table": "offers"
-    },
-    {
-      "nameExplicit": false,
-      "columns": ["name"],
-      "nullsNotDistinct": false,
-      "name": "ingredients_name_key",
       "schema": "public",
       "table": "ingredients",
+      "name": "ingredients_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "offers",
+      "name": "offers_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "products",
+      "name": "products_pkey",
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "entityType": "pks"
+    },
+    {
+      "schema": "public",
+      "table": "offers",
+      "name": "offers_product_vendor_unique",
+      "nameExplicit": true,
+      "columns": [
+        "product_id",
+        "vendor"
+      ],
+      "nullsNotDistinct": false,
       "entityType": "uniques"
     },
     {
+      "schema": "public",
+      "table": "ingredients",
+      "name": "ingredients_name_key",
       "nameExplicit": false,
-      "columns": ["name"],
+      "columns": [
+        "name"
+      ],
       "nullsNotDistinct": false,
-      "name": "products_name_key",
+      "entityType": "uniques"
+    },
+    {
       "schema": "public",
       "table": "products",
+      "name": "products_name_key",
+      "nameExplicit": false,
+      "columns": [
+        "name"
+      ],
+      "nullsNotDistinct": false,
       "entityType": "uniques"
     }
-  ],
-  "renames": []
+  ]
 }

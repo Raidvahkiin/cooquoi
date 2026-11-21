@@ -24,7 +24,8 @@ FROM ${NODE_IMAGE} AS production
 WORKDIR /app
 
 ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
-RUN corepack enable pnpm
+# Download pnpm at build time, not at every container start
+RUN corepack enable pnpm && pnpm --version
 
 # Copy everything from deps (node_modules at all levels + source)
 COPY --from=deps /app ./
