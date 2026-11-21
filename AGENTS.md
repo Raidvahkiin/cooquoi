@@ -30,6 +30,21 @@ Daily-comfort food app: helps a household decide what to cook and what to buy fr
 
 Business and architecture docs live in [`docs/`](docs/README.md): [vision](docs/business/vision.md), [glossary](docs/business/glossary.md) (use its terms in code), [context map](docs/business/context-map.md) and [ADRs](docs/architecture/adr/). Read the relevant ones before designing a feature; record new architecture decisions as ADRs.
 
+## Project skills
+
+Repo skills live in `.agents/skills/` (linked from `.claude/skills/`):
+
+| Skill | Use |
+|---|---|
+| `refactor` | After any change: 2-level boy-scout scope, justified skips, dead-code and pass-through verification loop |
+| `webapp-feature` | Implement a webapp screen or slice |
+| `webapp-ui` | Build UI with Astryx and tokens |
+| `webapp-test` | Webapp tests (MSW, vi.mock, Testing Library) |
+| `api-client-sync` | Adapt the webapp after a contract change |
+| `webapp-review` | Review webapp changes |
+
+Webapp conventions: [ts/apps/cooquoi-webapp/AGENTS.md](ts/apps/cooquoi-webapp/AGENTS.md).
+
 ## Tooling
 
 - **Package manager: bun.** Run everything as `bun nx ...` (CI uses `bunx nx`). Install with `bun install`.
