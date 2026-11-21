@@ -33,6 +33,7 @@ The suggestion capability is the **core domain**. Every other context exists to 
 
 | # | Journey | Flow |
 |---|---|---|
+| J0 | **Get started** | I sign in (Google or a Cooquoi account) → my personal household and profile are created → I pick my language (`en` / `fr` / `vi`) → I land on an empty fridge that invites me to add my first items |
 | J1 | **Restock** | I buy groceries → I add items (manually in MVP, receipt scan later) → stock increases, prices paid are recorded |
 | J2 | **Check my fridge** | I see what I have, how much, and what expires soon |
 | J3 | **Cook** | I cook a recipe → its ingredients are consumed from stock |

@@ -10,7 +10,7 @@
 | **Market** | Vendors, products, price observations, preferred vendors | Supporting | After MVP (legacy version exists) |
 | **Cookbook** | Recipes, ingredients with quantities, servings, sharing | Supporting | After MVP |
 | **Receipt Scanning** | Receipt photo → structured lines → stock and prices | Supporting (AI is an external generic service) | Later |
-| **Identity & Household** | Authentication (Keycloak), households, memberships, sharing rules | Generic (auth) + small supporting model | MVP (minimal) |
+| **Identity & Household** | Authentication (Keycloak), user profiles, households, memberships, sharing rules ([ADR 0015](../architecture/adr/0015-user-profile.md)) | Generic (auth) + small supporting model | MVP (minimal) |
 
 - **Core** — the differentiator; gets the richest model and most investment.
 - **Supporting** — necessary, simpler models.
@@ -60,7 +60,7 @@ flowchart TB
 | Upstream → Downstream | Pattern | Notes |
 |---|---|---|
 | Keycloak → Identity & Household | Anti-corruption layer | Only the subject id and roles cross the boundary; no Keycloak types in the domain. |
-| Identity & Household → all | Shared identifiers | Contexts reference `HouseholdId` / `UserId` by id only. |
+| Identity & Household → all | Shared identifiers | Contexts reference `HouseholdId` / `UserId` by id only. `UserId` is Cooquoi's own id, independent of the identity provider. |
 | Foodpedia → Pantry, Market, Cookbook, Planning | Open host service | Foodpedia publishes ingredients, units and conversions; downstream contexts reference ingredients by id and never modify them. |
 | Pantry, Market, Cookbook → Planning & Suggestion | Customer / supplier | Planning reads stock, prices and recipes through queries or published events. |
 | Receipt Scanning → Pantry, Market | Published events | One receipt produces `ItemsRestocked` and `PricePaidRecorded`. |

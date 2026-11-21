@@ -6,7 +6,8 @@ Terms used identically in code, docs and conversations. When a new concept appea
 
 | Term | Definition |
 |---|---|
-| **User** | A person authenticated through Keycloak. Identified in the domain only by their identity-provider subject id; no credentials are stored by Cooquoi. |
+| **User** | A person authenticated through Keycloak. Has a **user profile** in Cooquoi, identified by our own `UserId`; no credentials are stored by Cooquoi. |
+| **User profile** | What Cooquoi stores about a user: display name and email (copied from Keycloak at sign-in), language preference, default household. |
 | **Household** | The owner of pantries, budget, preferred vendors and (later) private ingredients. In MVP every user gets a personal household on first login. |
 | **Membership** | The link between a user and a household, with a role in that household. |
 | **Curator** | A user with the curator role, allowed to add and edit Foodpedia entries. |
