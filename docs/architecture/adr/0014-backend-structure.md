@@ -70,7 +70,7 @@ Reusable DDD patterns that could be published to NuGet carry a **product-neutral
 ```
 Cooquoi.Context.Pantry/
 ├─ Domain/
-│  └─ StockItems/              # StockItem.cs, StockItemId.cs, value objects, StockItemEvents.cs, StockItemError.cs
+│  └─ StockItems/              # StockItemAggregate.cs, StockItemId.cs, value objects, StockItemEvents.cs, StockItemError.cs
 ├─ Features/
 │  ├─ AddStockItem/
 │  │  ├─ AddStockItem.cs                # request record + validator
@@ -119,6 +119,7 @@ If a use case needs two entry points (HTTP and a message), its core becomes a Wo
 - Another context's `PublicApi` is referenced only from `Integration/`.
 - `Features/` does not use `ExecuteUpdate` / `ExecuteDelete` (writes go through aggregates).
 - `Api` references contexts only through their `*Module` registration.
+- Domain type names match their kind (§7): `…Aggregate` ⇔ derives from `AggregateRoot<TId>`, `…Entity` ⇔ derives from `Entity<TId>`; any other class or record in `Domain/` is immutable (no public or private setters other than `init`).
 
 ### 6. Persistence: EF Core as unit of work, no repository layer
 
@@ -223,13 +224,27 @@ Alternative: an external secret manager (Vault, Infisical, Doppler) — not wort
 
 | Concept | Convention |
 |---|---|
-| Aggregate | `sealed class`, private setters, private parameterless constructor for EF Core, static factory (`Ingredient.Create(...)`), behaviour as methods. No public setters. |
+| Aggregate | `sealed class`, private setters, private parameterless constructor for EF Core, static factory (`IngredientAggregate.Create(...)`), behaviour as methods. No public setters. |
+| Entity (inside an aggregate) | Derives from `Entity<TId>`: identity within its aggregate, never loaded or saved alone. |
 | Check first, then change | A method validates every rule **before** changing any state; a failure never leaves an aggregate half-changed. |
 | Value object | Immutable `sealed record` / `readonly record struct`, validated on creation. Collections with rules are first-class value objects (`ConversionTable`, `LocalizedNames`). |
 | Domain service | Pure function, no state (`QuantityConverter.Normalize`). |
 | Strongly typed id | `readonly record struct IngredientId(Guid Value)`, `New()` with UUID v7; EF value converters by convention. |
 | Domain event | Immutable record raised by the aggregate (`Raise(...)`). |
 | Time | `TimeProvider`, never `DateTime.Now`. |
+
+**Naming by kind** — the kind decides which rules a reviewer checks, so it is visible in the name:
+
+| Kind | Name | Example |
+|---|---|---|
+| Aggregate root | `<Concept>Aggregate` | `HouseholdAggregate`, `IngredientAggregate` |
+| Entity | `<Concept>Entity` | `MembershipEntity` |
+| Value object | `<Concept>`, unmarked — no marker means no identity | `Locale`, `IdentityRef`, `ConversionTable` |
+
+- Ids, events, errors and enums keep their own suffixes (`HouseholdId`, `IngredientError`).
+- The suffix stays inside the context: response DTOs, contract models and integration events use the plain glossary term (`MeHousehold`, not `MeHouseholdAggregate`).
+- Why: the same name for the context and its main concept clashed with the namespace (`Cooquoi.Context.Household.…Household` needed per-file aliases); each kind has its own review checklist (version token and `DbSet` for aggregates, identity inside the aggregate for entities, immutability for values); and the TypeScript code already marks kinds (`.entity.ts`, `.vo.ts`). Value objects stay unmarked because they are the most numerous and appear in most signatures.
+- Alternatives considered: single-letter prefixes (`AHousehold`, `EMembership`) — `E` commonly means enum, `AIngredient` reads as "AI ingredient", and .NET guidelines reserve prefixes for `I` and `T`; marking value objects too (`LocaleVo`) — noise on the most used types for little gain.
 
 Functional DDD (a pure *decider*: `decide(state, command) → events`) was considered; it fits event sourcing, but fights EF Core's state-based tracking. A context moving to event sourcing would adopt it for that context.
 
@@ -427,7 +442,7 @@ Review thresholds, reported by a CI script and the `refactor` / review skills �
 | **Architecture tests** | Rules of §5 | ArchUnitNET |
 | **Contract tests** | ASP.NET's OpenAPI vs the TypeSpec spec; error catalogue vs contract and translations | `oasdiff` + catalogue test |
 
-- **Mirrored test projects**: tests live in `tests/Cooquoi.Context.<Name>.Tests/`, mirroring the source path (`src/…/Domain/Ingredients/Ingredient.cs` → `tests/…/Domain/Ingredients/IngredientTests.cs`). A CI check verifies that every aggregate and value object in `Domain/` and every use case in `Features/` has a matching test file. Colocating test files next to source (compiled by the test project) was considered: it breaks IDE refactorings and the conventions tools and agents expect, while mirroring gives the same discoverability.
+- **Mirrored test projects**: tests live in `tests/Cooquoi.Context.<Name>.Tests/`, mirroring the source path (`src/…/Domain/Ingredients/IngredientAggregate.cs` → `tests/…/Domain/Ingredients/IngredientAggregateTests.cs`). A CI check verifies that every aggregate and value object in `Domain/` and every use case in `Features/` has a matching test file. Colocating test files next to source (compiled by the test project) was considered: it breaks IDE refactorings and the conventions tools and agents expect, while mirroring gives the same discoverability.
 - **No mocks of our own code.** Only true externals (LLM, weather API) are replaced, at the HTTP level or through the host's service registration in tests.
 - Production code is never changed for testability.
 

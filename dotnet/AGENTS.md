@@ -44,6 +44,7 @@ dotnet/
 - `Raidvahkiin.*` never references `Cooquoi.*`.
 - Another context's `PublicApi` is used **only from `Integration/`**; never reference another context's `Domain/`, `Features/` or `Persistence/`.
 - No `ExecuteUpdate` / `ExecuteDelete` in `Features/` — writes go through aggregates.
+- Domain names match their kind: `…Aggregate` ⇔ `AggregateRoot<TId>`, `…Entity` ⇔ `Entity<TId>`; every other `Domain/` type is immutable.
 - No use case calls another use case. Share logic through the domain or `Persistence/Lookups/`; trigger follow-up work with events or cascading messages.
 - Writes to another context only through events.
 
@@ -75,7 +76,9 @@ dotnet/
 
 | Concept | Convention |
 |---|---|
+| Naming by kind | Aggregate root `<Concept>Aggregate` (derives `AggregateRoot<TId>`), entity `<Concept>Entity` (derives `Entity<TId>`), value object unmarked (`Locale`). DTOs and contract models keep the plain term. ADR 0014 §7. |
 | Aggregate | `sealed class`, private setters, private ctor for EF Core, static `Create(...)`, behaviour methods. Small: a consistency boundary. |
+| Entity | Identity inside its aggregate; never loaded or saved alone. |
 | Methods | **Check every rule first, then change state.** No half-changed aggregates. |
 | Value object | Immutable record, validated on creation; collections with rules are value objects (`ConversionTable`) |
 | Domain service | Pure function |
