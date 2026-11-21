@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>DDD building blocks: aggregate roots, domain events, error definitions.</Description>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+</Project>

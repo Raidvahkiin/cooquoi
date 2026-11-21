@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Cooquoi.Api/Cooquoi.Api.csproj" />
+    <Project Path="src/Cooquoi.Context.Household/Cooquoi.Context.Household.csproj" />
+    <Project Path="src/Cooquoi.Platform/Cooquoi.Platform.csproj" />
+    <Project Path="src/Cooquoi.ServiceDefaults/Cooquoi.ServiceDefaults.csproj" />
+    <Project Path="src/Cooquoi.SharedKernel/Cooquoi.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/Raidvahkiin.Ddd.AspNetCore/Raidvahkiin.Ddd.AspNetCore.csproj" />
+    <Project Path="src/BuildingBlocks/Raidvahkiin.Ddd/Raidvahkiin.Ddd.csproj" />
+  </Folder>
+  <Project Path="../aspire/Cooquoi.AppHost/Cooquoi.AppHost.csproj" />
+</Solution>

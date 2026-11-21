@@ -42,6 +42,25 @@ The smallest domain, but every layer: Aspire, Keycloak, API, domain, persistence
 
 **Done when**: `aspire run` starts everything; signing in with Keycloak creates a profile and a household; the webapp shows the user's name; tests pass.
 
+**Status (2026-11-21)**: built and verified end to end under Aspire. Remaining: tests, then recording these findings in the ADRs.
+
+- **Verified**: Keycloak login from the webapp → `/account` calls `GET /v1/me` with the bearer token → profile and personal household created on first call, same ids afterwards; no token → 401 `ProblemDetails`; token locale wins over `Accept-Language`.
+- **Not done**: domain tests (xUnit v3 + Shouldly) in a mirrored `dotnet/tests/Cooquoi.Context.Household.Tests`; integration tests (Alba + Testcontainers: first sign-in, repeat call, concurrent first sign-in with row counts, 401); webapp auth route tests; Astryx `AppShell` (deferred to phase 4); Google brokering (identity provider in the realm, disabled).
+- **Known gaps**: after login the user always lands on `/` (the original page is not passed back); token refresh in `proxy.ts` not verified with an expired token; the `Version` bump covers the aggregate root row only, not owned children (memberships); Wolverine transaction middleware not used yet (the endpoint calls `SaveChangesAsync` itself, decided in phase 2 with the outbox).
+
+**Answers so far**
+
+- **Aspire 17**: the AppHost SDK is obsolete (ASPIRE012) → plain `Microsoft.NET.Sdk` + `Aspire.Hosting.AppHost`, projects added with `AddDotnetProject(name, path)`. The API needs a `launchSettings.json` profile or it gets no endpoint. Next.js: `AddNextJsApp(...).WithPnpm(install: false)` (resource type `NextJsAppResource`); needs a `dev` script; set the port on the existing `http` endpoint (`WithEndpoint("http", e => e.Port = 3000)`), adding a second one fails. Generated secrets (`AddParameter` + `GenerateParameterDefault`, persisted) live in `~/.aspire/secrets/cooquoi-apphost/`, so the Postgres password is not visible to query the DB by hand. The dashboard reported the API healthy while it had crashed at startup: check the logs.
+- **Keycloak**: the integration is still preview (`17.0.0-preview…`). Realm import with `${ENV}` placeholders works. Declaring `clientScopes` in the realm replaces Keycloak's defaults (tokens lost roles and name) → put the audience protocol mapper on the client instead. Dev users imported only in development.
+- **Cookie size**: about 3.4 KB of 4 KB (≈650 bytes margin) with access + refresh tokens, no ID token.
+- **Logout**: without the ID token Keycloak shows a confirmation page and keeps the SSO session → back-channel POST to the end-session endpoint with the refresh token.
+- **JWT**: JwtBearer with `MapInboundClaims = false`, audience `cooquoi-api` via a client mapper; works.
+- **Wolverine 6**: needs `WolverineFx.RuntimeCompilation` in development (production should use pre-generated code); injected types must be public (`CurrentUser`); register DbContext options as singleton (`optionsLifetime: ServiceLifetime.Singleton`) or codegen falls back to service location.
+- **Concurrent first sign-in**: unique index `ux_user_profiles_identity` + retry on unique violation implemented; not yet proven by a test.
+- **Contract chain**: TypeSpec → `contracts/generated/openapi.yaml` → Hey API 0.99 client in `ts/libs/api-client`; usable from Server Components with `throwOnError: true` per call (the typed client option did not narrow the types).
+- **Next.js 16**: Server Components cannot write cookies → token refresh lives in `src/proxy.ts`.
+- **.NET tooling**: `global.json` at the repo root (SDK 10.0.100, `latestFeature`); NuGet's latest are .NET 11 packages, so 10.x versions are pinned in `Directory.Packages.props`; `IDE0005` needs `GenerateDocumentationFile` (+ `NoWarn CS1591`); EF migrations break the strict analyzers → `generated_code = true` for `**/Migrations/*.cs` in `.editorconfig`; `CA1716` rejects a type named `Me` (→ `MeResponse`).
+- **Dev loop**: `aspire start` from `aspire/Cooquoi.AppHost` (dashboard on 15149, webapp 3000, API 5281); `dotnet tool restore` for `dotnet-ef`.
 ### Phase 2 — Foodpedia backend
 
 **Build**

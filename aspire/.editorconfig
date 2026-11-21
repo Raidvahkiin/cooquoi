@@ -1,0 +1,12 @@
+root = false
+
+[*.cs]
+# Unused code is an error (ADR 0014)
+dotnet_diagnostic.IDE0051.severity = error   # unused private member
+dotnet_diagnostic.IDE0052.severity = error   # unread private member
+dotnet_diagnostic.IDE0060.severity = error   # unused parameter
+dotnet_diagnostic.IDE0005.severity = error   # unnecessary using
+
+csharp_style_namespace_declarations = file_scoped:error
+csharp_style_prefer_primary_constructors = true:suggestion
+csharp_style_var_when_type_is_apparent = true:suggestion

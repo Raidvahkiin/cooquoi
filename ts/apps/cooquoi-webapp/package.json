@@ -3,17 +3,22 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "typecheck": "tsc --project tsconfig.json --noEmit"
+    "typecheck": "tsc --project tsconfig.json --noEmit",
+    "dev": "next dev"
   },
   "dependencies": {
+    "@cooquoi/api-client": "workspace:*",
     "@hookform/resolvers": "catalog:",
     "@utils/api-contracts": "workspace:*",
     "@utils/react": "workspace:*",
     "clsx": "catalog:",
+    "iron-session": "catalog:",
     "next": "catalog:",
+    "openid-client": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "react-hook-form": "catalog:",
+    "server-only": "catalog:",
     "tailwind-merge": "catalog:",
     "zod": "catalog:"
   },

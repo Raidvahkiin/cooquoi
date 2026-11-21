@@ -1,4 +1,5 @@
 packages:
+  - contracts
   - apps/*
   - libs/*
   - libs/**/*
@@ -9,6 +10,7 @@ packages:
 catalog:
   "@electric-sql/pglite": ^0.5.17
   "@fastify/static": ^10.1.12
+  "@hey-api/openapi-ts": ^0.99.0
   "@hookform/resolvers": ^7.0.7
   "@nestjs/common": ^12.5.1
   "@nestjs/config": ^12.1.1
@@ -21,6 +23,10 @@ catalog:
   "@swc-node/register": 1.12.1
   "@swc/core": 1.16.22
   "@tailwindcss/postcss": ^4.3.5
+  "@typespec/compiler": ^1.18.0
+  "@typespec/http": ^1.18.0
+  "@typespec/openapi": ^1.18.0
+  "@typespec/openapi3": ^1.18.0
   "@types/pg": ^8.23.1
   class-transformer: ^0.5.1
   class-validator: ^0.15.1
@@ -29,13 +35,16 @@ catalog:
   dotenv: ^18.0.10
   drizzle-kit: 1.0.0-rc.6
   drizzle-orm: 1.0.0-rc.6
+  iron-session: ^8.0.4
   next: 16.4.6
+  openid-client: ^6.9.1
   pg: ^8.23.1
   react: ^19.3.1
   react-dom: ^19.3.1
   react-hook-form: ^7.92.0
   reflect-metadata: ^0.2.2
   rxjs: ^7.8.2
+  server-only: ^0.0.1
   tailwind-merge: ^3.7.1
   uuid: ^14.0.3
   zod: ^4.6.7
@@ -55,3 +64,5 @@ minimumReleaseAgeExclude:
   - drizzle-kit@1.0.0-rc.6
   - drizzle-orm@1.0.0-rc.6
   - "@nestjs/platform-express@12.6.0"
+  - oauth4webapi@3.8.9
+  - openid-client@6.9.1

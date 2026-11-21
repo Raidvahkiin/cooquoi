@@ -64,3 +64,8 @@ storybook-static
 *.tsbuildinfo
 debug-storybook.log
 .vitest
+
+# .NET
+bin/
+obj/
+.idea/

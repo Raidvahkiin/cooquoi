@@ -49,15 +49,5 @@
   "packageManager": "pnpm@12.21.0",
   "engines": {
     "node": ">=24.15.0 <25"
-  },
-  "workspaces": [
-    "apps/*",
-    "libs/*",
-    "libs/**/*",
-    "ts/apps/*",
-    "ts/libs/**/*"
-  ],
-  "overrides": {
-    "typescript": "npm:@typescript/typescript6@^6.0.2"
   }
 }

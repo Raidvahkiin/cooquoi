@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../BuildingBlocks/Raidvahkiin.Ddd/Raidvahkiin.Ddd.csproj" />
+  </ItemGroup>
+</Project>

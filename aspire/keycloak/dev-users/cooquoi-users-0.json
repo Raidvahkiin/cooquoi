@@ -1,0 +1,18 @@
+{
+  "realm": "cooquoi",
+  "users": [
+    {
+      "username": "dev@cooquoi.local",
+      "email": "dev@cooquoi.local",
+      "emailVerified": true,
+      "firstName": "Dev",
+      "lastName": "Cooquoi",
+      "enabled": true,
+      "attributes": { "locale": ["en"] },
+      "credentials": [
+        { "type": "password", "value": "${COOQUOI_DEV_USER_PASSWORD}", "temporary": false }
+      ],
+      "realmRoles": ["default-roles-cooquoi", "catalog-curator"]
+    }
+  ]
+}

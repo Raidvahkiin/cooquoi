@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>Maps Raidvahkiin.Ddd errors to RFC 9457 ProblemDetails.</Description>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="../Raidvahkiin.Ddd/Raidvahkiin.Ddd.csproj" />
+  </ItemGroup>
+</Project>

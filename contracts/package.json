@@ -1,0 +1,25 @@
+{
+  "name": "@cooquoi/contracts",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Cooquoi API contract (TypeSpec, source of truth). Emits OpenAPI to generated/.",
+  "scripts": {
+    "compile": "tsp compile ."
+  },
+  "devDependencies": {
+    "@typespec/compiler": "catalog:",
+    "@typespec/http": "catalog:",
+    "@typespec/openapi": "catalog:",
+    "@typespec/openapi3": "catalog:"
+  },
+  "nx": {
+    "tags": ["type:contract", "scope:contract", "platform:all"],
+    "targets": {
+      "compile": {
+        "cache": true,
+        "inputs": ["{projectRoot}/**/*.tsp", "{projectRoot}/tspconfig.yaml"],
+        "outputs": ["{projectRoot}/generated"]
+      }
+    }
+  }
+}

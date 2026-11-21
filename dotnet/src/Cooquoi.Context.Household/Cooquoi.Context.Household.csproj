@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="EFCore.NamingConventions" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="WolverineFx.Http" />
+    <ProjectReference Include="../Cooquoi.Platform/Cooquoi.Platform.csproj" />
+    <ProjectReference Include="../Cooquoi.SharedKernel/Cooquoi.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

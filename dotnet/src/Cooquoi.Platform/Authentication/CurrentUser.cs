@@ -1,0 +1,21 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
+
+namespace Cooquoi.Platform.Authentication;
+
+public sealed class CurrentUser(IHttpContextAccessor accessor) : ICurrentUser
+{
+    private ClaimsPrincipal Principal =>
+        accessor.HttpContext?.User ?? throw new InvalidOperationException("No HTTP context for the current user");
+
+    public string Issuer => Required("iss");
+    public string Subject => Required("sub");
+    public string DisplayName => Optional("name") ?? Optional("preferred_username") ?? Subject;
+    public string? Email => Optional("email");
+    public string? Locale => Optional("locale");
+
+    private string? Optional(string type) => Principal.FindFirst(type)?.Value;
+
+    private string Required(string type) =>
+        Optional(type) ?? throw new InvalidOperationException($"Access token has no '{type}' claim");
+}

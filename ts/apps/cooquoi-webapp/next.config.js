@@ -10,7 +10,7 @@ const nextConfig = {
   output: 'standalone',
   outputFileTracingRoot: workspaceRoot,
   turbopack: { root: workspaceRoot },
-  transpilePackages: ['@utils/react'],
+  transpilePackages: ['@utils/react', '@cooquoi/api-client'],
 };
 
 module.exports = nextConfig;

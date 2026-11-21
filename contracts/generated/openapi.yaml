@@ -1,0 +1,175 @@
+openapi: 3.1.0
+info:
+  title: Cooquoi API
+  description: Cooquoi API — source of truth for every client (ADR 0009).
+  version: 0.0.0
+tags:
+  - name: Household
+paths:
+  /v1/me:
+    get:
+      operationId: getMe
+      description: |-
+        Returns the signed-in user's profile and households.
+        On first sign-in, creates the profile and a personal household (ADR 0015).
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Household.Me'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Household
+security:
+  - BearerAuth: []
+components:
+  schemas:
+    Common.CommonErrorCode:
+      type: string
+      enum:
+        - common.validation
+        - common.not-found
+        - common.unauthorized
+        - common.forbidden
+        - common.concurrency-conflict
+        - common.version-mismatch
+        - common.if-match-required
+        - common.idempotency-key-reused
+        - common.request-in-progress
+        - common.unexpected
+      description: Stable error codes shared by every context (ADR 0014 §9).
+    Common.FieldError:
+      type: object
+      required:
+        - field
+        - code
+      properties:
+        field:
+          type: string
+          description: JSON path of the field in the request, e.g. `names[1].primary`.
+        code:
+          type: string
+          description: Stable code, e.g. `validation.required`, `validation.max-length`.
+        params:
+          type: object
+          additionalProperties: {}
+          description: 'Values for the translated message, e.g. `{ "max": 100 }`.'
+      description: One field error of a validation problem, translatable by code.
+    Common.Id:
+      type: string
+      format: uuid
+      description: Opaque identifier (UUID v7 server-side).
+    Common.Locale:
+      type: string
+      enum:
+        - en
+        - fr
+        - vi
+      description: Supported UI and content languages (ADR 0012).
+    Common.ProblemDetails:
+      type: object
+      required:
+        - type
+        - title
+        - status
+        - code
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
+          type: string
+        instance:
+          type: string
+        code:
+          type: string
+          description: Stable machine code clients translate (`<context>.<error>`).
+        params:
+          type: object
+          additionalProperties: {}
+          description: Values for the translated message.
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Common.FieldError'
+          description: Field errors, present on validation problems.
+        traceId:
+          type: string
+          description: W3C trace id, to correlate with logs.
+      description: RFC 9457 problem details with Cooquoi extensions (ADR 0014 §10).
+    Household.HouseholdSummary:
+      type: object
+      required:
+        - id
+        - name
+        - role
+      properties:
+        id:
+          $ref: '#/components/schemas/Common.Id'
+        name:
+          anyOf:
+            - type: string
+            - type: 'null'
+          description: Null until renamed; clients display a translated default ("My household").
+        role:
+          $ref: '#/components/schemas/Household.MembershipRole'
+      description: A household the user belongs to.
+    Household.Me:
+      type: object
+      required:
+        - profile
+        - households
+      properties:
+        profile:
+          $ref: '#/components/schemas/Household.UserProfile'
+        households:
+          type: array
+          items:
+            $ref: '#/components/schemas/Household.HouseholdSummary'
+      description: The signed-in user's profile and households.
+    Household.MembershipRole:
+      type: string
+      enum:
+        - owner
+        - member
+      description: Role of a user in a household.
+    Household.UserProfile:
+      type: object
+      required:
+        - userId
+        - displayName
+        - locale
+        - defaultHouseholdId
+      properties:
+        userId:
+          $ref: '#/components/schemas/Common.Id'
+        displayName:
+          type: string
+        email:
+          type: string
+        locale:
+          $ref: '#/components/schemas/Common.Locale'
+        defaultHouseholdId:
+          $ref: '#/components/schemas/Common.Id'
+      description: What Cooquoi stores about the signed-in user (ADR 0015).
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: Bearer
+servers:
+  - url: https://api.cooquoi.com
+    description: Production
+    variables: {}
