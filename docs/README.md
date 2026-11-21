@@ -44,6 +44,10 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0015](architecture/adr/0015-user-profile.md) | User profile stored in the backend | Accepted |
 | [0016](architecture/adr/0016-package-manager-and-runtime.md) | Package manager, runtime and TypeScript versions | Accepted |
 
+## Work
+
+- [Backlog](backlog/README.md) — epics, stories and tasks, sized for agent sessions
+
 ## Conventions
 
 - Diagrams are written in **Mermaid** inside Markdown.

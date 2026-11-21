@@ -28,7 +28,9 @@ Daily-comfort food app: helps a household decide what to cook and what to buy fr
 
 ## Documentation
 
-Business and architecture docs live in [`docs/`](docs/README.md): [vision](docs/business/vision.md), [glossary](docs/business/glossary.md) (use its terms in code), [context map](docs/business/context-map.md) and [ADRs](docs/architecture/adr/). Read the relevant ones before designing a feature; record new architecture decisions as ADRs. Current work: [spike plan](docs/architecture/spike-walking-skeleton.md).
+Business and architecture docs live in [`docs/`](docs/README.md): [vision](docs/business/vision.md), [glossary](docs/business/glossary.md) (use its terms in code), [context map](docs/business/context-map.md) and [ADRs](docs/architecture/adr/). Record new architecture decisions as ADRs. Current work: [spike plan](docs/architecture/spike-walking-skeleton.md); planned work in [`docs/backlog/`](docs/backlog/README.md).
+
+**Reading ADRs**: never read them all. Pick by title from the ADR table in [`docs/README.md`](docs/README.md), only those whose decision the task changes or depends on, and read their **Decision** section; most tasks need none because the `AGENTS.md` files already carry the conventions.
 
 Large docs already summarised elsewhere: [ADR 0014](docs/architecture/adr/0014-backend-structure.md) is distilled in `dotnet/AGENTS.md` and [ADR 0013](docs/architecture/adr/0013-webapp-structure.md) in the webapp `AGENTS.md`. Read the ADR itself only when changing that structure or when the summary does not answer.
 
@@ -57,6 +59,10 @@ Repo skills live in `.agents/skills/` (linked from `.claude/skills/`):
 | `dotnet-feature` | Implement a backend use case: endpoint, persistence, migration, tests |
 | `dotnet-test` | C# tests (xUnit + Shouldly, Alba + Testcontainers, architecture) |
 | `dotnet-review` | Review backend changes |
+| `backlog-plan` | Turn a doc or feature into epics, stories, tasks and subtasks in `docs/backlog/` (planning only) |
+| `backlog-run` | Run a story or task: parent delegates each task to a fresh session or subagent, verifies cheaply; worker rules |
+
+Prompt templates to start sessions from: [`.agents/prompts/`](.agents/prompts/README.md).
 
 Webapp conventions: [ts/apps/cooquoi-webapp/AGENTS.md](ts/apps/cooquoi-webapp/AGENTS.md).
 Backend conventions: [dotnet/AGENTS.md](dotnet/AGENTS.md).
