@@ -5,7 +5,7 @@ description: Design or change the domain of a Cooquoi bounded context in C# — 
 
 # .NET domain
 
-Conventions: `dotnet/AGENTS.md` (Domain, Errors). Reference: `dotnet/src/Cooquoi.Context.Foodpedia/Domain/Ingredients/`. Read the context's `docs/contexts/<context>/domain-model.md` first: its rule ids (F1, F2…) and terms are the source of truth.
+Conventions: `dotnet/AGENTS.md` (Domain, Errors). Reference: `dotnet/src/Cooquoi.Context.Foodpedia/Domain/Ingredients/`. Read the context's `docs/contexts/<context>/domain-model.md` first, only the sections for the aggregates you touch (`grep -n '^#'` it, then read those sections): its rule ids (F1, F2…) and terms are the source of truth.
 
 ## Steps
 

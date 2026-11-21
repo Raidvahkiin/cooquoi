@@ -30,6 +30,17 @@ Daily-comfort food app: helps a household decide what to cook and what to buy fr
 
 Business and architecture docs live in [`docs/`](docs/README.md): [vision](docs/business/vision.md), [glossary](docs/business/glossary.md) (use its terms in code), [context map](docs/business/context-map.md) and [ADRs](docs/architecture/adr/). Read the relevant ones before designing a feature; record new architecture decisions as ADRs. Current work: [spike plan](docs/architecture/spike-walking-skeleton.md).
 
+Large docs already summarised elsewhere: [ADR 0014](docs/architecture/adr/0014-backend-structure.md) is distilled in `dotnet/AGENTS.md` and [ADR 0013](docs/architecture/adr/0013-webapp-structure.md) in the webapp `AGENTS.md`. Read the ADR itself only when changing that structure or when the summary does not answer.
+
+## Context economy
+
+Every tool call re-reads the whole conversation, so what enters the context is paid for again on each later call.
+
+- **Search wide with a subagent**: to find how something is done across contexts or more than a few files, use an `Explore` agent and ask for `file:line` conclusions, not file contents.
+- **Read narrowly**: `grep -n` first, then read that range. Read docs by heading (`grep -n '^#' <doc>`, then the section). Never `cat` several files, loop over a folder, or `ls -R` / `find` the whole tree.
+- **Quiet commands**: use the quiet forms in each `AGENTS.md` Commands section; keep only errors and the summary (`| tail`, `| grep -E 'error|fail'`). Nx already prints a summary and names the log file of a failing task: read that file, not the whole run.
+- **Fewer round trips**: batch independent commands in one call; don't re-read a file you just wrote or already read.
+
 ## Project skills
 
 Repo skills live in `.agents/skills/` (linked from `.claude/skills/`):

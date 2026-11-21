@@ -138,9 +138,11 @@ See the `dotnet-test` skill. Domain: xUnit v3 + Shouldly, rule ids in names. Int
 ## Commands
 
 ```bash
-dotnet build dotnet/Cooquoi.slnx
-dotnet test --solution dotnet/Cooquoi.slnx            # Microsoft Testing Platform
-dotnet test --project dotnet/tests/<Project>
+dotnet build dotnet/Cooquoi.slnx -v q -nologo -clp:ErrorsOnly
+dotnet test --solution dotnet/Cooquoi.slnx -v q --no-progress        # Microsoft Testing Platform
+dotnet test --project dotnet/tests/<Project> -v q --no-progress
 dotnet format dotnet/Cooquoi.slnx --verify-no-changes
 aspire start                                           # from aspire/Cooquoi.AppHost; dashboard :15149, API :5281, webapp :3000
 ```
+
+Keep these flags. `-v q` hides the build chatter of `dotnet test`. `--no-progress` drops the `[+n/x0/?0]` lines that pile up during long Testcontainers runs (`--progress off` does not remove them all). Failed tests still print their details. For one failing test's logs, rerun it alone with `--output Detailed`.

@@ -5,7 +5,7 @@ description: Implement a use case in a Cooquoi C# bounded context end to end —
 
 # .NET feature
 
-Conventions: `dotnet/AGENTS.md`. Reference implementation: `dotnet/src/Cooquoi.Context.Foodpedia/` (`Features/DefineConversion/` for an action, `Features/CreateIngredient/` for a create, `Features/SearchIngredients/` for a list). Use cases come from `docs/contexts/<context>/use-cases.md` (Q1, C5…).
+Conventions: `dotnet/AGENTS.md`. Reference implementation: `dotnet/src/Cooquoi.Context.Foodpedia/` (`Features/DefineConversion/` for an action, `Features/CreateIngredient/` for a create, `Features/SearchIngredients/` for a list). Use cases come from `docs/contexts/<context>/use-cases.md` (Q1, C5…): read only the entries you implement. Read the reference feature that matches your kind, not the whole context.
 
 ## Steps
 
