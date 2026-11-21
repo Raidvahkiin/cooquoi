@@ -14,7 +14,11 @@ export async function startLogin(returnTo: string): Promise<URL> {
   const state = oidc.randomState();
 
   const session = await getSession();
-  session.pendingLogin = { codeVerifier, state, returnTo: toSafePath(returnTo) };
+  session.pendingLogin = {
+    codeVerifier,
+    state,
+    returnTo: toSafePath(returnTo),
+  };
   await session.save();
 
   return oidc.buildAuthorizationUrl(config, {
@@ -35,7 +39,10 @@ export async function completeLogin(callbackSearch: string): Promise<string> {
     throw new Error('No login in progress');
   }
 
-  const callbackUrl = new URL(`${CALLBACK_PATH}${callbackSearch}`, getEnv().APP_URL);
+  const callbackUrl = new URL(
+    `${CALLBACK_PATH}${callbackSearch}`,
+    getEnv().APP_URL,
+  );
   const response = await oidc.authorizationCodeGrant(config, callbackUrl, {
     pkceCodeVerifier: pending.codeVerifier,
     expectedState: pending.state,
