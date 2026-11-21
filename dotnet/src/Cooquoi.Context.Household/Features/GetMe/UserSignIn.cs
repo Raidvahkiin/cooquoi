@@ -67,4 +67,4 @@ internal static class UserSignIn
         };
 }
 
-internal sealed record SignInRequest(HouseholdDbContext Db, ICurrentUser User, string? AcceptLanguage, DateTimeOffset Now);
+internal sealed record SignInRequest(HouseholdDbContext Db, CurrentUser User, string? AcceptLanguage, DateTimeOffset Now);

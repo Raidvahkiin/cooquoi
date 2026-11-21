@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using Alba;
 using Cooquoi.Context.Household.Features.GetMe;
+using Cooquoi.Context.Household.Persistence.Lookups;
 using Cooquoi.Context.Household.Tests.Support;
 using Microsoft.EntityFrameworkCore;
 
@@ -83,9 +84,7 @@ public sealed class GetMeEndpointTests(ApiFixture api)
         await using var db = api.CreateDbContext();
         var profiles = await db.UserProfiles.Where(profile => profile.Identity.Subject == subject).ToListAsync(cancellationToken);
         var profile = profiles.ShouldHaveSingleItem();
-        var households = await db.Households
-            .Where(household => household.Memberships.Any(membership => membership.UserId == profile.Id))
-            .CountAsync(cancellationToken);
+        var households = await db.Households.WithMember(profile.Id).CountAsync(cancellationToken);
         households.ShouldBe(1);
     }
 

@@ -14,7 +14,7 @@ public static class GetMeEndpoint
     [WolverineGet("/v1/me", OperationId = "getMe")]
     [Authorize]
     public static async Task<MeResponse> Get(
-        ICurrentUser user,
+        CurrentUser user,
         HouseholdDbContext db,
         TimeProvider time,
         HttpRequest request,

@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Http;
 
 namespace Cooquoi.Platform.Authentication;
 
-public sealed class CurrentUser(IHttpContextAccessor accessor) : ICurrentUser
+/// <summary>Identity of the caller, as stated by the validated access token.</summary>
+public sealed class CurrentUser(IHttpContextAccessor accessor)
 {
     private ClaimsPrincipal Principal =>
         accessor.HttpContext?.User ?? throw new InvalidOperationException("No HTTP context for the current user");

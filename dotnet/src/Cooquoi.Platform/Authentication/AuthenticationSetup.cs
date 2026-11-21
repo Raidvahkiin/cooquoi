@@ -35,7 +35,7 @@ public static class AuthenticationSetup
             });
         builder.Services.AddAuthorization();
         builder.Services.AddHttpContextAccessor();
-        builder.Services.AddScoped<ICurrentUser, CurrentUser>();
+        builder.Services.AddScoped<CurrentUser>();
         return builder;
     }
 
