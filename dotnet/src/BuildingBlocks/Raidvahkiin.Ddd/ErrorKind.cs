@@ -7,6 +7,9 @@ public enum ErrorKind
     NotFound,
     Forbidden,
     Conflict,
+    /// <summary>A precondition sent by the client no longer holds (stale version).</summary>
     PreconditionFailed,
+    /// <summary>A precondition the operation demands was not sent (missing version).</summary>
+    PreconditionRequired,
     BusinessRule,
 }

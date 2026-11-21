@@ -11,6 +11,7 @@ internal static class ErrorKindStatus
         ErrorKind.NotFound => StatusCodes.Status404NotFound,
         ErrorKind.Conflict => StatusCodes.Status409Conflict,
         ErrorKind.PreconditionFailed => StatusCodes.Status412PreconditionFailed,
+        ErrorKind.PreconditionRequired => StatusCodes.Status428PreconditionRequired,
         ErrorKind.BusinessRule => StatusCodes.Status422UnprocessableEntity,
         _ => StatusCodes.Status500InternalServerError,
     };

@@ -10,7 +10,9 @@ internal static class Api
             .WithReference(database)
             .WaitFor(database)
             .WaitFor(keycloak)
-            .WithEnvironment("Authentication__Authority", Identity.IssuerUrl(keycloak));
+            .WithEnvironment("Authentication__Authority", Identity.IssuerUrl(keycloak))
+            // Without it the dashboard showed the API healthy while it had crashed at startup.
+            .WithHttpHealthCheck("/health");
 
     private static string ApiProjectPath(IDistributedApplicationBuilder builder) =>
         Path.Combine(builder.AppHostDirectory, "..", "..", "dotnet", "src", "Cooquoi.Api", "Cooquoi.Api.csproj");

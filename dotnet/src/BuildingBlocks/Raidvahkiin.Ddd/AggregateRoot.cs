@@ -1,10 +1,10 @@
 namespace Raidvahkiin.Ddd;
 
 /// <summary>
-/// Consistency boundary. <see cref="Version"/> is the optimistic concurrency token,
-/// bumped on every change to any part of the aggregate.
+/// Consistency boundary. <see cref="Version"/> is the optimistic concurrency token, bumped by the
+/// persistence layer whenever any part of the aggregate changes. Every behaviour raises an event.
 /// </summary>
-public abstract class AggregateRoot<TId> : IVersioned
+public abstract class AggregateRoot<TId> : IAggregateRoot
     where TId : struct
 {
     private readonly List<IDomainEvent> _domainEvents = [];
@@ -18,6 +18,4 @@ public abstract class AggregateRoot<TId> : IVersioned
     protected void Raise(IDomainEvent domainEvent) => _domainEvents.Add(domainEvent);
 
     public void ClearDomainEvents() => _domainEvents.Clear();
-
-    public void IncrementVersion() => Version++;
 }

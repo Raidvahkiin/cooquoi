@@ -28,7 +28,9 @@
     "src/**/*.js",
     "src/**/*.jsx",
     ".next/types/**/*.ts",
-    "next-env.d.ts"
+    "next-env.d.ts",
+    "test/**/*.ts",
+    "vite.config.mts"
   ],
   "exclude": [
     "out-tsc",
@@ -36,8 +38,6 @@
     "node_modules",
     "jest.config.ts",
     "jest.config.cts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts",
     ".next",
     "**/*.stories.ts",
     "**/*.stories.tsx",

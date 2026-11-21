@@ -1,10 +1,11 @@
 using System.Reflection;
 using Cooquoi.Context.Household.Persistence;
-using Microsoft.AspNetCore.Builder;
+using Cooquoi.Platform;
+using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Raidvahkiin.Ddd.EntityFrameworkCore;
 
 namespace Cooquoi.Context.Household;
 
@@ -15,19 +16,20 @@ public static class HouseholdModule
 
     public static IHostApplicationBuilder AddHouseholdContext(this IHostApplicationBuilder builder, string connectionName)
     {
-        var connectionString = builder.Configuration.GetConnectionString(connectionName)
-            ?? throw new InvalidOperationException($"Missing connection string '{connectionName}'");
+        var connectionString = builder.Configuration.RequiredConnectionString(connectionName);
         // Singleton options: Wolverine's generated code can then build the DbContext directly.
         builder.Services.AddDbContext<HouseholdDbContext>(
-            options => ((DbContextOptionsBuilder<HouseholdDbContext>)options).UseCooquoiNpgsql(connectionString),
+            (services, options) => options
+                .UseSchemaNpgsql(connectionString, HouseholdDbContext.Schema)
+                .AddCooquoiInterceptors(services),
             optionsLifetime: ServiceLifetime.Singleton);
         return builder;
     }
 
     /// <summary>Development only: production applies a migration bundle before start (ADR 0014).</summary>
-    public static async Task MigrateHouseholdDatabaseAsync(this WebApplication app)
+    public static async Task MigrateHouseholdDatabaseAsync(this IServiceProvider services, CancellationToken cancellationToken)
     {
-        await using var scope = app.Services.CreateAsyncScope();
-        await scope.ServiceProvider.GetRequiredService<HouseholdDbContext>().Database.MigrateAsync();
+        await using var scope = services.CreateAsyncScope();
+        await scope.ServiceProvider.GetRequiredService<HouseholdDbContext>().Database.MigrateAsync(cancellationToken);
     }
 }

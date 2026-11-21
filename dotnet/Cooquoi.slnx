@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Cooquoi.Api/Cooquoi.Api.csproj" />
+    <Project Path="src/Cooquoi.Context.Foodpedia/Cooquoi.Context.Foodpedia.csproj" />
     <Project Path="src/Cooquoi.Context.Household/Cooquoi.Context.Household.csproj" />
     <Project Path="src/Cooquoi.Platform/Cooquoi.Platform.csproj" />
     <Project Path="src/Cooquoi.ServiceDefaults/Cooquoi.ServiceDefaults.csproj" />
@@ -8,10 +9,15 @@
   </Folder>
   <Folder Name="/src/BuildingBlocks/">
     <Project Path="src/BuildingBlocks/Raidvahkiin.Ddd.AspNetCore/Raidvahkiin.Ddd.AspNetCore.csproj" />
+    <Project Path="src/BuildingBlocks/Raidvahkiin.Ddd.EntityFrameworkCore/Raidvahkiin.Ddd.EntityFrameworkCore.csproj" />
     <Project Path="src/BuildingBlocks/Raidvahkiin.Ddd/Raidvahkiin.Ddd.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Cooquoi.Architecture.Tests/Cooquoi.Architecture.Tests.csproj" />
+    <Project Path="tests/Cooquoi.Context.Foodpedia.Tests/Cooquoi.Context.Foodpedia.Tests.csproj" />
     <Project Path="tests/Cooquoi.Context.Household.Tests/Cooquoi.Context.Household.Tests.csproj" />
+    <Project Path="tests/Cooquoi.Platform.Tests/Cooquoi.Platform.Tests.csproj" />
+    <Project Path="tests/Cooquoi.Testing/Cooquoi.Testing.csproj" />
   </Folder>
   <Project Path="../aspire/Cooquoi.AppHost/Cooquoi.AppHost.csproj" />
 </Solution>

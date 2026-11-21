@@ -32,6 +32,6 @@ internal sealed class UserProfileConfiguration : IEntityTypeConfiguration<UserPr
             .HasConversion(id => id.Value, value => new HouseholdId(value));
     }
 
-    /// <summary>Safety net for concurrent first sign-ins of the same identity.</summary>
-    public const string UniqueIdentityIndex = "ux_user_profiles_identity";
+    /// <summary>Safety net behind the sign-in advisory lock.</summary>
+    private const string UniqueIdentityIndex = "ux_user_profiles_identity";
 }

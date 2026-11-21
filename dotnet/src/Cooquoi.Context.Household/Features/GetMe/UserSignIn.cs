@@ -5,7 +5,6 @@ using Cooquoi.Context.Household.Persistence.Lookups;
 using Cooquoi.Platform.Authentication;
 using Cooquoi.SharedKernel;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace Cooquoi.Context.Household.Features.GetMe;
 
@@ -18,28 +17,37 @@ internal static class UserSignIn
     public static async Task<UserProfileAggregate> RecordAsync(SignInRequest request, CancellationToken cancellationToken)
     {
         var identity = new IdentityRef(request.User.Issuer, request.User.Subject);
-        var existing = await request.Db.UserProfiles.FindByIdentityAsync(identity, cancellationToken);
-        if (existing is not null)
-        {
-            existing.RecordSignIn(new SignInDetails(request.User.DisplayName, request.User.Email, request.Now));
-            await request.Db.SaveChangesAsync(cancellationToken);
-            return existing;
-        }
-
-        try
-        {
-            return await CreateAsync(request, identity, cancellationToken);
-        }
-        catch (DbUpdateException exception) when (IsDuplicateIdentity(exception))
-        {
-            // Two first requests raced (e.g. two tabs): the other one created the profile.
-            request.Db.ChangeTracker.Clear();
-            return await request.Db.UserProfiles.FindByIdentityAsync(identity, cancellationToken)
-                ?? throw new InvalidOperationException("Profile vanished after a duplicate sign-in", exception);
-        }
+        var profile = await request.Db.UserProfiles.FindByIdentityAsync(identity, cancellationToken)
+            ?? await CreateOnceAsync(request, identity, cancellationToken);
+        // Saved by Wolverine's transactional middleware after the endpoint.
+        profile.RecordSignIn(new SignInDetails(request.User.DisplayName, request.User.Email, request.Now));
+        return profile;
     }
 
-    private static async Task<UserProfileAggregate> CreateAsync(SignInRequest request, IdentityRef identity, CancellationToken cancellationToken)
+    /// <summary>
+    /// Two first requests can race (two tabs). A transaction-scoped advisory lock per identity
+    /// serializes them: the second waits, then finds the profile. The unique index
+    /// <c>ux_user_profiles_identity</c> stays the safety net.
+    /// </summary>
+    private static async Task<UserProfileAggregate> CreateOnceAsync(SignInRequest request, IdentityRef identity, CancellationToken cancellationToken)
+    {
+        var db = request.Db;
+        await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
+        var lockKey = $"household.sign-in:{identity.Issuer}|{identity.Subject}";
+        await db.Database.ExecuteSqlAsync($"SELECT pg_advisory_xact_lock(hashtextextended({lockKey}, 0))", cancellationToken);
+
+        var profile = await db.UserProfiles.FindByIdentityAsync(identity, cancellationToken);
+        if (profile is null)
+        {
+            profile = Create(request, identity);
+            await db.SaveChangesAsync(cancellationToken);
+        }
+
+        await transaction.CommitAsync(cancellationToken);
+        return profile;
+    }
+
+    private static UserProfileAggregate Create(SignInRequest request, IdentityRef identity)
     {
         var userId = UserId.New();
         var household = HouseholdAggregate.CreatePersonal(HouseholdId.New(), userId);
@@ -54,16 +62,8 @@ internal static class UserSignIn
 
         request.Db.Households.Add(household);
         request.Db.UserProfiles.Add(profile);
-        await request.Db.SaveChangesAsync(cancellationToken);
         return profile;
     }
-
-    private static bool IsDuplicateIdentity(DbUpdateException exception) =>
-        exception.InnerException is PostgresException
-        {
-            SqlState: PostgresErrorCodes.UniqueViolation,
-            ConstraintName: Persistence.Configurations.UserProfileConfiguration.UniqueIdentityIndex,
-        };
 }
 
 internal sealed record SignInRequest(HouseholdDbContext Db, CurrentUser User, string? AcceptLanguage, DateTimeOffset Now);

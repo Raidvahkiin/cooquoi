@@ -27,11 +27,21 @@ public sealed class UserProfileAggregate : AggregateRoot<UserId>
         LastSignInAt = request.SignedInAt,
     };
 
-    /// <summary>Name and email follow the identity provider; the locale stays the user's choice.</summary>
+    /// <summary>Sign-ins closer together than this do not move <see cref="LastSignInAt"/>.</summary>
+    public static readonly TimeSpan SignInRefreshInterval = TimeSpan.FromHours(1);
+
+    /// <summary>
+    /// Name and email follow the identity provider; the locale stays the user's choice. Every page
+    /// load signs in, so the time is refreshed at most hourly: an unchanged profile is not written,
+    /// and concurrent requests of one user do not conflict.
+    /// </summary>
     public void RecordSignIn(SignInDetails details)
     {
         DisplayName = details.DisplayName;
         Email = details.Email;
-        LastSignInAt = details.SignedInAt;
+        if (details.SignedInAt - LastSignInAt >= SignInRefreshInterval)
+        {
+            LastSignInAt = details.SignedInAt;
+        }
     }
 }

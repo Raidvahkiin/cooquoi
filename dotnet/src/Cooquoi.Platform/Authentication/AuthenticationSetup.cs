@@ -1,8 +1,10 @@
+using Cooquoi.Platform.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Raidvahkiin.Ddd;
 using Raidvahkiin.Ddd.AspNetCore;
 
 namespace Cooquoi.Platform.Authentication;
@@ -31,9 +33,16 @@ public static class AuthenticationSetup
                 jwt.Audience = options.Audience;
                 jwt.MapInboundClaims = false;
                 jwt.TokenValidationParameters.NameClaimType = "name";
-                jwt.Events = new JwtBearerEvents { OnChallenge = WriteUnauthorizedProblemAsync };
+                jwt.Events = new JwtBearerEvents
+                {
+                    OnChallenge = WriteUnauthorizedProblemAsync,
+                    OnForbidden = WriteForbiddenProblemAsync,
+                };
             });
-        builder.Services.AddAuthorization();
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy(CooquoiPolicies.Curator, policy => policy
+                .RequireAuthenticatedUser()
+                .RequireAssertion(context => context.User.HasRealmRole(RealmRoles.CatalogCurator)));
         builder.Services.AddHttpContextAccessor();
         builder.Services.AddScoped<CurrentUser>();
         return builder;
@@ -44,7 +53,18 @@ public static class AuthenticationSetup
     {
         context.HandleResponse();
         context.Response.Headers.WWWAuthenticate = JwtBearerDefaults.AuthenticationScheme;
-        var problemDetails = context.HttpContext.RequestServices.GetRequiredService<IProblemDetailsService>();
-        await problemDetails.TryWriteAsync(context.HttpContext, new Problem(StatusCodes.Status401Unauthorized, UnauthorizedCode));
+        await WriteProblemAsync(context.HttpContext, new Problem(StatusCodes.Status401Unauthorized, UnauthorizedCode));
+    }
+
+    /// <summary>403 in the contract's shape (<c>common.forbidden</c>), e.g. a missing curator role.</summary>
+    private static Task WriteForbiddenProblemAsync(ForbiddenContext context) =>
+        WriteProblemAsync(
+            context.HttpContext,
+            new Problem(StatusCodes.Status403Forbidden, CommonError.Forbidden.Code, CommonError.Forbidden.MessageTemplate));
+
+    private static async Task WriteProblemAsync(HttpContext httpContext, Problem problem)
+    {
+        var problemDetails = httpContext.RequestServices.GetRequiredService<IProblemDetailsService>();
+        await problemDetails.TryWriteAsync(httpContext, problem);
     }
 }

@@ -1,0 +1,218 @@
+{
+  "tags": [
+    {
+      "code": "category:fish-seafood",
+      "labels": {
+        "en": "Fish & seafood",
+        "fr": "Poissons et fruits de mer",
+        "vi": "Cá và hải sản"
+      }
+    },
+    {
+      "code": "category:meat",
+      "labels": { "en": "Meat", "fr": "Viande", "vi": "Thịt" }
+    },
+    {
+      "code": "category:vegetables",
+      "labels": { "en": "Vegetables", "fr": "Légumes", "vi": "Rau củ" }
+    },
+    {
+      "code": "category:dairy-eggs",
+      "labels": {
+        "en": "Dairy & eggs",
+        "fr": "Produits laitiers et œufs",
+        "vi": "Sữa và trứng"
+      }
+    },
+    {
+      "code": "category:grains",
+      "labels": { "en": "Grains", "fr": "Céréales", "vi": "Ngũ cốc" }
+    },
+    {
+      "code": "category:legumes",
+      "labels": {
+        "en": "Legumes & soy",
+        "fr": "Légumineuses et soja",
+        "vi": "Đậu và đỗ"
+      }
+    },
+    {
+      "code": "category:herbs-spices",
+      "labels": {
+        "en": "Herbs & spices",
+        "fr": "Herbes et épices",
+        "vi": "Rau thơm và gia vị"
+      }
+    },
+    {
+      "code": "category:condiments",
+      "labels": {
+        "en": "Condiments",
+        "fr": "Condiments",
+        "vi": "Nước chấm và gia vị"
+      }
+    },
+    {
+      "code": "family:salmon",
+      "labels": { "en": "Salmon", "fr": "Saumon", "vi": "Cá hồi" }
+    },
+    {
+      "code": "family:rice",
+      "labels": { "en": "Rice", "fr": "Riz", "vi": "Gạo" }
+    },
+    {
+      "code": "allergen:fish",
+      "labels": { "en": "Fish", "fr": "Poisson", "vi": "Cá" }
+    },
+    {
+      "code": "diet:vegan",
+      "labels": { "en": "Vegan", "fr": "Végan", "vi": "Thuần chay" }
+    }
+  ],
+  "ingredients": [
+    {
+      "code": "salmon",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Salmon" },
+        "fr": { "primary": "Saumon" },
+        "vi": { "primary": "Cá hồi" }
+      },
+      "tags": ["category:fish-seafood", "family:salmon", "allergen:fish"],
+      "conversions": [{ "unit": "fillet", "unitAmount": 1, "baseAmount": 200 }],
+      "shelfLife": { "days": 2, "recommendedStorage": "fridge" }
+    },
+    {
+      "code": "smoked-salmon",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Smoked salmon" },
+        "fr": { "primary": "Saumon fumé" },
+        "vi": { "primary": "Cá hồi xông khói" }
+      },
+      "tags": ["category:fish-seafood", "family:salmon", "allergen:fish"],
+      "conversions": [{ "unit": "slice", "unitAmount": 1, "baseAmount": 25 }],
+      "shelfLife": { "days": 14, "recommendedStorage": "fridge" }
+    },
+    {
+      "code": "egg",
+      "baseUnit": "piece",
+      "names": {
+        "en": { "primary": "Egg" },
+        "fr": { "primary": "Œuf" },
+        "vi": { "primary": "Trứng", "synonyms": ["Trứng gà"] }
+      },
+      "tags": ["category:dairy-eggs"],
+      "conversions": [{ "unit": "g", "unitAmount": 60, "baseAmount": 1 }],
+      "shelfLife": { "days": 28, "recommendedStorage": "fridge" }
+    },
+    {
+      "code": "milk",
+      "baseUnit": "ml",
+      "names": {
+        "en": { "primary": "Milk" },
+        "fr": { "primary": "Lait" },
+        "vi": { "primary": "Sữa" }
+      },
+      "tags": ["category:dairy-eggs"],
+      "conversions": [{ "unit": "g", "unitAmount": 1030, "baseAmount": 1000 }],
+      "shelfLife": { "days": 7, "recommendedStorage": "fridge" }
+    },
+    {
+      "code": "white-rice",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "White rice" },
+        "fr": { "primary": "Riz blanc" },
+        "vi": { "primary": "Gạo trắng", "synonyms": ["Gạo tẻ"] }
+      },
+      "tags": ["category:grains", "family:rice", "diet:vegan"],
+      "conversions": [{ "unit": "cup", "unitAmount": 1, "baseAmount": 185 }],
+      "shelfLife": { "days": 365, "recommendedStorage": "room" }
+    },
+    {
+      "code": "brown-rice",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Brown rice" },
+        "fr": { "primary": "Riz complet" },
+        "vi": { "primary": "Gạo lứt" }
+      },
+      "tags": ["category:grains", "family:rice", "diet:vegan"],
+      "shelfLife": { "days": 180, "recommendedStorage": "room" }
+    },
+    {
+      "code": "garlic",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Garlic" },
+        "fr": { "primary": "Ail" },
+        "vi": { "primary": "Tỏi" }
+      },
+      "tags": ["category:vegetables", "diet:vegan"],
+      "conversions": [
+        { "unit": "clove", "unitAmount": 1, "baseAmount": 5 },
+        { "unit": "piece", "unitAmount": 1, "baseAmount": 50 }
+      ],
+      "shelfLife": { "days": 60, "recommendedStorage": "room" }
+    },
+    {
+      "code": "tofu",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Tofu" },
+        "fr": { "primary": "Tofu" },
+        "vi": { "primary": "Đậu phụ", "synonyms": ["Đậu hũ"] }
+      },
+      "tags": ["category:legumes", "diet:vegan"],
+      "conversions": [{ "unit": "pack", "unitAmount": 1, "baseAmount": 300 }],
+      "shelfLife": { "days": 5, "recommendedStorage": "fridge" }
+    },
+    {
+      "code": "zucchini",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Zucchini", "synonyms": ["Courgette"] },
+        "fr": { "primary": "Courgette" },
+        "vi": { "primary": "Bí ngòi" }
+      },
+      "tags": ["category:vegetables", "diet:vegan"],
+      "conversions": [{ "unit": "piece", "unitAmount": 1, "baseAmount": 200 }],
+      "shelfLife": { "days": 7, "recommendedStorage": "fridge" }
+    },
+    {
+      "code": "pork",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Pork" },
+        "fr": { "primary": "Porc" },
+        "vi": { "primary": "Thịt lợn", "synonyms": ["Thịt heo"] }
+      },
+      "tags": ["category:meat"],
+      "shelfLife": { "days": 3, "recommendedStorage": "fridge" }
+    },
+    {
+      "code": "fish-sauce",
+      "baseUnit": "ml",
+      "names": {
+        "en": { "primary": "Fish sauce" },
+        "fr": { "primary": "Sauce de poisson", "synonyms": ["Nuoc-mâm"] },
+        "vi": { "primary": "Nước mắm" }
+      },
+      "tags": ["category:condiments", "allergen:fish"],
+      "shelfLife": { "days": 365, "recommendedStorage": "room" }
+    },
+    {
+      "code": "coriander",
+      "baseUnit": "g",
+      "names": {
+        "en": { "primary": "Coriander", "synonyms": ["Cilantro"] },
+        "fr": { "primary": "Coriandre" },
+        "vi": { "primary": "Rau mùi", "synonyms": ["Ngò"] }
+      },
+      "tags": ["category:herbs-spices", "diet:vegan"],
+      "conversions": [{ "unit": "bunch", "unitAmount": 1, "baseAmount": 30 }],
+      "shelfLife": { "days": 5, "recommendedStorage": "fridge" }
+    }
+  ]
+}

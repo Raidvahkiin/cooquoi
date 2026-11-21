@@ -27,9 +27,9 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="1.21.0" />
   </ItemGroup>
   <ItemGroup Label="Application">
-    <PackageVersion Include="FluentValidation" Version="12.2.0" />
     <PackageVersion Include="WolverineFx" Version="6.64.2" />
     <PackageVersion Include="WolverineFx.Http" Version="6.64.2" />
+    <PackageVersion Include="WolverineFx.Http.FluentValidation" Version="6.64.2" />
     <PackageVersion Include="WolverineFx.EntityFrameworkCore" Version="6.64.2" />
     <PackageVersion Include="WolverineFx.Postgresql" Version="6.64.2" />
     <PackageVersion Include="WolverineFx.RuntimeCompilation" Version="6.64.2" />

@@ -29,10 +29,28 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
+
                     b.Property<string>("Name")
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("name");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("updated_by");
 
                     b.Property<long>("Version")
                         .IsConcurrencyToken()
@@ -50,6 +68,15 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid")
                         .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
 
                     b.Property<Guid>("DefaultHouseholdId")
                         .HasColumnType("uuid")
@@ -76,6 +103,15 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                         .HasColumnType("character varying(8)")
                         .HasColumnName("locale");
 
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("updated_by");
+
                     b.Property<long>("Version")
                         .IsConcurrencyToken()
                         .HasColumnType("bigint")
@@ -85,6 +121,30 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                         .HasName("pk_user_profiles");
 
                     b.ToTable("user_profiles", "household");
+                });
+
+            modelBuilder.Entity("Cooquoi.Platform.Idempotency.IdempotencyCommit", b =>
+                {
+                    b.Property<string>("Subject")
+                        .HasColumnType("text")
+                        .HasColumnName("subject");
+
+                    b.Property<Guid>("Key")
+                        .HasColumnType("uuid")
+                        .HasColumnName("key");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("state");
+
+                    b.HasKey("Subject", "Key")
+                        .HasName("pk_idempotent_requests");
+
+                    b.ToTable("idempotent_requests", "platform", t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("Cooquoi.Context.Household.Domain.Households.HouseholdAggregate", b =>

@@ -9,6 +9,9 @@ public sealed record DomainError(string Code, ErrorKind Kind, string MessageTemp
     public DomainException ToException(IReadOnlyDictionary<string, object?>? parameters = null) =>
         new(this, parameters ?? new Dictionary<string, object?>());
 
+    public DomainException ToException(params (string Name, object? Value)[] parameters) =>
+        ToException(ErrorParameter.Of(parameters));
+
     public string FormatMessage(IReadOnlyDictionary<string, object?> parameters) =>
         parameters.Aggregate(
             MessageTemplate,

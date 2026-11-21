@@ -2,7 +2,7 @@ import { sealData, unsealData } from 'iron-session';
 import { HttpResponse, http } from 'msw';
 import { NextRequest } from 'next/server';
 import { describe, expect, it } from 'vitest';
-import type { SessionData } from '@/shared/auth';
+import { REQUESTED_PATH_HEADER, type SessionData } from '@/shared/auth';
 import {
   identityEndpoints,
   tokenResponseFixture,
@@ -95,6 +95,17 @@ describe('proxy', () => {
     );
 
     expect(sessionCookieOf(response)).toBeUndefined();
+  });
+
+  it('tells the page which path was requested, for a login to come back to', async () => {
+    const response = await proxy(
+      new NextRequest('http://localhost:3000/account?tab=households'),
+    );
+
+    // Next.js applies `x-middleware-request-*` headers to the request the page reads.
+    expect(
+      response.headers.get(`x-middleware-request-${REQUESTED_PATH_HEADER}`),
+    ).toBe('/account?tab=households');
   });
 
   it('signs the user out when Keycloak refuses the refresh', async () => {

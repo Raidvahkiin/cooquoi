@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Description>EF Core support for Raidvahkiin.Ddd: aggregate versioning, audit, constraint mapping, paging and sorting.</Description>
+    <IsPackable>true</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <ProjectReference Include="../Raidvahkiin.Ddd/Raidvahkiin.Ddd.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Raidvahkiin.Ddd.EntityFrameworkCore;
 
 namespace Cooquoi.Context.Household.Persistence;
 
@@ -7,7 +8,7 @@ namespace Cooquoi.Context.Household.Persistence;
 internal sealed class HouseholdDbContextFactory : IDesignTimeDbContextFactory<HouseholdDbContext>
 {
     public HouseholdDbContext CreateDbContext(string[] args) =>
-        new(new DbContextOptionsBuilder<HouseholdDbContext>()
-            .UseCooquoiNpgsql("Host=localhost;Database=cooquoi")
+        new((DbContextOptions<HouseholdDbContext>)new DbContextOptionsBuilder<HouseholdDbContext>()
+            .UseSchemaNpgsql("Host=localhost;Database=cooquoi", HouseholdDbContext.Schema)
             .Options);
 }

@@ -1,16 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <ItemGroup>
     <PackageReference Include="WolverineFx.Http" />
+    <PackageReference Include="WolverineFx.Postgresql" />
     <PackageReference Include="WolverineFx.RuntimeCompilation" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="../BuildingBlocks/Raidvahkiin.Ddd.AspNetCore/Raidvahkiin.Ddd.AspNetCore.csproj" />
+    <ProjectReference Include="../Cooquoi.Context.Foodpedia/Cooquoi.Context.Foodpedia.csproj" />
     <ProjectReference Include="../Cooquoi.Context.Household/Cooquoi.Context.Household.csproj" />
     <ProjectReference Include="../Cooquoi.Platform/Cooquoi.Platform.csproj" />
     <ProjectReference Include="../Cooquoi.ServiceDefaults/Cooquoi.ServiceDefaults.csproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- Integration tests host the API through its Program (Alba). -->
-    <InternalsVisibleTo Include="Cooquoi.Context.Household.Tests" />
+    <InternalsVisibleTo Include="Cooquoi.Testing" />
   </ItemGroup>
 </Project>

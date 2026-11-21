@@ -4,7 +4,7 @@ export default defineProject({
   root: import.meta.dirname,
   cacheDir: '../../../node_modules/.vite/ts/apps/cooquoi-webapp',
   resolve: {
-    // tsconfig excludes test files, so its `@/*` paths do not apply to them: alias explicitly.
+    // Vitest does not read tsconfig `paths`: mirror `@/*` here.
     alias: {
       '@': `${import.meta.dirname}/src`,
       'server-only': `${import.meta.dirname}/test/server-only.ts`,
@@ -12,7 +12,6 @@ export default defineProject({
   },
   test: {
     name: 'webapp',
-    watch: false,
     environment: 'node',
     include: ['src/**/*.test.ts'],
     setupFiles: ['test/setup.ts'],

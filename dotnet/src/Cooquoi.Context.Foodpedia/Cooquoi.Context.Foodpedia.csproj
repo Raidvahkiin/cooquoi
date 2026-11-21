@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+    <PackageReference Include="WolverineFx.EntityFrameworkCore" />
+    <PackageReference Include="WolverineFx.Http.FluentValidation" />
+    <ProjectReference Include="../Cooquoi.Platform/Cooquoi.Platform.csproj" />
+    <ProjectReference Include="../Cooquoi.SharedKernel/Cooquoi.SharedKernel.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Persistence/Seed/foodpedia-seed.json" LogicalName="foodpedia-seed.json" />
+  </ItemGroup>
+</Project>

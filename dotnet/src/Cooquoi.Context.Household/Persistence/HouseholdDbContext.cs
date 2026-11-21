@@ -1,7 +1,8 @@
 using Cooquoi.Context.Household.Domain.Households;
 using Cooquoi.Context.Household.Domain.Users;
+using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Raidvahkiin.Ddd;
+using Raidvahkiin.Ddd.EntityFrameworkCore.Interceptors;
 
 namespace Cooquoi.Context.Household.Persistence;
 
@@ -17,24 +18,7 @@ public sealed class HouseholdDbContext(DbContextOptions<HouseholdDbContext> opti
     {
         modelBuilder.HasDefaultSchema(Schema);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(HouseholdDbContext).Assembly);
-    }
-
-    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-    {
-        BumpVersionsOfModifiedAggregates();
-        return base.SaveChangesAsync(cancellationToken);
-    }
-
-    // Spike: covers changes to the root row only; changes limited to owned children
-    // are handled in phase 2 (Raidvahkiin.Ddd.EntityFrameworkCore interceptor).
-    private void BumpVersionsOfModifiedAggregates()
-    {
-        foreach (var entry in ChangeTracker.Entries().Where(entry => entry.State == EntityState.Modified))
-        {
-            if (entry.Entity is IVersioned aggregate)
-            {
-                aggregate.IncrementVersion();
-            }
-        }
+        modelBuilder.AddAggregateAudit();
+        modelBuilder.MapIdempotencyCommits();
     }
 }
