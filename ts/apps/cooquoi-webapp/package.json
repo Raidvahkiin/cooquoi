@@ -6,17 +6,16 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.2.2",
+    "@hookform/resolvers": "catalog:",
     "@utils/api-contracts": "workspace:*",
     "@utils/react": "workspace:*",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "next": "16.3.6",
-    "react": "^ 19.2.4",
-    "react-dom": "^ 19.2.4",
-    "react-hook-form": "^7.73.1",
-    "tailwind-merge": "^3.5.0",
-    "zod": "^4.3.6"
+    "clsx": "catalog:",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
+    "react-hook-form": "catalog:",
+    "tailwind-merge": "catalog:",
+    "zod": "catalog:"
   },
   "nx": {
     "tags": [
@@ -26,10 +25,12 @@
       "platform:nextjs"
     ],
     "sync": {
-      "disabledSyncGenerators": ["@nx/js:typescript-sync"]
+      "disabledSyncGenerators": [
+        "@nx/js:typescript-sync"
+      ]
     }
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.2.2"
+    "@tailwindcss/postcss": "catalog:"
   }
 }

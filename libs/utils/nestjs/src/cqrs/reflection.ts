@@ -1,17 +1,15 @@
+import { ModulesContainer } from '@nestjs/core';
 import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 
-import { ModulesContainer } from '@nestjs/core';
-
 import { Command } from '@nestjs/cqrs';
-
-import {
-  ICommandMiddlewareHandler,
-  _ICommandMiddlewareHandler,
-} from './middlewares';
 import {
   getMiddlewareMetadata,
   middlewareMetadataExists,
 } from './decorators/decorator.reflection';
+import {
+  _ICommandMiddlewareHandler,
+  ICommandMiddlewareHandler,
+} from './middlewares';
 
 /**
  * This function retrieves all the middlewares registered in the modules container.

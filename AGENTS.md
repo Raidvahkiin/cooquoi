@@ -48,18 +48,19 @@ Backend conventions (draft): [dotnet/AGENTS.md](dotnet/AGENTS.md).
 
 ## Tooling
 
-- **Package manager: bun.** Run everything as `bun nx ...` (CI uses `bunx nx`). Install with `bun install`.
+- **Package manager: pnpm** (version pinned in `package.json` `packageManager`, enabled with `corepack enable pnpm`). **Node** pinned in `.node-version`, the same in local, CI and Docker. Run everything as `pnpm nx ...`. Install with `pnpm install`. Shared dependency versions live in the `catalog:` of `pnpm-workspace.yaml` ([ADR 0016](docs/architecture/adr/0016-package-manager-and-runtime.md)).
+- **TypeScript**: `tsc` is TypeScript 7 (fast native compiler, used by typecheck); the `typescript` package is aliased to TypeScript 6 for tools that need its API (Nx, typescript-eslint, Next.js).
 - Nx 23 monorepo, TypeScript 6 (`strict`), Vitest everywhere, Biome for formatting and ESLint (with `@nx/enforce-module-boundaries`) for linting.
 - Common commands:
 
 ```bash
-bun nx run <project>:<target>          # e.g. bun nx run @cooquoi/market:test
-bun nx run-many -t lint typecheck test # what CI runs
-bun nx affected -t test
-bun run dev:api                         # @cooquoi/api:start:dev
-bun run dev:webapp                      # @cooquoi/webapp:dev
-bun run compose:dev up -d               # local Postgres etc. (docker/dev.docker-compose.yml)
-bun run nx:format                       # biome format --write
+pnpm nx run <project>:<target>          # e.g. pnpm nx run @cooquoi/market:test
+pnpm nx run-many -t lint typecheck test # what CI runs
+pnpm nx affected -t test
+pnpm run dev:api                         # @cooquoi/api:start:dev
+pnpm run dev:webapp                      # @cooquoi/webapp:dev
+pnpm run compose:dev up -d               # local Postgres etc. (docker/dev.docker-compose.yml)
+pnpm run nx:format                       # biome format --write
 ```
 
 Project names are the full package names (`@cooquoi/market`, not `market`).
@@ -70,12 +71,12 @@ Top-level folders are split by **toolchain**, not by frontend/backend:
 
 | Folder | Toolchain | Content |
 |---|---|---|
-| `ts/` | bun + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, React UI, API client |
+| `ts/` | pnpm + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, React UI, API client |
 | `aspire/` *(planned)* | .NET (Aspire AppHost) | Runtime orchestration of the whole system: Postgres, Keycloak, API, webapp. `aspire run` starts everything |
 | `dotnet/` *(conventions drafted, no code yet)* | .NET + `Cooquoi.slnx` | C# backend (DDD bounded contexts) and the Aspire AppHost — see [dotnet/AGENTS.md](dotnet/AGENTS.md) |
 | `contracts/` *(planned)* | TypeSpec | API contract, source of truth for all generated clients |
 | `mobile/` *(future)* | Flutter | Native mobile app. Until then the webapp is a **PWA** ([ADR 0007](docs/architecture/adr/0007-mobile-strategy.md)) |
-| `apps/`, `libs/` *(legacy)* | bun + Nx | NestJS backend (`@cooquoi/api`, `@cooquoi/market`, `@utils/nestjs`, `@libs/core`), kept until the C# backend replaces it |
+| `apps/`, `libs/` *(legacy)* | pnpm + Nx (runs on Node) | NestJS backend (`@cooquoi/api`, `@cooquoi/market`, `@utils/nestjs`, `@libs/core`), kept until the C# backend replaces it |
 
 Nx stays at the root and orchestrates every folder.
 
@@ -131,4 +132,4 @@ Only the `market` context exists today. Planned contexts (not created yet): `sto
 
 ## Environment
 
-API env vars: `DATABASE_URL` (required), `PORT` (default `3001`), `DATABASE_SEEDING_ENABLED` (default `false`). Docker images are built per app (`bun nx docker-build <project>`) and pushed to GHCR by CI on `v*` tags.
+API env vars: `DATABASE_URL` (required), `PORT` (default `3001`), `DATABASE_SEEDING_ENABLED` (default `false`). Docker images are built per app (`pnpm nx docker-build <project>`) and pushed to GHCR by CI on `v*` tags.

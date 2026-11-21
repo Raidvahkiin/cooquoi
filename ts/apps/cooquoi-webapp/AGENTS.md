@@ -145,12 +145,12 @@ export const consumeStockItem = defineAction(consumeStockItemSchema, async (inpu
 ## Commands
 
 ```bash
-bun nx run @cooquoi/webapp:dev
-bun nx run @cooquoi/webapp:lint        # ESLint (Nx boundaries)
-bun nx run @cooquoi/webapp:typecheck
-bun nx run @cooquoi/webapp:test
-bun biome check ts/apps/cooquoi-webapp
-bun knip --workspace ts/apps/cooquoi-webapp
+pnpm nx run @cooquoi/webapp:dev
+pnpm nx run @cooquoi/webapp:lint        # ESLint (Nx boundaries)
+pnpm nx run @cooquoi/webapp:typecheck
+pnpm nx run @cooquoi/webapp:test
+pnpm biome check ts/apps/cooquoi-webapp
+pnpm knip --workspace ts/apps/cooquoi-webapp
 ```
 
 `test`, Biome v2 rules and `knip` are set up during the rebuild.

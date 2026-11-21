@@ -42,6 +42,7 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0013](architecture/adr/0013-webapp-structure.md) | Webapp structure and conventions | Accepted |
 | [0014](architecture/adr/0014-backend-structure.md) | Backend structure and conventions | Accepted (spike items pending) |
 | [0015](architecture/adr/0015-user-profile.md) | User profile stored in the backend | Accepted |
+| [0016](architecture/adr/0016-package-manager-and-runtime.md) | Package manager, runtime and TypeScript versions | Accepted |
 
 ## Conventions
 

@@ -16,6 +16,19 @@
     "./package.json": "./package.json"
   },
   "nx": {
-    "tags": ["type:lib", "scope:utility", "platform:nestjs"]
+    "tags": [
+      "type:lib",
+      "scope:utility",
+      "platform:nestjs"
+    ]
+  },
+  "dependencies": {
+    "@nestjs/common": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/cqrs": "catalog:",
+    "uuid": "catalog:"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "catalog:"
   }
 }

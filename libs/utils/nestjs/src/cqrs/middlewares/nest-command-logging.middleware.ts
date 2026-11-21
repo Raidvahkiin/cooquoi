@@ -1,15 +1,14 @@
 import { Inject, Optional } from '@nestjs/common';
 import { Command } from '@nestjs/cqrs';
 import { CommandMiddleware, EnableLoggingDecorator } from '../decorators';
-
+import type { ILogger } from '../logging/logger';
+import { MIDDLEWARE_LOGGER } from '../logging/logger';
+import { NestJsLogger } from '../logging/nestjs-logger';
 import {
   CommandMiddlewareContext,
   CommandMiddlewareNext,
   ICommandMiddlewareHandler,
 } from './command-handler.middleware';
-import type { ILogger } from '../logging/logger';
-import { MIDDLEWARE_LOGGER } from '../logging/logger';
-import { NestJsLogger } from '../logging/nestjs-logger';
 
 function maskSensitiveData(obj: unknown, sensitiveKeys: string[]): void {
   if (typeof obj === 'object' && obj !== null) {

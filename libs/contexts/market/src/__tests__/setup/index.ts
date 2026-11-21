@@ -5,7 +5,7 @@ import { ingredients, offers } from '../../domain';
 import { products } from '../../domain/entities/product.aggregate';
 import { productIngredients } from '../../domain/entities/relations';
 import { MarketModule } from '../../market.module';
-import { PgliteDb, createPgliteDb } from './pglite';
+import { createPgliteDb, PgliteDb } from './pglite';
 
 export async function getTestSuit() {
   const db: PgliteDb = await createPgliteDb();

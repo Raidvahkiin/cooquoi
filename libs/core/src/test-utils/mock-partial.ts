@@ -1,4 +1,4 @@
-import { Mocked } from "vitest";
+import { Mocked } from 'vitest';
 
 /**
  * Unsafely casts a partial mock object to a fully mocked type.
@@ -15,5 +15,5 @@ import { Mocked } from "vitest";
  * may lead to runtime errors if required properties or methods are missing.
  */
 export function mockPartial<T>(partial: Partial<Mocked<T>>): Mocked<T> {
-	return partial as Mocked<T>;
+  return partial as Mocked<T>;
 }

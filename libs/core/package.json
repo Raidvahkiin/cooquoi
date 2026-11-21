@@ -21,6 +21,13 @@
     "./package.json": "./package.json"
   },
   "nx": {
-    "tags": ["type:lib", "scope:core", "platform:all"]
+    "tags": [
+      "type:lib",
+      "scope:core",
+      "platform:all"
+    ]
+  },
+  "dependencies": {
+    "uuid": "catalog:"
   }
 }

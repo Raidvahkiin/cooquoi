@@ -1,10 +1,10 @@
-import { searchIngredients } from '@/actions/market.actions';
+import { Stack } from '@utils/react/ui';
 import { Suspense } from 'react';
+import { searchIngredients } from '@/actions/market.actions';
+import { Header } from './_components/header';
 import { IngredientList } from './_components/ingredient-list';
 import { IngredientsSearchInput } from './_components/ingredients-search-input';
 import { Pagination } from './_components/pagination';
-import { Stack } from '@utils/react/ui';
-import { Header } from './_components/header';
 
 const PAGE_SIZE = 10;
 

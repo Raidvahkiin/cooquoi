@@ -1,3 +1,3 @@
-import "../src/ui/theme/global.css";
+import '../src/ui/theme/global.css';
 
 export const parameters = {};

@@ -1,14 +1,14 @@
 'use client';
 
+import { cva, type VariantProps } from 'class-variance-authority';
 import {
-  type ReactNode,
   type MouseEvent,
+  type ReactNode,
   useCallback,
   useEffect,
-  useState,
   useRef,
+  useState,
 } from 'react';
-import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '../../utils/class-name.util';
 
 const idClassname = 'UiModal';

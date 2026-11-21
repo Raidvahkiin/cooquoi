@@ -8,9 +8,7 @@
     "strict": false,
     "rootDir": "src"
   },
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "dist",
     "dist/**",
@@ -32,9 +30,6 @@
   "references": [
     {
       "path": "../../utils/nestjs/tsconfig.lib.json"
-    },
-    {
-      "path": "../../core/tsconfig.lib.json"
     }
   ]
 }

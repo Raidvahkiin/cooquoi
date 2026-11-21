@@ -33,8 +33,8 @@ Remaining after pass 3: none | `…`
 
 | Command | Result |
 |---|---|
-| `bun nx affected -t lint` | ✅ / ❌ |
-| `bun nx affected -t typecheck` | ✅ / ❌ |
-| `bun nx affected -t test` | ✅ / ❌ |
-| `bun biome check` | ✅ / ❌ |
-| `bun knip` (or `dotnet build` with analyzers) | ✅ / ❌ |
+| `pnpm nx affected -t lint` | ✅ / ❌ |
+| `pnpm nx affected -t typecheck` | ✅ / ❌ |
+| `pnpm nx affected -t test` | ✅ / ❌ |
+| `pnpm biome check` | ✅ / ❌ |
+| `pnpm knip` (or `dotnet build` with analyzers) | ✅ / ❌ |

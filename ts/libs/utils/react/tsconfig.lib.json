@@ -3,21 +3,14 @@
   "compilerOptions": {
     "composite": true,
     "jsx": "react-jsx",
-    "lib": [
-      "es2023",
-      "dom",
-      "dom.iterable"
-    ],
+    "lib": ["es2023", "dom", "dom.iterable"],
     "outDir": "dist",
     "rootDir": "src",
     "emitDeclarationOnly": true,
     "declaration": true,
     "tsBuildInfoFile": "./dist/tsconfig.lib.tsbuildinfo"
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [
     "dist",
     "dist/**",
@@ -40,9 +33,5 @@
     "**/*.stories.jsx",
     "**/*.stories.tsx"
   ],
-  "references": [
-    {
-      "path": "../../../../libs/core/tsconfig.lib.json"
-    }
-  ]
+  "references": []
 }

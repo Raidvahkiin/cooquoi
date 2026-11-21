@@ -13,10 +13,10 @@ import {
 } from 'drizzle-orm';
 import { DATABASE_TOKEN, type MarketDatabase } from '../../../config';
 import {
-  type Offer,
-  type Product,
   ingredients,
+  type Offer,
   offers,
+  type Product,
   productIngredients,
   products,
 } from '../../../domain';

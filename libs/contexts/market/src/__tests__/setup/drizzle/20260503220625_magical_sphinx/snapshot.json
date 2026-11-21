@@ -2,9 +2,7 @@
   "version": "8",
   "dialect": "postgres",
   "id": "46ad15c0-db7f-4371-bfca-96e6be00091c",
-  "prevIds": [
-    "00000000-0000-0000-0000-000000000000"
-  ],
+  "prevIds": ["00000000-0000-0000-0000-000000000000"],
   "ddl": [
     {
       "isRlsEnabled": false,
@@ -311,14 +309,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "parent_ingredient_id"
-      ],
+      "columns": ["parent_ingredient_id"],
       "schemaTo": "public",
       "tableTo": "ingredients",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "ingredient_components_parent_ingredient_id_ingredients_id_fkey",
@@ -328,14 +322,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "component_ingredient_id"
-      ],
+      "columns": ["component_ingredient_id"],
       "schemaTo": "public",
       "tableTo": "ingredients",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "ingredient_components_C2DEt5a1olON_fkey",
@@ -345,14 +335,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "product_id"
-      ],
+      "columns": ["product_id"],
       "schemaTo": "public",
       "tableTo": "products",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "offers_product_id_products_id_fkey",
@@ -362,14 +348,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "product_id"
-      ],
+      "columns": ["product_id"],
       "schemaTo": "public",
       "tableTo": "products",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "product_ingredients_product_id_products_id_fkey",
@@ -379,14 +361,10 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "ingredient_id"
-      ],
+      "columns": ["ingredient_id"],
       "schemaTo": "public",
       "tableTo": "ingredients",
-      "columnsTo": [
-        "id"
-      ],
+      "columnsTo": ["id"],
       "onUpdate": "NO ACTION",
       "onDelete": "CASCADE",
       "name": "product_ingredients_ingredient_id_ingredients_id_fkey",
@@ -395,10 +373,7 @@
       "table": "product_ingredients"
     },
     {
-      "columns": [
-        "parent_ingredient_id",
-        "component_ingredient_id"
-      ],
+      "columns": ["parent_ingredient_id", "component_ingredient_id"],
       "nameExplicit": false,
       "name": "ingredient_components_pkey",
       "entityType": "pks",
@@ -406,9 +381,7 @@
       "table": "ingredient_components"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "ingredients_pkey",
       "schema": "public",
@@ -416,9 +389,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "offers_pkey",
       "schema": "public",
@@ -426,9 +397,7 @@
       "entityType": "pks"
     },
     {
-      "columns": [
-        "id"
-      ],
+      "columns": ["id"],
       "nameExplicit": false,
       "name": "products_pkey",
       "schema": "public",
@@ -437,10 +406,7 @@
     },
     {
       "nameExplicit": true,
-      "columns": [
-        "product_id",
-        "vendor"
-      ],
+      "columns": ["product_id", "vendor"],
       "nullsNotDistinct": false,
       "name": "offers_product_vendor_unique",
       "entityType": "uniques",
@@ -449,9 +415,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "name"
-      ],
+      "columns": ["name"],
       "nullsNotDistinct": false,
       "name": "ingredients_name_key",
       "schema": "public",
@@ -460,9 +424,7 @@
     },
     {
       "nameExplicit": false,
-      "columns": [
-        "name"
-      ],
+      "columns": ["name"],
       "nullsNotDistinct": false,
       "name": "products_name_key",
       "schema": "public",

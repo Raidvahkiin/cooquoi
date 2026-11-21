@@ -1,6 +1,6 @@
+import { getTestSuit } from '../../../../__tests__/setup';
 import type { FilterIngredientsResult } from '../../..';
 import { FilterIngredientsQuery } from '../../..';
-import { getTestSuit } from '../../../../__tests__/setup';
 
 describe('FilterIngredients feature', () => {
   let testSuit: Awaited<ReturnType<typeof getTestSuit>>;

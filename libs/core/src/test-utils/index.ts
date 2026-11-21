@@ -1,1 +1,1 @@
-export * from "./mock-partial";
+export * from './mock-partial';

@@ -1,6 +1,5 @@
 import { join } from 'node:path';
-import { drizzle } from 'drizzle-orm/pglite';
-import { PgliteDatabase } from 'drizzle-orm/pglite';
+import { drizzle, PgliteDatabase } from 'drizzle-orm/pglite';
 import { migrate } from 'drizzle-orm/pglite/migrator';
 import { relations } from '../../domain/entities/relations';
 

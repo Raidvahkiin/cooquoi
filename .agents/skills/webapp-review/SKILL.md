@@ -53,4 +53,4 @@ Conventions: `ts/apps/cooquoi-webapp/AGENTS.md`. Report findings as a list: **fi
 - [ ] The verification loop ran (dead code, pass-throughs, speculative layers).
 
 ### Checks
-- [ ] `lint`, `typecheck`, `test` on `@cooquoi/webapp`, `bun biome check` and `bun knip` pass — results shown, not assumed.
+- [ ] `lint`, `typecheck`, `test` on `@cooquoi/webapp`, `pnpm biome check` and `pnpm knip` pass — results shown, not assumed.

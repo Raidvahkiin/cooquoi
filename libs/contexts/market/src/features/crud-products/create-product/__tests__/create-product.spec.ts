@@ -1,7 +1,7 @@
 import { eq } from 'drizzle-orm';
+import { getTestSuit } from '../../../../__tests__/setup';
 import { ingredients, productIngredients, products } from '../../../../domain';
 import { CreateProductCommand } from '../create-product.command';
-import { getTestSuit } from '../../../../__tests__/setup';
 
 describe('CreateProduct feature', () => {
   let testSuit: Awaited<ReturnType<typeof getTestSuit>>;

@@ -16,13 +16,13 @@ import {
   Query,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetIngredientsRequestDto } from './dtos/get-ingredients-request.dto';
 import type {
   CreateIngredientBody,
   CreateIngredientResponse,
   Ingredient,
   IngredientsEndpoints,
 } from '@utils/api-contracts/cooquoi';
+import { GetIngredientsRequestDto } from './dtos/get-ingredients-request.dto';
 
 @Controller('ingredients')
 export class IngredientsController implements IngredientsEndpoints {

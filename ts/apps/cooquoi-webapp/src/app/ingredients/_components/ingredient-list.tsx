@@ -1,10 +1,10 @@
 'use client';
 
-import { deleteIngredient } from '@/actions/market.actions';
-import type { IngredientDto } from '@/types/ingredient';
 import { Button, Stack, TrashIcon } from '@utils/react/ui';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
+import { deleteIngredient } from '@/actions/market.actions';
+import type { IngredientDto } from '@/types/ingredient';
 
 type Props = {
   ingredients: IngredientDto[];

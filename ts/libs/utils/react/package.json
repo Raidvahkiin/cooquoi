@@ -19,14 +19,16 @@
     "./package.json": "./package.json"
   },
   "dependencies": {
-    "@libs/core": "workspace:*",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "tailwind-merge": "^3.5.0"
+    "class-variance-authority": "catalog:",
+    "clsx": "catalog:",
+    "react": "catalog:",
+    "tailwind-merge": "catalog:"
   },
   "nx": {
-    "tags": ["type:lib", "scope:utility", "platform:react"]
+    "tags": [
+      "type:lib",
+      "scope:utility",
+      "platform:react"
+    ]
   }
 }

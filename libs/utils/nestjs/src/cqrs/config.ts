@@ -1,9 +1,8 @@
 import { ConfigurableModuleBuilder, Provider, Type } from '@nestjs/common';
 
 import { CqrsModuleOptions } from '@nestjs/cqrs';
-
-import { _ICommandMiddlewareHandler } from './middlewares';
 import { type ILogger } from './logging/logger';
+import { _ICommandMiddlewareHandler } from './middlewares';
 
 export const { OPTIONS_TYPE, MODULE_OPTIONS_TOKEN, ConfigurableModuleClass } =
   new ConfigurableModuleBuilder<{

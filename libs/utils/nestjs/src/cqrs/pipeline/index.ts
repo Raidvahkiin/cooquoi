@@ -4,8 +4,8 @@ import { InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
 import { Command } from '@nestjs/cqrs';
 import { v7 as uuid } from 'uuid';
 import {
-  CommandMiddlewareContext,
   _ICommandMiddlewareHandler,
+  CommandMiddlewareContext,
 } from '../middlewares';
 import { filterMiddlewares, getMiddlewares } from '../reflection';
 

@@ -10,16 +10,28 @@
     }
   },
   "nx": {
-    "tags": ["type:lib", "scope:bounded-context", "platform:nestjs"]
+    "tags": [
+      "type:lib",
+      "scope:bounded-context",
+      "platform:nestjs"
+    ]
   },
   "scripts": {
     "generate:test-schema": "rimraf src/__tests__/setup/drizzle && drizzle-kit generate --config=drizzle-test.config.ts"
   },
   "dependencies": {
-    "@libs/core": "workspace:*",
-    "@utils/nestjs": "workspace:*"
+    "@utils/nestjs": "workspace:*",
+    "@nestjs/common": "catalog:",
+    "@nestjs/cqrs": "catalog:",
+    "drizzle-orm": "catalog:",
+    "pg": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.8"
+    "@electric-sql/pglite": "catalog:",
+    "@nestjs/platform-express": "catalog:",
+    "@nestjs/testing": "catalog:",
+    "@types/pg": "catalog:",
+    "drizzle-kit": "catalog:"
   }
 }

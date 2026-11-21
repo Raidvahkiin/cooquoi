@@ -63,3 +63,4 @@ storybook-static
 # TS build info / storybook debug logs
 *.tsbuildinfo
 debug-storybook.log
+.vitest

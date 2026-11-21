@@ -1,14 +1,14 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren } from 'react';
 
 export const Card: FC<PropsWithChildren<{ className?: string }>> = ({
-	children,
-	className,
+  children,
+  className,
 }) => {
-	return (
-		<div
-			className={`bg-ui-surface shadow-md rounded-ui-lg p-6 ${className ?? ""}`}
-		>
-			{children}
-		</div>
-	);
+  return (
+    <div
+      className={`bg-ui-surface shadow-md rounded-ui-lg p-6 ${className ?? ''}`}
+    >
+      {children}
+    </div>
+  );
 };

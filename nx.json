@@ -1,10 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -73,7 +70,11 @@
     "test": {
       "cache": true,
       "executor": "nx:run-commands",
-      "inputs": ["default", "^default", "{workspaceRoot}/scripts/vitest-reporter.mjs"],
+      "inputs": [
+        "default",
+        "^default",
+        "{workspaceRoot}/scripts/vitest-reporter.mjs"
+      ],
       "options": {
         "command": "vitest run --config {projectRoot}/vite.config.mts --reporter=./scripts/vitest-reporter.mjs",
         "cwd": "{workspaceRoot}"
@@ -85,6 +86,9 @@
     "applyChanges": false
   },
   "cli": {
-    "packageManager": "bun"
+    "packageManager": "pnpm"
+  },
+  "affected": {
+    "legacy": true
   }
 }

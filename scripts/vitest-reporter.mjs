@@ -26,10 +26,13 @@ export default class CompactReporter {
         const r = this.#results.get(item);
         if (!r || r.state === 'pending') continue;
         const icon =
-          r.state === 'passed' ? green('\u2713') :
-          r.state === 'skipped' ? yellow('\u2193') :
-          red('\u2717');
-        const ms = r.duration != null ? ` ${dim(`${Math.round(r.duration)}ms`)}` : '';
+          r.state === 'passed'
+            ? green('\u2713')
+            : r.state === 'skipped'
+              ? yellow('\u2193')
+              : red('\u2717');
+        const ms =
+          r.duration != null ? ` ${dim(`${Math.round(r.duration)}ms`)}` : '';
         process.stdout.write(`${indent(depth) + icon} ${item.name}${ms}\n`);
       }
     }

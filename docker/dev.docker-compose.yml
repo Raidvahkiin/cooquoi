@@ -4,7 +4,7 @@ services:
     image: postgis/postgis:16-3.4
     container_name: database
     restart: unless-stopped
-    profiles: [ api, all, db, webapp ]
+    profiles: [api, all, db, webapp]
     ports:
       - "5432:5432"
     environment:
@@ -19,7 +19,7 @@ services:
     image: cooquoi-api:latest
     container_name: api
     restart: unless-stopped
-    profiles: [ api, all ]
+    profiles: [api, all]
     ports:
       - "3001:3000"
     environment:
@@ -33,7 +33,7 @@ services:
     image: cooquoi-webapp:latest
     container_name: webapp
     restart: unless-stopped
-    profiles: [ webapp, all ]
+    profiles: [webapp, all]
     ports:
       - "3000:3000"
     environment:

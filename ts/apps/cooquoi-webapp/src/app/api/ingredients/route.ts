@@ -1,6 +1,6 @@
+import { NextRequest, NextResponse } from 'next/server';
 import { cooquoiClient } from '@/services';
 import type { CreateIngredientDto } from '@/types/ingredient';
-import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;

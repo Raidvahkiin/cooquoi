@@ -1,4 +1,4 @@
-export type SortDirection = "asc" | "desc";
+export type SortDirection = 'asc' | 'desc';
 
 export type SortOption<T extends object> = {
   value: keyof T;
@@ -10,13 +10,13 @@ export interface Filter {
 }
 
 export interface TextFilter extends Filter {
-  filterType: "text";
+  filterType: 'text';
   type?: string;
   filter?: unknown;
 }
 
 export interface SetFilter extends Filter {
-  filterType: "set";
+  filterType: 'set';
   values?: unknown;
 }
 

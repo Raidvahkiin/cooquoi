@@ -1,14 +1,13 @@
-import { Test } from '@nestjs/testing';
-import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { ConsoleLogger, LoggerService } from '@nestjs/common';
-
-import { MediatorModule } from './module';
+import { Command, CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { Test } from '@nestjs/testing';
+import { CommandMiddleware } from './decorators';
 import {
-  ICommandMiddlewareHandler,
   CommandMiddlewareContext,
   CommandMiddlewareNext,
+  ICommandMiddlewareHandler,
 } from './middlewares';
-import { CommandMiddleware } from './decorators';
+import { MediatorModule } from './module';
 
 class TestCommand extends Command<void> {}
 

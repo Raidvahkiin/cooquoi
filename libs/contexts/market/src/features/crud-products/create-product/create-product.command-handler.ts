@@ -3,8 +3,8 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { inArray } from 'drizzle-orm';
 import { DATABASE_TOKEN, type MarketDatabase } from '../../../config';
 import {
-  Product,
   ingredients,
+  Product,
   productIngredients,
   products,
 } from '../../../domain';

@@ -18,9 +18,9 @@ import {
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import type {
   CreateProductBody,
+  FilterParams,
   FilterResult,
   ProductsEndpoints,
-  FilterParams,
 } from '@utils/api-contracts/cooquoi';
 
 @Controller('products')

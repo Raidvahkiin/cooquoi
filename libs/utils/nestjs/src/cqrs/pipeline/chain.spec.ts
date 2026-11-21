@@ -8,7 +8,7 @@ import {
   ICommandMiddlewareHandler,
 } from '../middlewares';
 
-import { CommandMiddlewareHandlerNotFoundError, buildChain } from './chain';
+import { buildChain, CommandMiddlewareHandlerNotFoundError } from './chain';
 
 describe('buildChain', () => {
   class TestCommand extends Command<any> {}

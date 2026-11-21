@@ -1,1 +1,1 @@
-export * from "./backend.http-client";
+export * from './backend.http-client';

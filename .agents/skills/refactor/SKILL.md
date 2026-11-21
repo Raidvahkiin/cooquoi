@@ -57,7 +57,7 @@ Refactoring creates new dead code and useless layers. After the fixes, run this 
 
 | Detect | How | Fix |
 |---|---|---|
-| Dead code: unused files, exports, functions, types, dependencies, i18n keys, CSS classes | TS: `bun knip` + Biome unused-variable/import rules. C#: analyzers IDE0051/IDE0052/IDE0060 + warnings as errors; search references for public members | Delete. Never comment out, never keep "just in case" |
+| Dead code: unused files, exports, functions, types, dependencies, i18n keys, CSS classes | TS: `pnpm knip` + Biome unused-variable/import rules. C#: analyzers IDE0051/IDE0052/IDE0060 + warnings as errors; search references for public members | Delete. Never comment out, never keep "just in case" |
 | Pass-through function or class: body only forwards its arguments to another call with the same meaning, or a wrapper adding nothing | Would removing it change anything except call sites? If not, it is a pass-through | Inline it, update callers |
 | Speculative layer: interface with one implementation and no test/ADR reason, generic helper used once | Count usages | Inline the implementation / make the helper local |
 | Barrel exports nobody imports | `knip` | Remove the export |

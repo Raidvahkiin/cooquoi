@@ -1,27 +1,27 @@
 {
-	"folders": [
-		{
-			"name": "root",
-			"path": "."
-		},
-	],
-	"settings": {
-		"files.exclude": {
-			"**/node_modules": true,
-			"**/dist": true,
-			"**/tsconfig*.json": true,
-			"**/vite.config.*": true,
-			"**/.storybook": true,
-			"**/out-tsc": true,
-			".agents": true,
-			".vscode": true,
-			".claude": true,
-			".codex": true,
-			".idea": true,
-			".nx": true,
-			".gemini": true,
-			".opencode": true,
-			".cursor": true,
-		}
-	}
+  "folders": [
+    {
+      "name": "root",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/dist": true,
+      "**/tsconfig*.json": true,
+      "**/vite.config.*": true,
+      "**/.storybook": true,
+      "**/out-tsc": true,
+      ".agents": true,
+      ".vscode": true,
+      ".claude": true,
+      ".codex": true,
+      ".idea": true,
+      ".nx": true,
+      ".gemini": true,
+      ".opencode": true,
+      ".cursor": true
+    }
+  }
 }

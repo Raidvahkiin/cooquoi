@@ -1,17 +1,17 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Input, Modal, PlusIcon, useModal } from '@utils/react/ui';
-import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useDebounce } from '@utils/react/hooks';
+import { Button, Input, Modal, PlusIcon, useModal } from '@utils/react/ui';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form';
+import { z } from 'zod';
 import {
   checkProductNameExists,
   createOffers,
   createProduct,
 } from '@/actions/market.actions';
-import { useFieldArray, useForm } from 'react-hook-form';
-import { useRouter } from 'next/navigation';
-import { z } from 'zod';
 import { IngredientPicker } from './ingredient-picker';
 import { CURRENCIES, OfferFields } from './offer-fields';
 

@@ -1,1 +1,1 @@
-export * from "./datetime-provider";
+export * from './datetime-provider';

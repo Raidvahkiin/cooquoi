@@ -13,8 +13,8 @@ Top-level folders are split by **toolchain**. Each has exactly one manifest and 
 
 ```
 cooquoi/
-├─ nx.json  package.json  bun.lock   # orchestration (Nx + shared npm tools)
-├─ ts/          # bun workspaces — apps/ and libs/
+├─ nx.json  package.json  pnpm-lock.yaml   # orchestration (Nx + shared npm tools)
+├─ ts/          # pnpm workspaces — apps/ and libs/
 ├─ dotnet/      # Cooquoi.slnx, global.json, Directory.*.props, src/, tests/, aspire/
 ├─ contracts/   # TypeSpec
 ├─ mobile/      # Flutter
@@ -24,6 +24,8 @@ cooquoi/
 - **Nx stays at the repository root** and orchestrates every folder, so `nx affected` spans all ecosystems (e.g. a contract change rebuilds the TS and Dart clients).
 - The root `package.json` / `node_modules` serve Nx, its plugins and npm-based tools (TypeSpec, OpenAPI generators), not only `ts/`.
 - TypeScript-only root config (`tsconfig.base.json`, `eslint.config.mts`, `biome.json`) moves into `ts/` once the legacy NestJS projects in `apps/` and `libs/` are removed.
+
+> **Package manager**: bun was replaced by pnpm ([ADR 0016](0016-package-manager-and-runtime.md)).
 
 > **Amended by [ADR 0014](0014-backend-structure.md)**: the Aspire AppHost lives at the repository root in `aspire/Cooquoi.AppHost/`, as it orchestrates every toolchain at runtime.
 

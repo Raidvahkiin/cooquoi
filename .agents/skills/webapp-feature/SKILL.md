@@ -38,6 +38,6 @@ Conventions: `ts/apps/cooquoi-webapp/AGENTS.md`. Read it first.
 
 ## Done when
 
-- `bun nx run @cooquoi/webapp:lint`, `:typecheck`, `:test` and `bun knip` pass.
+- `pnpm nx run @cooquoi/webapp:lint`, `:typecheck`, `:test` and `pnpm knip` pass.
 - The refactor report is included in the final message.
 - No business rule was implemented in the webapp (if one seemed needed, it belongs in the API — report it).

@@ -6,11 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build": "nest build",
-    "start": "bun run src/main.ts",
-    "start:dev": "bun --watch src/main.ts",
-    "start:debug": "bun --inspect src/main.ts",
-    "start:prod": "node dist/main",
+    "start": "SWC_NODE_PROJECT=./tsconfig.json node --no-experimental-strip-types -r @swc-node/register src/main.ts",
+    "start:dev": "SWC_NODE_PROJECT=./tsconfig.json node --no-experimental-strip-types -r @swc-node/register --watch src/main.ts",
+    "start:debug": "SWC_NODE_PROJECT=./tsconfig.json node --no-experimental-strip-types -r @swc-node/register --inspect --watch src/main.ts",
     "db:push": "drizzle-kit push --force",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
@@ -22,21 +20,25 @@
   },
   "dependencies": {
     "@cooquoi/market": "workspace:*",
-    "@nestjs/common": "^12.1.0",
-    "@nestjs/config": "^12.0.1",
-    "@nestjs/core": "^12.1.0",
-    "@nestjs/cqrs": "^12.0.0",
-    "@nestjs/platform-fastify": "^12.1.0",
-    "@nestjs/swagger": "^12.0.2",
     "@utils/api-contracts": "workspace:*",
     "@utils/nestjs": "workspace:*",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.15.1"
+    "@fastify/static": "catalog:",
+    "@nestjs/common": "catalog:",
+    "@nestjs/config": "catalog:",
+    "@nestjs/core": "catalog:",
+    "@nestjs/cqrs": "catalog:",
+    "@nestjs/platform-fastify": "catalog:",
+    "@nestjs/swagger": "catalog:",
+    "@swc-node/register": "catalog:",
+    "@swc/core": "catalog:",
+    "class-transformer": "catalog:",
+    "class-validator": "catalog:",
+    "dotenv": "catalog:",
+    "reflect-metadata": "catalog:",
+    "rxjs": "catalog:"
   },
   "devDependencies": {
-    "@nestjs/cli": "^12.0.7",
-    "source-map-support": "^0.5.21",
-    "ts-loader": "^9.5.2",
-    "tsconfig-paths": "^4.2.0"
+    "@nestjs/testing": "catalog:",
+    "drizzle-kit": "catalog:"
   }
 }

@@ -5,14 +5,10 @@
     "emitDeclarationOnly": true,
     "declaration": true,
     "tsBuildInfoFile": "dist/tsconfig.lib.tsbuildinfo",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "rootDir": "src"
   },
-  "include": [
-    "src/**/*.ts"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": [
     "dist",
     "dist/**",

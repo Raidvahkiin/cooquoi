@@ -1,5 +1,5 @@
-import { cooquoiClient } from '@/services';
 import { NextResponse } from 'next/server';
+import { cooquoiClient } from '@/services';
 
 type AgGridFilterModel = Record<string, { filter?: string }>;
 

@@ -1,7 +1,7 @@
-import type { FilterProductsResult } from '../../..';
-import { FilterProductsQuery } from '../../..';
 import { getTestSuit } from '../../../../__tests__/setup';
 import { ingredients, productIngredients, products } from '../../../../domain';
+import type { FilterProductsResult } from '../../..';
+import { FilterProductsQuery } from '../../..';
 
 describe('FilterProducts feature', () => {
   let testSuit: Awaited<ReturnType<typeof getTestSuit>>;

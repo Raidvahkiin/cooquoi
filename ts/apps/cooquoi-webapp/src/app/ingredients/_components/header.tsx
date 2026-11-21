@@ -1,7 +1,5 @@
 'use client';
 
-import { createIngredient } from '@/actions/market.actions';
-import type { CreateIngredientDto } from '@/types/ingredient';
 import {
   Button,
   Input,
@@ -12,6 +10,8 @@ import {
 } from '@utils/react/ui';
 import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
+import { createIngredient } from '@/actions/market.actions';
+import type { CreateIngredientDto } from '@/types/ingredient';
 
 export function Header() {
   const router = useRouter();

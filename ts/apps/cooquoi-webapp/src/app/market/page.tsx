@@ -1,8 +1,8 @@
-import { cooquoiClient } from '@/services/backend.http-client';
 import { Suspense } from 'react';
-import { SearchInput } from './_components/search-input';
-import { ProductList } from './_components/product-list';
+import { cooquoiClient } from '@/services/backend.http-client';
 import { AddProductButton } from './_components/add-product-button';
+import { ProductList } from './_components/product-list';
+import { SearchInput } from './_components/search-input';
 
 type PageProps = {
   searchParams: Promise<{ search?: string }>;

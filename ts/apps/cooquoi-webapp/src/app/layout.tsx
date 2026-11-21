@@ -1,5 +1,5 @@
-import { Topbar } from '@/components/features/top-bar';
 import { Roboto } from 'next/font/google';
+import { Topbar } from '@/components/features/top-bar';
 import './global.css';
 
 const roboto = Roboto({

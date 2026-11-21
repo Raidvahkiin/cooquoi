@@ -80,4 +80,4 @@ it('consumes a stock item', async () => {
 
 ## Done when
 
-`bun nx run @cooquoi/webapp:test` passes and every new query, action, view model and component has tests.
+`pnpm nx run @cooquoi/webapp:test` passes and every new query, action, view model and component has tests.

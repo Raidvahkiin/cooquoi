@@ -1,15 +1,13 @@
 import { DynamicModule, Type } from '@nestjs/common';
 import { CommandBus, CqrsModule } from '@nestjs/cqrs';
-
-import { ICommandPipeline, CommandPipeline } from './pipeline';
-
-import { Mediator } from './mediator';
 import {
   ConfigurableModuleClass,
   MODULE_OPTIONS_TOKEN,
   OPTIONS_TYPE,
 } from './config';
 import { ILogger, MIDDLEWARE_LOGGER } from './logging/logger';
+import { Mediator } from './mediator';
+import { CommandPipeline, ICommandPipeline } from './pipeline';
 
 /**
  * {@link MediatorModule} class

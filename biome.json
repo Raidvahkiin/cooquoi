@@ -1,7 +1,29 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.8/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
-    "ignore": ["dist", "coverage", ".nx/cache", ".nx/workspace-data"]
+    "includes": [
+      "**",
+      "!**/dist",
+      "!**/coverage",
+      "!**/.nx/cache",
+      "!**/.nx/workspace-data",
+      "!**/*.md",
+      "!**/pnpm-lock.yaml",
+      "!**/.agents",
+      "!**/.cursor",
+      "!**/.github/skills",
+      "!**/.github/agents",
+      "!**/.github/prompts",
+      "!**/.opencode",
+      "!**/.codex",
+      "!**/.gemini",
+      "!**/.claude"
+    ]
   },
   "formatter": {
     "enabled": true,
@@ -19,18 +41,27 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "useImportType": "off"
       }
     }
   },
-  "organizeImports": {
-    "enabled": true
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
   },
   "overrides": [
     {
-      "include": ["**/*.spec.ts", "**/*.spec.tsx", "**/*.test.ts", "**/*.test.tsx"],
+      "includes": [
+        "**/*.spec.ts",
+        "**/*.spec.tsx",
+        "**/*.test.ts",
+        "**/*.test.tsx"
+      ],
       "linter": {
         "rules": {
           "suspicious": {
@@ -39,5 +70,10 @@
         }
       }
     }
-  ]
+  ],
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  }
 }

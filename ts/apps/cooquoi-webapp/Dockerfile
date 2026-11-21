@@ -1,30 +1,36 @@
+# Node version must match .node-version
+ARG NODE_IMAGE=node:24.15.0-alpine
+
 # ---- Stage 1: Install dependencies ----
-FROM node:22-alpine AS deps
+FROM ${NODE_IMAGE} AS deps
 
 WORKDIR /app
 
-RUN npm install -g bun
+# pnpm version comes from package.json "packageManager"
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm
 
 # Copy full monorepo (filtered by .dockerignore)
 COPY . .
 
-RUN bun install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 # ---- Stage 2: Build ----
-FROM node:22-alpine AS builder
+FROM ${NODE_IMAGE} AS builder
 
 WORKDIR /app
 
-RUN npm install -g bun
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm
 
 COPY --from=deps /app ./
 
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN bun nx sync && bun nx build @cooquoi/webapp
+RUN pnpm exec nx sync && pnpm exec nx build @cooquoi/webapp
 
 # ---- Stage 3: Production image ----
-FROM node:22-alpine AS production
+FROM ${NODE_IMAGE} AS production
 
 WORKDIR /app
 

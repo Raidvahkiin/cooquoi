@@ -1,20 +1,30 @@
+# Node version must match .node-version.
+# Debian slim (not alpine) keeps bash available for the Coolify terminal.
+ARG NODE_IMAGE=node:24.15.0-bookworm-slim
+
 # ---- Stage 1: Install dependencies ----
-FROM oven/bun:1 AS deps
+FROM ${NODE_IMAGE} AS deps
 
 WORKDIR /app
 
+# pnpm version comes from package.json "packageManager"
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm
+
 # Copy full monorepo (filtered by .dockerignore)
-# Lockfile needs all workspace package.json files for resolution
+# The lockfile needs every workspace package.json for resolution
 COPY . .
 
-RUN bun install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 
 
 # ---- Stage 2: Production image ----
-# Use full image (not slim) to ensure bash/sh is available for Coolify terminal
-FROM oven/bun:1 AS production
+FROM ${NODE_IMAGE} AS production
 
 WORKDIR /app
+
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+RUN corepack enable pnpm
 
 # Copy everything from deps (node_modules at all levels + source)
 COPY --from=deps /app ./
@@ -24,4 +34,5 @@ ENV PORT=3001
 
 EXPOSE 3001
 
-CMD ["sh", "-c", "cd /app && bunx nx run @cooquoi/api:db:migrate && bunx nx run @cooquoi/api:start"]
+# Run migrations, then start the API on Node (TypeScript compiled on the fly by @swc-node/register)
+CMD ["sh", "-c", "cd /app/apps/cooquoi-api && pnpm run db:migrate && pnpm run start"]

@@ -10,6 +10,10 @@
     }
   },
   "nx": {
-    "tags": ["type:lib", "scope:utility", "platform:all"]
+    "tags": [
+      "type:lib",
+      "scope:utility",
+      "platform:all"
+    ]
   }
 }
