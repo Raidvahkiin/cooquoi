@@ -40,6 +40,7 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0011](architecture/adr/0011-webapp-api-auth.md) | Webapp ↔ API: Next.js as backend-for-frontend, bearer-only API | Accepted |
 | [0012](architecture/adr/0012-internationalization.md) | Internationalization: English, French, Vietnamese | Accepted |
 | [0013](architecture/adr/0013-webapp-structure.md) | Webapp structure and conventions | Accepted |
+| [0014](architecture/adr/0014-backend-structure.md) | Backend structure and conventions | Accepted (spike items pending) |
 
 ## Conventions
 

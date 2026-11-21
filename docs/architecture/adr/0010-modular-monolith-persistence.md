@@ -12,7 +12,7 @@ Cooquoi has several bounded contexts ([context map](../../business/context-map.m
 ### 1. One deployable, many modules
 
 - A single ASP.NET host, **`Cooquoi.Api`**, hosts every bounded context.
-- **One .NET project per bounded context** (`Cooquoi.Foodpedia`, `Cooquoi.Pantry`, `Cooquoi.Household`…), each registering its own endpoints, handlers and `DbContext` through a module entry point.
+- **One .NET project per bounded context** (`Cooquoi.Context.Foodpedia`, `Cooquoi.Context.Pantry`, `Cooquoi.Context.Household`…), each registering its own endpoints, handlers and `DbContext` through a module entry point.
 - Contexts communicate only through **published queries** (in-process calls to the owning context's public API) or **events** via Wolverine ([ADR 0003](0003-wolverine.md)). Never through another context's internals or tables.
 - Boundaries are enforced by **architecture tests** (e.g. NetArchTest or ArchUnitNET).
 

@@ -25,6 +25,8 @@ cooquoi/
 - The root `package.json` / `node_modules` serve Nx, its plugins and npm-based tools (TypeSpec, OpenAPI generators), not only `ts/`.
 - TypeScript-only root config (`tsconfig.base.json`, `eslint.config.mts`, `biome.json`) moves into `ts/` once the legacy NestJS projects in `apps/` and `libs/` are removed.
 
+> **Amended by [ADR 0014](0014-backend-structure.md)**: the Aspire AppHost lives at the repository root in `aspire/Cooquoi.AppHost/`, as it orchestrates every toolchain at runtime.
+
 ## Consequences
 
 - Clear ownership: one folder, one toolchain, scoped config.

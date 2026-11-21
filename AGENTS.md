@@ -44,6 +44,7 @@ Repo skills live in `.agents/skills/` (linked from `.claude/skills/`):
 | `webapp-review` | Review webapp changes |
 
 Webapp conventions: [ts/apps/cooquoi-webapp/AGENTS.md](ts/apps/cooquoi-webapp/AGENTS.md).
+Backend conventions (draft): [dotnet/AGENTS.md](dotnet/AGENTS.md).
 
 ## Tooling
 
@@ -70,7 +71,8 @@ Top-level folders are split by **toolchain**, not by frontend/backend:
 | Folder | Toolchain | Content |
 |---|---|---|
 | `ts/` | bun + Nx | TypeScript apps (`ts/apps/`) and libs (`ts/libs/`) — Next.js webapp, React UI, API client |
-| `dotnet/` *(planned)* | .NET + `Cooquoi.slnx` | C# backend (DDD bounded contexts) and the Aspire AppHost |
+| `aspire/` *(planned)* | .NET (Aspire AppHost) | Runtime orchestration of the whole system: Postgres, Keycloak, API, webapp. `aspire run` starts everything |
+| `dotnet/` *(conventions drafted, no code yet)* | .NET + `Cooquoi.slnx` | C# backend (DDD bounded contexts) and the Aspire AppHost — see [dotnet/AGENTS.md](dotnet/AGENTS.md) |
 | `contracts/` *(planned)* | TypeSpec | API contract, source of truth for all generated clients |
 | `mobile/` *(future)* | Flutter | Native mobile app. Until then the webapp is a **PWA** ([ADR 0007](docs/architecture/adr/0007-mobile-strategy.md)) |
 | `apps/`, `libs/` *(legacy)* | bun + Nx | NestJS backend (`@cooquoi/api`, `@cooquoi/market`, `@utils/nestjs`, `@libs/core`), kept until the C# backend replaces it |
