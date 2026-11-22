@@ -24,6 +24,7 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | **Dimension** | The kind of measure a unit belongs to: mass, volume or count. |
 | **Conversion** | A rule turning one unit into another. **Universal** within a dimension (1 kg = 1000 g); **ingredient-specific** across dimensions or for custom units (1 egg ≈ 60 g, 1 fillet of salmon ≈ 200 g). |
 | **Shelf life** | The default number of days an ingredient keeps, with a **recommended storage** (fridge, freezer, room). Used to propose an expiry date and a pantry. |
+| **Expiry kind** | How an ingredient's expiry is known: **printed** (on the package, differs every time: milk, yoghurt), **estimated** (from shelf life: vegetables, bread) or **long-life** (rice, pasta, cans; never warned). Households may override it. |
 | **Tag** | A namespaced label classifying ingredients: `category:` (UI grouping, at least one per ingredient), `season:`, `diet:`, `allergen:`, `family:` (links variants such as salmon and smoked salmon). Curated, with translated labels. |
 | **Variant** | A distinct ingredient close to another (smoked salmon / salmon, brown rice / white rice), linked by a `family:` tag. |
 | **Household-private ingredient** *(after MVP)* | An ingredient created by a household when it is missing from Foodpedia; visible only to that household until a curator promotes it. |
@@ -32,17 +33,19 @@ Terms used identically in code, docs and conversations. When a new concept appea
 
 | Term | Definition |
 |---|---|
-| **Pantry** | A named storage owned by a household ("Fridge", "Freezer", "Mum's cellar"). A household can have several. |
-| **Inbox** ("To put away") | The household's system pantry where every restock lands until it is put away. Its items count as stock. It cannot be renamed, deleted or chosen as a move target. |
-| **Put away** | Move a stock item (whole, or split by a quantity) from the inbox into a real pantry. |
+| **Pantry** | A named storage owned by a household ("Fridge", "Freezer", "Cupboard", "Mum's cellar"). A household can have several. In code, the Pantry aggregate of the Pantry context. |
+| **To put away** | A stock item with no pantry yet, as every restock creates it. It counts as stock. Not an entity: only how a client shows these items. |
+| **Put away** | Give a stock item with no pantry a pantry (whole, or split by a quantity). There is no moving back to no pantry. |
 | **Split** | Moving part of a stock item: the moved part becomes a new stock item with the same entered unit, source and restock date. |
-| **Stock item** | An ingredient held in a pantry, with a quantity and an optional expiry date. |
+| **Stock item** | An ingredient held by a household, in a pantry or still to put away, with a quantity and an optional expiry date. |
 | **Entered quantity** | The quantity exactly as the user typed it (amount + unit, e.g. "2 packs"). Never overwritten. |
 | **Normalized quantity** | The entered quantity converted to the ingredient's base unit, when a conversion is known. |
 | **Unnormalized** | A stock item whose entered unit has no known conversion yet. It is visible but not summed with others. |
 | **Household conversion** | A conversion confirmed by a household for its own products ("1 fillet ≈ 180 g"). Applied before Foodpedia's default conversions. |
 | **Conversion proposal** | A suggested conversion ("1 fillet ≈ 200 g?") offered to the user when an unknown unit is entered; the user confirms or adjusts it. |
-| **Expiry date** | The date a stock item should be consumed by. Defaults from shelf life, adjustable manually. |
+| **Expiry date** | The date a stock item should be consumed by. Always optional; proposed by expiry kind (never for printed), adjustable manually. |
+| **Missing expiry** | A printed or estimated stock item with no expiry date. Flagged so it can be filled in; never counted as expiring. |
+| **Remembered shelf life** | For an estimated ingredient, the days a household's own items keep in one storage, learned from the expiry dates it types at put-away. |
 | **Threshold** | Optional per-ingredient levels set by the household: **low** and **over**, expressed in the base unit. |
 | **Low stock / Overstock** | The state of an ingredient whose total normalized quantity is below the low threshold / above the over threshold. |
 | **Consume** | Remove a quantity of an ingredient from stock (cooking, eating). |
@@ -74,4 +77,4 @@ Terms used identically in code, docs and conversations. When a new concept appea
 
 ## Domain events (first pass)
 
-`HouseholdCreated` · `IngredientAdded` · `ConversionDefined` · `ItemsRestocked` · `StockItemMoved` · `StockItemConsumed` · `StockItemDiscarded` · `StockItemExpiringSoon` · `StockRunningLow` · `StockOverstocked` · `PricePaidRecorded` · `RecipeRegistered` · `MealPlanned` · `MealCooked` · `ShoppingListGenerated` · `ReceiptScanned`
+`HouseholdCreated` · `IngredientAdded` · `ConversionDefined` · `ItemsRestocked` · `StockItemMoved` · `IngredientExpiryKindChanged` · `StockItemConsumed` · `StockItemDiscarded` · `StockItemExpiringSoon` · `StockRunningLow` · `StockOverstocked` · `PricePaidRecorded` · `RecipeRegistered` · `MealPlanned` · `MealCooked` · `ShoppingListGenerated` · `ReceiptScanned`

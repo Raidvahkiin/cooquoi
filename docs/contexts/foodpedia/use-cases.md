@@ -16,7 +16,7 @@
 | # | Use case | Input | Output | Notes |
 |---|---|---|---|---|
 | Q1 | **Search ingredients** | `q`, `tags?` (all must match), `status?` (curators only), `sort`, `page`, `pageSize` | `Page<IngredientSummary>` (id, code, name in requested locale, base unit, category tags) | Matches primary names and synonyms in **all locales**, active locale ranked first, accent-insensitive. Retired hidden for users. |
-| Q2 | **Get ingredient** | `ingredientId` | `IngredientDetail` (name and synonyms in requested locale, base unit, conversions, shelf life, tags, status) | Locale from `Accept-Language`, fallback English. |
+| Q2 | **Get ingredient** | `ingredientId` | `IngredientDetail` (name and synonyms in requested locale, base unit, conversions, shelf life, expiry kind, tags, status) | Locale from `Accept-Language`, fallback English. |
 | Q3 | **Get ingredient translations** *(curator)* | `ingredientId` | All `LocalizedName`s, missing locales flagged | For editing. |
 | Q4 | **List missing translations** *(curator)* | `locale`, `page` | `Page<IngredientSummary>` | Helps complete `fr` / `vi`. |
 | Q5 | **List tags** | `namespace?`, `page` | `Page<TagSummary>` (code, label in requested locale) | For filters and editing. |
@@ -27,7 +27,7 @@
 
 | # | Use case | Input | Rules | Event |
 |---|---|---|---|---|
-| C1 | **Create ingredient** | `code`, `names` (English required), `baseUnit`, `tags` (≥ 1 `category:`), `shelfLife?`, `conversions?` | F1–F9 | `IngredientCreated` |
+| C1 | **Create ingredient** | `code`, `names` (English required), `baseUnit`, `expiryKind`, `tags` (≥ 1 `category:`), `shelfLife?`, `conversions?` | F1–F9, F12 | `IngredientCreated` |
 | C2 | **Rename** (`:rename`) | `locale`, `primary` | F3, F4 | `IngredientNamesChanged` |
 | C3 | **Set synonyms** (`:set-synonyms`) | `locale`, `synonyms[]` | — | `IngredientNamesChanged` |
 | C4 | **Change base unit** (`:change-base-unit`) | `baseUnit`, conversion between old and new base unit | F5 | `BaseUnitChanged` |
@@ -37,6 +37,7 @@
 | C8 | **Tag / untag** (`:tag`, `:untag`) | `tagCode` | F9 | `IngredientTagsChanged` |
 | C9 | **Retire** (`:retire`) | — | F10 | `IngredientRetired` |
 | C10 | **Restore** (`:restore`) | — | — | `IngredientRestored` |
+| C11 | **Set expiry kind** (`:set-expiry-kind`) | `printed` \| `estimated` \| `long-life` | F12 | `IngredientExpiryKindChanged` |
 
 ## Commands — tags (curator)
 
@@ -52,7 +53,7 @@ All commands: F10 (no change on retired items except restore) and F11 (curator o
 
 | # | Operation | Used by | Behaviour |
 |---|---|---|---|
-| P1 | `GetIngredients(ids, locale)` | Pantry, Cookbook, Market, Planning | Batch read for display and validation (status, base unit, tags). |
+| P1 | `GetIngredients(ids, locale)` | Pantry, Cookbook, Market, Planning | Batch read for display and validation (status, base unit, expiry kind, tags). |
 | P2 | `NormalizeQuantity(ingredientId, amount, unit)` | Pantry, Cookbook, Market | Amount in the base unit using Foodpedia defaults, or *unnormalized*. Pantry applies household conversions first. |
 | P3 | `ProposeShelfLife(ingredientId, from)` | Pantry | Proposed expiry date and recommended storage, or none. |
 
@@ -60,7 +61,7 @@ All commands: F10 (no change on retired items except restore) and F11 (curator o
 
 1. **Import** (one shot, script): fetch candidate ingredients with `en` / `fr` / `vi` names from Wikidata (CC0).
 2. **Map** to our model: generate `code`s, primary names, synonyms.
-3. **Complete** with AI proposals: base unit, conversions, shelf life + storage, tags.
+3. **Complete** with AI proposals: base unit, conversions, shelf life + storage, expiry kind, tags.
 4. **Review** by the curator, then commit the seed files (keyed by `code`).
 5. **Load**: idempotent seeding at startup in development, once per release in production.
 

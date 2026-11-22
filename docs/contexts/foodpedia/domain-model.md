@@ -26,6 +26,7 @@ classDiagram
     BaseUnit baseUnit
     IngredientStatus status
     ShelfLife? shelfLife
+    ExpiryKind expiryKind
     TagCode[] tags
     +rename(locale, primaryName)
     +setSynonyms(locale, synonyms)
@@ -33,6 +34,7 @@ classDiagram
     +defineConversion(unit, unitAmount, baseAmount)
     +removeConversion(unit)
     +setShelfLife(shelfLife)
+    +setExpiryKind(expiryKind)
     +tag(tagCode)
     +untag(tagCode)
     +retire()
@@ -91,6 +93,7 @@ classDiagram
 | `baseUnit` | `BaseUnit` | `gram` \| `millilitre` \| `piece`. Changeable by a curator **only with a conversion between old and new base unit** (see below). |
 | `conversions` | `Conversion[]` | Ingredient-specific units → base unit (Foodpedia defaults; households may override in Pantry). |
 | `shelfLife` | `ShelfLife?` | Default days and recommended storage, used to propose expiry dates and storage. |
+| `expiryKind` | `printed` \| `estimated` \| `long-life` | How its expiry is known (see *ExpiryKind*). Seeded, set by curators. |
 | `tags` | `TagCode[]` | Classification: category, season, diet, allergen, family… At least one `category:` tag. |
 | `status` | `active` \| `retired` | Never deleted. Retired ingredients stay readable for existing references, but cannot be newly used. |
 | `scope` *(planned)* | `global` \| `household` | Household-private ingredients, after MVP. Not implemented; reserved so identity and uniqueness rules do not change later. |
@@ -166,6 +169,18 @@ A conversion is a **ratio**: "`unitAmount` `<unit>` = `baseAmount` of the ingred
 - `recommendedStorage`: `fridge` \| `freezer` \| `room`.
 - Used by Pantry to propose an expiry date and a pantry; always adjustable by the user.
 
+### ExpiryKind (enum)
+
+How the Pantry context should treat an ingredient's expiry date:
+
+| Kind | Examples | Meaning |
+|---|---|---|
+| `printed` | Milk, yoghurt, packaged meat, eggs, cheese | The date is on the package and differs every time: never proposed, the user types it. |
+| `estimated` | Vegetables, fruit, bread, leftovers | No printed date: proposed from shelf life (or the household's remembered value). |
+| `long-life` | Rice, pasta, cans | Keeps for months: expiry optional, never warned. |
+
+Households may override the kind for their own stock in the Pantry context.
+
 ## Invariants
 
 | # | Rule |
@@ -181,6 +196,7 @@ A conversion is a **ratio**: "`unitAmount` `<unit>` = `baseAmount` of the ingred
 | F9 | An ingredient has at least one active `category:` tag; it may only use active tags. |
 | F10 | A retired ingredient or tag cannot be modified, except to be restored. Nothing is ever hard-deleted. |
 | F11 | Only users with the `catalog-curator` role change Foodpedia. Changes apply immediately. |
+| F12 | Every ingredient has an `expiryKind`. |
 
 ## Domain services (published to other contexts)
 
@@ -201,6 +217,7 @@ Exposed **in-process** as Foodpedia's published query API ([ADR 0010](../../arch
 | `BaseUnitChanged` | Base unit changed | **Pantry, Cookbook, Market** (re-normalize from entered quantities) |
 | `ConversionDefined` / `ConversionRemoved` | Default conversion changed | Pantry (re-normalize unnormalized items) |
 | `ShelfLifeChanged` | Shelf life changed | — (affects new proposals only) |
+| `IngredientExpiryKindChanged` | Expiry kind changed | Pantry context (flags and warnings; dates untouched) |
 | `IngredientRetired` / `IngredientRestored` | Status change | Pantry, Cookbook (flag references) |
 | `TagCreated` / `TagLabelsChanged` / `TagRetired` | Tag catalogue changes | Search projection |
 
@@ -214,7 +231,7 @@ Events also form the **change history** of Foodpedia (who changed what, when).
 ## Seed data
 
 - **One-shot import**, not a runtime dependency: a script pulls candidate ingredients with names in `en`, `fr`, `vi` from **Wikidata** (CC0 — no licence obligations), maps them to our model, and writes seed files keyed by `code`.
-- Base units, conversions, shelf life and tags are not in open sources: they are **proposed by AI and reviewed by the curator** before the seed files are committed.
+- Base units, conversions, shelf life, expiry kind and tags are not in open sources: they are **proposed by AI and reviewed by the curator** before the seed files are committed.
 - Open Food Facts was considered; its ODbL licence requires sharing derived databases under the same licence, so it is used at most as a manual reference.
 - Target: ≈200–300 common ingredients for the MVP.
 - Seeding is idempotent (by `code`), run at startup in development and once per release in production.
@@ -232,3 +249,4 @@ Events also form the **change history** of Foodpedia (who changed what, when).
 | Seed | One-shot import from Wikidata, AI-completed, curator-reviewed |
 | Curator edits | Applied immediately; events give history. Draft/publish only if several or external curators appear |
 | Deletion | Never; retire only |
+| Expiry kind | `printed` \| `estimated` \| `long-life` on every ingredient, seeded (AI-proposed, curator-reviewed) and set by curators; own event `IngredientExpiryKindChanged` (2026-11-22) |
