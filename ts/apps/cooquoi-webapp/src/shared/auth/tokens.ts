@@ -5,16 +5,26 @@ import type { AuthTokens } from './session';
 
 /** Refresh slightly before expiry, so a request never carries an expired token. */
 const EXPIRY_MARGIN_MS = 30_000;
+/** Keycloak's default SSO idle timeout, when the response gives no refresh token lifetime. */
+const DEFAULT_REFRESH_LIFETIME_S = 1800;
 
 export function toAuthTokens(response: oidc.TokenEndpointResponse): AuthTokens {
   if (!response.refresh_token) {
     throw new Error('Keycloak returned no refresh token');
   }
+  const refreshLifetime =
+    Number(response.refresh_expires_in) || DEFAULT_REFRESH_LIFETIME_S;
   return {
     accessToken: response.access_token,
     refreshToken: response.refresh_token,
     expiresAt: Date.now() + (response.expires_in ?? 0) * 1000,
+    refreshExpiresAt: Date.now() + refreshLifetime * 1000,
   };
+}
+
+/** TTL of a signed-in session: the refresh token's remaining lifetime (ADR 0019 §2). */
+export function toSessionTtlSeconds(tokens: AuthTokens): number {
+  return Math.max(1, Math.ceil((tokens.refreshExpiresAt - Date.now()) / 1000));
 }
 
 export function isExpiringSoon(tokens: AuthTokens): boolean {

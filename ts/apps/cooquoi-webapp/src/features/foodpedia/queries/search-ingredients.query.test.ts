@@ -1,6 +1,6 @@
 import { delay, HttpResponse, http } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getSession } from '@/shared/auth';
+import { signIn } from '../../../../test/auth';
 import { API_BASE_URL } from '../../../../test/fixtures/household';
 import { server } from '../../../../test/msw/node';
 import { searchIngredientsPage } from './search-ingredients.query';
@@ -10,13 +10,7 @@ vi.mock('next-intl/server', () => ({ getLocale: async () => locale.current }));
 
 beforeEach(async () => {
   locale.current = 'fr';
-  const session = await getSession();
-  session.tokens = {
-    accessToken: 'access',
-    refreshToken: 'refresh',
-    expiresAt: Date.now() + 60_000,
-  };
-  await session.save();
+  await signIn();
 });
 
 function captureRequests() {

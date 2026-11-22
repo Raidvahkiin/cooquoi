@@ -1,4 +1,10 @@
 export { completeLogin, logout, startLogin } from './login';
 export { REQUESTED_PATH_HEADER, requireAccessToken } from './require-session';
-export { getSession, type SessionData, sessionOptions } from './session';
-export { isExpiringSoon, refreshTokens } from './tokens';
+export {
+  type AuthTokens,
+  type CookieAccess,
+  deleteSession,
+  loadSession,
+  saveSession,
+} from './session';
+export { isExpiringSoon, refreshTokens, toSessionTtlSeconds } from './tokens';

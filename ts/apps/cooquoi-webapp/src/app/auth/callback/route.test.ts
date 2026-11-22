@@ -1,7 +1,12 @@
 import { HttpResponse, http } from 'msw';
 import { describe, expect, it } from 'vitest';
-import { getSession } from '@/shared/auth';
-import { appRequest, startLoginAt } from '../../../../test/auth';
+import { loadSession } from '@/shared/auth';
+import {
+  appRequest,
+  currentSession,
+  startLoginAt,
+} from '../../../../test/auth';
+import { cookieJar } from '../../../../test/cookie-jar';
 import {
   identityEndpoints,
   tokenResponseFixture,
@@ -28,7 +33,7 @@ describe('GET /auth/callback', () => {
 
     await callbackFor('/auth/login');
 
-    const { pendingLogin } = await getSession();
+    const { pendingLogin } = await currentSession();
     expect(pendingLogin).toBeUndefined();
     expect(Object.fromEntries(tokenRequest ?? [])).toMatchObject({
       grant_type: 'authorization_code',
@@ -44,12 +49,30 @@ describe('GET /auth/callback', () => {
     expect(response.headers.get('location')).toBe(
       'http://localhost:3000/account',
     );
-    const { tokens } = await getSession();
+    const { tokens } = await currentSession();
     expect(tokens).toMatchObject({
       accessToken: 'access-token-1',
       refreshToken: 'refresh-token-1',
     });
     expect(tokens?.expiresAt).toBeGreaterThan(Date.now());
+  });
+
+  it('moves the signed-in session to a new id', async () => {
+    await startLoginAt('/auth/login');
+    const pendingSid = (await loadSession())?.sid;
+
+    await callbackFor('/auth/login');
+
+    const sid = (await loadSession())?.sid;
+    expect(sid).toBeDefined();
+    expect(sid).not.toBe(pendingSid);
+  });
+
+  it('keeps only a small session id in the cookie', async () => {
+    await callbackFor('/auth/login');
+
+    // The tokens alone would take several KB (ADR 0011); the sealed id stays a few hundred bytes.
+    expect(cookieJar.get('cooquoi_session')?.value.length).toBeLessThan(400);
   });
 
   it('rejects a callback whose state does not match the login in progress', async () => {
@@ -58,7 +81,7 @@ describe('GET /auth/callback', () => {
     await expect(
       completeLogin(appRequest('/auth/callback?code=c&state=forged')),
     ).rejects.toThrow();
-    expect((await getSession()).tokens).toBeUndefined();
+    expect((await currentSession()).tokens).toBeUndefined();
   });
 
   it('rejects a callback without a login in progress', async () => {

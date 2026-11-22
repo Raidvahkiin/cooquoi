@@ -3,7 +3,7 @@ import type { CommonLocale } from '@cooquoi/api-client';
 import { headers } from 'next/headers';
 import { cache } from 'react';
 import { fetchMe } from '@/shared/api';
-import { getSession } from '@/shared/auth';
+import { loadSession } from '@/shared/auth';
 import { DEFAULT_LOCALE, isLocale, type Locale } from './locales';
 
 /**
@@ -13,10 +13,9 @@ import { DEFAULT_LOCALE, isLocale, type Locale } from './locales';
  */
 const profileLocale = cache(async (): Promise<CommonLocale | undefined> => {
   try {
-    const session = await getSession();
-    if (!session.tokens) return undefined;
-    const accessToken = session.tokens.accessToken;
-    return (await fetchMe(accessToken)).profile.locale;
+    const tokens = (await loadSession())?.data.tokens;
+    if (!tokens) return undefined;
+    return (await fetchMe(tokens.accessToken)).profile.locale;
   } catch {
     return undefined;
   }

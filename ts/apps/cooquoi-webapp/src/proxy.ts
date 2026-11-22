@@ -1,16 +1,19 @@
-import { getIronSession } from 'iron-session';
 import { type NextRequest, NextResponse } from 'next/server';
 import {
+  type AuthTokens,
+  type CookieAccess,
+  deleteSession,
   isExpiringSoon,
+  loadSession,
   REQUESTED_PATH_HEADER,
   refreshTokens,
-  type SessionData,
-  sessionOptions,
+  saveSession,
+  toSessionTtlSeconds,
 } from '@/shared/auth';
 
 /**
- * Refreshes the access token before pages run: Server Components cannot write cookies,
- * the proxy can (ADR 0011). A failed refresh signs the user out. Also tells the page which
+ * Refreshes the access token before pages run, extending the session's TTL (ADR 0011, 0019).
+ * A failed refresh signs the user out. Also tells the page which
  * path was requested, so a login started from it can come back there.
  */
 export async function proxy(request: NextRequest) {
@@ -20,26 +23,38 @@ export async function proxy(request: NextRequest) {
     `${request.nextUrl.pathname}${request.nextUrl.search}`,
   );
   const response = NextResponse.next({ request: { headers } });
-  // Written through `response.cookies` (not a raw Set-Cookie header): Next.js then hands the
-  // refreshed cookie to the page of this same request, not only to the browser.
-  const session = await getIronSession<SessionData>(
-    {
-      get: (name) => request.cookies.get(name),
-      set: response.cookies.set.bind(response.cookies),
-    },
-    sessionOptions(),
-  );
+  // Written through `response.cookies` (not a raw Set-Cookie header): Next.js then hands a
+  // cleared cookie to the page of this same request, not only to the browser.
+  const access: CookieAccess = {
+    get: (name) => request.cookies.get(name),
+    set: response.cookies.set.bind(response.cookies),
+  };
+  const tokens = (await loadSession(access))?.data.tokens;
 
-  if (session.tokens && isExpiringSoon(session.tokens)) {
-    try {
-      session.tokens = await refreshTokens(session.tokens);
-    } catch {
-      session.tokens = undefined;
-    }
-    await session.save();
+  if (tokens && isExpiringSoon(tokens)) {
+    await refreshOrSignOut(tokens, access);
   }
 
   return response;
+}
+
+async function refreshOrSignOut(
+  tokens: AuthTokens,
+  access: CookieAccess,
+): Promise<void> {
+  let refreshed: AuthTokens;
+  try {
+    refreshed = await refreshTokens(tokens);
+  } catch {
+    await deleteSession(access);
+    return;
+  }
+  // Outside the try: a store error goes to the error page, it does not sign the user out.
+  await saveSession({
+    data: { tokens: refreshed },
+    ttlSeconds: toSessionTtlSeconds(refreshed),
+    access,
+  });
 }
 
 export const config = {

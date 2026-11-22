@@ -14,6 +14,9 @@ const nextConfig = {
   outputFileTracingRoot: workspaceRoot,
   turbopack: { root: workspaceRoot },
   transpilePackages: ['@cooquoi/api-client'],
+  // Loaded by Node at runtime, not bundled: @redis/client pulls in a native addon (@node-rs/xxhash).
+  // The proxy runs on Node.js (Next 16), so it can use them too.
+  serverExternalPackages: ['redis', '@redis/client'],
 };
 
 module.exports = withNextIntl(nextConfig);

@@ -1,20 +1,10 @@
 import { HttpResponse, http } from 'msw';
 import { describe, expect, it } from 'vitest';
+import { signIn } from '../../../test/auth';
 import { meFixture } from '../../../test/fixtures/household';
 import { server } from '../../../test/msw/node';
 import { requestHeaders } from '../../../test/request-headers';
-import { getSession } from '../auth';
 import { pickAcceptedLocale, resolveLocale } from './resolve-locale';
-
-async function signIn() {
-  const session = await getSession();
-  session.tokens = {
-    accessToken: 'access',
-    refreshToken: 'refresh',
-    expiresAt: Date.now() + 60_000,
-  };
-  await session.save();
-}
 
 describe('resolveLocale', () => {
   it('uses the locale of the signed-in profile over Accept-Language', async () => {

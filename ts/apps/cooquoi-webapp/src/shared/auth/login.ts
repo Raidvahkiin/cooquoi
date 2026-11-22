@@ -2,10 +2,17 @@ import 'server-only';
 import * as oidc from 'openid-client';
 import { getEnv } from '@/shared/config/env';
 import { getOidcConfig } from './oidc';
-import { getSession } from './session';
-import { toAuthTokens } from './tokens';
+import {
+  deleteSession,
+  loadSession,
+  rotateSession,
+  saveSession,
+} from './session';
+import { toAuthTokens, toSessionTtlSeconds } from './tokens';
 
 const CALLBACK_PATH = '/auth/callback';
+/** Time allowed to sign in at Keycloak and come back. */
+const PENDING_LOGIN_TTL_S = 600;
 
 /** Starts the Authorization Code + PKCE flow and returns Keycloak's login URL. */
 export async function startLogin(returnTo: string): Promise<URL> {
@@ -13,13 +20,12 @@ export async function startLogin(returnTo: string): Promise<URL> {
   const codeVerifier = oidc.randomPKCECodeVerifier();
   const state = oidc.randomState();
 
-  const session = await getSession();
-  session.pendingLogin = {
-    codeVerifier,
-    state,
-    returnTo: toSafePath(returnTo),
-  };
-  await session.save();
+  await saveSession({
+    data: {
+      pendingLogin: { codeVerifier, state, returnTo: toSafePath(returnTo) },
+    },
+    ttlSeconds: PENDING_LOGIN_TTL_S,
+  });
 
   return oidc.buildAuthorizationUrl(config, {
     redirect_uri: new URL(CALLBACK_PATH, getEnv().APP_URL).href,
@@ -33,8 +39,7 @@ export async function startLogin(returnTo: string): Promise<URL> {
 /** Exchanges the authorization code, stores the tokens, returns where to go next. */
 export async function completeLogin(callbackSearch: string): Promise<string> {
   const config = await getOidcConfig();
-  const session = await getSession();
-  const pending = session.pendingLogin;
+  const pending = (await loadSession())?.data.pendingLogin;
   if (!pending) {
     throw new Error('No login in progress');
   }
@@ -48,20 +53,18 @@ export async function completeLogin(callbackSearch: string): Promise<string> {
     expectedState: pending.state,
   });
 
-  session.tokens = toAuthTokens(response);
-  session.pendingLogin = undefined;
-  await session.save();
+  const tokens = toAuthTokens(response);
+  await rotateSession({ tokens }, toSessionTtlSeconds(tokens));
   return pending.returnTo;
 }
 
 /**
  * Ends the Keycloak SSO session server-side (no confirmation page, since the ID token
- * is not kept in the cookie), then the local session. Returns where to send the user.
+ * is not kept), then the local session. Returns where to send the user.
  */
 export async function logout(): Promise<URL> {
-  const session = await getSession();
-  const refreshToken = session.tokens?.refreshToken;
-  session.destroy();
+  const refreshToken = (await loadSession())?.data.tokens?.refreshToken;
+  await deleteSession();
 
   if (refreshToken) {
     await endKeycloakSession(refreshToken);

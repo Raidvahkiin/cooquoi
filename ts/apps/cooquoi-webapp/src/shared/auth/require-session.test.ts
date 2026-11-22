@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { signIn } from '../../../test/auth';
 import { requestHeaders } from '../../../test/request-headers';
 import { REQUESTED_PATH_HEADER, requireAccessToken } from './require-session';
-import { getSession } from './session';
 
 vi.mock('next/navigation', () => ({
   redirect: vi.fn((url: string) => {
@@ -14,15 +14,12 @@ describe('requireAccessToken', () => {
   beforeEach(() => {
     vi.mocked(redirect).mockClear();
   });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
   it('returns the access token of the signed-in user', async () => {
-    const session = await getSession();
-    session.tokens = {
-      accessToken: 'access',
-      refreshToken: 'refresh',
-      expiresAt: Date.now() + 60_000,
-    };
-    await session.save();
+    await signIn({ accessToken: 'access' });
 
     await expect(requireAccessToken()).resolves.toBe('access');
   });
@@ -38,6 +35,17 @@ describe('requireAccessToken', () => {
   });
 
   it('comes back to the home page when the requested path is unknown', async () => {
+    await expect(requireAccessToken()).rejects.toThrow();
+
+    expect(redirect).toHaveBeenCalledWith('/auth/login?returnTo=%2F');
+  });
+
+  it('sends the user to login when the stored session has expired', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    await signIn();
+    // signIn stores the session for 1800 s.
+    vi.advanceTimersByTime(1_801_000);
+
     await expect(requireAccessToken()).rejects.toThrow();
 
     expect(redirect).toHaveBeenCalledWith('/auth/login?returnTo=%2F');

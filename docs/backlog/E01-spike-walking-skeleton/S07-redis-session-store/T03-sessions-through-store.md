@@ -59,10 +59,10 @@ opus (cross-cutting change through auth and the proxy)
 
 ## Subtasks
 
-- [ ] T03.1 `session.ts`: sid cookie and store-backed helpers; update the `index.ts` barrel
-- [ ] T03.2 `login.ts` (start, complete with rotation, logout) and `require-session.ts` through the helpers
-- [ ] T03.3 `proxy.ts` refresh through the helpers, extending the TTL
-- [ ] T03.4 `test/setup.ts` store mock; update the existing auth tests and add the new cases above
+- [x] T03.1 `session.ts`: sid cookie and store-backed helpers; update the `index.ts` barrel
+- [x] T03.2 `login.ts` (start, complete with rotation, logout) and `require-session.ts` through the helpers
+- [x] T03.3 `proxy.ts` refresh through the helpers, extending the TTL
+- [x] T03.4 `test/setup.ts` store mock; update the existing auth tests and add the new cases above
 
 ## Done when
 
@@ -71,6 +71,10 @@ opus (cross-cutting change through auth and the proxy)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(webapp): server-side sessions in Redis (E01.S07.T03)`), stop.
 
-Status: todo
+Status: done (not committed: parent commits)
 
 Report:
+- Cookie holds only `{ sid }`; `session.ts` has `loadSession`/`saveSession`/`rotateSession`/`deleteSession` (optional `CookieAccess` for the proxy); `getSession`/`sessionOptions` removed, login, logout, `requireAccessToken`, proxy and `resolve-locale` go through them. TTLs: pending 600 s, signed-in = `refreshExpiresAt` (new on `AuthTokens`, from `refresh_expires_in`, 1800 s fallback); refresh re-SETs with the new TTL (store `extend` stays unused).
+- Tests: `test/setup.ts` mocks `session-store` with `test/session-store.ts` (memory store, reset per test); `test/auth.ts` gains `signIn`/`currentSession`; new cases: rotation, cookie size, logout deletes key, expired key redirects, refresh extends TTL.
+- Surprise: a sealed `{ sid }` cookie is ~308 bytes (iron seal overhead ~260), so "under 200 bytes" is impossible; the test asserts < 400.
+- Verified: typecheck, lint, test (85 node tests) green; biome-check and knip green; `getIronSession` only in `session.ts`. Store errors in the proxy propagate (error page), only a refused refresh signs out.

@@ -3,7 +3,12 @@ import { createMemorySessionStore } from './memory-session-store';
 import type { SessionData } from './session';
 
 const data: SessionData = {
-  tokens: { accessToken: 'access', refreshToken: 'refresh', expiresAt: 1_000 },
+  tokens: {
+    accessToken: 'access',
+    refreshToken: 'refresh',
+    expiresAt: 1_000,
+    refreshExpiresAt: 2_000,
+  },
 };
 
 describe('memory session store', () => {

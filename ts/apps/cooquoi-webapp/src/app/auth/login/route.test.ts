@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { getSession } from '@/shared/auth';
-import { startLoginAt } from '../../../../test/auth';
+import { currentSession, startLoginAt } from '../../../../test/auth';
 import { identityEndpoints } from '../../../../test/fixtures/identity';
 
 describe('GET /auth/login', () => {
@@ -23,7 +22,7 @@ describe('GET /auth/login', () => {
   it('keeps the state and the page to return to in the session', async () => {
     const location = await startLoginAt('/auth/login?returnTo=/account');
 
-    const { pendingLogin } = await getSession();
+    const { pendingLogin } = await currentSession();
     expect(pendingLogin?.state).toBe(location.searchParams.get('state'));
     expect(pendingLogin?.returnTo).toBe('/account');
   });
@@ -35,7 +34,7 @@ describe('GET /auth/login', () => {
         `/auth/login?returnTo=${encodeURIComponent(returnTo)}`,
       );
 
-      expect((await getSession()).pendingLogin?.returnTo).toBe('/');
+      expect((await currentSession()).pendingLogin?.returnTo).toBe('/');
     },
   );
 });

@@ -39,6 +39,7 @@ const data: SessionData = {
     accessToken: 'secret-access-token',
     refreshToken: 'secret-refresh-token',
     expiresAt: 1_000,
+    refreshExpiresAt: 2_000,
   },
 };
 
