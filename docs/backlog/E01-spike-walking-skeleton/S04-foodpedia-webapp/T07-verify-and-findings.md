@@ -52,3 +52,4 @@ Report:
 - T07.2 (curl, signed in): saumon/salmon as dev-fr French UI; `ca hoi` as dev-vi Vietnamese UI; dev English UI.
 - T07.3 (API stopped): HTTP 500 after about 10 s with the root error page (Banner + Try again), in English not French, plus an `unhandledRejection` from the timeout abort in Next dev; a `q` over 100 chars shows no error (falls back to the full list). An exported `API_TIMEOUT_MS=900000` in the starting shell had silently overridden the default.
 - T07.4: four PNGs (search and error Banner, light and dark) in the session scratchpad, not committed. Callback `https://` was curl's HSTS cache, not the app.
+- After 661ec53 (API stopped): `/` 500 error page in 5.1 s, no `unhandledRejection`; `/foodpedia?q=saumon` still hung 60 s (see spike plan status). API restarted, `/health` 200, search 200.
