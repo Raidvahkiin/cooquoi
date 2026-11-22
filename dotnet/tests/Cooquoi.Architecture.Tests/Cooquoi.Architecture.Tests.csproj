@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <PackageReference Include="TngTech.ArchUnitNET.xUnitV3" />
+    <PackageReference Include="YamlDotNet" />
     <ProjectReference Include="../../src/Cooquoi.Api/Cooquoi.Api.csproj" />
   </ItemGroup>
 </Project>

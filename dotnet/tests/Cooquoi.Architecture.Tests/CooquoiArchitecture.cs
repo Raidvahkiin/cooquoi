@@ -32,4 +32,18 @@ internal static class CooquoiArchitecture
         OwnAssemblies.SelectMany(assembly => assembly.GetTypes())
             .Where(type => type.Namespace?.Contains(".Domain", StringComparison.Ordinal) == true && type.Namespace.StartsWith("Cooquoi.Context.", StringComparison.Ordinal))
             .Where(type => !type.IsNested && !type.Name.StartsWith('<'));
+
+    /// <summary><c>dotnet/</c>: the folder holding <c>Cooquoi.slnx</c>, found above the test output.</summary>
+    public static string SolutionDirectory { get; } = FindSolutionDirectory();
+
+    private static string FindSolutionDirectory()
+    {
+        var directory = new DirectoryInfo(AppContext.BaseDirectory);
+        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "Cooquoi.slnx")))
+        {
+            directory = directory.Parent;
+        }
+
+        return directory?.FullName ?? throw new InvalidOperationException("Cooquoi.slnx not found above the test output");
+    }
 }

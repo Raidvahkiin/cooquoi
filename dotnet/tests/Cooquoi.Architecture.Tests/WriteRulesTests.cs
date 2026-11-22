@@ -18,22 +18,11 @@ public sealed class WriteRulesTests
         violations.ShouldBeEmpty();
     }
 
-    private static string SourceRoot { get; } = Path.Combine(FindSolutionDirectory(), "src");
+    private static string SourceRoot { get; } = Path.Combine(CooquoiArchitecture.SolutionDirectory, "src");
 
     private static IEnumerable<string> SourceFiles(string layer) =>
         Directory.EnumerateDirectories(SourceRoot, "Cooquoi.Context.*")
             .Select(context => Path.Combine(context, layer))
             .Where(Directory.Exists)
             .SelectMany(directory => Directory.EnumerateFiles(directory, "*.cs", SearchOption.AllDirectories));
-
-    private static string FindSolutionDirectory()
-    {
-        var directory = new DirectoryInfo(AppContext.BaseDirectory);
-        while (directory is not null && !File.Exists(Path.Combine(directory.FullName, "Cooquoi.slnx")))
-        {
-            directory = directory.Parent;
-        }
-
-        return directory?.FullName ?? throw new InvalidOperationException("Cooquoi.slnx not found above the test output");
-    }
 }
