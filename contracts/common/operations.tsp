@@ -10,7 +10,8 @@ namespace Cooquoi.Common;
 
 // Operation kinds every context reuses (ADR 0009 §2). Suffixed `Operation`: `Read` and
 // `Create` would clash with TypeSpec visibility templates. An instance adds the route:
-// `@route("/v1/ingredients/{id}:rename") op renameIngredient is ReplaceActionOperation<RenameIngredient>;`
+// `@route("/v1/ingredients/{ingredientId}:rename") op renameIngredient is ReplaceActionOperation<RenameIngredient, IngredientPath>;`
+// `TPath` names the path parameter as the backend route does (default `{id}`), e.g. `alias IngredientPath = { @path ingredientId: Id };`.
 
 /** Lists resources: typed filters, search, sort and paging. */
 @get
@@ -21,7 +22,7 @@ op ListOperation<TFilter extends {}, TItem>(...ListQuery<TFilter>):
 
 /** Reads one resource by id; `ETag` carries its version. */
 @get
-op ReadOperation<T>(@path id: Id):
+op ReadOperation<T, TPath extends {} = { @path id: Id }>(...TPath):
   | {
       @body body: T;
       ...ETagHeader;
@@ -48,8 +49,8 @@ op CreateOperation<TBody extends {}, TCreated>(
 
 /** Named action on a resource (`POST /…/{id}:verb`); `ETag` carries the new version. */
 @post
-op ActionOperation<TBody extends {}>(
-  @path id: Id,
+op ActionOperation<TBody extends {}, TPath extends {} = { @path id: Id }>(
+  ...TPath,
   ...IdempotencyKeyHeader,
   @body body: TBody,
 ):
@@ -66,8 +67,8 @@ op ActionOperation<TBody extends {}>(
 
 /** Action that replaces state from what the client read: requires `If-Match`. */
 @post
-op ReplaceActionOperation<TBody extends {}>(
-  @path id: Id,
+op ReplaceActionOperation<TBody extends {}, TPath extends {} = { @path id: Id }>(
+  ...TPath,
   ...IdempotencyKeyHeader,
   ...IfMatchHeader,
   @body body: TBody,

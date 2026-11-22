@@ -5,9 +5,14 @@ export type ClientOptions = {
 };
 
 /**
+ * Units an ingredient may be measured in by default.
+ */
+export type CommonBaseUnit = 'g' | 'ml' | 'piece';
+
+/**
  * Stable error codes shared by every context (ADR 0014 §9).
  */
-export type CommonCommonErrorCode = 'common.validation' | 'common.not-found' | 'common.unauthorized' | 'common.forbidden' | 'common.concurrency-conflict' | 'common.version-mismatch' | 'common.if-match-required' | 'common.idempotency-key-reused' | 'common.request-in-progress' | 'common.unexpected';
+export type CommonCommonErrorCode = 'common.validation' | 'common.invalid-sort' | 'common.not-found' | 'common.unauthorized' | 'common.forbidden' | 'common.concurrency-conflict' | 'common.version-mismatch' | 'common.if-match-required' | 'common.idempotency-key-required' | 'common.idempotency-key-reused' | 'common.request-in-progress' | 'common.request-already-processed' | 'common.unexpected';
 
 /**
  * One field error of a validation problem, translatable by code.
@@ -18,9 +23,9 @@ export type CommonFieldError = {
      */
     field: string;
     /**
-     * Stable code, e.g. `validation.required`, `validation.max-length`.
+     * Stable code clients translate.
      */
-    code: string;
+    code: CommonValidationCode;
     /**
      * Values for the translated message, e.g. `{ "max": 100 }`.
      */
@@ -69,6 +74,122 @@ export type CommonProblemDetails = {
 };
 
 /**
+ * Unit codes of the fixed unit catalogue (Foodpedia domain model); adding one is a contract change.
+ */
+export type CommonUnit = 'g' | 'kg' | 'ml' | 'l' | 'tsp' | 'tbsp' | 'cup' | 'piece' | 'pack' | 'can' | 'bottle' | 'slice' | 'fillet' | 'clove' | 'bunch' | 'pinch';
+
+/**
+ * Stable codes of field errors (`errors[].code`), shared by every validator.
+ */
+export type CommonValidationCode = 'validation.required' | 'validation.max-length' | 'validation.min-length' | 'validation.min' | 'validation.max' | 'validation.range' | 'validation.pattern' | 'validation.invalid' | 'validation.one-of';
+
+/**
+ * How many base units one `unit` of this ingredient weighs or holds, e.g. 1 `clove` = 5 `g`.
+ */
+export type FoodpediaConversion = {
+    unit: CommonUnit;
+    unitAmount: number;
+    baseAmount: number;
+};
+
+/**
+ * Body of the ingredient creation (C1); business rules F1–F9.
+ */
+export type FoodpediaCreateIngredient = {
+    /**
+     * Kebab-case, unique.
+     */
+    code: string;
+    /**
+     * One per locale; English required.
+     */
+    names: Array<FoodpediaIngredientName>;
+    baseUnit: CommonBaseUnit;
+    /**
+     * At least one `category:` tag.
+     */
+    tags: Array<string>;
+    conversions?: Array<FoodpediaConversion>;
+    shelfLife?: FoodpediaShelfLife;
+};
+
+/**
+ * Id of the created ingredient.
+ */
+export type FoodpediaCreatedIngredient = {
+    id: CommonId;
+};
+
+/**
+ * Body of a conversion definition (C5); replaces an existing one for the same unit.
+ */
+export type FoodpediaDefineConversion = {
+    unit: CommonUnit;
+    unitAmount: number;
+    baseAmount: number;
+};
+
+/**
+ * Stable error codes of the Foodpedia context (`problem.code`), next to `CommonErrorCode`.
+ */
+export type FoodpediaFoodpediaErrorCode = 'foodpedia.code-taken' | 'foodpedia.invalid-code' | 'foodpedia.invalid-name' | 'foodpedia.english-name-required' | 'foodpedia.duplicate-locale' | 'foodpedia.name-missing' | 'foodpedia.name-taken' | 'foodpedia.invalid-base-unit' | 'foodpedia.invalid-conversion-amount' | 'foodpedia.conversion-not-needed' | 'foodpedia.invalid-shelf-life' | 'foodpedia.category-tag-required' | 'foodpedia.ingredient-retired' | 'foodpedia.invalid-tag-code' | 'foodpedia.invalid-tag-label' | 'foodpedia.english-label-required' | 'foodpedia.unknown-tags';
+
+/**
+ * One ingredient in the requested locale; `version` is sent back as `If-Match`.
+ */
+export type FoodpediaIngredientDetail = {
+    id: CommonId;
+    code: string;
+    locale: CommonLocale;
+    name: string;
+    synonyms: Array<string>;
+    baseUnit: CommonBaseUnit;
+    conversions: Array<FoodpediaConversion>;
+    shelfLife?: FoodpediaShelfLife | null;
+    tags: Array<string>;
+    status: FoodpediaIngredientStatus;
+    version: number;
+};
+
+/**
+ * A name of the ingredient in one locale.
+ */
+export type FoodpediaIngredientName = {
+    locale: CommonLocale;
+    primary: string;
+    synonyms?: Array<string>;
+};
+
+/**
+ * Lifecycle of an ingredient; retired ones are hidden from non-curators.
+ */
+export type FoodpediaIngredientStatus = 'active' | 'retired';
+
+/**
+ * One search result; the name is in the requested locale, English when missing.
+ */
+export type FoodpediaIngredientSummary = {
+    id: CommonId;
+    code: string;
+    name: string;
+    baseUnit: CommonBaseUnit;
+    categoryTags: Array<string>;
+};
+
+/**
+ * How long an ingredient keeps, and where.
+ */
+export type FoodpediaShelfLife = {
+    days: number;
+    recommendedStorage: FoodpediaStorage;
+};
+
+/**
+ * Where an ingredient keeps best.
+ */
+export type FoodpediaStorage = 'fridge' | 'freezer' | 'room';
+
+/**
  * A household the user belongs to.
  */
 export type HouseholdHouseholdSummary = {
@@ -103,6 +224,209 @@ export type HouseholdUserProfile = {
     locale: CommonLocale;
     defaultHouseholdId: CommonId;
 };
+
+/**
+ * Curators only; others always see active ingredients.
+ */
+export type FoodpediaIngredientFilterStatus = FoodpediaIngredientStatus;
+
+/**
+ * Tag codes (`<namespace>:<value>`); all must match.
+ */
+export type FoodpediaIngredientFilterTags = Array<string>;
+
+export type SearchIngredientsData = {
+    body?: never;
+    path?: never;
+    query?: {
+        /**
+         * Tag codes (`<namespace>:<value>`); all must match.
+         */
+        tags?: Array<string>;
+        /**
+         * Curators only; others always see active ingredients.
+         */
+        status?: FoodpediaIngredientStatus;
+        /**
+         * Free-text search.
+         */
+        q?: string;
+        /**
+         * Sort fields among the ones the resource whitelists; a leading `-` sorts descending, e.g. `-expiresAt`.
+         */
+        sort?: Array<string>;
+        /**
+         * 1-based page number.
+         */
+        page?: number;
+        /**
+         * Page size, at most 100 (server-enforced).
+         */
+        pageSize?: number;
+    };
+    url: '/v1/ingredients';
+};
+
+export type SearchIngredientsErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+};
+
+export type SearchIngredientsError = SearchIngredientsErrors[keyof SearchIngredientsErrors];
+
+export type SearchIngredientsResponses = {
+    /**
+     * One page of a list.
+     */
+    200: {
+        items: Array<FoodpediaIngredientSummary>;
+        page: number;
+        pageSize: number;
+        totalCount: number;
+    };
+};
+
+export type SearchIngredientsResponse = SearchIngredientsResponses[keyof SearchIngredientsResponses];
+
+export type CreateIngredientData = {
+    body: FoodpediaCreateIngredient;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path?: never;
+    query?: never;
+    url: '/v1/ingredients';
+};
+
+export type CreateIngredientErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+};
+
+export type CreateIngredientError = CreateIngredientErrors[keyof CreateIngredientErrors];
+
+export type CreateIngredientResponses = {
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     */
+    201: FoodpediaCreatedIngredient;
+};
+
+export type CreateIngredientResponse = CreateIngredientResponses[keyof CreateIngredientResponses];
+
+export type GetIngredientData = {
+    body?: never;
+    path: {
+        ingredientId: CommonId;
+    };
+    query?: never;
+    url: '/v1/ingredients/{ingredientId}';
+};
+
+export type GetIngredientErrors = {
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+};
+
+export type GetIngredientError = GetIngredientErrors[keyof GetIngredientErrors];
+
+export type GetIngredientResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FoodpediaIngredientDetail;
+};
+
+export type GetIngredientResponse = GetIngredientResponses[keyof GetIngredientResponses];
+
+export type DefineConversionData = {
+    body: FoodpediaDefineConversion;
+    headers: {
+        'Idempotency-Key': string;
+        'If-Match': string;
+    };
+    path: {
+        ingredientId: CommonId;
+    };
+    query?: never;
+    url: '/v1/ingredients/{ingredientId}:define-conversion';
+};
+
+export type DefineConversionErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 412 — `If-Match` does not match the current version.
+     */
+    412: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+    /**
+     * 428 — `If-Match` is required.
+     */
+    428: CommonProblemDetails;
+};
+
+export type DefineConversionError = DefineConversionErrors[keyof DefineConversionErrors];
+
+export type DefineConversionResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type DefineConversionResponse = DefineConversionResponses[keyof DefineConversionResponses];
 
 export type GetMeData = {
     body?: never;

@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { GetMeData, GetMeErrors, GetMeResponses } from './types.gen';
+import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -17,6 +17,53 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
      */
     meta?: keyof ClientMeta extends never ? Record<string, unknown> : ClientMeta;
 };
+
+/**
+ * Q1: searches primary names and synonyms in all locales, accent-insensitive, active locale ranked first.
+ * Names come in the `Accept-Language` locale (English fallback). `q` is at most 100 characters.
+ * Sort keys: `relevance`, `name`, `code`; default `-relevance,name` with `q`, `name` without.
+ */
+export const searchIngredients = <ThrowOnError extends boolean = false>(options?: Options<SearchIngredientsData, ThrowOnError>): RequestResult<SearchIngredientsResponses, SearchIngredientsErrors, ThrowOnError> => (options?.client ?? client).get<SearchIngredientsResponses, SearchIngredientsErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/ingredients',
+    ...options
+});
+
+/**
+ * C1: creates an ingredient. Requires the curator role.
+ * Errors: `foodpedia.code-taken`, `foodpedia.name-taken` (409), `foodpedia.unknown-tags` (422).
+ */
+export const createIngredient = <ThrowOnError extends boolean = false>(options: Options<CreateIngredientData, ThrowOnError>): RequestResult<CreateIngredientResponses, CreateIngredientErrors, ThrowOnError> => (options.client ?? client).post<CreateIngredientResponses, CreateIngredientErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/ingredients',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * Q2: one ingredient, name and synonyms in the `Accept-Language` locale (English fallback).
+ */
+export const getIngredient = <ThrowOnError extends boolean = false>(options: Options<GetIngredientData, ThrowOnError>): RequestResult<GetIngredientResponses, GetIngredientErrors, ThrowOnError> => (options.client ?? client).get<GetIngredientResponses, GetIngredientErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/ingredients/{ingredientId}',
+    ...options
+});
+
+/**
+ * C5: defines or replaces the conversion of one unit. Requires the curator role.
+ */
+export const defineConversion = <ThrowOnError extends boolean = false>(options: Options<DefineConversionData, ThrowOnError>): RequestResult<DefineConversionResponses, DefineConversionErrors, ThrowOnError> => (options.client ?? client).post<DefineConversionResponses, DefineConversionErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/ingredients/{ingredientId}:define-conversion',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
 
 /**
  * Returns the signed-in user's profile and households.

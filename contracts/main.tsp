@@ -2,6 +2,7 @@ import "@typespec/http";
 import "@typespec/openapi";
 import "./common/main.tsp";
 import "./contexts/household/main.tsp";
+import "./contexts/foodpedia/main.tsp";
 
 using Http;
 
