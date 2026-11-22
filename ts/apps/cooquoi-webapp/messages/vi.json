@@ -6,12 +6,60 @@
     "nav": {
       "label": "Điều hướng chính",
       "foodpedia": "Foodpedia"
-    }
+    },
+    "errorTitle": "Lỗi"
   },
   "household": {
     "account": {
       "signedInAs": "Đã đăng nhập với tên {name}",
       "summary": "Ngôn ngữ: {locale} · Số hộ gia đình: {count}"
+    }
+  },
+  "errors": {
+    "common": {
+      "validation": "Yêu cầu không hợp lệ.",
+      "invalid-sort": "Không thể sắp xếp theo “{sort}”. Giá trị cho phép: {allowed}.",
+      "not-found": "Không tìm thấy {resource} “{id}”.",
+      "unauthorized": "Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.",
+      "forbidden": "Bạn không có quyền thực hiện thao tác này.",
+      "concurrency-conflict": "Người khác vừa thay đổi mục này cùng lúc. Hãy thử lại.",
+      "version-mismatch": "Mục này đã thay đổi kể từ khi bạn mở: hiện ở phiên bản {current}, không phải {expected}.",
+      "if-match-required": "Thao tác này cần phiên bản của mục đang thay đổi.",
+      "idempotency-key-required": "Yêu cầu này thiếu khóa duy nhất.",
+      "idempotency-key-reused": "Khóa yêu cầu này đã được dùng cho một yêu cầu khác.",
+      "request-in-progress": "Yêu cầu này vẫn đang được xử lý.",
+      "request-already-processed": "Yêu cầu này đã được xử lý. Hãy tải lại để xem kết quả.",
+      "unexpected": "Đã xảy ra lỗi. Hãy thử lại sau."
+    },
+    "foodpedia": {
+      "code-taken": "Đã có nguyên liệu với mã “{code}”.",
+      "invalid-code": "“{code}” không phải mã nguyên liệu hợp lệ (các từ viết thường nối bằng dấu gạch ngang).",
+      "invalid-name": "“{name}” không phải tên hợp lệ cho ngôn ngữ “{locale}”.",
+      "english-name-required": "Nguyên liệu cần có tên tiếng Anh.",
+      "duplicate-locale": "Mỗi ngôn ngữ chỉ được một tên; “{locale}” xuất hiện hai lần.",
+      "name-missing": "Nguyên liệu chưa có tên cho ngôn ngữ “{locale}”.",
+      "name-taken": "Đã có nguyên liệu tên “{name}” cho ngôn ngữ “{locale}”.",
+      "invalid-base-unit": "“{unit}” không thể là đơn vị cơ bản; hãy dùng g, ml hoặc piece.",
+      "invalid-conversion-amount": "Cả hai số lượng của quy đổi “{unit}” phải lớn hơn 0.",
+      "conversion-not-needed": "“{unit}” đã tự quy đổi sang “{baseUnit}” mà không cần quy đổi riêng cho nguyên liệu.",
+      "invalid-shelf-life": "Hạn sử dụng phải ít nhất một ngày, không phải {days}.",
+      "category-tag-required": "Nguyên liệu cần ít nhất một thẻ danh mục.",
+      "ingredient-retired": "Nguyên liệu “{code}” đã ngừng sử dụng và không thể thay đổi.",
+      "invalid-tag-code": "“{code}” không phải mã thẻ dạng “không-gian:giá-trị” với không gian đã biết.",
+      "invalid-tag-label": "Nhãn của thẻ cho ngôn ngữ “{locale}” đang trống.",
+      "english-label-required": "Thẻ cần có nhãn tiếng Anh.",
+      "unknown-tags": "Thẻ không tồn tại hoặc đã ngừng sử dụng: {codes}."
+    },
+    "validation": {
+      "required": "Trường này là bắt buộc.",
+      "max-length": "Dùng tối đa {maxLength} ký tự.",
+      "min-length": "Dùng tối thiểu {minLength} ký tự.",
+      "min": "Giá trị phải từ {comparisonValue} trở lên.",
+      "max": "Giá trị phải không vượt quá {comparisonValue}.",
+      "range": "Giá trị phải nằm trong khoảng từ {from} đến {to}.",
+      "pattern": "Định dạng không hợp lệ.",
+      "invalid": "Giá trị này không hợp lệ.",
+      "one-of": "Hãy chọn một trong: {allowedValues}."
     }
   }
 }

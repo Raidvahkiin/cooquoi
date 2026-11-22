@@ -6,12 +6,60 @@
     "nav": {
       "label": "Navigation principale",
       "foodpedia": "Foodpedia"
-    }
+    },
+    "errorTitle": "Erreur"
   },
   "household": {
     "account": {
       "signedInAs": "Connecté en tant que {name}",
       "summary": "Langue : {locale} · Foyers : {count}"
+    }
+  },
+  "errors": {
+    "common": {
+      "validation": "La requête est invalide.",
+      "invalid-sort": "Impossible de trier par « {sort} ». Valeurs possibles : {allowed}.",
+      "not-found": "{resource} « {id} » est introuvable.",
+      "unauthorized": "Votre session a expiré. Reconnectez-vous.",
+      "forbidden": "Vous n’avez pas le droit de faire cela.",
+      "concurrency-conflict": "Quelqu’un d’autre a modifié cet élément en même temps. Réessayez.",
+      "version-mismatch": "Cet élément a changé depuis son ouverture : il est à la version {current}, et non {expected}.",
+      "if-match-required": "Cette opération nécessite la version de l’élément modifié.",
+      "idempotency-key-required": "Il manque la clé unique de cette requête.",
+      "idempotency-key-reused": "Cette clé de requête a déjà servi pour une autre requête.",
+      "request-in-progress": "Cette requête est encore en cours.",
+      "request-already-processed": "Cette requête a déjà été traitée. Rechargez pour voir le résultat.",
+      "unexpected": "Une erreur est survenue. Réessayez plus tard."
+    },
+    "foodpedia": {
+      "code-taken": "Un ingrédient de code « {code} » existe déjà.",
+      "invalid-code": "« {code} » n’est pas un code d’ingrédient valide (mots en minuscules séparés par des tirets).",
+      "invalid-name": "« {name} » n’est pas un nom valide pour la langue « {locale} ».",
+      "english-name-required": "Un ingrédient doit avoir un nom en anglais.",
+      "duplicate-locale": "Un seul nom par langue est autorisé ; « {locale} » apparaît deux fois.",
+      "name-missing": "L’ingrédient n’a pas de nom pour la langue « {locale} ».",
+      "name-taken": "Un ingrédient nommé « {name} » existe déjà pour la langue « {locale} ».",
+      "invalid-base-unit": "« {unit} » ne peut pas être une unité de base ; utilisez g, ml ou pièce.",
+      "invalid-conversion-amount": "Les deux quantités de la conversion « {unit} » doivent être positives.",
+      "conversion-not-needed": "« {unit} » se convertit déjà en « {baseUnit} » sans conversion propre à l’ingrédient.",
+      "invalid-shelf-life": "La durée de conservation doit être d’au moins un jour, et non {days}.",
+      "category-tag-required": "Un ingrédient doit avoir au moins une étiquette de catégorie.",
+      "ingredient-retired": "L’ingrédient « {code} » est retiré et ne peut plus être modifié.",
+      "invalid-tag-code": "« {code} » n’est pas un code d’étiquette de la forme « espace:valeur » avec un espace connu.",
+      "invalid-tag-label": "Le libellé de l’étiquette pour la langue « {locale} » est vide.",
+      "english-label-required": "Une étiquette doit avoir un libellé en anglais.",
+      "unknown-tags": "Étiquettes inconnues ou retirées : {codes}."
+    },
+    "validation": {
+      "required": "Ce champ est obligatoire.",
+      "max-length": "Utilisez au plus {maxLength} caractères.",
+      "min-length": "Utilisez au moins {minLength} caractères.",
+      "min": "La valeur doit être au moins {comparisonValue}.",
+      "max": "La valeur doit être au plus {comparisonValue}.",
+      "range": "La valeur doit être comprise entre {from} et {to}.",
+      "pattern": "Le format n’est pas valide.",
+      "invalid": "Cette valeur n’est pas valide.",
+      "one-of": "Choisissez parmi : {allowedValues}."
     }
   }
 }

@@ -6,12 +6,60 @@
     "nav": {
       "label": "Main navigation",
       "foodpedia": "Foodpedia"
-    }
+    },
+    "errorTitle": "Error"
   },
   "household": {
     "account": {
       "signedInAs": "Signed in as {name}",
       "summary": "Language: {locale} · Households: {count}"
+    }
+  },
+  "errors": {
+    "common": {
+      "validation": "The request is invalid.",
+      "invalid-sort": "Cannot sort by “{sort}”. Allowed: {allowed}.",
+      "not-found": "{resource} “{id}” was not found.",
+      "unauthorized": "Your session has expired. Sign in again.",
+      "forbidden": "You are not allowed to do this.",
+      "concurrency-conflict": "Someone else changed this at the same time. Try again.",
+      "version-mismatch": "This was changed since you opened it: it is at version {current}, not {expected}.",
+      "if-match-required": "This operation needs the version of what you are changing.",
+      "idempotency-key-required": "This request is missing its unique key.",
+      "idempotency-key-reused": "This request key was already used for a different request.",
+      "request-in-progress": "This request is still running.",
+      "request-already-processed": "This request was already processed. Reload to see the result.",
+      "unexpected": "Something went wrong. Try again later."
+    },
+    "foodpedia": {
+      "code-taken": "An ingredient with code “{code}” already exists.",
+      "invalid-code": "“{code}” is not a valid ingredient code (lowercase words separated by hyphens).",
+      "invalid-name": "“{name}” is not a valid name in locale “{locale}”.",
+      "english-name-required": "An ingredient needs an English name.",
+      "duplicate-locale": "Only one name per language is allowed; “{locale}” appears twice.",
+      "name-missing": "The ingredient has no name in locale “{locale}”.",
+      "name-taken": "An ingredient named “{name}” already exists in locale “{locale}”.",
+      "invalid-base-unit": "“{unit}” cannot be a base unit; use g, ml or piece.",
+      "invalid-conversion-amount": "Both amounts of the “{unit}” conversion must be positive.",
+      "conversion-not-needed": "“{unit}” already converts to “{baseUnit}” without an ingredient conversion.",
+      "invalid-shelf-life": "Shelf life must be at least one day, not {days}.",
+      "category-tag-required": "An ingredient needs at least one category tag.",
+      "ingredient-retired": "Ingredient “{code}” is retired and cannot be changed.",
+      "invalid-tag-code": "“{code}” is not a tag code like “namespace:value” with a known namespace.",
+      "invalid-tag-label": "The tag label in locale “{locale}” is empty.",
+      "english-label-required": "A tag needs an English label.",
+      "unknown-tags": "Unknown or retired tags: {codes}."
+    },
+    "validation": {
+      "required": "This field is required.",
+      "max-length": "Use at most {maxLength} characters.",
+      "min-length": "Use at least {minLength} characters.",
+      "min": "The value must be at least {comparisonValue}.",
+      "max": "The value must be at most {comparisonValue}.",
+      "range": "The value must be between {from} and {to}.",
+      "pattern": "The format is not valid.",
+      "invalid": "This value is not valid.",
+      "one-of": "Choose one of: {allowedValues}."
     }
   }
 }

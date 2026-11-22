@@ -73,10 +73,10 @@ test/                              # msw server, handlers, fixtures, render help
 ```ts
 type ActionResult<T = void> =
   | { ok: true; data: T }
-  | { ok: false; error: { code: string; fieldErrors?: Record<string, string[]> } };
+  | { ok: false; error: ApiError };
 ```
 
-`code` comes from the API's `ProblemDetails`; the UI translates it.
+`ApiError = { code, params?, fieldErrors? }` is the type of `shared/api/to-api-error.ts`, shared with queries; `code` and `params` come from the API's `ProblemDetails` and the UI translates them (`ErrorMessage`).
 
 ## Examples
 
