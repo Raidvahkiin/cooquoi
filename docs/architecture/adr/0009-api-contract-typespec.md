@@ -77,7 +77,7 @@ contracts/
 ├─ contexts/
 │  ├─ household/         # models.tsp, routes.tsp
 │  ├─ foodpedia/
-│  └─ pantry/
+│  └─ foodventory/
 └─ generated/openapi.yaml
 ```
 

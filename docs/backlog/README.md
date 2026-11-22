@@ -33,8 +33,8 @@ Status: `todo` · `doing` · `done` · `blocked (<why>)` · `dropped`.
 
 Decided 2026-11-22: **API first, suggestions before UI.** The goal is the core domain (Planning & Suggestion) answering "what can I cook?" through the API, fed by real stock, before any new screen is built.
 
-1. **Pantry**: model ([docs/contexts/pantry](../contexts/pantry/)), then the API with manual stock entry
-2. **Product scan / receipt input** into Pantry (at least the API), or manual add only if scan waits
+1. **Foodventory**: model ([docs/contexts/foodventory](../contexts/foodventory/)), then the API with manual stock entry
+2. **Product scan / receipt input** into Foodventory (at least the API), or manual add only if scan waits
 3. **Cookbook and Market**: the minimum suggestions need (recipes with quantities; prices at preferred vendors)
 4. **Planning & Suggestion API**: ranked suggestions ([ADR 0005](../architecture/adr/0005-ai-suggestions-token-strategy.md))
 5. **UI** for the above, once the API is ready

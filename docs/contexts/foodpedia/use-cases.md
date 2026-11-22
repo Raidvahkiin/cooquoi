@@ -9,7 +9,7 @@
 |---|---|
 | **User** (any signed-in user) | Search and read ingredients and tags, list units |
 | **Curator** (`catalog-curator` role) | Everything a user can, plus manage ingredients and tags. Changes apply immediately. |
-| **Other contexts** (Pantry, Cookbook, Market, Planning) | Use the published in-process API |
+| **Other contexts** (Foodventory, Cookbook, Market, Planning) | Use the published in-process API |
 
 ## Queries
 
@@ -53,9 +53,9 @@ All commands: F10 (no change on retired items except restore) and F11 (curator o
 
 | # | Operation | Used by | Behaviour |
 |---|---|---|---|
-| P1 | `GetIngredients(ids, locale)` | Pantry, Cookbook, Market, Planning | Batch read for display and validation (status, base unit, expiry kind, tags). |
-| P2 | `NormalizeQuantity(ingredientId, amount, unit)` | Pantry, Cookbook, Market | Amount in the base unit using Foodpedia defaults, or *unnormalized*. Pantry applies household conversions first. |
-| P3 | `ProposeShelfLife(ingredientId, from)` | Pantry | Proposed expiry date and recommended storage, or none. |
+| P1 | `GetIngredients(ids, locale)` | Foodventory, Cookbook, Market, Planning | Batch read for display and validation (status, base unit, expiry kind, tags). |
+| P2 | `NormalizeQuantity(ingredientId, amount, unit)` | Foodventory, Cookbook, Market | Amount in the base unit using Foodpedia defaults, or *unnormalized*. Foodventory applies household conversions first. |
+| P3 | `ProposeShelfLife(ingredientId, from)` | Foodventory | Proposed expiry date and recommended storage, or none. |
 
 ## Seed
 

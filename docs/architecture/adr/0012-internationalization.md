@@ -55,7 +55,7 @@ Three kinds of text exist, each handled differently:
 
 - Clients send **`Accept-Language`**; read endpoints return reference data **in the requested locale** (with fallback), e.g. `name: "Saumon"`.
 - Curator endpoints read and write **all translations** (`LocalizedText` model in the contract: `{ locale, name, synonyms[] }[]`).
-- Errors: `ProblemDetails` carries a **stable machine `code`** (e.g. `pantry.conversion-unknown`) plus an English `detail`; clients localize by `code` ([ADR 0009](0009-api-contract-typespec.md)).
+- Errors: `ProblemDetails` carries a **stable machine `code`** (e.g. `foodventory.conversion-unknown`) plus an English `detail`; clients localize by `code` ([ADR 0009](0009-api-contract-typespec.md)).
 - The server never localizes user content.
 
 ### 6. Money and formatting

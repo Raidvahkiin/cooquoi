@@ -1,7 +1,7 @@
 # Foodpedia — Domain model
 
 - **Status**: Reviewed — ready for the spike
-- **Type**: Supporting context, upstream of Pantry, Market, Cookbook and Planning ([context map](../../business/context-map.md))
+- **Type**: Supporting context, upstream of Foodventory, Market, Cookbook and Planning ([context map](../../business/context-map.md))
 
 ## Purpose
 
@@ -91,7 +91,7 @@ classDiagram
 | `code` | `IngredientCode` | Language-neutral kebab-case slug (`salmon`, `smoked-salmon`, `brown-rice`). Unique, **immutable**. Used in seed files, AI prompts and logs. |
 | `names` | `LocalizedName[]` | One per locale; **English required**. |
 | `baseUnit` | `BaseUnit` | `gram` \| `millilitre` \| `piece`. Changeable by a curator **only with a conversion between old and new base unit** (see below). |
-| `conversions` | `Conversion[]` | Ingredient-specific units → base unit (Foodpedia defaults; households may override in Pantry). |
+| `conversions` | `Conversion[]` | Ingredient-specific units → base unit (Foodpedia defaults; households may override in Foodventory). |
 | `shelfLife` | `ShelfLife?` | Default days and recommended storage, used to propose expiry dates and storage. |
 | `expiryKind` | `printed` \| `estimated` \| `long-life` | How its expiry is known (see *ExpiryKind*). Seeded, set by curators. |
 | `tags` | `TagCode[]` | Classification: category, season, diet, allergen, family… At least one `category:` tag. |
@@ -106,7 +106,7 @@ Early data may have the wrong base unit, so curators can change it:
 
 - The change carries **a conversion between old and new base unit** (e.g. `g` → `piece` with `1 piece = 60 g`), so every quantity expressed in the old base unit stays convertible.
 - Existing conversions are recomputed against the new base unit.
-- Foodpedia publishes `BaseUnitChanged`. **Pantry re-normalizes from the entered quantities it always keeps**, so no user data is lost or guessed.
+- Foodpedia publishes `BaseUnitChanged`. **Foodventory re-normalizes from the entered quantities it always keeps**, so no user data is lost or guessed.
 
 ### LocalizedName (value object)
 
@@ -161,17 +161,17 @@ A conversion is a **ratio**: "`unitAmount` `<unit>` = `baseAmount` of the ingred
 
 **Rule:** a conversion exists only for a unit that **cannot** be reached from the base unit by a universal conversion. A conversion to `g` also unlocks `kg`; one to `ml` unlocks `l`, `tsp`, `tbsp`, `cup`.
 
-**Household conversions** (a household confirming "1 fillet ≈ 180 g" for *its* salmon) belong to **Pantry**, not Foodpedia: they vary by household and region. Foodpedia conversions are the shared defaults.
+**Household conversions** (a household confirming "1 fillet ≈ 180 g" for *its* salmon) belong to **Foodventory**, not Foodpedia: they vary by household and region. Foodpedia conversions are the shared defaults.
 
 ### ShelfLife (value object)
 
 - `days`: default number of days the ingredient keeps.
 - `recommendedStorage`: `fridge` \| `freezer` \| `room`.
-- Used by Pantry to propose an expiry date and a pantry; always adjustable by the user.
+- Used by Foodventory to propose an expiry date and a pantry; always adjustable by the user.
 
 ### ExpiryKind (enum)
 
-How the Pantry context should treat an ingredient's expiry date:
+How the Foodventory context should treat an ingredient's expiry date:
 
 | Kind | Examples | Meaning |
 |---|---|---|
@@ -179,7 +179,7 @@ How the Pantry context should treat an ingredient's expiry date:
 | `estimated` | Vegetables, fruit, bread, leftovers | No printed date: proposed from shelf life (or the household's remembered value). |
 | `long-life` | Rice, pasta, cans | Keeps for months: expiry optional, never warned. |
 
-Households may override the kind for their own stock in the Pantry context.
+Households may override the kind for their own stock in the Foodventory context.
 
 ## Invariants
 
@@ -202,7 +202,7 @@ Households may override the kind for their own stock in the Pantry context.
 
 | Service | Purpose |
 |---|---|
-| `QuantityConverter.Normalize(ingredientId, quantity)` | Converts `(amount, unit)` to the base unit using **Foodpedia defaults**: a universal conversion to the unit of an ingredient conversion (e.g. `kg` → `g`), then the ratio. Returns *unnormalized* when no path exists. Pantry applies household conversions **before** calling it. |
+| `QuantityConverter.Normalize(ingredientId, quantity)` | Converts `(amount, unit)` to the base unit using **Foodpedia defaults**: a universal conversion to the unit of an ingredient conversion (e.g. `kg` → `g`), then the ratio. Returns *unnormalized* when no path exists. Foodventory applies household conversions **before** calling it. |
 | `ShelfLifePolicy.Propose(ingredientId, from)` | Proposed expiry (`from + days`) and recommended storage, or none. |
 
 Exposed **in-process** as Foodpedia's published query API ([ADR 0010](../../architecture/adr/0010-modular-monolith-persistence.md)) — other contexts never read Foodpedia's tables.
@@ -214,11 +214,11 @@ Exposed **in-process** as Foodpedia's published query API ([ADR 0010](../../arch
 | `IngredientCreated` | Curator adds an ingredient | Search projection |
 | `IngredientNamesChanged` | Names or synonyms change | Search projection |
 | `IngredientTagsChanged` | Tags added or removed | Search projection, Planning (filters) |
-| `BaseUnitChanged` | Base unit changed | **Pantry, Cookbook, Market** (re-normalize from entered quantities) |
-| `ConversionDefined` / `ConversionRemoved` | Default conversion changed | Pantry (re-normalize unnormalized items) |
+| `BaseUnitChanged` | Base unit changed | **Foodventory, Cookbook, Market** (re-normalize from entered quantities) |
+| `ConversionDefined` / `ConversionRemoved` | Default conversion changed | Foodventory (re-normalize unnormalized items) |
 | `ShelfLifeChanged` | Shelf life changed | — (affects new proposals only) |
-| `IngredientExpiryKindChanged` | Expiry kind changed | Pantry context (flags and warnings; dates untouched) |
-| `IngredientRetired` / `IngredientRestored` | Status change | Pantry, Cookbook (flag references) |
+| `IngredientExpiryKindChanged` | Expiry kind changed | Foodventory context (flags and warnings; dates untouched) |
+| `IngredientRetired` / `IngredientRestored` | Status change | Foodventory, Cookbook (flag references) |
 | `TagCreated` / `TagLabelsChanged` / `TagRetired` | Tag catalogue changes | Search projection |
 
 Events also form the **change history** of Foodpedia (who changed what, when).
@@ -240,9 +240,9 @@ Events also form the **change history** of Foodpedia (who changed what, when).
 
 | Question | Decision |
 |---|---|
-| Base unit | Changeable by curators, with a conversion; Pantry re-normalizes from entered quantities |
+| Base unit | Changeable by curators, with a conversion; Foodventory re-normalizes from entered quantities |
 | Shelf life | Days + recommended storage |
-| Household conversions | In Pantry, per household, applied before Foodpedia defaults |
+| Household conversions | In Foodventory, per household, applied before Foodpedia defaults |
 | Cooking units | `tsp`, `tbsp`, metric `cup` (250 ml) included |
 | Categories | Replaced by namespaced **tags** (`category`, `season`, `diet`, `allergen`, `family`) |
 | Variants | Separate ingredients, linked by `family:` tags |

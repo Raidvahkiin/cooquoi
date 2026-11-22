@@ -26,7 +26,7 @@ The suggestion capability is the **core domain**. Every other context exists to 
 | **User** | A person managing their food. In MVP, a single individual | MVP |
 | **Household** | The owner of pantries, budget and preferences. In MVP, one person; later, a family or group of friends | MVP (single member) |
 | **Curator** | A user with an elevated role who maintains Foodpedia (ingredients, units, conversions) | MVP |
-| **AI agent** | System actor that ranks and explains suggestions, and later reads receipts | Suggestions: after Pantry |
+| **AI agent** | System actor that ranks and explains suggestions, and later reads receipts | Suggestions: after Foodventory |
 | **External price API** | Automatic price updates | Later |
 
 ## Key journeys
@@ -52,7 +52,7 @@ The suggestion capability is the **core domain**. Every other context exists to 
 
 - Authentication (Keycloak) and a personal household created on first login
 - Foodpedia: seeded ingredients, base units, conversions, default shelf life, curator role
-- Pantry: named pantries, stock items with entered and normalized quantities, expiry, thresholds
+- Foodventory: named pantries, stock items with entered and normalized quantities, expiry, thresholds
 
 **After MVP**
 

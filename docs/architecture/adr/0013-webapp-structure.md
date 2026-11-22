@@ -16,7 +16,7 @@ Goals: easy to review, readability over micro-performance, high cohesion, thin r
 ```
 src/
 ├─ app/          # routing only: page, layout, loading, error, not-found, route handlers
-├─ features/     # one folder per bounded context / screen area (pantry, foodpedia, household…)
+├─ features/     # one folder per bounded context / screen area (foodventory, foodpedia, household…)
 │  └─ <feature>/
 │     ├─ index.ts      # public API of the feature, the only import path for app/
 │     ├─ queries/      # *.query.ts — server-only reads

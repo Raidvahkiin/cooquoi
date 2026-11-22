@@ -35,11 +35,11 @@ dotnet/
 │  ├─ Cooquoi.Api/               # host: composition, OpenAPI, module registration
 │  ├─ Cooquoi.Context.Household/         # one project per bounded context
 │  ├─ Cooquoi.Context.Foodpedia/
-│  └─ Cooquoi.Context.Pantry/
+│  └─ Cooquoi.Context.Foodventory/
 └─ tests/
    ├─ Raidvahkiin.Ddd.Tests/
    ├─ Cooquoi.Context.Foodpedia.Tests/   # one test project per context
-   ├─ Cooquoi.Context.Pantry.Tests/
+   ├─ Cooquoi.Context.Foodventory.Tests/
    ├─ Cooquoi.Api.Tests/         # contract drift, auth, error catalogue, host-level behaviour
    └─ Cooquoi.Architecture.Tests/
 ```
@@ -68,7 +68,7 @@ Reusable DDD patterns that could be published to NuGet carry a **product-neutral
 | **Published API** | `PublicApi/` | Types and operations other contexts may use, and published integration events. |
 
 ```
-Cooquoi.Context.Pantry/
+Cooquoi.Context.Foodventory/
 ├─ Domain/
 │  └─ StockItems/              # StockItemAggregate.cs, StockItemId.cs, value objects, StockItemEvents.cs, StockItemError.cs
 ├─ Features/
@@ -79,17 +79,17 @@ Cooquoi.Context.Pantry/
 │  └─ OnBaseUnitChanged/                # event-triggered use case
 │     └─ RenormalizeStockItemsHandler.cs
 ├─ Persistence/
-│  ├─ PantryDbContext.cs
+│  ├─ FoodventoryDbContext.cs
 │  ├─ Configurations/
 │  ├─ Lookups/                          # reusable lookup extensions (ForHousehold, ByCode…)
 │  ├─ Projections/                      # read-model handlers (no business logic)
 │  └─ Migrations/
 ├─ Integration/
-│  ├─ IFoodReference.cs                 # port defined by Pantry, in Pantry's words
+│  ├─ IFoodReference.cs                 # port defined by Foodventory, in Foodventory's words
 │  ├─ FoodpediaFoodReference.cs         # adapter calling Foodpedia's PublicApi
 │  └─ Outgoing/                         # domain events → integration events
 ├─ PublicApi/
-└─ PantryModule.cs                      # AddPantry(), MapPantry(), event routing
+└─ FoodventoryModule.cs                 # AddFoodventory(), MapFoodventory(), event routing
 ```
 
 If a use case needs two entry points (HTTP and a message), its core becomes a Wolverine message handler and the HTTP endpoint invokes it — the only allowed indirection.
@@ -105,7 +105,7 @@ If a use case needs two entry points (HTTP and a message), its core becomes a Wo
   | Follow-up work after a use case | Raise an event or cascade a message (own use case, own transaction) |
 
 - **Cross-context access only through ports and adapters** (consumer-driven anti-corruption layer):
-  - The consumer defines a **port** in its own vocabulary in `Integration/` (Pantry's `IFoodReference`: normalize a quantity, propose shelf life).
+  - The consumer defines a **port** in its own vocabulary in `Integration/` (Foodventory's `IFoodReference`: normalize a quantity, propose shelf life).
   - An **adapter** in `Integration/` implements it by calling the provider's `PublicApi` and translating to the consumer's types.
   - **Only `Integration/` may reference another context's `PublicApi`**; nothing references another context's `Domain/`, `Features/` or `Persistence/`.
   - **Writes to another context are never synchronous**: they go through events.

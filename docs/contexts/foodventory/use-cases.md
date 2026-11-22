@@ -1,8 +1,8 @@
-# Pantry context — Use cases
+# Foodventory — Use cases
 
 - **Status**: Reviewed — decisions of 2026-11-22 applied
 - Domain model: [domain-model.md](domain-model.md). Contract style: uniform reads, named actions for writes ([ADR 0009](../../architecture/adr/0009-api-contract-typespec.md)). API only; no UI in this phase.
-- Every operation is scoped to the caller's household (P2). **MVP** unless marked *later*.
+- Every operation is scoped to the caller's household (FV2). **MVP** unless marked *later*.
 
 ## Actors
 
@@ -21,7 +21,7 @@
 |---|---|---|---|---|
 | Q1 | **List pantries** | — | `PantrySummary[]` (id, name, storage, item count) plus the count of items to put away | Small; not paged. |
 | Q2 | **Stock items** | `pantryId` (a Pantry aggregate id, or `none` for "to put away"), `needsExpiry?`, `tags?`, `sort` (`expiry` \| `name` \| `added`), `page` | `Page<StockItemView>` | J2 "what I have"; `pantryId=none` is "what's still to put away"; `needsExpiry=true` lists items with missing expiry (`printed` / `estimated` only). |
-| Q3 | **Stock by ingredient** | `q?`, `tags?`, `pantryId?`, `page` | `Page<IngredientStockView>` (ingredient, base unit, **total**, unnormalized items, earliest expiry, items with missing expiry, low/over state) | Total summed in the base unit, put away or not (P6, P12). |
+| Q3 | **Stock by ingredient** | `q?`, `tags?`, `pantryId?`, `page` | `Page<IngredientStockView>` (ingredient, base unit, **total**, unnormalized items, earliest expiry, items with missing expiry, low/over state) | Total summed in the base unit, put away or not (FV6, FV12). |
 | Q4 | **Get ingredient stock** | `ingredientId` | Items per pantry (and with none), total, threshold, household conversions, effective expiry kind + override, remembered shelf lives | Detail and editing. |
 | Q5 | **Expiring soon** | `withinDays` (default 3), `includeExpired` (default true), `page` | `Page<StockItemView>` ordered by expiry | J2 "what expires soon"; never `long-life`; missing expiry excluded. |
 | Q6 | **Low stock** | `includeOverstock?`, `page` | `Page<IngredientStockView>` in low (or over) state | Only ingredients with a threshold. |
@@ -30,10 +30,10 @@
 
 | # | Use case | Input | Rules | Event |
 |---|---|---|---|---|
-| C1 | **Create pantry** | `name`, `storage?` | P1 | `PantryCreated` |
-| C2 | **Rename** (`:rename`) | `name` | P1 | `PantryRenamed` |
+| C1 | **Create pantry** | `name`, `storage?` | FV1 | `PantryCreated` |
+| C2 | **Rename** (`:rename`) | `name` | FV1 | `PantryRenamed` |
 | C3 | **Set storage** (`:set-storage`) | `storage` or none | — | `PantryStorageChanged` |
-| C4 | **Delete pantry** | — | P13 | `PantryDeleted` |
+| C4 | **Delete pantry** | — | FV13 | `PantryDeleted` |
 
 Default Pantry aggregates (Fridge, Freezer, Dry goods) are created from `HouseholdCreated`, not by a command.
 
@@ -41,19 +41,19 @@ Default Pantry aggregates (Fridge, Freezer, Dry goods) are created from `Househo
 
 | # | Use case | Input | Rules | Event |
 |---|---|---|---|---|
-| S1 | **Restock** (`/stock:restock`) | `lines[]`: `ingredientId`, `amount`, `unit`, `expiry?` — **no pantry**: items are created to put away | P2, P3, P4, P6, P8; all lines in one transaction | `ItemsRestocked`; may raise `StockOverstocked` / end `StockRunningLow` |
-| S2 | **Put away / move item** (`/stock-items/{id}:move`) | `pantryId` (required), `amount?` + `unit?` (absent: whole item), `expiry?` | P2, P8, P9, P15 | `StockItemMoved`; `ShelfLifeRemembered` when learned |
-| S3 | **Consume ingredient** (`/stock/{ingredientId}:consume`) | `amount`, `unit`, `pantryId?` | P5, P7; returns consumed items and shortfall | `StockItemConsumed` per item touched; may raise `StockRunningLow` |
-| S4 | **Consume item** (`/stock-items/{id}:consume`) | `amount`, `unit?` (default: entered unit) | P5, P6, P7 | `StockItemConsumed` |
+| S1 | **Restock** (`/stock:restock`) | `lines[]`: `ingredientId`, `amount`, `unit`, `expiry?` — **no pantry**: items are created to put away | FV2, FV3, FV4, FV6, FV8; all lines in one transaction | `ItemsRestocked`; may raise `StockOverstocked` / end `StockRunningLow` |
+| S2 | **Put away / move item** (`/stock-items/{id}:move`) | `pantryId` (required), `amount?` + `unit?` (absent: whole item), `expiry?` | FV2, FV8, FV9, FV15 | `StockItemMoved`; `ShelfLifeRemembered` when learned |
+| S3 | **Consume ingredient** (`/stock/{ingredientId}:consume`) | `amount`, `unit`, `pantryId?` | FV5, FV7; returns consumed items and shortfall | `StockItemConsumed` per item touched; may raise `StockRunningLow` |
+| S4 | **Consume item** (`/stock-items/{id}:consume`) | `amount`, `unit?` (default: entered unit) | FV5, FV6, FV7 | `StockItemConsumed` |
 | S5 | **Discard item** (`:discard`) | `reason` (`expired` \| `spoiled` \| `other`) | — | `StockItemDiscarded` |
-| S6 | **Adjust item** (`:adjust`) | `remaining` (entered unit) | P5; correction after a stock check, may exceed the entered amount | `StockItemAdjusted` |
-| S7 | **Set expiry** (`:set-expiry`) | `date` or none | P8; source becomes `manual`; any time, any kind | `StockItemExpiryChanged` |
-| S8 | **Set threshold** (`/stock/{ingredientId}:set-threshold`) | `low?`, `over?` (base unit) | P10, P12 | `StockRunningLow` / `StockOverstocked` on state change |
+| S6 | **Adjust item** (`:adjust`) | `remaining` (entered unit) | FV5; correction after a stock check, may exceed the entered amount | `StockItemAdjusted` |
+| S7 | **Set expiry** (`:set-expiry`) | `date` or none | FV8; source becomes `manual`; any time, any kind | `StockItemExpiryChanged` |
+| S8 | **Set threshold** (`/stock/{ingredientId}:set-threshold`) | `low?`, `over?` (base unit) | FV10, FV12 | `StockRunningLow` / `StockOverstocked` on state change |
 | S9 | **Override expiry kind** (`/stock/{ingredientId}:override-expiry-kind`) | `kind` or none (back to the Foodpedia kind) | — | `ExpiryKindOverridden` |
-| S10 | **Define household conversion** (`:define-conversion`) | `unit`, `unitAmount`, `baseAmount` | P11; re-normalizes items (P6) | `HouseholdConversionDefined` |
+| S10 | **Define household conversion** (`:define-conversion`) | `unit`, `unitAmount`, `baseAmount` | FV11; re-normalizes items (FV6) | `HouseholdConversionDefined` |
 | S11 | **Remove household conversion** (`:remove-conversion`) | `unit` | Re-normalizes (Foodpedia default or unnormalized) | `HouseholdConversionRemoved` |
 
-The restock response returns each created item with its normalized quantity, proposed expiry and `expiryMissing`, and a **conversion proposal** for unnormalized lines. The put-away response returns the moved (or split) item with its recomputed expiry and `expiryUnusual` when a typed date is far outside the household's usual range. A `pantry.unit-not-convertible` problem (S2–S4) carries the ingredient and unit so the client can define a household conversion (S10) and retry. Writes on an existing aggregate use `If-Match` (ETag of the IngredientStock or Pantry aggregate); restock, move and consume accept an `Idempotency-Key`.
+The restock response returns each created item with its normalized quantity, proposed expiry and `expiryMissing`, and a **conversion proposal** for unnormalized lines. The put-away response returns the moved (or split) item with its recomputed expiry and `expiryUnusual` when a typed date is far outside the household's usual range. A `foodventory.unit-not-convertible` problem (S2–S4) carries the ingredient and unit so the client can define a household conversion (S10) and retry. Writes on an existing aggregate use `If-Match` (ETag of the IngredientStock or Pantry aggregate); restock, move and consume accept an `Idempotency-Key`.
 
 ## Published API for Planning & Suggestion
 
@@ -80,11 +80,11 @@ Planning computes coverage and "uses expiring" from this in code; only its one-l
 | Event | From | Effect | Phase |
 |---|---|---|---|
 | `HouseholdCreated` | Identity & Household | Create the default Pantry aggregates (Fridge, Freezer, Dry goods) | MVP |
-| `BaseUnitChanged`, `ConversionDefined`, `ConversionRemoved` | Foodpedia context | Re-normalize affected items (P6) | MVP |
+| `BaseUnitChanged`, `ConversionDefined`, `ConversionRemoved` | Foodpedia context | Re-normalize affected items (FV6) | MVP |
 | `IngredientExpiryKindChanged` | Foodpedia context | Update the copied kind; flags and warnings follow, dates untouched | MVP |
 | `IngredientRetired` / `IngredientRestored` | Foodpedia context | Flag / unflag items | MVP |
-| `MealCooked` | Planning | Consume each recipe ingredient as S3 (clamped, shortfall reported), once per meal (P14) | *later* |
-| `ReceiptScanned` | Receipt Scanning | Restock as S1 with `source = receipt`, once per receipt line (P14); unknown products arrive unnormalized | *later* |
+| `MealCooked` | Planning | Consume each recipe ingredient as S3 (clamped, shortfall reported), once per meal (FV14) | *later* |
+| `ReceiptScanned` | Receipt Scanning | Restock as S1 with `source = receipt`, once per receipt line (FV14); unknown products arrive unnormalized | *later* |
 
 ### Events published
 

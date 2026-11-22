@@ -12,17 +12,17 @@ Cooquoi has several bounded contexts ([context map](../../business/context-map.m
 ### 1. One deployable, many modules
 
 - A single ASP.NET host, **`Cooquoi.Api`**, hosts every bounded context.
-- **One .NET project per bounded context** (`Cooquoi.Context.Foodpedia`, `Cooquoi.Context.Pantry`, `Cooquoi.Context.Household`…), each registering its own endpoints, handlers and `DbContext` through a module entry point.
+- **One .NET project per bounded context** (`Cooquoi.Context.Foodpedia`, `Cooquoi.Context.Foodventory`, `Cooquoi.Context.Household`…), each registering its own endpoints, handlers and `DbContext` through a module entry point.
 - Contexts communicate only through **published queries** (in-process calls to the owning context's public API) or **events** via Wolverine ([ADR 0003](0003-wolverine.md)). Never through another context's internals or tables.
 - Boundaries are enforced by **architecture tests** (e.g. NetArchTest or ArchUnitNET).
 
 ### 2. One database, one schema per context
 
-- **One Postgres database**, with **one schema per context**: `household`, `foodpedia`, `pantry`, … plus `wolverine` for message storage.
+- **One Postgres database**, with **one schema per context**: `household`, `foodpedia`, `foodventory`, … plus `wolverine` for message storage.
 - **One `DbContext` per context**, with `HasDefaultSchema("<context>")` and its own migrations history table. A `DbContext` never maps another context's tables.
 - **A single connection string** (one database) serves every context; isolation comes from schemas, not separate connections.
 - *Alternative rejected*: one Postgres **database** per context on the same server. Strongest isolation, but one connection string per context and Wolverine message storage needed in each database to keep the outbox transactional; more setup and backups for little gain at this scale.
-- **No foreign keys across schemas.** A context stores other contexts' ids only (e.g. `IngredientId` in Pantry). Cross-context consistency comes from events (e.g. Foodpedia publishes `IngredientRetired`, Pantry reacts).
+- **No foreign keys across schemas.** A context stores other contexts' ids only (e.g. `IngredientId` in Foodventory). Cross-context consistency comes from events (e.g. Foodpedia publishes `IngredientRetired`, Foodventory reacts).
 
 ### 3. Data access
 

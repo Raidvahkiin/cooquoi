@@ -82,7 +82,7 @@ type ActionResult<T = void> =
 
 ```tsx
 // app/(app)/pantries/[pantryId]/page.tsx
-import { getPantry, PantryScreen } from '@/features/pantry';
+import { getPantry, PantryScreen } from '@/features/foodventory';
 
 export default async function PantryPage({ params }: PageProps<'/pantries/[pantryId]'>) {
   const { pantryId } = await params;
@@ -92,7 +92,7 @@ export default async function PantryPage({ params }: PageProps<'/pantries/[pantr
 ```
 
 ```ts
-// features/pantry/actions/consume-stock-item.action.ts
+// features/foodventory/actions/consume-stock-item.action.ts
 'use server';
 import { revalidatePath } from 'next/cache';
 import { defineAction } from '@/shared/actions';
@@ -101,7 +101,7 @@ import { consumeStockItemSchema } from '../schemas/consume-stock-item.schema';
 
 export const consumeStockItem = defineAction(consumeStockItemSchema, async (input) => {
   const api = await createApiClient();
-  await api.pantry.consumeStockItem({ path: input.path, body: input.quantity });
+  await api.foodventory.consumeStockItem({ path: input.path, body: input.quantity });
   revalidatePath(`/pantries/${input.path.pantryId}`);
 });
 ```

@@ -25,5 +25,5 @@ Recipe suggestions are the core domain. They depend on stock, recipes, prices at
 ## Consequences
 
 - Token usage stays low and predictable; results are explainable and largely reproducible.
-- Upstream contexts (Pantry, Market, Cookbook) must expose the data needed for pre-filtering (coverage, normalized quantities, prices per base unit).
+- Upstream contexts (Foodventory, Market, Cookbook) must expose the data needed for pre-filtering (coverage, normalized quantities, prices per base unit).
 - The LLM sits behind an anti-corruption layer; the provider can change without affecting the domain.

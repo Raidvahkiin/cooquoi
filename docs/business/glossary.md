@@ -29,11 +29,11 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | **Variant** | A distinct ingredient close to another (smoked salmon / salmon, brown rice / white rice), linked by a `family:` tag. |
 | **Household-private ingredient** *(after MVP)* | An ingredient created by a household when it is missing from Foodpedia; visible only to that household until a curator promotes it. |
 
-## Pantry
+## Foodventory
 
 | Term | Definition |
 |---|---|
-| **Pantry** | A named storage owned by a household ("Fridge", "Freezer", "Dry goods", "Mum's cellar"). A household can have several. In code, the Pantry aggregate of the Pantry context. |
+| **Pantry** | A named storage owned by a household ("Fridge", "Freezer", "Dry goods", "Mum's cellar"). A household can have several. In code, the Pantry aggregate of the Foodventory context. |
 | **To put away** | A stock item with no pantry yet, as every restock creates it. It counts as stock. Not an entity: only how a client shows these items. |
 | **Put away** | Give a stock item with no pantry a pantry (whole, or split by a quantity). There is no moving back to no pantry. |
 | **Split** | Moving part of a stock item: the moved part becomes a new stock item with the same entered unit, source and restock date. |

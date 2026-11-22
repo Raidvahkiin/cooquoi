@@ -5,7 +5,7 @@
 
 ## Context
 
-Use cases are implemented as commands and queries. Bounded contexts must react to each other (`MealCooked` consumes stock, `ReceiptScanned` feeds Pantry and Market) and some features are time-based (expiry reminders). MediatR became commercial in 2025.
+Use cases are implemented as commands and queries. Bounded contexts must react to each other (`MealCooked` consumes stock, `ReceiptScanned` feeds Foodventory and Market) and some features are time-based (expiry reminders). MediatR became commercial in 2025.
 
 Options considered:
 
@@ -18,7 +18,7 @@ Options considered:
 
 ## Decision
 
-Use **Wolverine**, pending a spike: Foodpedia or Pantry context with EF Core + Postgres, one command and one domain event through the outbox, running under Aspire.
+Use **Wolverine**, pending a spike: Foodpedia or Foodventory context with EF Core + Postgres, one command and one domain event through the outbox, running under Aspire.
 
 ## Consequences
 

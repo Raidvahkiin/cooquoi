@@ -9,7 +9,7 @@
 1. **Authentication** (first — everything depends on it): sign in, user profile and personal household created on first sign-in, current user in every request ([ADR 0015](adr/0015-user-profile.md)).
 2. **Foodpedia** (richer domain): search ingredients (cross-language, accent-insensitive), get one, create one (curator only), define a conversion (action with `If-Match`), seed ≈10 ingredients in `en`, `fr`, `vi` (including names with `đ`).
 
-Out of scope: Pantry, the Wikidata import, Flutter, deployment.
+Out of scope: Foodventory, the Wikidata import, Flutter, deployment.
 
 ## Phases
 

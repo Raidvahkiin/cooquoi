@@ -6,7 +6,7 @@
 |---|---|---|---|
 | **Planning & Suggestion** | Meal plans, budget tracking, AI suggestions, shopping lists | **Core** | After MVP |
 | **Foodpedia** | Ingredients, units, conversions, shelf life — shared reference data | Supporting | MVP |
-| **Pantry** | Named pantries, stock items, quantities, expiry, thresholds | Supporting | MVP |
+| **Foodventory** | Named pantries, stock items, quantities, expiry, thresholds | Supporting | MVP |
 | **Market** | Vendors, products, price observations, preferred vendors | Supporting | After MVP (legacy version exists) |
 | **Cookbook** | Recipes, ingredients with quantities, servings, sharing | Supporting | After MVP |
 | **Receipt Scanning** | Receipt photo → structured lines → stock and prices | Supporting (AI is an external generic service) | Later |
@@ -23,7 +23,7 @@ flowchart TB
   IDP["Keycloak<br/>(external, generic)"]
   ID["Identity & Household"]
   FP["Foodpedia"]
-  PA["Pantry"]
+  PA["Foodventory"]
   MK["Market"]
   CB["Cookbook"]
   PS["Planning & Suggestion<br/>(core)"]
@@ -61,11 +61,11 @@ flowchart TB
 |---|---|---|
 | Keycloak → Identity & Household | Anti-corruption layer | Only the subject id and roles cross the boundary; no Keycloak types in the domain. |
 | Identity & Household → all | Shared identifiers | Contexts reference `HouseholdId` / `UserId` by id only. `UserId` is Cooquoi's own id, independent of the identity provider. |
-| Foodpedia → Pantry, Market, Cookbook, Planning | Open host service | Foodpedia publishes ingredients, units and conversions; downstream contexts reference ingredients by id and never modify them. |
-| Pantry, Market, Cookbook → Planning & Suggestion | Customer / supplier | Planning reads stock, prices and recipes through queries or published events. |
-| Receipt Scanning → Pantry | Published event | `ReceiptScanned`; the Pantry context restocks its lines as items to put away and publishes its own `ItemsRestocked`. |
+| Foodpedia → Foodventory, Market, Cookbook, Planning | Open host service | Foodpedia publishes ingredients, units and conversions; downstream contexts reference ingredients by id and never modify them. |
+| Foodventory, Market, Cookbook → Planning & Suggestion | Customer / supplier | Planning reads stock, prices and recipes through queries or published events. |
+| Receipt Scanning → Foodventory | Published event | `ReceiptScanned`; the Foodventory context restocks its lines as items to put away and publishes its own `ItemsRestocked`. |
 | Receipt Scanning → Market | Published event | `PricePaidRecorded` for the prices on the receipt. |
-| Planning & Suggestion → Pantry | Published event | `MealCooked` consumes stock. |
+| Planning & Suggestion → Foodventory | Published event | `MealCooked` consumes stock. |
 | Planning & Suggestion ↔ LLM | Anti-corruption layer | Domain sends compact summaries and receives ranked ids + explanations (see [ADR 0005](../architecture/adr/0005-ai-suggestions-token-strategy.md)). |
 
 ## Rules across contexts
