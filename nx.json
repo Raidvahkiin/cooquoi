@@ -53,6 +53,10 @@
     }
   ],
   "targetDefaults": {
+    "typecheck": {
+      "cache": true,
+      "inputs": ["default", "^default"]
+    },
     "test": {
       "cache": true,
       "executor": "nx:run-commands",
