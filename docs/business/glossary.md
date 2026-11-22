@@ -44,6 +44,9 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | **Low stock / Overstock** | The state of an ingredient whose total normalized quantity is below the low threshold / above the over threshold. |
 | **Consume** | Remove a quantity of an ingredient from stock (cooking, eating). |
 | **Discard** | Remove a stock item that was not consumed (expired, spoiled). |
+| **Ingredient stock** | Everything a household holds of one ingredient across its pantries: its stock items, threshold and household conversions. |
+| **Remaining quantity** | What is left of a stock item, in its entered unit. Consumption and adjustment change only this. |
+| **Shortfall** | The part of a consumption that exceeded what was held. Reported, never stored as negative stock. |
 
 ## Market
 
