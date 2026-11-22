@@ -47,6 +47,7 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0018](architecture/adr/0018-https-everywhere-in-dev.md) | HTTPS everywhere in development | Accepted |
 | [0019](architecture/adr/0019-webapp-sessions-in-redis.md) | Server-side webapp sessions in Redis | Accepted |
 | [0020](architecture/adr/0020-build-tools-nx-and-dotnet.md) | Build tools: Nx for TypeScript and TypeSpec, the .NET toolchain for C# | Accepted |
+| [0021](architecture/adr/0021-enum-values-camel-case.md) | Enum values are camelCase everywhere | Accepted |
 
 ## Work
 
