@@ -66,7 +66,10 @@ export default class CompactReporter {
       for (const err of mod.errors()) {
         // The browser runner wraps the real failure: "Failed to import test file" + `cause`.
         for (let e = err; e != null; e = e.cause) {
-          console.error((e === err ? '' : 'Caused by: ') + (e.stack ?? e.message ?? String(e)));
+          console.error(
+            (e === err ? '' : 'Caused by: ') +
+              (e.stack ?? e.message ?? String(e)),
+          );
         }
       }
     }
