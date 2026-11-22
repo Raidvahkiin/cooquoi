@@ -25,7 +25,7 @@ Receipt or product scan (`ReceiptScanned`), `MealCooked` consumption (no stub), 
 
 | Id | Title | Status | Depends on |
 |---|---|---|---|
-| [E02.S01](S01-foodpedia-expiry-kind/story.md) | Foodpedia expiry kind and published API | todo | — |
+| [E02.S01](S01-foodpedia-expiry-kind/story.md) | Foodpedia expiry kind and published API | done | — |
 | [E02.S02](S02-foodventory-skeleton/story.md) | Foodventory context skeleton, current household, default Pantry aggregates | todo | E02.S01 (T04) |
 | [E02.S03](S03-pantry-commands/story.md) | Pantry aggregate commands and list | todo | E02.S02 |
 | [E02.S04](S04-restock-put-away/story.md) | IngredientStock aggregate: restock and put away | todo | E02.S01, E02.S03 |

@@ -52,7 +52,7 @@ Endpoints (T03); architecture-test rules for consumers (E02.S02.T02); Foodventor
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodpedia): published API and integration events (E02.S01.T04)`), stop.
 
-Status: blocked (DefineConversionEndpointTests.Defines_the_conversion…publishes_ConversionDefined fails: with a handler on ConversionDefined, FindEnvelopesWithMessageType sees 5 tracked records; line 52 needs `defined.Messages.Executed.MessagesOf<ConversionDefined>().Where(…)`, in Features tests I may not edit)
+Status: done (the blocking DefineConversion assertion was fixed in T03, 9071c4c)
 
 Report:
 - `PublicApi/IFoodpediaCatalog` (scoped, internal `FoodpediaCatalog`, AsNoTracking projections) with P1–P3 returning records of primitives + `Unit`; codes as contract kebab strings (`ContractEnumNames`), chosen over PublicApi enums (no name clash, outbox-safe JSON).
