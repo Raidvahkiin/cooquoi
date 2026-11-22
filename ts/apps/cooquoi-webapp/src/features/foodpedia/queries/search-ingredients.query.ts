@@ -16,7 +16,7 @@ export type IngredientSearchResult =
   | IngredientSearchViewModel
   | { error: ApiError };
 
-/** Q1 in the user's locale. An API problem comes back as `{ error }` (a 401 is auth's: it throws). */
+/** Q1 in the user's locale. An API problem comes back as `{ error }` (a 401 as `common.unauthorized`, a network failure as `common.unexpected`). */
 export const searchIngredientsPage = cache(
   async (params: IngredientSearchParams): Promise<IngredientSearchResult> => {
     const client = await createApiClient();
@@ -33,16 +33,23 @@ export const searchIngredientsPage = cache(
         },
       });
 
-    let result = await search(params.sort);
-    // The API's default sort replaces one it rejects.
-    if (
-      result.error &&
-      toApiError(result.error).code === 'common.invalid-sort'
-    ) {
-      result = await search(undefined);
+    try {
+      let result = await search(params.sort);
+      // The API's default sort replaces one it rejects.
+      if (
+        result.error &&
+        toApiError(result.error).code === 'common.invalid-sort'
+      ) {
+        result = await search(undefined);
+      }
+      // `proxy.ts` refreshes tokens beforehand, so a 401 here is an expired session.
+      if (result.response?.status === 401) {
+        return { error: { code: 'common.unauthorized' } };
+      }
+      if (result.error) return { error: toApiError(result.error) };
+      return toIngredientSearchViewModel(params, result.data);
+    } catch (error) {
+      return { error: toApiError(error) };
     }
-    if (result.response?.status === 401) throw new Error('Unauthorized');
-    if (result.error) return { error: toApiError(result.error) };
-    return toIngredientSearchViewModel(params, result.data);
   },
 );

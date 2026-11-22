@@ -106,4 +106,29 @@ describe('searchIngredientsPage', () => {
     ).resolves.toMatchObject({ rows: [], totalCount: 0 });
     expect(calls).toBe(2);
   });
+
+  it('returns a network failure as common.unexpected', async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/v1/ingredients`, () => HttpResponse.error()),
+    );
+
+    await expect(searchIngredientsPage({ q: '', page: 1 })).resolves.toEqual({
+      error: { code: 'common.unexpected' },
+    });
+  });
+
+  it('returns a 401 as common.unauthorized', async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/v1/ingredients`, () =>
+        HttpResponse.json(
+          { type: 'about:blank', title: 'Unauthorized', status: 401 },
+          { status: 401 },
+        ),
+      ),
+    );
+
+    await expect(searchIngredientsPage({ q: '', page: 1 })).resolves.toEqual({
+      error: { code: 'common.unauthorized' },
+    });
+  });
 });

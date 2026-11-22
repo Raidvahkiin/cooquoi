@@ -1,12 +1,13 @@
 import { NextIntlClientProvider } from 'next-intl';
-import { getLocale } from 'next-intl/server';
+import { getLocale, getTranslations } from 'next-intl/server';
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { bodyFont, UiProvider } from '@/shared/ui';
 
-export const metadata = {
-  title: 'Cooquoi',
-  description: 'What to cook and what to buy, from what is in your fridge.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('common.metadata');
+  return { title: t('title'), description: t('description') };
+}
 
 export default async function RootLayout({
   children,

@@ -5,6 +5,11 @@ import {
   UNEXPECTED_ERROR_CODE,
 } from '@/shared/api/to-api-error';
 
+type TranslateByCode = {
+  (code: string, params?: ApiError['params']): string;
+  has: (code: string) => boolean;
+};
+
 type ErrorMessageProps = {
   error: ApiError;
 };
@@ -13,12 +18,14 @@ type ErrorMessageProps = {
 export function ErrorMessage({ error }: ErrorMessageProps) {
   const t = useTranslations('errors');
   const tCommon = useTranslations('common');
-  const code = t.has(error.code as never) ? error.code : UNEXPECTED_ERROR_CODE;
+  // Codes arrive at run time, so next-intl's typed keys cannot check them: one cast, here.
+  const translate = t as unknown as TranslateByCode;
+  const code = translate.has(error.code) ? error.code : UNEXPECTED_ERROR_CODE;
   return (
     <Banner
       status="error"
       title={tCommon('errorTitle')}
-      description={t(code as never, error.params as never)}
+      description={translate(code, error.params)}
       collapsible={false}
     />
   );

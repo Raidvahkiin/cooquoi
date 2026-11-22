@@ -7,7 +7,11 @@
       "label": "Main navigation",
       "foodpedia": "Foodpedia"
     },
-    "errorTitle": "Error"
+    "errorTitle": "Error",
+    "metadata": {
+      "title": "Cooquoi",
+      "description": "What to cook and what to buy, from what is in your fridge."
+    }
   },
   "household": {
     "account": {
