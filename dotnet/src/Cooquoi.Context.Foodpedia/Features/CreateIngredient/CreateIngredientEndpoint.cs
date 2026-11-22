@@ -3,6 +3,7 @@ using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.Context.Foodpedia.Persistence;
 using Cooquoi.Context.Foodpedia.Persistence.Lookups;
 using Cooquoi.Platform.Authorization;
+using Cooquoi.Platform.OpenApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -12,6 +13,9 @@ namespace Cooquoi.Context.Foodpedia.Features.CreateIngredient;
 
 public static class CreateIngredientEndpoint
 {
+    /// <summary>OpenAPI responses of the contract template.</summary>
+    public static void Configure(HttpChain chain) => OperationContract.Create(chain);
+
     /// <summary>C1: a curator adds an ingredient; search finds it once the projection ran.</summary>
     [WolverinePost("/v1/ingredients", OperationId = "createIngredient")]
     [Authorize(Policy = CooquoiPolicies.Curator)]

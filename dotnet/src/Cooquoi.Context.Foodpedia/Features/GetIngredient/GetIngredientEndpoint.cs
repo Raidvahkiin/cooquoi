@@ -2,6 +2,7 @@ using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.Context.Foodpedia.Persistence;
 using Cooquoi.Platform.Concurrency;
+using Cooquoi.Platform.OpenApi;
 using Cooquoi.SharedKernel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +14,9 @@ namespace Cooquoi.Context.Foodpedia.Features.GetIngredient;
 
 public static class GetIngredientEndpoint
 {
+    /// <summary>OpenAPI responses of the contract template.</summary>
+    public static void Configure(HttpChain chain) => OperationContract.Read(chain);
+
     /// <summary>Q2: one ingredient, name in the <c>Accept-Language</c> locale (English fallback); <c>ETag</c> = version.</summary>
     [WolverineGet("/v1/ingredients/{ingredientId}", OperationId = "getIngredient")]
     [Authorize]

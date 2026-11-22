@@ -1,6 +1,7 @@
 using Cooquoi.Context.Household.Persistence;
 using Cooquoi.Context.Household.Persistence.Lookups;
 using Cooquoi.Platform.Authentication;
+using Cooquoi.Platform.OpenApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,9 @@ namespace Cooquoi.Context.Household.Features.GetMe;
 
 public static class GetMeEndpoint
 {
+    /// <summary>OpenAPI responses of the contract template.</summary>
+    public static void Configure(HttpChain chain) => OperationContract.OwnResource(chain);
+
     /// <summary>The signed-in user's profile and households, provisioned on first sign-in.</summary>
     [WolverineGet("/v1/me", OperationId = "getMe")]
     [Authorize]

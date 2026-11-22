@@ -2,6 +2,7 @@ using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Persistence;
 using Cooquoi.Platform.Authorization;
 using Cooquoi.Platform.Concurrency;
+using Cooquoi.Platform.OpenApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Raidvahkiin.Ddd;
@@ -11,6 +12,9 @@ namespace Cooquoi.Context.Foodpedia.Features.DefineConversion;
 
 public static class DefineConversionEndpoint
 {
+    /// <summary>OpenAPI responses of the contract template.</summary>
+    public static void Configure(HttpChain chain) => OperationContract.ReplaceAction(chain);
+
     /// <summary>Wolverine runs this before <see cref="Post"/>: 404 when the ingredient does not exist.</summary>
     public static async Task<IngredientAggregate> LoadAsync(Guid ingredientId, FoodpediaDbContext db, CancellationToken cancellationToken) =>
         await db.Ingredients.FindAsync([new IngredientId(ingredientId)], cancellationToken)
