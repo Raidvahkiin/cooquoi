@@ -6,7 +6,7 @@ One CI pipeline across every toolchain (.NET, TypeSpec, TypeScript) that fails o
 
 ## Acceptance
 
-- [ ] `aspire run` serves the dashboard, API, webapp and Keycloak on https with the .NET dev certificate; sign-in at `https://localhost:3000` works with no certificate warning and no HSTS upgrade; the session cookie is `Secure` in dev — *curl round trip verified (https, `Secure` cookie, no HSTS); browser shows a cert warning until `libnss3-tools` is installed and `scripts/dev-certs.sh` rerun*
+- [x] `aspire run` serves the dashboard, API, webapp and Keycloak on https with the .NET dev certificate; sign-in at `https://localhost:3000` works with no certificate warning and no HSTS upgrade; the session cookie is `Secure` in dev — *curl round trip verified (https, `Secure` cookie, no HSTS); NSS and OpenSSL trust done after installing `libnss3-tools`*
 - [x] A new Linux machine is set up with one documented script (`dotnet dev-certs https --trust`, PEM export, `NODE_EXTRA_CA_CERTS`)
 - [x] Dev users sign in with a short documented password (Aspire parameter, AppHost user secrets); dev users still exist only in Development
 - [x] `next build`, `pnpm run nx:format` and `pnpm biome check .` leave the working tree clean; no stale `.env.development.local`
@@ -41,4 +41,4 @@ T01, T03 and T04 touch disjoint files and can run at the same time. The story re
 
 All six tasks done and pushed (5e9fafa, f96143a, bd4a82d, 8ab686d, 4e327f5, 02f6661), plus review fixes. HTTPS everywhere in dev on the .NET dev certificate, fixed dev password `cooquoi-dev`, a clean working tree after build and format, `@cooquoi/dotnet` Nx targets with the contract chain, Biome size/complexity/boundary rules (all stable) and knip, and one CI pipeline; each of 10 rules fails its Nx target on a deliberate violation ([findings](findings.md)).
 `nx affected` spans TypeSpec → api-client → webapp; C# changes do not reach the contract, so `contract-drift` is its own job and must be a required check.
-Left: browser NSS trust (`sudo apt install libnss3-tools`), the first real GitHub CI run (`nx-set-shas`), branch protection for `verify` and `contract-drift`.
+Left: the first real GitHub CI run (`nx-set-shas`), branch protection for `verify` and `contract-drift`.
