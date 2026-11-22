@@ -6,8 +6,9 @@ The webapp's `cooquoi_session` cookie carries only a session id. The tokens and 
 
 ## Acceptance
 
-- [ ] Redis is an Aspire resource with `maxmemory` set, an eviction policy of `volatile-ttl`, no RDB/AOF and no data volume. The webapp references it; nothing else does.
+- [ ] Redis is an Aspire resource with `maxmemory` set, an eviction policy of `volatile-ttl`, no RDB/AOF and no data volume. The default user is off, and the webapp connects as its own ACL user limited to `session:*` (ADR 0019 §2). The webapp references it; nothing else does yet.
 - [ ] After sign-in the cookie is well under 200 bytes, and Redis holds `session:<id>` with a TTL equal to the refresh token lifetime.
+- [ ] The value in Redis is encrypted: `GET session:<id>` shows no token.
 - [ ] Token refresh extends the TTL. Sign-out deletes the key and the cookie. A new sign-in gets a new id.
 - [ ] Restarting Redis signs the user out cleanly: a redirect to login, not a 500.
 - [ ] Tests: unit tests on an in-memory store; one integration test of the Redis store against a real Redis (Testcontainers); route and proxy tests stay green.

@@ -2,7 +2,7 @@
 
 ## Goal
 
-`shared/auth` has a `SessionStore` with get, set (with TTL), extend and delete, keyed by session id. It has a Redis implementation and an in-memory one, and the Redis one is tested against a real Redis. No caller uses it yet.
+`shared/auth` has a `SessionStore` with get, set (with TTL), extend and delete, keyed by session id. It has a Redis implementation that encrypts values and an in-memory one, and the Redis one is tested against a real Redis. No caller uses it yet.
 
 ## Read only
 
@@ -19,7 +19,7 @@
 - Client: the `redis` package (node-redis 5) through the catalog. Use one lazily created client per process, connected on first use and cached like `getEnv()` (`env.ts:20-23`).
 - Shape:
   - `session-store.ts` holds the `SessionStore` type and `getSessionStore()`, which returns the Redis store.
-  - `redis-session-store.ts` stores a JSON value under `session:<id>` with `SET … EX`, and uses `EXPIRE` and `DEL`.
+  - `redis-session-store.ts` encrypts the JSON value with iron-session `sealData` and `SESSION_PASSWORD` (`unsealData` on read; a value that fails to unseal counts as missing). It stores it under `session:<id>` with `SET … EX`, and uses `EXPIRE` and `DEL`. It uses only the commands the ACL allows (T01: `get`, `set`, `expire`, `del`).
   - `memory-session-store.ts` holds a Map plus expiry and is used by tests.
   - Session ids come from `crypto.randomBytes(32).toString('base64url')`, in `session-id.ts` or inside the store file.
 - Tests:
@@ -42,7 +42,7 @@ opus (new building block)
 
 - [ ] T02.1 `REDIS_URL` in the env schema and the test env; `redis` and `@testcontainers/redis` in the catalog and the webapp `package.json`
 - [ ] T02.2 `SessionStore` type, session id generation, in-memory store + unit test
-- [ ] T02.3 Redis store + Testcontainers integration test (set/get, TTL set, extend, delete, missing key → `undefined`)
+- [ ] T02.3 Redis store + Testcontainers integration test: set/get, TTL set, extend, delete, missing key → `undefined`, the raw value is not readable JSON, and a user restricted to `~session:*` gets `NOPERM` on another key
 
 ## Done when
 
