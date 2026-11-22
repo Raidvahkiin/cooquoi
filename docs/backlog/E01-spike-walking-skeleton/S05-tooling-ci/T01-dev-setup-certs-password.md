@@ -37,9 +37,9 @@ sonnet
 
 ## Subtasks
 
-- [ ] T01.1 `scripts/dev-certs.sh`: trust, PEM export to the chosen path, Linux browser hint; gitignore the path if it is inside the repo
-- [ ] T01.2 `Identity.cs:20`: fixed `dev-user-password` parameter with a short default that the realm policy accepts; remove `AddGeneratedSecret` there (keep the helper if other callers use it)
-- [ ] T01.3 README "Run everything locally": the run-once `scripts/dev-certs.sh` step, the PEM path (used by T02), the dev users with their default password, and how to override it (`dotnet user-secrets set Parameters:dev-user-password … --project aspire/Cooquoi.AppHost`)
+- [x] T01.1 `scripts/dev-certs.sh`: trust, PEM export to the chosen path, Linux browser hint; gitignore the path if it is inside the repo
+- [x] T01.2 `Identity.cs:20`: fixed `dev-user-password` parameter with a short default that the realm policy accepts; remove `AddGeneratedSecret` there (keep the helper if other callers use it)
+- [x] T01.3 README "Run everything locally": the run-once `scripts/dev-certs.sh` step, the PEM path (used by T02), the dev users with their default password, and how to override it (`dotnet user-secrets set Parameters:dev-user-password … --project aspire/Cooquoi.AppHost`)
 
 ## Done when
 
@@ -49,6 +49,6 @@ sonnet
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`chore(dev): dev certificate script and fixed dev user password (E01.S05.T01)`), stop.
 
-Status: todo
+Status: done
 
-Report:
+Report: script (PEM at ~/.aspnet/dev-certs/https/aspnetcore-dev.pem, outside repo), AppHost parameter (default `cooquoi-dev`, realm has no passwordPolicy) and README done; bash -n and AppHost build pass. `dotnet dev-certs https --check --trust` exits 7 in this sandbox (Linux trust not effective, SSL_CERT_DIR hint printed); `aspire start` skipped (headless).

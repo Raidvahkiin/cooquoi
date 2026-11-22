@@ -17,7 +17,7 @@ internal static class Identity
 
         if (builder.Environment.IsDevelopment())
         {
-            var devUserPassword = builder.AddGeneratedSecret("dev-user-password");
+            var devUserPassword = builder.AddParameter("dev-user-password", "cooquoi-dev", secret: true);
             keycloak
                 .WithRealmImport(KeycloakFile(builder, "dev-users/cooquoi-users-0.json"))
                 .WithEnvironment("COOQUOI_DEV_USER_PASSWORD", devUserPassword);
