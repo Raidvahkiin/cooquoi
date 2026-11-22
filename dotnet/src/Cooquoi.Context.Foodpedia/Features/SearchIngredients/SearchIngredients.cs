@@ -2,6 +2,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Platform.OpenApi;
+using Cooquoi.Platform.Validation;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -25,10 +26,12 @@ public sealed record SearchIngredients(
 
 public sealed class SearchIngredientsValidator : AbstractValidator<SearchIngredients>
 {
+    private static readonly string[] Statuses = [.. Enum.GetNames<IngredientStatus>().Select(name => name.ToLowerInvariant())];
+
     public SearchIngredientsValidator()
     {
         RuleFor(query => query.Q).MaximumLength(100);
-        RuleFor(query => query.Status).Must(status => status is null or "active" or "retired").WithErrorCode("validation.one-of");
+        RuleFor(query => query.Status).Must(status => status is null || Statuses.Contains(status)).WithErrorCode(ValidationCodes.OneOf);
         RuleFor(query => query.Page).GreaterThanOrEqualTo(1);
         RuleFor(query => query.PageSize).InclusiveBetween(1, SearchIngredients.MaxPageSize);
     }

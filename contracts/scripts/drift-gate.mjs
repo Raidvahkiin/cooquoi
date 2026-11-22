@@ -11,7 +11,7 @@ const accepted = {
   openAPI:
     'Microsoft.OpenApi 2.x always writes 3.1.1; the TypeSpec emitter only offers 3.1.0. Same spec, patch revision.',
   'components.schemas':
-    'Schema names differ (TypeSpec namespaces vs C# DTO names). Endpoints compare resolved schemas, so any structural change still shows under paths.',
+    'Schema names differ (TypeSpec namespaces vs C# DTO names). Endpoints compare resolved schemas, so any structural change still shows under paths; a schema no path references is not checked.',
   'components.parameters':
     'TypeSpec puts shared query parameters in components; ASP.NET inlines them. Compared per endpoint like schemas.',
 };

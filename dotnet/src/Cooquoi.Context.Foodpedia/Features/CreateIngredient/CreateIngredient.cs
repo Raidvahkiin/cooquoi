@@ -1,6 +1,7 @@
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.Platform.OpenApi;
+using Cooquoi.Platform.Validation;
 using Cooquoi.SharedKernel;
 using FluentValidation;
 
@@ -44,15 +45,15 @@ public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredie
         RuleFor(request => request.Names).NotEmpty();
         RuleForEach(request => request.Names).ChildRules(name =>
         {
-            name.RuleFor(n => n.Locale).Must(Locales.Contains).WithErrorCode("validation.one-of");
+            name.RuleFor(n => n.Locale).Must(Locales.Contains).WithErrorCode(ValidationCodes.OneOf);
             name.RuleFor(n => n.Primary).NotEmpty().MaximumLength(LocalizedName.MaxLength);
         });
-        RuleFor(request => request.BaseUnit).Must(IsUnit).WithErrorCode("validation.one-of");
+        RuleFor(request => request.BaseUnit).Must(IsUnit).WithErrorCode(ValidationCodes.OneOf);
         RuleFor(request => request.Tags).NotEmpty();
         RuleForEach(request => request.Conversions).ChildRules(conversion =>
-            conversion.RuleFor(c => c.Unit).Must(IsUnit).WithErrorCode("validation.one-of"));
+            conversion.RuleFor(c => c.Unit).Must(IsUnit).WithErrorCode(ValidationCodes.OneOf));
         RuleFor(request => request.ShelfLife!.RecommendedStorage)
-            .Must(Storages.Contains).WithErrorCode("validation.one-of")
+            .Must(Storages.Contains).WithErrorCode(ValidationCodes.OneOf)
             .When(request => request.ShelfLife is not null);
     }
 

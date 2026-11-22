@@ -1,4 +1,5 @@
 using Cooquoi.Platform.OpenApi;
+using Cooquoi.Platform.Validation;
 using FluentValidation;
 
 namespace Cooquoi.Context.Foodpedia.Features.DefineConversion;
@@ -9,5 +10,5 @@ public sealed record DefineConversion([property: ContractCodes(typeof(SharedKern
 public sealed class DefineConversionValidator : AbstractValidator<DefineConversion>
 {
     public DefineConversionValidator() =>
-        RuleFor(request => request.Unit).Must(code => SharedKernel.Unit.FromCode(code) is not null).WithErrorCode("validation.one-of");
+        RuleFor(request => request.Unit).Must(code => SharedKernel.Unit.FromCode(code) is not null).WithErrorCode(ValidationCodes.OneOf);
 }

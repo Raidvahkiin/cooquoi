@@ -1,15 +1,14 @@
-using Cooquoi.Platform;
 using Cooquoi.Platform.Authentication;
+using Cooquoi.Platform.Validation;
 using Raidvahkiin.Ddd;
 using Raidvahkiin.Ddd.AspNetCore;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using YamlDotNet.RepresentationModel;
 
 namespace Cooquoi.Architecture.Tests;
 
 /// <summary>The error codes the backend can return and the ones the contract declares.</summary>
-internal static partial class ErrorCatalogue
+internal static class ErrorCatalogue
 {
     private const BindingFlags StaticMembers = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.DeclaredOnly;
 
@@ -26,9 +25,8 @@ internal static partial class ErrorCatalogue
             .Concat(ProblemConstants)
             .ToHashSet(StringComparer.Ordinal);
 
-    /// <summary>Codes mapped from FluentValidation validators, plus <c>WithErrorCode("validation.…")</c> in use cases.</summary>
-    public static IReadOnlySet<string> BackendValidationCodes() =>
-        MappedValidationCodes().Concat(ExplicitValidationCodes()).ToHashSet(StringComparer.Ordinal);
+    /// <summary>Every <c>validation.*</c> code a 400 response may carry.</summary>
+    public static IReadOnlySet<string> BackendValidationCodes() => ValidationCodes.All.ToHashSet(StringComparer.Ordinal);
 
     /// <summary>Values of every <c>…ErrorCode</c> union of the contract.</summary>
     public static IReadOnlySet<string> ContractProblemCodes() =>
@@ -39,20 +37,6 @@ internal static partial class ErrorCatalogue
     public static IReadOnlySet<string> ContractValidationCodes() =>
         ContractSchemas().Single(schema => schema.Key.EndsWith(".ValidationCode", StringComparison.Ordinal)).Value
             .ToHashSet(StringComparer.Ordinal);
-
-    // ValidationCodes is internal with a private map; read through reflection, production code is not opened for tests.
-    private static IEnumerable<string> MappedValidationCodes()
-    {
-        var validationCodes = typeof(PlatformModule).Assembly.GetType("Cooquoi.Platform.Validation.ValidationCodes", throwOnError: true)!;
-        var map = (IReadOnlyDictionary<string, string>)validationCodes.GetField("ByValidator", StaticMembers)!.GetValue(null)!;
-        return map.Values;
-    }
-
-    private static IEnumerable<string> ExplicitValidationCodes() =>
-        Directory.EnumerateFiles(Path.Combine(CooquoiArchitecture.SolutionDirectory, "src"), "*.cs", SearchOption.AllDirectories)
-            .Where(file => file.Split(Path.DirectorySeparatorChar).Contains("Features"))
-            .SelectMany(file => WithValidationErrorCode().Matches(File.ReadAllText(file)))
-            .Select(match => match.Groups["code"].Value);
 
     /// <summary><c>components.schemas</c> of the generated OpenAPI document that are string enums.</summary>
     private static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ContractSchemas()
@@ -71,7 +55,4 @@ internal static partial class ErrorCatalogue
                 ((YamlScalarNode)schema.Key).Value!,
                 ((YamlSequenceNode)schema.Value["enum"]).Children.Select(value => ((YamlScalarNode)value).Value!)));
     }
-
-    [GeneratedRegex("""WithErrorCode\("(?<code>validation\.[^"]+)"\)""")]
-    private static partial Regex WithValidationErrorCode();
 }

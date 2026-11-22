@@ -76,7 +76,9 @@ jobs:
         run: pnpm exec nx run @cooquoi/api-client:generate
 
       - name: Generated files are committed and fresh
-        run: git diff --exit-code contracts/generated dotnet/generated ts/libs/api-client/src/generated
+        run: |
+          git status --porcelain contracts/generated dotnet/generated ts/libs/api-client/src/generated
+          test -z "$(git status --porcelain contracts/generated dotnet/generated ts/libs/api-client/src/generated)"
 
       # Same oasdiff as `@cooquoi/contracts:drift` (v0.2.1 runs tufin/oasdiff:v1.39.0); keep both in step.
       - name: oasdiff (contract vs ASP.NET)
