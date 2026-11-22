@@ -4,6 +4,8 @@ import { z } from 'zod';
 const envSchema = z.object({
   APP_URL: z.url(),
   API_BASE_URL: z.url(),
+  /** Upper bound of one API call, so a stopped API fails fast instead of hanging the page. */
+  API_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
   OIDC_ISSUER: z.url(),
   OIDC_CLIENT_ID: z.string().min(1),
   OIDC_CLIENT_SECRET: z.string().min(1),

@@ -1,4 +1,4 @@
-import { HttpResponse, http } from 'msw';
+import { delay, HttpResponse, http } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { API_BASE_URL } from '../../../../test/fixtures/household';
 import { server } from '../../../../test/msw/node';
@@ -129,6 +129,24 @@ describe('searchIngredientsPage', () => {
 
     await expect(searchIngredientsPage({ q: '', page: 1 })).resolves.toEqual({
       error: { code: 'common.unauthorized' },
+    });
+  });
+
+  it('returns a timeout as common.unexpected', async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/v1/ingredients`, async () => {
+        await delay(1000);
+        return HttpResponse.json({
+          items: [],
+          page: 1,
+          pageSize: 20,
+          totalCount: 0,
+        });
+      }),
+    );
+
+    await expect(searchIngredientsPage({ q: '', page: 1 })).resolves.toEqual({
+      error: { code: 'common.unexpected' },
     });
   });
 });

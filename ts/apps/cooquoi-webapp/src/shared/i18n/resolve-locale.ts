@@ -1,14 +1,9 @@
 import 'server-only';
-import {
-  type CommonLocale,
-  createClient,
-  createConfig,
-  getMe,
-} from '@cooquoi/api-client';
+import { type CommonLocale, getMe } from '@cooquoi/api-client';
 import { headers } from 'next/headers';
 import { cache } from 'react';
 import { getSession } from '@/shared/auth';
-import { getEnv } from '@/shared/config/env';
+import { createApiClientWithToken } from '@/shared/api';
 import { DEFAULT_LOCALE, isLocale, type Locale } from './locales';
 
 /**
@@ -21,9 +16,7 @@ const profileLocale = cache(async (): Promise<CommonLocale | undefined> => {
   if (!session.tokens) return undefined;
   const accessToken = session.tokens.accessToken;
   try {
-    const client = createClient(
-      createConfig({ baseUrl: getEnv().API_BASE_URL, auth: () => accessToken }),
-    );
+    const client = createApiClientWithToken(accessToken);
     const { data } = await getMe({ client, throwOnError: true });
     return data.profile.locale;
   } catch {
