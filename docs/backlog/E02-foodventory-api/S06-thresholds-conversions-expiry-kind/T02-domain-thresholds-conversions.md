@@ -4,7 +4,7 @@
 
 The IngredientStock aggregate gains:
 - `Threshold` (FV10) and `SetThreshold`.
-- A stock state (`ok` | `low` | `over` | `no-threshold`) re-evaluated after every write that changes the total, raising `StockRunningLow` / `StockOverstocked` only on change (FV12).
+- A stock state (`ok` | `low` | `over` | `noThreshold`) re-evaluated after every write that changes the total, raising `StockRunningLow` / `StockOverstocked` only on change (FV12).
 - `HouseholdConversion` with `DefineConversion` / `RemoveConversion` (FV11), which re-normalize every item (FV6).
 - `ApplyFoodpediaConversions(FoodpediaFacts)` for the event handler of T05.
 

@@ -20,7 +20,7 @@ The contract declares the five read operations with their filters, sort keys and
 - Q3 `GET /v1/stock` `ListOperation<IngredientStockFilter, IngredientStockView>`: `q?` (≤ 100), `pantryId?`. `IngredientStockView`:
   - `ingredientId`, `ingredientName`, `baseUnit`, `total: decimal`.
   - `unnormalized: Quantity[]`, `earliestExpiry?: plainDate`, `missingExpiryCount`.
-  - `state: "ok" | "low" | "over" | "no-threshold"`, `expiryKind` (effective), `ingredientRetired`.
+  - `state: "ok" | "low" | "over" | "noThreshold"`, `expiryKind` (effective), `ingredientRetired`.
 - Q4 `GET /v1/stock/{ingredientId}` `ReadOperation<IngredientStockDetail, IngredientStockPath>`:
   - `items: StockItemView[]` (the client groups by `pantryId`), `total`, `threshold?`.
   - `conversions: { unit, unitAmount, baseAmount }[]`, `expiryKind`, `expiryKindOverride?`.
