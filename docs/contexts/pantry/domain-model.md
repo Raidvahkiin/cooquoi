@@ -132,7 +132,7 @@ A cooked meal or a receipt touches several ingredients, so one command may chang
 | `name` | `PantryName` | Trimmed, 1–60 chars, unique per household (P1). |
 | `storage` | `fridge` \| `freezer` \| `room` \| none | Same values as Foodpedia's recommended storage; drives proposed expiry on put-away. |
 
-**Default Pantry aggregates**, created when `HouseholdCreated` is received, named in the creator's language (fallback English): **Fridge** (`fridge`), **Freezer** (`freezer`), **Cupboard** (`room`).
+**Default Pantry aggregates**, created when `HouseholdCreated` is received, named in the creator's language (fallback English): **Fridge** (`fridge`), **Freezer** (`freezer`), **Dry goods** (`room`: spaghetti, rice, sugar, salt, cans). Names: en Fridge / Freezer / Dry goods; fr Réfrigérateur / Congélateur / Épicerie sèche; vi Tủ lạnh / Tủ đông / Đồ khô.
 
 A household may delete all its Pantry aggregates: items with no pantry stay valid stock, so no "keep at least one pantry" rule is needed; put-away just waits until one exists.
 
@@ -275,7 +275,7 @@ Consumed: `HouseholdCreated` (Identity), `BaseUnitChanged`, `ConversionDefined`,
 | Household conversions | In the IngredientStock aggregate, applied before Foodpedia defaults |
 | Prices | Not in the Pantry context (Market) |
 | To put away | Not an entity: a stock item with no pantry. Restock always creates such items; put-away sets a Pantry aggregate; no move back. They count as stock (totals, suggestions, thresholds). Clients show them as "To put away" |
-| Default Pantry aggregates | Fridge, Freezer, Cupboard, created on `HouseholdCreated` in the creator's language |
+| Default Pantry aggregates | Fridge, Freezer, Dry goods, created on `HouseholdCreated` in the creator's language |
 | Last pantry | No rule: a household may delete every Pantry aggregate (P13 only requires it empty) |
 | Consumption order | Earliest expiry first, oldest added as tie-breaker |
 | Consuming more than held | Clamp to zero and report the shortfall (manual and `MealCooked`) |

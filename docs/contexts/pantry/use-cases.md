@@ -35,7 +35,7 @@
 | C3 | **Set storage** (`:set-storage`) | `storage` or none | — | `PantryStorageChanged` |
 | C4 | **Delete pantry** | — | P13 | `PantryDeleted` |
 
-Default Pantry aggregates (Fridge, Freezer, Cupboard) are created from `HouseholdCreated`, not by a command.
+Default Pantry aggregates (Fridge, Freezer, Dry goods) are created from `HouseholdCreated`, not by a command.
 
 ## Commands — stock
 
@@ -79,7 +79,7 @@ Planning computes coverage and "uses expiring" from this in code; only its one-l
 
 | Event | From | Effect | Phase |
 |---|---|---|---|
-| `HouseholdCreated` | Identity & Household | Create the default Pantry aggregates (Fridge, Freezer, Cupboard) | MVP |
+| `HouseholdCreated` | Identity & Household | Create the default Pantry aggregates (Fridge, Freezer, Dry goods) | MVP |
 | `BaseUnitChanged`, `ConversionDefined`, `ConversionRemoved` | Foodpedia context | Re-normalize affected items (P6) | MVP |
 | `IngredientExpiryKindChanged` | Foodpedia context | Update the copied kind; flags and warnings follow, dates untouched | MVP |
 | `IngredientRetired` / `IngredientRestored` | Foodpedia context | Flag / unflag items | MVP |
