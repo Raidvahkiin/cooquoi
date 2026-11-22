@@ -232,7 +232,7 @@ Consumed: `HouseholdCreated` (Identity), `BaseUnitChanged`, `ConversionDefined`,
 
 | Question | Decision |
 |---|---|
-| Aggregates | `Pantry` + `IngredientStock` per household and ingredient; `StockItem` is an entity |
+| Aggregates | `Pantry` + `IngredientStock` per household and ingredient; `StockItem` is an entity (accepted by the user 2026-11-22) |
 | Quantities | Entered kept forever; remaining in the entered unit; normalized derived |
 | Household conversions | Inside `IngredientStock`, applied before Foodpedia defaults |
 | Prices | Not in Pantry (Market) |
