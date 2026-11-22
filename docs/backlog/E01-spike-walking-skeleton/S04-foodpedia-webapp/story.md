@@ -32,7 +32,7 @@ Foodpedia ingredient search in the **user app** (`@cooquoi/webapp`), on Astryx w
 | [T04](T04-error-translation-catalogue.md) | Error catalogue: every contract code has a translation | done | T03 | yes | s04-t04 (subagent) |
 | [T05](T05-ingredient-search.md) | Foodpedia ingredient search page (Q1) | done | T03 | yes | s04-t05 (subagent) |
 | [T06](T06-define-conversion.md) | Ingredient page with the define-conversion form | dropped (moved to E01.S06) | — | — | — |
-| [T07](T07-verify-and-findings.md) | Dev users, end-to-end check under Aspire, phase 4 findings | done (Aspire check after 661ec53 left) | T04, T05 | no | s04-t07 (subagent) |
+| [T07](T07-verify-and-findings.md) | Dev users, end-to-end check under Aspire, phase 4 findings | done | T04, T05 | no | s04-t07 (subagent) |
 
 T01 → T02 → T03 are sequential (same `messages/*.json`, layout and test setup). T04 (`dotnet/tests` only) can run alongside T05 (webapp only). Review (`webapp-review` + the T04 `dotnet-review` scope) runs at story close, by `backlog-run`.
 
@@ -41,5 +41,5 @@ Decided at planning (2026-11-22): curator screens live in a separate curator app
 ## Summary
 
 Built in the user app: next-intl with the profile locale, Astryx `cooquoi` theme and AppShell, errors translated by code, a .NET catalogue test, and Q1 search at `/foodpedia`. T06 moved to E01.S06. Reviews and the check under Aspire led to fixes: an API call timeout, a translated error page and a shared `/v1/me` call.
-Verified: webapp tests (63) and build are green, architecture tests 15/15. Under Aspire, search works in three languages and light and dark screenshots were taken. Not yet confirmed under Aspire: after 661ec53, a down API costs one ~5 s wait.
+Verified: webapp tests (64) and build are green, architecture tests 15/15. Under Aspire, search works in three languages, light and dark screenshots were taken, and a down API gives the error page in ~5 s (be08c57).
 The UI is a spike (table, paging and sort). The real screen is mobile-first with a card list. Open decisions (HTTPS in dev, session cookie size, dev password), the review findings and the S05 items: [findings.md](findings.md).
