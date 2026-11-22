@@ -43,6 +43,9 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0014](architecture/adr/0014-backend-structure.md) | Backend structure and conventions | Accepted (spike items pending) |
 | [0015](architecture/adr/0015-user-profile.md) | User profile stored in the backend | Accepted |
 | [0016](architecture/adr/0016-package-manager-and-runtime.md) | Package manager, runtime and TypeScript versions | Accepted |
+| 0017 | Curator app (reserved, written by E01.S06.T01) | — |
+| [0018](architecture/adr/0018-https-everywhere-in-dev.md) | HTTPS everywhere in development | Accepted |
+| [0019](architecture/adr/0019-webapp-sessions-in-redis.md) | Server-side webapp sessions in Redis | Accepted |
 
 ## Work
 
