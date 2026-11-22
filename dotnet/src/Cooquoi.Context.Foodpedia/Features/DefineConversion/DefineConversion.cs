@@ -1,9 +1,10 @@
+using Cooquoi.Platform.OpenApi;
 using FluentValidation;
 
 namespace Cooquoi.Context.Foodpedia.Features.DefineConversion;
 
 /// <summary>C5: body of <c>POST /v1/ingredients/{id}:define-conversion</c>; requires <c>If-Match</c>.</summary>
-public sealed record DefineConversion(string Unit, decimal UnitAmount, decimal BaseAmount);
+public sealed record DefineConversion([property: ContractCodes(typeof(SharedKernel.Unit), nameof(SharedKernel.Unit.All))] string Unit, decimal UnitAmount, decimal BaseAmount);
 
 public sealed class DefineConversionValidator : AbstractValidator<DefineConversion>
 {

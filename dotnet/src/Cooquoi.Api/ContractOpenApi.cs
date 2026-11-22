@@ -1,15 +1,19 @@
 using System.Reflection;
+using System.Text.Json.Nodes;
 using Cooquoi.Platform.OpenApi;
+using Cooquoi.Platform.Validation;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
 
 /// <summary>
 /// The OpenAPI 3.1 document of what the API really serves, shaped to compare cleanly with the TypeSpec
-/// contract (ADR 0009): bearer security, server <c>/</c>, every problem as <c>application/problem+json</c>
-/// with the contract's <c>ProblemDetails</c>, and the template headers of <see cref="OperationContract"/>.
-/// Written to <c>dotnet/generated/openapi.json</c> at build time (GetDocument.Insider).
+/// contract (ADR 0009): bearer security, the contract's server, every problem as <c>application/problem+json</c>
+/// with the contract's <c>ProblemDetails</c>, the template headers of <see cref="OperationContract"/>, and
+/// schemas written the way TypeSpec writes them (see <see cref="DescribeSchemaAsync"/>, <see cref="DescribeNullability"/>).
+/// Written to <c>dotnet/generated/openapi.json</c> at build time (GetDocument.Insider); <c>@cooquoi/contracts:drift</c>
+/// compares it with the contract.
 /// </summary>
-internal static class ContractOpenApi
+internal static partial class ContractOpenApi
 {
     public const string DocumentName = "v1";
 
@@ -17,6 +21,7 @@ internal static class ContractOpenApi
     private const string ProblemSchema = "ProblemDetails";
     private const string FieldErrorSchema = "FieldError";
     private const string ProblemContentType = "application/problem+json";
+    private const string Server = "https://api.cooquoi.com";
 
     /// <summary>True when the build-time generator runs the host: there is no database or identity provider then.</summary>
     public static bool IsGeneratingDocument => Assembly.GetEntryAssembly()?.GetName().Name == "GetDocument.Insider";
@@ -32,6 +37,7 @@ internal static class ContractOpenApi
         services.AddOpenApi(DocumentName, options =>
         {
             options.OpenApiVersion = OpenApiSpecVersion.OpenApi3_1;
+            options.AddSchemaTransformer(DescribeSchemaAsync);
             options.AddOperationTransformer(DescribeOperationAsync);
             options.AddDocumentTransformer(DescribeDocumentAsync);
         });
@@ -40,6 +46,15 @@ internal static class ContractOpenApi
     {
         var metadata = context.Description.ActionDescriptor.EndpointMetadata;
         AddRequestHeaders(operation, metadata.OfType<RequestHeaderMetadata>());
+        // TypeSpec writes `explode: false` on scalar query parameters (no effect on the wire for a single value).
+        foreach (var parameter in (operation.Parameters ?? []).OfType<OpenApiParameter>())
+        {
+            if (parameter is { In: ParameterLocation.Query, Schema.Type: not JsonSchemaType.Array })
+            {
+                parameter.Explode = false;
+            }
+        }
+
         foreach (var (status, response) in operation.Responses ?? [])
         {
             if (response is OpenApiResponse concrete)
@@ -61,7 +76,7 @@ internal static class ContractOpenApi
                 Name = header.Name,
                 In = ParameterLocation.Header,
                 Required = header.Required,
-                Schema = new OpenApiSchema { Type = JsonSchemaType.String },
+                Schema = new OpenApiSchema { Type = JsonSchemaType.String, Format = header.Format },
             });
         }
     }
@@ -86,7 +101,7 @@ internal static class ContractOpenApi
     private static Task DescribeDocumentAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
     {
         document.Info.Title = "Cooquoi API";
-        document.Servers = [new OpenApiServer { Url = "/" }];
+        document.Servers = [new OpenApiServer { Url = Server }];
 
         document.Components ??= new OpenApiComponents();
         document.Components.SecuritySchemes ??= new Dictionary<string, IOpenApiSecurityScheme>();
@@ -98,6 +113,11 @@ internal static class ContractOpenApi
         document.Components.Schemas.Remove("HttpValidationProblemDetails");
         document.Components.Schemas[FieldErrorSchema] = FieldError();
         document.Components.Schemas[ProblemSchema] = ProblemDetails(document);
+        foreach (var schema in document.Components.Schemas.Values.OfType<OpenApiSchema>())
+        {
+            DescribeNullability(schema);
+        }
+
         return Task.CompletedTask;
     }
 
@@ -126,7 +146,7 @@ internal static class ContractOpenApi
         Properties = new Dictionary<string, IOpenApiSchema>
         {
             ["field"] = new OpenApiSchema { Type = JsonSchemaType.String },
-            ["code"] = new OpenApiSchema { Type = JsonSchemaType.String },
+            ["code"] = new OpenApiSchema { Type = JsonSchemaType.String, Enum = [.. ValidationCodes.All.Select(code => (JsonNode)JsonValue.Create(code))] },
             ["params"] = FreeObject(),
         },
     };

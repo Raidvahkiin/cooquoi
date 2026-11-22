@@ -47,6 +47,50 @@ jobs:
       - name: Test
         run: pnpm exec nx run-many -t test --parallel=3
 
+  # ADR 0009 §6: the API's real OpenAPI document must match the TypeSpec contract.
+  contract-drift:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      # SDK version comes from global.json (same as local)
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Writes dotnet/generated/openapi.json (build-time OpenAPI generation)
+      - name: Build .NET
+        run: dotnet build dotnet/Cooquoi.slnx -v q -nologo -clp:ErrorsOnly
+
+      - name: Generate contract and client
+        run: pnpm exec nx run @cooquoi/api-client:generate
+
+      - name: Generated files are committed and fresh
+        run: git diff --exit-code contracts/generated dotnet/generated ts/libs/api-client/src/generated
+
+      # Same oasdiff as `@cooquoi/contracts:drift` (v0.2.1 runs tufin/oasdiff:v1.39.0); keep both in step.
+      - name: oasdiff (contract vs ASP.NET)
+        uses: oasdiff/oasdiff-action/diff@v0.2.1
+        with:
+          base: contracts/generated/openapi.yaml
+          revision: dotnet/generated/openapi.json
+          format: json
+          exclude-elements: description,examples,summary,tags,title
+          output-to-file: oasdiff.json
+
+      - name: Drift gate
+        run: node contracts/scripts/drift-gate.mjs oasdiff.json
+
   build-and-push-images:
     needs: lint-typecheck-test
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')

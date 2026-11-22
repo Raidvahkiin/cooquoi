@@ -7,7 +7,7 @@ public sealed record Locale
     public static readonly Locale French = new("fr");
     public static readonly Locale Vietnamese = new("vi");
 
-    private static readonly Locale[] Supported = [English, French, Vietnamese];
+    public static readonly IReadOnlyList<Locale> All = [English, French, Vietnamese];
 
     private Locale(string code) => Code = code;
 
@@ -17,7 +17,7 @@ public sealed record Locale
     public static Locale FromTagOrDefault(string? tag)
     {
         var language = tag?.Split('-', '_')[0].ToLowerInvariant();
-        return Supported.FirstOrDefault(locale => locale.Code == language) ?? English;
+        return All.FirstOrDefault(locale => locale.Code == language) ?? English;
     }
 
     public override string ToString() => Code;

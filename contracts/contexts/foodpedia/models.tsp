@@ -64,7 +64,7 @@ model IngredientDetail {
   synonyms: string[];
   baseUnit: BaseUnit;
   conversions: Conversion[];
-  shelfLife?: ShelfLife | null;
+  shelfLife: ShelfLife | null;
   tags: string[];
   status: IngredientStatus;
   version: int64;

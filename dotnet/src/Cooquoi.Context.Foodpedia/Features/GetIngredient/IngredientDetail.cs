@@ -1,15 +1,19 @@
+using Cooquoi.Context.Foodpedia.Domain.Ingredients;
+using Cooquoi.Platform.OpenApi;
+using Cooquoi.SharedKernel;
+
 namespace Cooquoi.Context.Foodpedia.Features.GetIngredient;
 
 /// <summary>Q2: one ingredient in the requested locale; <see cref="Version"/> is sent back as <c>If-Match</c>.</summary>
 public sealed record IngredientDetail(
     Guid Id,
     string Code,
-    string Locale,
+    [property: ContractCodes(typeof(Locale), nameof(Locale.All))] string Locale,
     string Name,
     IReadOnlyList<string> Synonyms,
-    string BaseUnit,
+    [property: ContractCodes(typeof(Unit), nameof(Unit.BaseUnits))] string BaseUnit,
     IReadOnlyList<ConversionDetail> Conversions,
     ShelfLifeDetail? ShelfLife,
     IReadOnlyList<string> Tags,
-    string Status,
+    [property: ContractEnum<IngredientStatus>] string Status,
     long Version);

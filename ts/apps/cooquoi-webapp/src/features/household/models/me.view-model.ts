@@ -10,7 +10,7 @@ export type MeViewModel = {
 export function toMeViewModel(me: HouseholdMe): MeViewModel {
   return {
     displayName: me.profile.displayName,
-    email: me.profile.email,
+    email: me.profile.email ?? undefined,
     locale: me.profile.locale,
     householdCount: me.households.length,
   };

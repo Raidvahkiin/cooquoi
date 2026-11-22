@@ -145,7 +145,7 @@ export type FoodpediaIngredientDetail = {
     synonyms: Array<string>;
     baseUnit: CommonBaseUnit;
     conversions: Array<FoodpediaConversion>;
-    shelfLife?: FoodpediaShelfLife | null;
+    shelfLife: FoodpediaShelfLife | null;
     tags: Array<string>;
     status: FoodpediaIngredientStatus;
     version: number;
@@ -220,7 +220,7 @@ export type HouseholdMembershipRole = 'owner' | 'member';
 export type HouseholdUserProfile = {
     userId: CommonId;
     displayName: string;
-    email?: string;
+    email: string | null;
     locale: CommonLocale;
     defaultHouseholdId: CommonId;
 };

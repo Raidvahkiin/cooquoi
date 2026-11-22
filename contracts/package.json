@@ -28,6 +28,22 @@
         "outputs": [
           "{projectRoot}/generated"
         ]
+      },
+      "drift": {
+        "cache": true,
+        "dependsOn": [
+          "compile"
+        ],
+        "inputs": [
+          "{projectRoot}/generated/openapi.yaml",
+          "{workspaceRoot}/dotnet/generated/openapi.json",
+          "{projectRoot}/scripts/drift-gate.mjs"
+        ],
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "{workspaceRoot}",
+          "command": "docker run --rm -v \"$PWD\":/specs:ro -w /specs tufin/oasdiff:v1.39.0 diff -f json -e description,examples,summary,tags,title contracts/generated/openapi.yaml dotnet/generated/openapi.json | node contracts/scripts/drift-gate.mjs"
+        }
       }
     }
   }

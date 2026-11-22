@@ -1,5 +1,6 @@
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
+using Cooquoi.Platform.OpenApi;
 using Cooquoi.SharedKernel;
 using FluentValidation;
 
@@ -9,16 +10,16 @@ namespace Cooquoi.Context.Foodpedia.Features.CreateIngredient;
 public sealed record CreateIngredient(
     string Code,
     IReadOnlyList<CreateIngredient.Name> Names,
-    string BaseUnit,
+    [property: ContractCodes(typeof(Unit), nameof(Unit.BaseUnits))] string BaseUnit,
     IReadOnlyList<string> Tags,
     IReadOnlyList<CreateIngredient.ConversionInput>? Conversions = null,
     CreateIngredient.ShelfLifeInput? ShelfLife = null)
 {
-    public sealed record Name(string Locale, string Primary, IReadOnlyList<string>? Synonyms = null);
+    public sealed record Name([property: ContractCodes(typeof(Locale), nameof(Locale.All))] string Locale, string Primary, IReadOnlyList<string>? Synonyms = null);
 
-    public sealed record ConversionInput(string Unit, decimal UnitAmount, decimal BaseAmount);
+    public sealed record ConversionInput([property: ContractCodes(typeof(Unit), nameof(Unit.All))] string Unit, decimal UnitAmount, decimal BaseAmount);
 
-    public sealed record ShelfLifeInput(int Days, string RecommendedStorage);
+    public sealed record ShelfLifeInput(int Days, [property: ContractEnum<Storage>] string RecommendedStorage);
 
     /// <summary>Only after validation: locales and units are known.</summary>
     internal NewIngredient ToNewIngredient(IngredientId id) => new(

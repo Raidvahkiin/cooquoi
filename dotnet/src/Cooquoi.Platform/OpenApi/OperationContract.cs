@@ -6,8 +6,8 @@ using Wolverine.Http;
 
 namespace Cooquoi.Platform.OpenApi;
 
-/// <summary>A header the endpoint reads; the OpenAPI document lists it as a parameter.</summary>
-public sealed record RequestHeaderMetadata(string Name, bool Required);
+/// <summary>A header the endpoint reads; the OpenAPI document lists it as a parameter (string, of <paramref name="Format"/> when given).</summary>
+public sealed record RequestHeaderMetadata(string Name, bool Required, string? Format = null);
 
 /// <summary>A header the endpoint answers with this status; the OpenAPI document lists it on that response.</summary>
 public sealed record ResponseHeaderMetadata(int StatusCode, string Name);
@@ -85,5 +85,5 @@ public static class OperationContract
         chain.Metadata.Finally(endpoint => endpoint.RemoveStatusCodeResponse(StatusCodes.Status404NotFound));
 
     private static void Idempotent(HttpChain chain) =>
-        chain.Metadata.WithMetadata(new RequestHeaderMetadata(IdempotencyMiddleware.Header, Required: true));
+        chain.Metadata.WithMetadata(new RequestHeaderMetadata(IdempotencyMiddleware.Header, Required: true, Format: "uuid"));
 }

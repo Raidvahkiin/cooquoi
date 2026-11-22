@@ -1,3 +1,7 @@
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using Cooquoi.Context.Foodpedia.Domain.Ingredients;
+using Cooquoi.Platform.OpenApi;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +14,10 @@ namespace Cooquoi.Context.Foodpedia.Features.SearchIngredients;
 public sealed record SearchIngredients(
     [FromQuery(Name = "q")] string? Q,
     [FromQuery(Name = "tags")] string[]? Tags,
-    [FromQuery(Name = "status")] string? Status,
+    [FromQuery(Name = "status"), ContractEnum<IngredientStatus>] string? Status,
     [FromQuery(Name = "sort")] string[]? Sort,
-    [FromQuery(Name = "page")] int? Page,
-    [FromQuery(Name = "pageSize")] int? PageSize)
+    [FromQuery(Name = "page"), DefaultValue(1), Range(1, int.MaxValue)] int? Page,
+    [FromQuery(Name = "pageSize"), DefaultValue(SearchIngredients.DefaultPageSize), Range(1, SearchIngredients.MaxPageSize)] int? PageSize)
 {
     public const int DefaultPageSize = 20;
     public const int MaxPageSize = 100;

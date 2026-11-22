@@ -14,7 +14,7 @@ union MembershipRole {
 model UserProfile {
   userId: Id;
   displayName: string;
-  email?: string;
+  email: string | null;
   locale: Locale;
   defaultHouseholdId: Id;
 }

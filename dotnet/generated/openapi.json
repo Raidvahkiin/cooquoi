@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "/"
+      "url": "https://api.cooquoi.com"
     }
   ],
   "paths": {
@@ -54,6 +54,7 @@
           {
             "name": "q",
             "in": "query",
+            "explode": false,
             "schema": {
               "type": "string"
             }
@@ -71,7 +72,12 @@
           {
             "name": "status",
             "in": "query",
+            "explode": false,
             "schema": {
+              "enum": [
+                "active",
+                "retired"
+              ],
               "type": "string"
             }
           },
@@ -88,25 +94,24 @@
           {
             "name": "page",
             "in": "query",
+            "explode": false,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 1
             }
           },
           {
             "name": "pageSize",
             "in": "query",
+            "explode": false,
             "schema": {
-              "pattern": "^-?(?:0|[1-9]\\d*)$",
-              "type": [
-                "integer",
-                "string"
-              ],
-              "format": "int32"
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "format": "int32",
+              "default": 20
             }
           }
         ],
@@ -156,7 +161,8 @@
             "in": "header",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -326,7 +332,8 @@
             "in": "header",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "format": "uuid"
             }
           },
           {
@@ -455,23 +462,33 @@
         "type": "object",
         "properties": {
           "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
             "type": "string"
           },
           "unitAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
-            "format": "double"
+            "type": "number",
+            "format": "decimal"
           },
           "baseAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
-            "format": "double"
+            "type": "number",
+            "format": "decimal"
           }
         }
       },
@@ -484,23 +501,33 @@
         "type": "object",
         "properties": {
           "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
             "type": "string"
           },
           "unitAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
-            "format": "double"
+            "type": "number",
+            "format": "decimal"
           },
           "baseAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
-            "format": "double"
+            "type": "number",
+            "format": "decimal"
           }
         }
       },
@@ -523,6 +550,11 @@
             }
           },
           "baseUnit": {
+            "enum": [
+              "g",
+              "ml",
+              "piece"
+            ],
             "type": "string"
           },
           "tags": {
@@ -532,23 +564,31 @@
             }
           },
           "conversions": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": "array",
             "items": {
               "$ref": "#/components/schemas/ConversionInput"
             }
           },
           "shelfLife": {
-            "oneOf": [
-              {
-                "type": "null"
+            "required": [
+              "days",
+              "recommendedStorage"
+            ],
+            "type": "object",
+            "properties": {
+              "days": {
+                "type": "integer",
+                "format": "int32"
               },
-              {
-                "$ref": "#/components/schemas/ShelfLifeInput"
+              "recommendedStorage": {
+                "enum": [
+                  "fridge",
+                  "freezer",
+                  "room"
+                ],
+                "type": "string"
               }
-            ]
+            }
           }
         },
         "description": "C1: body of `POST /v1/ingredients`."
@@ -574,23 +614,33 @@
         "type": "object",
         "properties": {
           "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
             "type": "string"
           },
           "unitAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
-            "format": "double"
+            "type": "number",
+            "format": "decimal"
           },
           "baseAmount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)(?:\\.\\d+)?$",
-            "type": [
-              "number",
-              "string"
-            ],
-            "format": "double"
+            "type": "number",
+            "format": "decimal"
           }
         },
         "description": "C5: body of `POST /v1/ingredients/{id}:define-conversion`; requires `If-Match`."
@@ -606,6 +656,17 @@
             "type": "string"
           },
           "code": {
+            "enum": [
+              "validation.required",
+              "validation.max-length",
+              "validation.min-length",
+              "validation.min",
+              "validation.max",
+              "validation.range",
+              "validation.pattern",
+              "validation.invalid",
+              "validation.one-of"
+            ],
             "type": "string"
           },
           "params": {
@@ -638,6 +699,11 @@
             "type": "string"
           },
           "locale": {
+            "enum": [
+              "en",
+              "fr",
+              "vi"
+            ],
             "type": "string"
           },
           "name": {
@@ -650,6 +716,11 @@
             }
           },
           "baseUnit": {
+            "enum": [
+              "g",
+              "ml",
+              "piece"
+            ],
             "type": "string"
           },
           "conversions": {
@@ -659,12 +730,30 @@
             }
           },
           "shelfLife": {
-            "oneOf": [
+            "anyOf": [
               {
-                "type": "null"
+                "required": [
+                  "days",
+                  "recommendedStorage"
+                ],
+                "type": "object",
+                "properties": {
+                  "days": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "recommendedStorage": {
+                    "enum": [
+                      "fridge",
+                      "freezer",
+                      "room"
+                    ],
+                    "type": "string"
+                  }
+                }
               },
               {
-                "$ref": "#/components/schemas/ShelfLifeDetail"
+                "type": "null"
               }
             ]
           },
@@ -675,14 +764,14 @@
             }
           },
           "status": {
+            "enum": [
+              "active",
+              "retired"
+            ],
             "type": "string"
           },
           "version": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int64"
           }
         },
@@ -709,6 +798,11 @@
             "type": "string"
           },
           "baseUnit": {
+            "enum": [
+              "g",
+              "ml",
+              "piece"
+            ],
             "type": "string"
           },
           "categoryTags": {
@@ -733,12 +827,20 @@
             "format": "uuid"
           },
           "name": {
-            "type": [
-              "null",
-              "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "role": {
+            "enum": [
+              "owner",
+              "member"
+            ],
             "type": "string"
           }
         }
@@ -761,12 +863,21 @@
             "type": "string"
           },
           "email": {
-            "type": [
-              "null",
-              "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "locale": {
+            "enum": [
+              "en",
+              "fr",
+              "vi"
+            ],
             "type": "string"
           },
           "defaultHouseholdId": {
@@ -802,16 +913,18 @@
         "type": "object",
         "properties": {
           "locale": {
+            "enum": [
+              "en",
+              "fr",
+              "vi"
+            ],
             "type": "string"
           },
           "primary": {
             "type": "string"
           },
           "synonyms": {
-            "type": [
-              "null",
-              "array"
-            ],
+            "type": "array",
             "items": {
               "type": "string"
             }
@@ -834,27 +947,15 @@
             }
           },
           "page": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "pageSize": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "totalCount": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int64"
           }
         },
@@ -912,14 +1013,15 @@
         "type": "object",
         "properties": {
           "days": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "recommendedStorage": {
+            "enum": [
+              "fridge",
+              "freezer",
+              "room"
+            ],
             "type": "string"
           }
         }
@@ -932,14 +1034,15 @@
         "type": "object",
         "properties": {
           "days": {
-            "pattern": "^-?(?:0|[1-9]\\d*)$",
-            "type": [
-              "integer",
-              "string"
-            ],
+            "type": "integer",
             "format": "int32"
           },
           "recommendedStorage": {
+            "enum": [
+              "fridge",
+              "freezer",
+              "room"
+            ],
             "type": "string"
           }
         }

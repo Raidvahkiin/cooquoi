@@ -3,8 +3,11 @@ using FluentValidation.Results;
 namespace Cooquoi.Platform.Validation;
 
 /// <summary>The shared <c>validation.*</c> codes clients translate (ADR 0014 §10).</summary>
-internal static class ValidationCodes
+public static class ValidationCodes
 {
+    /// <summary>Set by use cases with <c>WithErrorCode</c> for a closed set of values.</summary>
+    public const string OneOf = "validation.one-of";
+
     private static readonly Dictionary<string, string> ByValidator = new(StringComparer.Ordinal)
     {
         ["NotEmptyValidator"] = "validation.required",
@@ -22,12 +25,15 @@ internal static class ValidationCodes
     /// <summary>Message parameters worth translating; FluentValidation's own (PropertyName…) are dropped.</summary>
     private static readonly string[] KeptParams = ["MaxLength", "MinLength", "ComparisonValue", "From", "To", "AllowedValues"];
 
-    public static string Of(ValidationFailure failure) =>
+    /// <summary>Every code a 400 response may carry, listed by the OpenAPI document.</summary>
+    public static IEnumerable<string> All => ByValidator.Values.Append(OneOf).Distinct();
+
+    internal static string Of(ValidationFailure failure) =>
         failure.ErrorCode.StartsWith("validation.", StringComparison.Ordinal)
             ? failure.ErrorCode
             : ByValidator.GetValueOrDefault(failure.ErrorCode, "validation.invalid");
 
-    public static IReadOnlyDictionary<string, object?>? ParamsOf(ValidationFailure failure)
+    internal static IReadOnlyDictionary<string, object?>? ParamsOf(ValidationFailure failure)
     {
         var kept = (failure.FormattedMessagePlaceholderValues ?? [])
             .Where(placeholder => KeptParams.Contains(placeholder.Key))

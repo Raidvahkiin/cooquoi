@@ -1,8 +1,8 @@
 openapi: 3.1.0
 info:
   title: Cooquoi API
+  version: 1.0.0
   description: Cooquoi API — source of truth for every client (ADR 0009).
-  version: 0.0.0
 tags:
   - name: Household
   - name: Foodpedia
@@ -543,6 +543,7 @@ components:
         - synonyms
         - baseUnit
         - conversions
+        - shelfLife
         - tags
         - status
         - version
@@ -682,6 +683,7 @@ components:
       required:
         - userId
         - displayName
+        - email
         - locale
         - defaultHouseholdId
       properties:
@@ -690,7 +692,9 @@ components:
         displayName:
           type: string
         email:
-          type: string
+          anyOf:
+            - type: string
+            - type: 'null'
         locale:
           $ref: '#/components/schemas/Common.Locale'
         defaultHouseholdId:
