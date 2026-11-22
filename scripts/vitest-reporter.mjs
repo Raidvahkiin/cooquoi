@@ -58,6 +58,16 @@ export default class CompactReporter {
       skipped && dim(`${skipped} skipped`),
     ].filter(Boolean);
     console.log(`\n${bold('Tests')}  ${parts.join(', ')} (${total})`);
+
+    // A file that fails to load or errors outside a test has no test results: print it, or the run fails silently.
+    const broken = testModules.filter((mod) => mod.errors().length > 0);
+    for (const mod of broken) {
+      console.error(red(`\n✗ ${mod.moduleId}`));
+      for (const err of mod.errors()) console.error(err.stack ?? err.message);
+    }
+    if (broken.length > 0) {
+      console.error(red(`${broken.length} file(s) failed outside their tests`));
+    }
     for (const err of unhandledErrors) console.error(err);
   }
 }
