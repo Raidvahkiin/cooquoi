@@ -27,6 +27,6 @@ libnss3-tools / nss-tools):
   certutil -d sql:\$HOME/.pki/nssdb -A -t "C,," -n cooquoi-dev -i "${PEM_PATH}"
 
 Firefox: Settings > Privacy & Security > Certificates > View Certificates > Authorities
-> Import, then pick the PEM above. Node is covered by NODE_EXTRA_CA_CERTS (set by the AppHost).
+> Import, then pick the PEM above. The webapp dev server trusts it through `next dev --experimental-https-ca`.
 MSG
 fi

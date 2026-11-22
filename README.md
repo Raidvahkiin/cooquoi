@@ -15,7 +15,7 @@ cd aspire/Cooquoi.AppHost && aspire run
 
 Aspire starts Postgres, Keycloak, the C# API and the Next.js webapp, and prints the dashboard URL. 
 
-`scripts/dev-certs.sh` trusts the .NET dev certificate and exports it as PEM to `~/.aspnet/dev-certs/https/aspnetcore-dev.pem` (Node trusts it through `NODE_EXTRA_CA_CERTS`). On Linux it also prints the manual browser trust step (NSS `certutil`). Check with `dotnet dev-certs https --check --trust`.
+`scripts/dev-certs.sh` trusts the .NET dev certificate and exports it as PEM to `~/.aspnet/dev-certs/https/aspnetcore-dev.pem` (the webapp `dev` script passes it to `next dev --experimental-https-ca`). On Linux, install `libnss3-tools` first so browsers (NSS) trust it too, and add `export SSL_CERT_DIR="$HOME/.aspnet/dev-certs/trust:/usr/lib/ssl/certs"` to your shell profile for OpenSSL clients. Check with `dotnet dev-certs https --check --trust`.
 
 The dev user is `dev@cooquoi.local`; its password is the `dev-user-password` parameter, `cooquoi-dev` by default. Override it with `dotnet user-secrets set Parameters:dev-user-password <value> --project aspire/Cooquoi.AppHost`.
 
