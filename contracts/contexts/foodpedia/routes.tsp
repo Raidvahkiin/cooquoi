@@ -36,4 +36,12 @@ interface IngredientOperations {
   @route("/v1/ingredients/{ingredientId}:define-conversion")
   @operationId("defineConversion")
   defineConversion is ReplaceActionOperation<DefineConversion, IngredientPath>;
+
+  /**
+   * C11: sets how the expiry date of one ingredient is known. Requires the curator role.
+   * Errors: `foodpedia.ingredient-retired` (422).
+   */
+  @route("/v1/ingredients/{ingredientId}:set-expiry-kind")
+  @operationId("setExpiryKind")
+  setExpiryKind is ReplaceActionOperation<SetExpiryKind, IngredientPath>;
 }

@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses } from './types.gen';
+import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -58,6 +58,20 @@ export const getIngredient = <ThrowOnError extends boolean = false>(options: Opt
 export const defineConversion = <ThrowOnError extends boolean = false>(options: Options<DefineConversionData, ThrowOnError>): RequestResult<DefineConversionResponses, DefineConversionErrors, ThrowOnError> => (options.client ?? client).post<DefineConversionResponses, DefineConversionErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/v1/ingredients/{ingredientId}:define-conversion',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * C11: sets how the expiry date of one ingredient is known. Requires the curator role.
+ * Errors: `foodpedia.ingredient-retired` (422).
+ */
+export const setExpiryKind = <ThrowOnError extends boolean = false>(options: Options<SetExpiryKindData, ThrowOnError>): RequestResult<SetExpiryKindResponses, SetExpiryKindErrors, ThrowOnError> => (options.client ?? client).post<SetExpiryKindResponses, SetExpiryKindErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/ingredients/{ingredientId}:set-expiry-kind',
     ...options,
     headers: {
         'Content-Type': 'application/json',

@@ -19,6 +19,13 @@ union Storage {
   room: "room",
 }
 
+/** How the expiry date of an ingredient is known (F12). */
+union ExpiryKind {
+  printed: "printed",
+  estimated: "estimated",
+  longLife: "long-life",
+}
+
 /** Typed filters of the ingredient search (Q1). */
 model IngredientFilter {
   /** Tag codes (`<namespace>:<value>`); all must match. */
@@ -63,6 +70,7 @@ model IngredientDetail {
   name: string;
   synonyms: string[];
   baseUnit: BaseUnit;
+  expiryKind: ExpiryKind;
   conversions: Conversion[];
   shelfLife: ShelfLife | null;
   tags: string[];
@@ -87,6 +95,8 @@ model CreateIngredient {
 
   baseUnit: BaseUnit;
 
+  expiryKind: ExpiryKind;
+
   /** At least one `category:` tag. */
   tags: string[];
 
@@ -97,6 +107,11 @@ model CreateIngredient {
 /** Id of the created ingredient. */
 model CreatedIngredient {
   id: Id;
+}
+
+/** Body of an expiry kind change (C11). */
+model SetExpiryKind {
+  expiryKind: ExpiryKind;
 }
 
 /** Body of a conversion definition (C5); replaces an existing one for the same unit. */

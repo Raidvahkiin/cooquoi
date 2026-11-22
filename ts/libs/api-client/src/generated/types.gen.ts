@@ -105,6 +105,7 @@ export type FoodpediaCreateIngredient = {
      */
     names: Array<FoodpediaIngredientName>;
     baseUnit: CommonBaseUnit;
+    expiryKind: FoodpediaExpiryKind;
     /**
      * At least one `category:` tag.
      */
@@ -130,6 +131,11 @@ export type FoodpediaDefineConversion = {
 };
 
 /**
+ * How the expiry date of an ingredient is known (F12).
+ */
+export type FoodpediaExpiryKind = 'printed' | 'estimated' | 'long-life';
+
+/**
  * Stable error codes of the Foodpedia context (`problem.code`), next to `CommonErrorCode`.
  */
 export type FoodpediaFoodpediaErrorCode = 'foodpedia.code-taken' | 'foodpedia.invalid-code' | 'foodpedia.invalid-name' | 'foodpedia.english-name-required' | 'foodpedia.duplicate-locale' | 'foodpedia.name-missing' | 'foodpedia.name-taken' | 'foodpedia.invalid-base-unit' | 'foodpedia.invalid-conversion-amount' | 'foodpedia.conversion-not-needed' | 'foodpedia.invalid-shelf-life' | 'foodpedia.category-tag-required' | 'foodpedia.ingredient-retired' | 'foodpedia.invalid-tag-code' | 'foodpedia.invalid-tag-label' | 'foodpedia.english-label-required' | 'foodpedia.unknown-tags';
@@ -144,6 +150,7 @@ export type FoodpediaIngredientDetail = {
     name: string;
     synonyms: Array<string>;
     baseUnit: CommonBaseUnit;
+    expiryKind: FoodpediaExpiryKind;
     conversions: Array<FoodpediaConversion>;
     shelfLife: FoodpediaShelfLife | null;
     tags: Array<string>;
@@ -174,6 +181,13 @@ export type FoodpediaIngredientSummary = {
     name: string;
     baseUnit: CommonBaseUnit;
     categoryTags: Array<string>;
+};
+
+/**
+ * Body of an expiry kind change (C11).
+ */
+export type FoodpediaSetExpiryKind = {
+    expiryKind: FoodpediaExpiryKind;
 };
 
 /**
@@ -427,6 +441,65 @@ export type DefineConversionResponses = {
 };
 
 export type DefineConversionResponse = DefineConversionResponses[keyof DefineConversionResponses];
+
+export type SetExpiryKindData = {
+    body: FoodpediaSetExpiryKind;
+    headers: {
+        'Idempotency-Key': string;
+        'If-Match': string;
+    };
+    path: {
+        ingredientId: CommonId;
+    };
+    query?: never;
+    url: '/v1/ingredients/{ingredientId}:set-expiry-kind';
+};
+
+export type SetExpiryKindErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 412 — `If-Match` does not match the current version.
+     */
+    412: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+    /**
+     * 428 — `If-Match` is required.
+     */
+    428: CommonProblemDetails;
+};
+
+export type SetExpiryKindError = SetExpiryKindErrors[keyof SetExpiryKindErrors];
+
+export type SetExpiryKindResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type SetExpiryKindResponse = SetExpiryKindResponses[keyof SetExpiryKindResponses];
 
 export type GetMeData = {
     body?: never;

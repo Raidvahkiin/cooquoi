@@ -34,10 +34,10 @@ C# code (T02, T03), PublicApi (T04), webapp screens
 
 ## Subtasks
 
-- [ ] T01.1 `ExpiryKind` union; `expiryKind` in `IngredientDetail` and the create body (required)
-- [ ] T01.2 `setExpiryKind` route and `SetExpiryKind` model
-- [ ] T01.3 `pnpm nx run @cooquoi/api-client:generate`; commit `contracts/generated/openapi.yaml` and the client
-- [ ] T01.4 Webapp MSW fixtures / test data that build `IngredientDetail` get `expiryKind` (no screen change)
+- [x] T01.1 `ExpiryKind` union; `expiryKind` in `IngredientDetail` and the create body (required)
+- [x] T01.2 `setExpiryKind` route and `SetExpiryKind` model
+- [x] T01.3 `pnpm nx run @cooquoi/api-client:generate`; commit `contracts/generated/openapi.yaml` and the client
+- [x] T01.4 Webapp MSW fixtures / test data that build `IngredientDetail` get `expiryKind` (no screen change)
 
 ## Done when
 
@@ -45,6 +45,10 @@ C# code (T02, T03), PublicApi (T04), webapp screens
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(contracts): Foodpedia expiry kind (E02.S01.T01)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- Changed: `ExpiryKind` union, `expiryKind` on `IngredientDetail` and required on `CreateIngredient`, `SetExpiryKind` model, `setExpiryKind` route in `contracts/contexts/foodpedia/`; regenerated `contracts/generated/openapi.yaml` and `ts/libs/api-client/src/generated/`.
+- Verified: Done-when command exit 0; knip on the three projects clean. Drift check not run (expected red until T03).
+- T01.4: no fixture builds `IngredientDetail` (only `IngredientSummary`), so no fixture change.
+- Surprising: `expiryKind` is now required on the create body, so the C# create endpoint rejects a body without it until T02 lands.

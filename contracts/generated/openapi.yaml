@@ -277,6 +277,93 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Foodpedia.DefineConversion'
+  /v1/ingredients/{ingredientId}:set-expiry-kind:
+    post:
+      operationId: setExpiryKind
+      description: |-
+        C11: sets how the expiry date of one ingredient is known. Requires the curator role.
+        Errors: `foodpedia.ingredient-retired` (422).
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: If-Match
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '412':
+          description: 412 — `If-Match` does not match the current version.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '428':
+          description: 428 — `If-Match` is required.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodpedia
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodpedia.SetExpiryKind'
   /v1/me:
     get:
       operationId: getMe
@@ -464,6 +551,7 @@ components:
         - code
         - names
         - baseUnit
+        - expiryKind
         - tags
       properties:
         code:
@@ -476,6 +564,8 @@ components:
           description: One per locale; English required.
         baseUnit:
           $ref: '#/components/schemas/Common.BaseUnit'
+        expiryKind:
+          $ref: '#/components/schemas/Foodpedia.ExpiryKind'
         tags:
           type: array
           items:
@@ -512,6 +602,13 @@ components:
           type: number
           format: decimal
       description: Body of a conversion definition (C5); replaces an existing one for the same unit.
+    Foodpedia.ExpiryKind:
+      type: string
+      enum:
+        - printed
+        - estimated
+        - long-life
+      description: How the expiry date of an ingredient is known (F12).
     Foodpedia.FoodpediaErrorCode:
       type: string
       enum:
@@ -542,6 +639,7 @@ components:
         - name
         - synonyms
         - baseUnit
+        - expiryKind
         - conversions
         - shelfLife
         - tags
@@ -562,6 +660,8 @@ components:
             type: string
         baseUnit:
           $ref: '#/components/schemas/Common.BaseUnit'
+        expiryKind:
+          $ref: '#/components/schemas/Foodpedia.ExpiryKind'
         conversions:
           type: array
           items:
@@ -623,6 +723,14 @@ components:
           items:
             type: string
       description: One search result; the name is in the requested locale, English when missing.
+    Foodpedia.SetExpiryKind:
+      type: object
+      required:
+        - expiryKind
+      properties:
+        expiryKind:
+          $ref: '#/components/schemas/Foodpedia.ExpiryKind'
+      description: Body of an expiry kind change (C11).
     Foodpedia.ShelfLife:
       type: object
       required:
