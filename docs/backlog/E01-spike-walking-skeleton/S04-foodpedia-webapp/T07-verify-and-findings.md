@@ -34,8 +34,8 @@ sonnet
 
 - [x] T07.1 Add `dev-fr@cooquoi.local` (`locale: fr`) and `dev-vi@cooquoi.local` (`locale: vi`), no curator role, same password variable; check they import (realm reset if Aspire keeps the Keycloak volume, note how)
 - [x] T07.2 Under Aspire: as `dev-fr`, `/foodpedia?q=saumon` and `q=salmon` find *Saumon* with French UI; as `dev-vi`, `q=ca hoi` finds *cá hồi* with Vietnamese UI; as `dev`, English
-- [ ] T07.3 A translated error: e.g. `q` over 100 characters typed in the URL (or another real problem) shows the message of its code in the user's language
-- [ ] T07.4 Light and dark mode screenshots of the search page (paprika vs error red), saved in the session scratchpad, not committed
+- [x] T07.3 A translated error: e.g. `q` over 100 characters typed in the URL (or another real problem) shows the message of its code in the user's language
+- [x] T07.4 Light and dark mode screenshots of the search page (paprika vs error red), saved in the session scratchpad, not committed
 - [x] T07.5 Spike plan: Phase 4 **Status (date)** with the answers (Astryx in Server Components, theme build, dark mode; paprika vs error red; Vitest browser mode + MSW), what the tests fixed, what is not done (C5 moved to the curator app, E01.S06)
 - [x] T07.6 Webapp `AGENTS.md`: Commands section true (both Vitest projects, Playwright Chromium install), drop the "set up during the rebuild" line for what now exists; adjust `webapp-test` / `webapp-ui` skills only where the T02–T05 reports found a convention that differs
 
@@ -45,10 +45,10 @@ sonnet
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`docs(repo): phase 4 findings (E01.S04.T07)`), stop.
 
-Status: partial (T07.2 done via curl; T07.3 and T07.4 not met, see Report)
+Status: done, with findings (the API-down page takes about 10 s and is English)
 
 Report:
-- Changed: `dev-fr` / `dev-vi` in the dev users file (import verified under Aspire); spike plan Phase 4 status with answers and observations; webapp `AGENTS.md` Commands; `webapp-test` skill notes.
-- T07.2 observed (curl with sign-in, not the browser): saumon/salmon as dev-fr French UI with Saumon; `ca hoi` as dev-vi Vietnamese UI with Cá hồi; dev English UI.
-- T07.3 not met: `q` over 100 chars falls back to the full list (no error); with the API stopped `/foodpedia` hung over 100 s instead of a translated error. T07.4 blocked: the browser pane rejects Keycloak's self-signed certificate; no screenshots.
-- Surprising: post-login callback redirects to `https://localhost:3000` (webapp is http).
+- Changed: dev-fr / dev-vi dev users; spike plan Phase 4 status; webapp `AGENTS.md`; `webapp-test` skill notes.
+- T07.2 (curl, signed in): saumon/salmon as dev-fr French UI; `ca hoi` as dev-vi Vietnamese UI; dev English UI.
+- T07.3 (API stopped): HTTP 500 after about 10 s with the root error page (Banner + Try again), in English not French, plus an `unhandledRejection` from the timeout abort in Next dev; a `q` over 100 chars shows no error (falls back to the full list). An exported `API_TIMEOUT_MS=900000` in the starting shell had silently overridden the default.
+- T07.4: four PNGs (search and error Banner, light and dark) in the session scratchpad, not committed. Callback `https://` was curl's HSTS cache, not the app.
