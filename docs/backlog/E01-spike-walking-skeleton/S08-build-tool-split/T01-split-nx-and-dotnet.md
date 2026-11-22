@@ -40,13 +40,13 @@ sonnet
 
 ## Subtasks
 
-- [ ] T01.1 Delete `dotnet/project.json`; drop `@cooquoi/dotnet:build` from drift's `dependsOn`; `pnpm nx show projects` lists no `@cooquoi/dotnet`, and `pnpm nx run @cooquoi/contracts:drift` still passes
-- [ ] T01.2 `ci.yml`:
+- [x] T01.1 Delete `dotnet/project.json`; drop `@cooquoi/dotnet:build` from drift's `dependsOn`; `pnpm nx show projects` lists no `@cooquoi/dotnet`, and `pnpm nx run @cooquoi/contracts:drift` still passes
+- [x] T01.2 `ci.yml`:
   - a `dotnet` job: .NET setup only, path filter, then build, `git diff --exit-code dotnet/generated`, test, format check;
   - a `ts` job: Node only, `nx affected` / `run-many` for `lint typecheck test biome-check knip build drift`, the fresh-client check and the size report;
   - remove `contract-drift` or reduce it to what `ts` does not cover; update `needs:` of the image job.
-- [ ] T01.3 Violation checks with the new commands: rerun the S05 table rows for the failing .NET test, `dotnet format`, the error catalogue, the mirrored test and contract drift. Then make `dotnet/generated/openapi.json` stale (add a field to an endpoint's response without committing the regenerated file) and show that the freshness check fails. Revert each change. Update the S05 `findings.md` command column, and add a "Revised by E01.S08" note.
-- [ ] T01.4 Docs: `AGENTS.md` "Tooling" (what CI runs: two commands), `dotnet/AGENTS.md` "Commands" (the freshness rule: commit `dotnet/generated` with an endpoint change), webapp `AGENTS.md` if it names `@cooquoi/dotnet`. Then the Done-when grep prints nothing (backlog history and ADR 0020 may still mention it).
+- [x] T01.3 Violation checks with the new commands: rerun the S05 table rows for the failing .NET test, `dotnet format`, the error catalogue, the mirrored test and contract drift. Then make `dotnet/generated/openapi.json` stale (add a field to an endpoint's response without committing the regenerated file) and show that the freshness check fails. Revert each change. Update the S05 `findings.md` command column, and add a "Revised by E01.S08" note.
+- [x] T01.4 Docs: `AGENTS.md` "Tooling" (what CI runs: two commands), `dotnet/AGENTS.md` "Commands" (the freshness rule: commit `dotnet/generated` with an endpoint change), webapp `AGENTS.md` if it names `@cooquoi/dotnet`. Then the Done-when grep prints nothing (backlog history and ADR 0020 may still mention it).
 
 ## Done when
 
@@ -56,6 +56,9 @@ sonnet
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`ci(repo): split build tools per toolchain (E01.S08.T01)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Deleted `dotnet/project.json` (staged), dropped it from drift's `dependsOn`; `ci.yml` now has `ts` (Nx incl. drift, fresh-client check, size report) and `dotnet` (paths-filter, build, `dotnet/generated` freshness, test, format) jobs, image job needs both; required-check note is a comment in `ci.yml` (branch protection is the user's step).
+Violation checks re-run and reverted (failing test, format, catalogue, mirrored test, drift, stale openapi.json fails `git diff --exit-code`); S05 findings and AGENTS docs updated.
+Verified: Nx run-many (lint typecheck test biome-check knip build drift), dotnet test (121 pass), actionlint clean, grep empty. Not committed. CI never run on GitHub (paths-filter and `steps.gate` logic untested there).

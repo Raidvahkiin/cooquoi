@@ -145,4 +145,6 @@ dotnet format dotnet/Cooquoi.slnx --verify-no-changes
 aspire start                                           # from aspire/Cooquoi.AppHost; dashboard :15149, API :5281, webapp :3000
 ```
 
+CI runs these as its `dotnet` job (build, test, format), not through Nx. The build writes `dotnet/generated/openapi.json`; commit it with any endpoint change, because CI fails on `git diff --exit-code dotnet/generated` and the contract drift check (`pnpm nx run @cooquoi/contracts:drift`) reads that committed file.
+
 Keep these flags. `-v q` hides the build chatter of `dotnet test`. `--no-progress` drops the `[+n/x0/?0]` lines that pile up during long Testcontainers runs (`--progress off` does not remove them all). Failed tests still print their details. For one failing test's logs, rerun it alone with `--output Detailed`.

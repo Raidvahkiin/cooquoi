@@ -2,6 +2,8 @@
 
 ## Violation checks
 
+Revised by E01.S08 ([ADR 0020](../../../architecture/adr/0020-build-tools-nx-and-dotnet.md)): the .NET rows now use the `dotnet` CLI commands CI runs in its `dotnet` job (all re-verified failing). A stale `dotnet/generated/openapi.json` (field added to `ConversionDetail`, file not committed) fails `git diff --exit-code dotnet/generated` after `dotnet build`. The `nx affected` and `contract-drift` notes below describe the S05 setup; CI is now a `ts` job (Nx) and a `dotnet` job.
+
 Each violation was introduced locally, run through the Nx target CI uses (`--skip-nx-cache`), and reverted.
 
 | Rule | Violation | Command | Result |
@@ -11,11 +13,11 @@ Each violation was introduced locally, run through the Nx target CI uses (`--ski
 | knip unused export | extra `export const` in `search-ingredients.query.ts` | `pnpm nx run @cooquoi/monorepo:knip` | fails, "Unused exports (1)" |
 | TypeScript type error | `const bad: number = 'text'` | `pnpm nx run @cooquoi/webapp:typecheck` | fails, TS2322 |
 | Failing Vitest test | `expect(1).toBe(2)` | `pnpm nx run @cooquoi/webapp:test` | fails, 1 of 65 |
-| Failing .NET test | `1.ShouldBe(2)` in Architecture.Tests | `pnpm nx run @cooquoi/dotnet:test` | fails |
-| `dotnet format` | `namespace   X;` extra spaces | `pnpm nx run @cooquoi/dotnet:format-check` | fails, `WHITESPACE` |
+| Failing .NET test | `1.ShouldBe(2)` in Architecture.Tests | `dotnet test --project dotnet/tests/Cooquoi.Architecture.Tests -v q --no-progress` | fails |
+| `dotnet format` | `namespace   X;` extra spaces | `dotnet format dotnet/Cooquoi.slnx --verify-no-changes` | fails, `WHITESPACE` |
 | Contract drift | foodpedia route renamed in `routes.tsp` | `pnpm nx run @cooquoi/contracts:drift` | fails (oasdiff + drift gate) |
-| Error catalogue | `code-taken` removed from `messages/fr.json` | `pnpm nx run @cooquoi/dotnet:test` | fails, `Contract_codes_are_translated_in_every_locale(fr)` |
-| Mirrored test | `Features/Violation/` use case without tests | `pnpm nx run @cooquoi/dotnet:test` | fails, `Use_cases_have_a_mirrored_test_file` |
+| Error catalogue | `code-taken` removed from `messages/fr.json` | `dotnet test --project dotnet/tests/Cooquoi.Architecture.Tests -v q --no-progress` | fails, `Contract_codes_are_translated_in_every_locale(fr)` |
+| Mirrored test | `Features/Violation/` use case without tests | `dotnet test --project dotnet/tests/Cooquoi.Architecture.Tests -v q --no-progress` | fails, `Use_cases_have_a_mirrored_test_file` |
 
 ## Spike answers
 

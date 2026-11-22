@@ -24,7 +24,7 @@ Apply [ADR 0020](../../../architecture/adr/0020-build-tools-nx-and-dotnet.md): C
 
 | Id | Title | Status | Depends on | Parallel-safe | Session |
 |---|---|---|---|---|---|
-| [T01](T01-split-nx-and-dotnet.md) | Remove the .NET Nx project, split CI per toolchain, update docs | todo | — | — | s08-t01 |
+| [T01](T01-split-nx-and-dotnet.md) | Remove the .NET Nx project, split CI per toolchain, update docs | doing | — | — | s08-t01 |
 
 One task: every change touches the same CI file and the drift target, so splitting it would only add hand-offs. The story review runs after T01 (`backlog-run`).
 

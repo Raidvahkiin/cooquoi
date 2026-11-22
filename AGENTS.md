@@ -89,9 +89,11 @@ Nx stays at the root and orchestrates every TypeScript and TypeSpec project.
 - **TypeScript**: `tsc` is TypeScript 7 (fast native compiler, used by typecheck); the `typescript` package is aliased to TypeScript 6 for tools that need its API (Nx, typescript-eslint, Next.js).
 - Nx 24, Vitest, Biome for formatting, ESLint (with `@nx/enforce-module-boundaries`) for linting.
 - Project names are the full package names (`@cooquoi/webapp`, not `webapp`).
+- **Two build tools, two CI jobs** ([ADR 0020](docs/architecture/adr/0020-build-tools-nx-and-dotnet.md)): Nx runs TypeScript and TypeSpec (`ts` job), the `dotnet` CLI runs C# (`dotnet` job). There is no Nx project for C#.
 
 ```bash
-pnpm nx run-many -t lint typecheck test  # what CI runs (TypeScript)
+pnpm nx run-many -t lint typecheck test biome-check knip build drift  # CI `ts` job
+dotnet test --solution dotnet/Cooquoi.slnx -v q --no-progress           # CI `dotnet` job (after dotnet build, dotnet format)
 pnpm nx run <project>:<target>           # e.g. pnpm nx run @cooquoi/webapp:test
 pnpm run nx:format                        # biome format --write
 dotnet build dotnet/Cooquoi.slnx          # C# (see dotnet/AGENTS.md)

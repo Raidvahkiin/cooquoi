@@ -32,8 +32,7 @@
       "drift": {
         "cache": true,
         "dependsOn": [
-          "compile",
-          "@cooquoi/dotnet:build"
+          "compile"
         ],
         "inputs": [
           "{projectRoot}/generated/openapi.yaml",

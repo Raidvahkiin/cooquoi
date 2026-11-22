@@ -1,3 +1,5 @@
+# Required checks (branch protection, set by the repository owner): `ts` and `dotnet`.
+# `dotnet` always reports a result: on pull requests its steps are skipped when no C#-relevant file changed.
 name: CI
 
 on:
@@ -18,9 +20,9 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  # One pipeline for every toolchain, all through Nx: lint, typecheck, test (TypeScript and .NET, including
-  # the architecture, error catalogue and mirrored-test checks), Biome, knip, `dotnet format`.
-  verify:
+  # TypeScript and TypeSpec through Nx (ADR 0020): lint, typecheck, test, Biome, knip, build, and contract drift
+  # (compiled contract against the committed dotnet/generated/openapi.json, no C# build needed).
+  ts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -36,13 +38,6 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
 
-      # SDK version comes from global.json (same as local)
-      - uses: actions/setup-dotnet@v6
-        with:
-          global-json-file: global.json
-
-      # Docker is preinstalled on ubuntu-latest: Testcontainers (Postgres) uses it.
-
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -50,11 +45,20 @@ jobs:
 
       - name: Verify affected projects (pull request)
         if: github.event_name == 'pull_request'
-        run: pnpm exec nx affected -t lint typecheck test biome-check knip build format-check --parallel=3
+        run: pnpm exec nx affected -t lint typecheck test biome-check knip build drift --parallel=3
 
       - name: Verify every project (main and tags)
         if: github.event_name != 'pull_request'
-        run: pnpm exec nx run-many -t lint typecheck test biome-check knip build format-check --parallel=3
+        run: pnpm exec nx run-many -t lint typecheck test biome-check knip build drift --parallel=3
+
+      # `nx affected` can skip api-client; regenerate unconditionally so a stale client always fails.
+      - name: Generate contract and client
+        run: pnpm exec nx run @cooquoi/api-client:generate
+
+      - name: Generated client is committed and fresh
+        run: |
+          git diff --exit-code contracts/generated ts/libs/api-client/src/generated
+          test -z "$(git status --porcelain contracts/generated ts/libs/api-client/src/generated)"
 
       # Reports only: Biome's size rules are errors, so a violation already failed the step above.
       - name: Size report
@@ -74,43 +78,62 @@ jobs:
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
 
-  # ADR 0009 §6: the API's real OpenAPI document must match the TypeSpec contract.
-  # Must be a required check: `nx affected` does not select drift for C#-only changes.
-  contract-drift:
+  # C# through the dotnet CLI (ADR 0020): build, committed OpenAPI document is fresh, tests, format.
+  dotnet:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read # dorny/paths-filter lists the files of a pull request
     steps:
       - uses: actions/checkout@v6
 
-      - uses: pnpm/action-setup@v6
-
-      - uses: actions/setup-node@v7
+      # Pull requests only run the steps below when a file ErrorCatalogueTests, the API or Aspire depend on changed.
+      # Main and tags always run them.
+      - uses: dorny/paths-filter@v3.0.2
+        id: filter
+        if: github.event_name == 'pull_request'
         with:
-          node-version-file: .node-version
-          cache: pnpm
+          filters: |
+            dotnet:
+              - 'dotnet/**'
+              - 'aspire/**'
+              - 'contracts/**'
+              - 'global.json'
+              - 'ts/apps/cooquoi-webapp/messages/**'
+
+      - name: Decide whether to run
+        id: gate
+        run: echo "run=${{ github.event_name != 'pull_request' || steps.filter.outputs.dotnet == 'true' }}" >> "$GITHUB_OUTPUT"
 
       # SDK version comes from global.json (same as local)
       - uses: actions/setup-dotnet@v6
+        if: steps.gate.outputs.run == 'true'
         with:
           global-json-file: global.json
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+      # Docker is preinstalled on ubuntu-latest: Testcontainers (Postgres) uses it.
 
-      # No graph edge from @cooquoi/dotnet on purpose, so drift runs whatever the change.
-      # Builds .NET (writes dotnet/generated/openapi.json), compiles the contract, then oasdiff + drift gate.
-      - name: Contract drift
-        run: pnpm exec nx run @cooquoi/contracts:drift
+      - name: Build
+        if: steps.gate.outputs.run == 'true'
+        run: dotnet build dotnet/Cooquoi.slnx -v q -nologo -clp:ErrorsOnly
 
-      - name: Generate contract and client
-        run: pnpm exec nx run @cooquoi/api-client:generate
-
-      - name: Generated files are committed and fresh
+      # The build writes dotnet/generated/openapi.json; an endpoint change must commit the regenerated file.
+      - name: OpenAPI document is committed and fresh
+        if: steps.gate.outputs.run == 'true'
         run: |
-          git status --porcelain contracts/generated dotnet/generated ts/libs/api-client/src/generated
-          test -z "$(git status --porcelain contracts/generated dotnet/generated ts/libs/api-client/src/generated)"
+          git diff --exit-code dotnet/generated
+          test -z "$(git status --porcelain dotnet/generated)"
+
+      - name: Test
+        if: steps.gate.outputs.run == 'true'
+        run: dotnet test --solution dotnet/Cooquoi.slnx -v q --no-progress
+
+      - name: Format check
+        if: steps.gate.outputs.run == 'true'
+        run: dotnet format dotnet/Cooquoi.slnx --verify-no-changes
 
   build-and-push-images:
-    needs: [verify, contract-drift]
+    needs: [ts, dotnet]
     permissions:
       contents: read
       packages: write
