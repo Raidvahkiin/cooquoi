@@ -33,7 +33,7 @@ sonnet
 ## Subtasks
 
 - [x] T07.1 Add `dev-fr@cooquoi.local` (`locale: fr`) and `dev-vi@cooquoi.local` (`locale: vi`), no curator role, same password variable; check they import (realm reset if Aspire keeps the Keycloak volume, note how)
-- [ ] T07.2 Under Aspire: as `dev-fr`, `/foodpedia?q=saumon` and `q=salmon` find *Saumon* with French UI; as `dev-vi`, `q=ca hoi` finds *cá hồi* with Vietnamese UI; as `dev`, English
+- [x] T07.2 Under Aspire: as `dev-fr`, `/foodpedia?q=saumon` and `q=salmon` find *Saumon* with French UI; as `dev-vi`, `q=ca hoi` finds *cá hồi* with Vietnamese UI; as `dev`, English
 - [ ] T07.3 A translated error: e.g. `q` over 100 characters typed in the URL (or another real problem) shows the message of its code in the user's language
 - [ ] T07.4 Light and dark mode screenshots of the search page (paprika vs error red), saved in the session scratchpad, not committed
 - [x] T07.5 Spike plan: Phase 4 **Status (date)** with the answers (Astryx in Server Components, theme build, dark mode; paprika vs error red; Vitest browser mode + MSW), what the tests fixed, what is not done (C5 moved to the curator app, E01.S06)
@@ -45,9 +45,10 @@ sonnet
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`docs(repo): phase 4 findings (E01.S04.T07)`), stop.
 
-Status: partial (T07.2-T07.4 blocked: Docker daemon not running)
+Status: partial (T07.2 done via curl; T07.3 and T07.4 not met, see Report)
 
 Report:
-- Changed: `dev-fr` / `dev-vi` added to the dev users file (valid JSON, no curator role; Keycloak has no data volume so the import runs on every start); spike plan Phase 4 status with the answers; webapp `AGENTS.md` Commands and rebuild note; `webapp-test` skill browser-project notes.
-- Blocked (docker: `/var/run/docker.sock` missing, no daemon): `aspire run` built and started the dashboard but Postgres and Keycloak never started, API and webapp stayed Waiting. T07.2-T07.4 not observed, no screenshots; redo steps are in the spike plan status. Aspire stopped.
-- Surprising: nothing else; `dev-user-password` is an Aspire generated secret, read it in the dashboard.
+- Changed: `dev-fr` / `dev-vi` in the dev users file (import verified under Aspire); spike plan Phase 4 status with answers and observations; webapp `AGENTS.md` Commands; `webapp-test` skill notes.
+- T07.2 observed (curl with sign-in, not the browser): saumon/salmon as dev-fr French UI with Saumon; `ca hoi` as dev-vi Vietnamese UI with Cá hồi; dev English UI.
+- T07.3 not met: `q` over 100 chars falls back to the full list (no error); with the API stopped `/foodpedia` hung over 100 s instead of a translated error. T07.4 blocked: the browser pane rejects Keycloak's self-signed certificate; no screenshots.
+- Surprising: post-login callback redirects to `https://localhost:3000` (webapp is http).
