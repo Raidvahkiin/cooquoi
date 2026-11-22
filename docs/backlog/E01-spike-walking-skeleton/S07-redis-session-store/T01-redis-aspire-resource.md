@@ -34,7 +34,7 @@ none (AppHost)
 
 ## Model
 
-haiku (resource pattern given)
+sonnet (resource pattern given; the ACL wiring has no pattern yet)
 
 ## Lookups
 
@@ -54,7 +54,7 @@ haiku (resource pattern given)
 ## Done when
 
 - `dotnet build aspire/Cooquoi.AppHost -v q -nologo -clp:ErrorsOnly` succeeds.
-- Under `aspire start`, the dashboard shows `cache` healthy, and `docker exec <redis container> redis-cli -a <pw> CONFIG GET maxmemory*` shows 64 MB and `volatile-ttl`. With the webapp user, `GET foo` fails with `NOPERM` and `SET session:x 1` works.
+- Under `aspire start`, the dashboard shows `cache` healthy, and `docker inspect <redis container> --format '{{.Args}}'` shows the maxmemory, policy and persistence arguments (the default user is off, so `CONFIG GET` is not available). With the webapp user, `GET foo` fails with `NOPERM` and `SET session:x 1` works.
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(aspire): Redis resource for webapp sessions (E01.S07.T01)`), stop.
 
