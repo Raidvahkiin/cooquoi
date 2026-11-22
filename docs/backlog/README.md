@@ -21,7 +21,7 @@ Status: `todo` · `doing` · `done` · `blocked (<why>)` · `dropped`.
 
 **`story.md`**: `# E0n.S0n — <title>`, Goal, Acceptance (checklist; rule ids and use-case ids from the context docs), Context (paths with headings or line ranges, max ~6), Tasks table (`id | title | status | depends on | parallel-safe | session`), Summary (≤5 lines, written when done).
 
-**`T0n-<slug>.md`**: the [task brief](../../.agents/prompts/task-brief.md) sections (Goal, Read only, Reference, Skills, Lookups, Out of scope, Subtasks, Done when), then `Status:` and `Report:` (≤5 lines, written by the worker).
+**`T0n-<slug>.md`**: the [task brief](../../.agents/prompts/task-brief.md) sections (Goal, Read only, Reference, Skills, Model, Lookups, Out of scope, Subtasks, Done when), then `Status:` and `Report:` (≤5 lines, written by the worker).
 
 ## Epics
 

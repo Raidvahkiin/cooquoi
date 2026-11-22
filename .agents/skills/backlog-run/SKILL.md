@@ -21,10 +21,13 @@ Read `story.md` and the task files of the open tasks. Nothing else: no code, no 
 |---|---|
 | **Here** | Under ~10 tool calls, and this session is still small |
 | **Explore** subagent | A question, not a change: where or how something is done across files, what exists, which command verifies an area. Ask for `file:line` plus ≤10 lines, no file contents; `medium` breadth unless the question spans several naming conventions |
-| **Subagent** (`Agent`, general-purpose) | Self-contained work whose result is needed now, no steering expected: a subtask, a test group, the review |
-| **Session** (fresh) | A normal task (~20–60 calls) or anything the user may want to watch or steer |
+| **Subagent** (`Agent`, general-purpose) — **default** | A normal task (~10–40 calls) nobody needs to watch: `haiku` and `sonnet` tasks, a subtask, a test group, the review. Starts at ~51k context against ~71k+ for a session, so each call is cheaper. Brief = the task brief; the worker rules apply unchanged |
+| **Session** (fresh) | An `opus` task, a task likely past ~40 calls, one that may block on a user decision, or when the user asks to watch or steer |
 
-- Session tool available (desktop app): start one per task, `context: fresh`, brief = the task brief pointing at the task file. Otherwise print the filled brief for the user to paste into a new session, and stop.
+- Subagent: one per task, in dependency order, `model` from the task. Its report enters this context, so ask for the ≤5-line report only.
+- Session tool available (desktop app): start one per session-row task, `context: fresh`, brief = the task brief pointing at the task file. Otherwise print the filled brief for the user to paste into a new session, and stop.
+- **Model**: start each worker on the cheapest model that fits, passed as `model` to the session or `Agent` call (`context: fresh`; a fork ignores it). Use the task's `Model:` line; without one, pick by backlog-plan §4 (`haiku` mechanical, `sonnet` follows a pattern, `opus` new design). `Explore` lookups run on `haiku`; the story review on `sonnet`. The user's prompt wins: a named model, or "same model" / "no downgrade", replaces this rule for that run.
+- **Escalate, don't retry blind**: a worker that comes back red twice or `blocked` on a design question restarts on the next tier up (`haiku` → `sonnet` → `opus`) with its report as the brief's first line. Note the change in the story table.
 - Parallel only for `parallel-safe` tasks with no file overlap; parallel writers get their own worktree. Default: sequential in dependency order.
 - Set the task `Status: doing` and its session name in the story table before starting it.
 
@@ -33,7 +36,7 @@ Read `story.md` and the task files of the open tasks. Nothing else: no code, no 
 1. Read the task's **Report** and status.
 2. `git diff --stat` (or the worker's branch) and run the **Done when** command in its quiet form.
 3. Open a file only when the stat or the command looks wrong. Never re-read the whole diff in the parent.
-4. Red or incomplete → send the same session a short follow-up (what failed, the command output tail), not a new session.
+4. Red or incomplete → send the same session or subagent (`SendMessage` to its id) a short follow-up (what failed, the command output tail), not a new session.
 
 ### 4. Close the story
 

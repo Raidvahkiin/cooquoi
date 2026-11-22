@@ -38,11 +38,15 @@ Every section of the brief, concrete:
 - **Reference**: `file:line` of the pattern to copy.
 - **Skills**: the project skills the worker invokes (`dotnet-feature`, `webapp-feature`, `api-client-sync`…).
 - **Lookups** (optional): questions the worker must answer before coding that you could not settle with the step 2 map, each phrased as an `Explore` query with the expected answer (`file:line`, ≤10 lines). Prefer settling it now and putting the answer in Reference.
+- **Model**: the cheapest tier that fits, so `backlog-run` can start the worker on it:
+  - `haiku`: mechanical, fully specified by Reference: regenerate, rename, wire a registration or migration, move docs, bump versions.
+  - `sonnet` (default): a use case, endpoint, screen or test group that follows an existing pattern in Reference.
+  - `opus`: new structure or design with no pattern to copy: a new aggregate or rule set, a new building block, a cross-cutting change, unclear root cause.
 - **Out of scope**: the neighbouring tasks, by id.
 - **Done when**: the quiet verification command from `AGENTS.md` plus an observable result.
 
 ## 5. Finish
 
 1. Update the Epics table (README), `epic.md` and each `story.md` tasks table.
-2. Self-check: every task has Reference and Done when; no task depends on a later one; no story without acceptance criteria; open questions listed, not guessed.
+2. Self-check: every task has Reference, Model and Done when; no task depends on a later one; no story without acceptance criteria; open questions listed, not guessed.
 3. Report: the story table (id, title, tasks, depends on) and the open questions. Stop; do not start the work.

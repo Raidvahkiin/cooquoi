@@ -7,6 +7,7 @@ Goal: <one sentence, the outcome, in glossary terms>
 Read only: <paths with line ranges or headings; the AGENTS.md section that applies>
 Reference: <existing code to copy the pattern from, file:line>
 Skills: <dotnet-feature, dotnet-test, webapp-feature…>
+Model: <haiku | sonnet | opus> (read by the parent to start this session; see backlog-plan §4)
 Lookups (optional, each run as an Explore agent, answer = file:line + ≤10 lines, no file contents): <question>
 
 Out of scope: <neighbouring work this task must not touch>
