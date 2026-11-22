@@ -33,6 +33,9 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | Term | Definition |
 |---|---|
 | **Pantry** | A named storage owned by a household ("Fridge", "Freezer", "Mum's cellar"). A household can have several. |
+| **Inbox** ("To put away") | The household's system pantry where every restock lands until it is put away. Its items count as stock. It cannot be renamed, deleted or chosen as a move target. |
+| **Put away** | Move a stock item (whole, or split by a quantity) from the inbox into a real pantry. |
+| **Split** | Moving part of a stock item: the moved part becomes a new stock item with the same entered unit, source and restock date. |
 | **Stock item** | An ingredient held in a pantry, with a quantity and an optional expiry date. |
 | **Entered quantity** | The quantity exactly as the user typed it (amount + unit, e.g. "2 packs"). Never overwritten. |
 | **Normalized quantity** | The entered quantity converted to the ingredient's base unit, when a conversion is known. |
@@ -71,4 +74,4 @@ Terms used identically in code, docs and conversations. When a new concept appea
 
 ## Domain events (first pass)
 
-`HouseholdCreated` · `IngredientAdded` · `ConversionDefined` · `ItemsRestocked` · `StockItemConsumed` · `StockItemDiscarded` · `StockItemExpiringSoon` · `StockRunningLow` · `StockOverstocked` · `PricePaidRecorded` · `RecipeRegistered` · `MealPlanned` · `MealCooked` · `ShoppingListGenerated` · `ReceiptScanned`
+`HouseholdCreated` · `IngredientAdded` · `ConversionDefined` · `ItemsRestocked` · `StockItemMoved` · `StockItemConsumed` · `StockItemDiscarded` · `StockItemExpiringSoon` · `StockRunningLow` · `StockOverstocked` · `PricePaidRecorded` · `RecipeRegistered` · `MealPlanned` · `MealCooked` · `ShoppingListGenerated` · `ReceiptScanned`

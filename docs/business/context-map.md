@@ -48,7 +48,7 @@ flowchart TB
   EXT -->|"weather, prices"| PS
   PS <-->|"compact summaries / ranked ids"| AI
 
-  RS -->|"ItemsRestocked"| PA
+  RS -->|"ReceiptScanned"| PA
   RS -->|"PricePaidRecorded"| MK
   RS <--> AI
 
@@ -63,7 +63,8 @@ flowchart TB
 | Identity & Household → all | Shared identifiers | Contexts reference `HouseholdId` / `UserId` by id only. `UserId` is Cooquoi's own id, independent of the identity provider. |
 | Foodpedia → Pantry, Market, Cookbook, Planning | Open host service | Foodpedia publishes ingredients, units and conversions; downstream contexts reference ingredients by id and never modify them. |
 | Pantry, Market, Cookbook → Planning & Suggestion | Customer / supplier | Planning reads stock, prices and recipes through queries or published events. |
-| Receipt Scanning → Pantry, Market | Published events | One receipt produces `ItemsRestocked` and `PricePaidRecorded`. |
+| Receipt Scanning → Pantry | Published event | `ReceiptScanned`; Pantry restocks its lines into the inbox and publishes its own `ItemsRestocked`. |
+| Receipt Scanning → Market | Published event | `PricePaidRecorded` for the prices on the receipt. |
 | Planning & Suggestion → Pantry | Published event | `MealCooked` consumes stock. |
 | Planning & Suggestion ↔ LLM | Anti-corruption layer | Domain sends compact summaries and receives ranked ids + explanations (see [ADR 0005](../architecture/adr/0005-ai-suggestions-token-strategy.md)). |
 
