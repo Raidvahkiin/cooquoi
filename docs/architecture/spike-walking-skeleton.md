@@ -63,7 +63,7 @@ The smallest domain, but every layer: Aspire, Keycloak, API, domain, persistence
 - **Next.js 16**: Server Components cannot write cookies → token refresh lives in `src/proxy.ts`.
 - **.NET tooling**: `global.json` at the repo root (SDK 10.0.100, `latestFeature`); NuGet's latest are .NET 11 packages, so 10.x versions are pinned in `Directory.Packages.props`; `IDE0005` needs `GenerateDocumentationFile` (+ `NoWarn CS1591`); EF migrations break the strict analyzers → `generated_code = true` for `**/Migrations/*.cs` in `.editorconfig`; `CA1716` rejects a type named `Me` (→ `MeResponse`).
 - **Tests**: xunit v3 4.x runs only on Microsoft Testing Platform → `"test": { "runner": "Microsoft.Testing.Platform" }` in `global.json`, no VSTest packages, `dotnet test --project …`. Alba's `JwtSecurityStub` validates real JWTs (add `iss`); `RemoveClaim` only removes baseline claims, not ones the scenario added. `CA1707` off for `tests/` (sentence-style names). MSW 3 renamed `onUnhandledRequest` → `onUnhandledFrame`. The Nx Vitest plugin infers `test` from `vite.config.mts`.
-- **Dev loop**: `aspire start` from `aspire/Cooquoi.AppHost` (dashboard on 15149, webapp 3000, API 5281); `dotnet tool restore` for `dotnet-ef`.
+- **Dev loop**: `aspire start` from `aspire/Cooquoi.AppHost` (https: dashboard on 17149, webapp 3000, API 7281); `dotnet tool restore` for `dotnet-ef`.
 ### Phase 2 — Foodpedia backend
 
 **Build**

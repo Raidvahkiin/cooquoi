@@ -10,7 +10,11 @@ internal static class Identity
         this IDistributedApplicationBuilder builder,
         IResourceBuilder<ParameterResource> webappClientSecret)
     {
+        // Keycloak on the .NET dev certificate, so Node and .NET trust it (ADR 0018); the API is still experimental.
+#pragma warning disable ASPIRECERTIFICATES001
         var keycloak = builder.AddKeycloak("keycloak")
+            .WithHttpsDeveloperCertificate()
+#pragma warning restore ASPIRECERTIFICATES001
             .WithRealmImport(KeycloakFile(builder, "realms/cooquoi-realm.json"))
             .WithEnvironment("COOQUOI_WEBAPP_CLIENT_SECRET", webappClientSecret)
             .WithEnvironment("COOQUOI_WEBAPP_URL", Webapp.Url);
@@ -27,6 +31,7 @@ internal static class Identity
     }
 
     /// <summary>Issuer URL of the Cooquoi realm, as seen by browsers and services.</summary>
+    /// <remarks>On the dev certificate Keycloak keeps its endpoint named "http" but serves https.</remarks>
     public static ReferenceExpression IssuerUrl(IResourceBuilder<KeycloakResource> keycloak) =>
         ReferenceExpression.Create($"{keycloak.GetEndpoint("http")}/realms/{Realm}");
 

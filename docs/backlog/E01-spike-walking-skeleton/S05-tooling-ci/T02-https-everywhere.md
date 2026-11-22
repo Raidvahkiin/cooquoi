@@ -46,11 +46,11 @@ opus (cross-cutting across Aspire, Keycloak, Node and the browser; no pattern to
 
 ## Subtasks
 
-- [ ] T02.1 AppHost `launchSettings.json`: an `https` profile with https dashboard, OTLP and resource-service URLs; remove `ASPIRE_ALLOW_UNSECURED_TRANSPORT`. API `launchSettings.json`: an `https` profile.
-- [ ] T02.2 `Api.cs`: the `https` endpoint is the one used. `Webapp.cs`: `https://localhost:3000`, an https endpoint, `API_BASE_URL` from `GetEndpoint("https")`, and `NODE_EXTRA_CA_CERTS` set to the PEM path from T01. The webapp `dev` command serves https with that certificate and key.
-- [ ] T02.3 `Identity.cs`: Keycloak on the dev certificate, `IssuerUrl` and `COOQUOI_WEBAPP_URL` on https. Check that the realm redirect URIs resolve to https.
-- [ ] T02.4 `session.ts:32`: `secure: true` in every environment. Adjust any test that asserts the old flag.
-- [ ] T02.5 Run the system: `aspire start`, then sign in as `dev@cooquoi.local` at `https://localhost:3000`. Check there is no certificate warning, no http→https upgrade and a `Secure` session cookie (`curl -sv` against `/auth/login` with the PEM via `--cacert`, then the browser pane). Update the README ports line if it changed.
+- [x] T02.1 AppHost `launchSettings.json`: an `https` profile with https dashboard, OTLP and resource-service URLs; remove `ASPIRE_ALLOW_UNSECURED_TRANSPORT`. API `launchSettings.json`: an `https` profile.
+- [x] T02.2 `Api.cs`: the `https` endpoint is the one used. `Webapp.cs`: `https://localhost:3000`, an https endpoint, `API_BASE_URL` from `GetEndpoint("https")`, and `NODE_EXTRA_CA_CERTS` set to the PEM path from T01. The webapp `dev` command serves https with that certificate and key.
+- [x] T02.3 `Identity.cs`: Keycloak on the dev certificate, `IssuerUrl` and `COOQUOI_WEBAPP_URL` on https. Check that the realm redirect URIs resolve to https.
+- [x] T02.4 `session.ts:32`: `secure: true` in every environment. Adjust any test that asserts the old flag.
+- [x] T02.5 Run the system: `aspire start`, then sign in as `dev@cooquoi.local` at `https://localhost:3000`. Check there is no certificate warning, no http→https upgrade and a `Secure` session cookie (`curl -sv` against `/auth/login` with the PEM via `--cacert`, then the browser pane). Update the README ports line if it changed.
 
 ## Done when
 
@@ -59,6 +59,10 @@ opus (cross-cutting across Aspire, Keycloak, Node and the browser; no pattern to
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(dev): HTTPS everywhere in development (E01.S05.T02)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- Changed: AppHost and API `https` launch profiles (dashboard 17149, OTLP 21066, resources 22101, API 7281, no unsecured transport); Keycloak `WithHttpsDeveloperCertificate()` (experimental, pragma); webapp endpoint scheme https; `API_BASE_URL` from the API `https` endpoint; `next dev --experimental-https` with the T01 key, cert and `--experimental-https-ca`; session cookie `secure: true`.
+- Verified: build and webapp typecheck/test green; under `aspire start` every resource URL is https; curl `--cacert` round trip as `dev@cooquoi.local`: `/auth/login` → https Keycloak → `https://localhost:3000/auth/callback` → `/account` 200, `Secure` cookie, no HSTS. Browser pane: `ERR_CERT_AUTHORITY_INVALID` only because NSS trust (`certutil`) is not installed.
+- Surprising: Keycloak and Next.js keep their endpoint named `http` with an https scheme (`GetEndpoint("https")` throws), so `IssuerUrl` still reads `http`. Aspire overwrites `NODE_EXTRA_CA_CERTS` with its own bundle and `next dev` drops it for its server unless `--experimental-https-ca` is passed: that flag carries the PEM, not an AppHost env var.
+- Left: `oidc.ts` `allowInsecureRequests` branch for http issuers is now unused in dev (not in scope); README has no ports line, updated the one in `spike-walking-skeleton.md`.

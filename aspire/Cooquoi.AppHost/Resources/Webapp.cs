@@ -4,7 +4,7 @@ internal static class Webapp
 {
     /// <summary>Fixed port: it is the OIDC redirect target registered in the Keycloak realm.</summary>
     public const int Port = 3000;
-    public static readonly string Url = $"http://localhost:{Port}";
+    public static readonly string Url = $"https://localhost:{Port}";
 
     public static IResourceBuilder<NextJsAppResource> AddCooquoiWebapp(
         this IDistributedApplicationBuilder builder,
@@ -17,11 +17,17 @@ internal static class Webapp
 
         return builder.AddNextJsApp("webapp", webappDirectory)
             .WithPnpm(install: false)
-            .WithEndpoint("http", endpoint => endpoint.Port = Port)
+            // The dev script serves https on the dev certificate and passes it to the server as
+            // NODE_EXTRA_CA_CERTS (--experimental-https-ca); AddNextJsApp names its endpoint "http".
+            .WithEndpoint("http", endpoint =>
+            {
+                endpoint.Port = Port;
+                endpoint.UriScheme = "https";
+            })
             .WaitFor(api)
             .WaitFor(keycloak)
             .WithEnvironment("APP_URL", Url)
-            .WithEnvironment("API_BASE_URL", api.GetEndpoint("http"))
+            .WithEnvironment("API_BASE_URL", api.GetEndpoint("https"))
             .WithEnvironment("OIDC_ISSUER", Identity.IssuerUrl(keycloak))
             .WithEnvironment("OIDC_CLIENT_ID", Identity.WebappClientId)
             .WithEnvironment("OIDC_CLIENT_SECRET", webappClientSecret)

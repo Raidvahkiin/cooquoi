@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "typecheck": "tsc --project tsconfig.json --noEmit",
-    "dev": "next dev"
+    "dev": "next dev --experimental-https --experimental-https-key \"$HOME/.aspnet/dev-certs/https/aspnetcore-dev.key\" --experimental-https-cert \"$HOME/.aspnet/dev-certs/https/aspnetcore-dev.pem\" --experimental-https-ca \"$HOME/.aspnet/dev-certs/https/aspnetcore-dev.pem\""
   },
   "dependencies": {
     "@astryxdesign/core": "catalog:",

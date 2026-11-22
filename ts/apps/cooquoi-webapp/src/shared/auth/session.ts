@@ -29,7 +29,7 @@ export function sessionOptions(): SessionOptions {
     cookieName: 'cooquoi_session',
     cookieOptions: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       sameSite: 'lax',
       path: '/',
     },

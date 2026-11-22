@@ -12,7 +12,7 @@ internal static class Api
             .WaitFor(keycloak)
             .WithEnvironment("Authentication__Authority", Identity.IssuerUrl(keycloak))
             // Without it the dashboard showed the API healthy while it had crashed at startup.
-            .WithHttpHealthCheck("/health");
+            .WithHttpHealthCheck("/health", endpointName: "https");
 
     private static string ApiProjectPath(IDistributedApplicationBuilder builder) =>
         Path.Combine(builder.AppHostDirectory, "..", "..", "dotnet", "src", "Cooquoi.Api", "Cooquoi.Api.csproj");
