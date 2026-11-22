@@ -149,4 +149,22 @@ describe('searchIngredientsPage', () => {
       error: { code: 'common.unexpected' },
     });
   });
+
+  it('stays bounded when the response never ends, and fails fast right after a timeout', async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/v1/ingredients`, async () => {
+        await delay('infinite');
+        return HttpResponse.json({});
+      }),
+    );
+
+    const started = Date.now();
+    const first = await searchIngredientsPage({ q: 'a', page: 1 });
+    const second = await searchIngredientsPage({ q: 'b', page: 1 });
+
+    expect(first).toEqual({ error: { code: 'common.unexpected' } });
+    expect(second).toEqual({ error: { code: 'common.unexpected' } });
+    // One timeout (200 ms in tests), not two.
+    expect(Date.now() - started).toBeLessThan(400);
+  });
 });
