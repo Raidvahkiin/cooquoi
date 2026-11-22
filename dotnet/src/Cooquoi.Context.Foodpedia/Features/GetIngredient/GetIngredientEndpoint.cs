@@ -58,7 +58,7 @@ public static class GetIngredientEndpoint
     {
         public IngredientDetail ToDetail(IngredientId id, Locale locale)
         {
-            var name = Names.FirstOrDefault(n => n.Locale == locale) ?? Names.First(n => n.Locale == Locale.English);
+            var name = LocalizedName.Pick(Names, locale);
             return new IngredientDetail(
                 id.Value,
                 Code.Value,
@@ -68,9 +68,9 @@ public static class GetIngredientEndpoint
                 BaseUnit.Code,
                 [.. Conversions.Items.Select(c => new ConversionDetail(c.Unit.Code, c.UnitAmount, c.BaseAmount))],
                 ContractEnumNames.ToCode(ExpiryKind),
-                ShelfLife is null ? null : new ShelfLifeDetail(ShelfLife.Days, ShelfLife.RecommendedStorage.ToString().ToLowerInvariant()),
+                ShelfLife is null ? null : new ShelfLifeDetail(ShelfLife.Days, ContractEnumNames.ToCode(ShelfLife.RecommendedStorage)),
                 [.. Tags.Select(tag => tag.Value)],
-                Status.ToString().ToLowerInvariant(),
+                ContractEnumNames.ToCode(Status),
                 Version);
         }
     }

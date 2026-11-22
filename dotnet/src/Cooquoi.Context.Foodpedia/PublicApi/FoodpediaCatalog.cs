@@ -64,7 +64,7 @@ internal sealed class FoodpediaCatalog(FoodpediaDbContext db) : IFoodpediaCatalo
         public CatalogIngredient ToCatalogIngredient(Locale locale) => new(
             Id.Value,
             Code.Value,
-            (Names.FirstOrDefault(name => name.Locale == locale) ?? Names.First(name => name.Locale == Locale.English)).Primary,
+            LocalizedName.Pick(Names, locale).Primary,
             ContractEnumNames.ToCode(Status),
             BaseUnit,
             ContractEnumNames.ToCode(ExpiryKind),

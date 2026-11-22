@@ -46,8 +46,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
         return ingredient;
     }
 
-    public LocalizedName NameIn(Locale locale) =>
-        _names.FirstOrDefault(name => name.Locale == locale) ?? _names.First(name => name.Locale == Locale.English);
+    public LocalizedName NameIn(Locale locale) => LocalizedName.Pick(_names, locale);
 
     /// <summary>C5: defines the conversion of a unit, replacing the existing one.</summary>
     public void DefineConversion(Conversion conversion)

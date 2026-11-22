@@ -26,7 +26,7 @@ public sealed record SearchIngredients(
 
 public sealed class SearchIngredientsValidator : AbstractValidator<SearchIngredients>
 {
-    private static readonly string[] Statuses = [.. Enum.GetNames<IngredientStatus>().Select(name => name.ToLowerInvariant())];
+    private static readonly string[] Statuses = [.. Enum.GetNames<IngredientStatus>().Select(ContractEnumNames.ToCode)];
 
     public SearchIngredientsValidator()
     {

@@ -21,6 +21,13 @@ public sealed record LocalizedName
     public string Primary { get; }
     public IReadOnlyList<string> Synonyms { get; }
 
+    /// <summary>The name in <paramref name="locale"/>, else the English one (F2 guarantees it exists).</summary>
+    public static LocalizedName Pick(IEnumerable<LocalizedName> names, Locale locale)
+    {
+        var list = names as IReadOnlyList<LocalizedName> ?? [.. names];
+        return list.FirstOrDefault(name => name.Locale == locale) ?? list.First(name => name.Locale == Locale.English);
+    }
+
     public LocalizedName WithSynonyms(IReadOnlyList<string> synonyms) => new(Locale, Primary, synonyms);
 
     private static bool IsValidName(string name) => !string.IsNullOrWhiteSpace(name) && name.Trim().Length <= MaxLength;
