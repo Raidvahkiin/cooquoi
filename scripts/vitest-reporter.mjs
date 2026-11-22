@@ -63,7 +63,12 @@ export default class CompactReporter {
     const broken = testModules.filter((mod) => mod.errors().length > 0);
     for (const mod of broken) {
       console.error(red(`\n✗ ${mod.moduleId}`));
-      for (const err of mod.errors()) console.error(err.stack ?? err.message);
+      for (const err of mod.errors()) {
+        // The browser runner wraps the real failure: "Failed to import test file" + `cause`.
+        for (let e = err; e != null; e = e.cause) {
+          console.error((e === err ? '' : 'Caused by: ') + (e.stack ?? e.message ?? String(e)));
+        }
+      }
     }
     if (broken.length > 0) {
       console.error(red(`${broken.length} file(s) failed outside their tests`));
