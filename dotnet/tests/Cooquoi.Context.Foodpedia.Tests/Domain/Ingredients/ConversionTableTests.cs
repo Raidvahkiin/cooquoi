@@ -42,4 +42,35 @@ public sealed class ConversionTableTests
 
         ConversionTable.Restore([fillet]).ShouldBe(ConversionTable.Empty.Define(fillet, Unit.Gram));
     }
+
+    [Theory]
+    [InlineData(2, "kg", 2000)]
+    [InlineData(250, "g", 250)]
+    public void Normalize_converts_universally_to_the_base_unit(decimal amount, string unit, decimal expected) =>
+        ConversionTable.Empty.Normalize(amount, Unit.FromCode(unit)!, Unit.Gram).ShouldBe(expected);
+
+    [Fact]
+    public void Normalize_applies_the_conversion_of_the_unit()
+    {
+        var salmon = ConversionTable.Empty.Define(new Conversion(Unit.FromCode("fillet")!, 1, 200), Unit.Gram);
+
+        salmon.Normalize(3, Unit.FromCode("fillet")!, Unit.Gram).ShouldBe(600);
+    }
+
+    [Fact]
+    public void Normalize_reaches_a_conversion_through_a_universal_conversion()
+    {
+        var egg = ConversionTable.Empty.Define(new Conversion(Unit.Gram, 60, 1), Unit.Piece);
+
+        egg.Normalize(0.12m, Unit.Kilogram, Unit.Piece).ShouldBe(2);
+    }
+
+    [Fact]
+    public void Normalize_leaves_a_quantity_without_a_path_unnormalized()
+    {
+        var salmon = ConversionTable.Empty.Define(new Conversion(Unit.FromCode("fillet")!, 1, 200), Unit.Gram);
+
+        salmon.Normalize(1, Unit.FromCode("can")!, Unit.Gram).ShouldBeNull();
+        salmon.Normalize(1, Unit.Millilitre, Unit.Gram).ShouldBeNull();
+    }
 }

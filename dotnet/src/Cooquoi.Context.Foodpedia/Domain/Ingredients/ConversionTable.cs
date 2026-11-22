@@ -27,9 +27,31 @@ public sealed class ConversionTable : IEquatable<ConversionTable>
         return new ConversionTable([.. Items.Where(item => item.Unit != conversion.Unit), conversion]);
     }
 
+    /// <summary>
+    /// The amount in <paramref name="baseUnit"/> using Foodpedia defaults: a universal conversion to the base unit,
+    /// else a universal conversion to the unit of one of these conversions and then its ratio (<c>kg</c> → <c>g</c> → <c>piece</c>);
+    /// <c>null</c> (unnormalized) when no path exists.
+    /// </summary>
+    public decimal? Normalize(decimal amount, Unit unit, Unit baseUnit)
+    {
+        if (unit.ConvertsUniversallyTo(baseUnit))
+        {
+            return ConvertUniversally(amount, unit, baseUnit);
+        }
+
+        var conversion = Items.FirstOrDefault(item => item.Unit == unit)
+            ?? Items.FirstOrDefault(item => unit.ConvertsUniversallyTo(item.Unit));
+        return conversion is null
+            ? null
+            : ConvertUniversally(amount, unit, conversion.Unit) * conversion.BaseAmount / conversion.UnitAmount;
+    }
+
     public bool Equals(ConversionTable? other) => other is not null && Items.SequenceEqual(other.Items);
 
     public override bool Equals(object? obj) => Equals(obj as ConversionTable);
 
     public override int GetHashCode() => Items.Aggregate(0, HashCode.Combine);
+
+    private static decimal ConvertUniversally(decimal amount, Unit from, Unit to) =>
+        from == to ? amount : amount * from.FactorToDimensionBase!.Value / to.FactorToDimensionBase!.Value;
 }

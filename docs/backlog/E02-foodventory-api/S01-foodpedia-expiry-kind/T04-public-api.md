@@ -40,11 +40,11 @@ Endpoints (T03); architecture-test rules for consumers (E02.S02.T02); Foodventor
 
 ## Subtasks
 
-- [ ] T04.1 Domain: normalization method on `ConversionTable` + domain tests (universal, conversion, unnormalized)
-- [ ] T04.2 `PublicApi/` P1–P3 and records; registration in `FoodpediaModule`
-- [ ] T04.3 Integration tests for P1–P3 against the seeded database (`Cooquoi.Testing` `TestApi.CreateDbContext`, `TestApi.cs:41`)
-- [ ] T04.4 `PublicApi/Events/` records + mapping handlers; tracked-session tests that each domain event (sent with `InvokeMessageAndWaitAsync`) publishes its integration event, with no dependency on the T03 endpoint
-- [ ] T04.5 One line in `dotnet/AGENTS.md` "Layout" on `PublicApi/Events/`
+- [x] T04.1 Domain: normalization method on `ConversionTable` + domain tests (universal, conversion, unnormalized)
+- [x] T04.2 `PublicApi/` P1–P3 and records; registration in `FoodpediaModule`
+- [x] T04.3 Integration tests for P1–P3 against the seeded database (`Cooquoi.Testing` `TestApi.CreateDbContext`, `TestApi.cs:41`)
+- [x] T04.4 `PublicApi/Events/` records + mapping handlers; tracked-session tests that each domain event (sent with `InvokeMessageAndWaitAsync`) publishes its integration event, with no dependency on the T03 endpoint
+- [x] T04.5 One line in `dotnet/AGENTS.md` "Layout" on `PublicApi/Events/`
 
 ## Done when
 
@@ -52,6 +52,10 @@ Endpoints (T03); architecture-test rules for consumers (E02.S02.T02); Foodventor
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodpedia): published API and integration events (E02.S01.T04)`), stop.
 
-Status: todo
+Status: blocked (DefineConversionEndpointTests.Defines_the_conversion…publishes_ConversionDefined fails: with a handler on ConversionDefined, FindEnvelopesWithMessageType sees 5 tracked records; line 52 needs `defined.Messages.Executed.MessagesOf<ConversionDefined>().Where(…)`, in Features tests I may not edit)
 
 Report:
+- `PublicApi/IFoodpediaCatalog` (scoped, internal `FoodpediaCatalog`, AsNoTracking projections) with P1–P3 returning records of primitives + `Unit`; codes as contract kebab strings (`ContractEnumNames`), chosen over PublicApi enums (no name clash, outbox-safe JSON).
+- Domain: `ConversionTable.Normalize(amount, unit, baseUnit)` (universal, else via a conversion's unit, else null) and `ShelfLife.ProposeExpiry(from)`, with tests.
+- `PublicApi/Events/` (3 records, Guid ids) cascaded by `Integration/IntegrationEventsHandler` from the domain events (domain events stay internal); tracked tests via `InvokeMessageAndWaitAsync`. One line in `dotnet/AGENTS.md` Layout.
+- Verified: build clean, architecture 17/17, Foodpedia 103/104 (the one above). Refactor: "name in locale or English" now in 3 places (aggregate `NameIn`, GetIngredient, catalog): follow-up outside my allowed files; the one-impl interface is the published boundary (ADR 0010).

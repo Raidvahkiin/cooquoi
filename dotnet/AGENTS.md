@@ -34,6 +34,8 @@ dotnet/
 │     ├─ Features/<UseCase>/                # request + validator, endpoint
 │     ├─ Persistence/                       # DbContext, factory, Configurations/, Lookups/, Projections/, Seed/, Migrations/
 │     ├─ Integration/  PublicApi/           # when another context needs them
+│     │                                     # PublicApi/: I<Context>…  interface (published queries, impl internal) + records of primitives/SharedKernel;
+│     │                                     # PublicApi/Events/: integration events (ids, kebab codes), cascaded by an Integration/…Handler from domain events
 │     └─ <Context>Module.cs                 # Add<Context>Context(), migrate (+ seed) for development
 └─ tests/
    ├─ Cooquoi.Testing/                      # TestApi (Alba + Testcontainers), Callers, Problems — shared library

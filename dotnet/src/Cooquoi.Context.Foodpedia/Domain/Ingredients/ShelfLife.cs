@@ -15,4 +15,7 @@ public sealed record ShelfLife
 
     public int Days { get; }
     public Storage RecommendedStorage { get; }
+
+    /// <summary>The expiry date proposed for stock bought or opened on <paramref name="from"/>.</summary>
+    public DateOnly ProposeExpiry(DateOnly from) => from.AddDays(Days);
 }

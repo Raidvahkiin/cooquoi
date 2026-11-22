@@ -3,6 +3,7 @@ using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Persistence;
 using Cooquoi.Context.Foodpedia.Persistence.Configurations;
 using Cooquoi.Context.Foodpedia.Persistence.Seed;
+using Cooquoi.Context.Foodpedia.PublicApi;
 using Cooquoi.Platform;
 using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +37,7 @@ public static class FoodpediaModule
                 .AddCooquoiInterceptors(services, UniqueConstraints)
                 .AddInterceptors(new ActiveNameInterceptor()),
             wolverineSchema);
+        builder.Services.AddScoped<IFoodpediaCatalog, FoodpediaCatalog>();
         return builder;
     }
 
