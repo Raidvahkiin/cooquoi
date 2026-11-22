@@ -47,13 +47,23 @@ jobs:
 
       - uses: nrwl/nx-set-shas@v5
 
+      # Tests run in their own step, after the build: the webapp browser tests failed to import
+      # their files when they ran next to `next build` (CI runs 45070791238, 45071436050).
       - name: Verify affected projects (pull request)
         if: github.event_name == 'pull_request'
-        run: pnpm exec nx affected -t lint typecheck test biome-check knip build drift --parallel=3
+        run: pnpm exec nx affected -t lint typecheck biome-check knip build drift --parallel=3
+
+      - name: Test affected projects (pull request)
+        if: github.event_name == 'pull_request'
+        run: pnpm exec nx affected -t test --parallel=3
 
       - name: Verify every project (main and tags)
         if: github.event_name != 'pull_request'
-        run: pnpm exec nx run-many -t lint typecheck test biome-check knip build drift --parallel=3
+        run: pnpm exec nx run-many -t lint typecheck biome-check knip build drift --parallel=3
+
+      - name: Test every project (main and tags)
+        if: github.event_name != 'pull_request'
+        run: pnpm exec nx run-many -t test --parallel=3
 
       # `nx affected` can skip api-client; regenerate unconditionally so a stale client always fails.
       - name: Generate contract and client
