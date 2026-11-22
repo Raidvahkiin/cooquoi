@@ -44,10 +44,10 @@ sonnet
 
 ## Subtasks
 
-- [ ] T04.1 Run every check above and record the results (cookie bytes, TTL values, behaviour)
-- [ ] T04.2 `AGENTS.md` line 42: `auth/ # oidc client, Redis-backed sessions (ADR 0019), getSession(), requireSession()`
-- [ ] T04.3 S04 findings open question 3: add "→ decided in ADR 0019, built in E01.S07"
-- [ ] T04.4 `S07-redis-session-store/findings.md`: what was built, the check results and what is left
+- [x] T04.1 Run every check above and record the results (cookie bytes, TTL values, behaviour)
+- [x] T04.2 `AGENTS.md` line 42: `auth/ # oidc client, Redis-backed sessions (ADR 0019), getSession(), requireSession()`
+- [x] T04.3 S04 findings open question 3: add "→ decided in ADR 0019, built in E01.S07"
+- [x] T04.4 `S07-redis-session-store/findings.md`: what was built, the check results and what is left
 
 ## Done when
 
@@ -55,6 +55,9 @@ sonnet
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`docs(backlog): E01.S07 verified, findings (E01.S07.T04)`), stop.
 
-Status: todo
+Status: done (not committed; the parent commits)
 
 Report:
+Verified under `aspire start`: rediss works unchanged; cookie 308 B (not <200, open item with options in findings.md); TTL = 30-day refresh lifetime, refresh restores it, sign-out deletes the key, Redis restart gives a redirect to login (no 500).
+Changed `AGENTS.md` Structure line (real helper names), S04 findings open question 3, wrote `findings.md`; typecheck/lint/test green. Aspire stopped.
+Surprise: the `webapp` ACL forbids SCAN/TTL, so TTLs were probed with `EXPIRE ... GT|LT`.

@@ -39,7 +39,7 @@ src/
 │  └─ hooks/use-<name>.ts
 └─ shared/
    ├─ api/        # createApiClient(), toActionError()
-   ├─ auth/       # oidc client, iron-session, getSession(), requireSession()
+   ├─ auth/       # oidc client, Redis-backed sessions (ADR 0019): loadSession()/saveSession()/rotateSession()/deleteSession(), requireSession()
    ├─ actions/    # ActionResult, defineAction()
    ├─ i18n/       # next-intl request config
    ├─ config/     # env parsed with zod

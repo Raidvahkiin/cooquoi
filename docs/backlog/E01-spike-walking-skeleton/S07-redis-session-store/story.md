@@ -29,10 +29,10 @@ The webapp's `cooquoi_session` cookie carries only a session id. The tokens and 
 
 | Id | Title | Status | Depends on | Parallel-safe | Session |
 |---|---|---|---|---|---|
-| [T01](T01-redis-aspire-resource.md) | Redis as an Aspire resource | todo | E01.S05 | yes | s07-t01 |
-| [T02](T02-session-store.md) | Session store: interface, Redis and in-memory implementations | todo | E01.S05 | yes | s07-t02 |
-| [T03](T03-sessions-through-store.md) | Login, refresh, proxy and logout through the store | todo | T02 | no | s07-t03 |
-| [T04](T04-verify-and-findings.md) | Verify under Aspire, docs and findings | todo | T01, T03 | no | s07-t04 |
+| [T01](T01-redis-aspire-resource.md) | Redis as an Aspire resource | done | E01.S05 | yes | s07-t01 |
+| [T02](T02-session-store.md) | Session store: interface, Redis and in-memory implementations | done | E01.S05 | yes | s07-t02 |
+| [T03](T03-sessions-through-store.md) | Login, refresh, proxy and logout through the store | done | T02 | no | s07-t03 |
+| [T04](T04-verify-and-findings.md) | Verify under Aspire, docs and findings | done | T01, T03 | no | s07-t04 |
 
 T01 (AppHost) and T02 (webapp) touch disjoint files and can run at the same time. The story review runs after T04 (`backlog-run`).
 
