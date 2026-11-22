@@ -15,6 +15,44 @@
       "summary": "Ngôn ngữ: {locale} · Số hộ gia đình: {count}"
     }
   },
+  "foodpedia": {
+    "title": "Foodpedia",
+    "search": {
+      "label": "Tìm nguyên liệu",
+      "submit": "Tìm kiếm"
+    },
+    "table": {
+      "label": "Nguyên liệu",
+      "name": "Tên",
+      "code": "Mã",
+      "baseUnit": "Đơn vị cơ sở"
+    },
+    "empty": {
+      "title": "Không tìm thấy nguyên liệu",
+      "description": "Hãy thử cách viết khác hoặc từ khóa ngắn hơn."
+    },
+    "pagination": {
+      "label": "Các trang nguyên liệu"
+    },
+    "units": {
+      "g": "gam",
+      "kg": "ki-lô-gam",
+      "ml": "mililít",
+      "l": "lít",
+      "tsp": "thìa cà phê",
+      "tbsp": "thìa canh",
+      "cup": "cốc",
+      "piece": "cái",
+      "pack": "gói",
+      "can": "lon",
+      "bottle": "chai",
+      "slice": "lát",
+      "fillet": "miếng phi lê",
+      "clove": "tép",
+      "bunch": "bó",
+      "pinch": "nhúm"
+    }
+  },
   "errors": {
     "common": {
       "validation": "Yêu cầu không hợp lệ.",

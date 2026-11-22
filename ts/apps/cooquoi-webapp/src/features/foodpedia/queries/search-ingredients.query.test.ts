@@ -1,0 +1,109 @@
+import { HttpResponse, http } from 'msw';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { API_BASE_URL } from '../../../../test/fixtures/household';
+import { server } from '../../../../test/msw/node';
+import { getSession } from '@/shared/auth';
+import { searchIngredientsPage } from './search-ingredients.query';
+
+const locale = vi.hoisted(() => ({ current: 'fr' }));
+vi.mock('next-intl/server', () => ({ getLocale: async () => locale.current }));
+
+beforeEach(async () => {
+  locale.current = 'fr';
+  const session = await getSession();
+  session.tokens = {
+    accessToken: 'access',
+    refreshToken: 'refresh',
+    expiresAt: Date.now() + 60_000,
+  };
+  await session.save();
+});
+
+function captureRequests() {
+  const urls: URL[] = [];
+  const languages: (string | null)[] = [];
+  server.events.on('request:start', ({ request }) => {
+    if (new URL(request.url).pathname === '/v1/ingredients') {
+      urls.push(new URL(request.url));
+      languages.push(request.headers.get('Accept-Language'));
+    }
+  });
+  return { urls, languages };
+}
+
+describe('searchIngredientsPage', () => {
+  it('forwards q, page, sort and the locale, and maps names in that locale', async () => {
+    const { urls, languages } = captureRequests();
+
+    const result = await searchIngredientsPage({
+      q: 'saumon',
+      page: 2,
+      sort: '-name',
+    });
+
+    expect(urls[0]?.searchParams.get('q')).toBe('saumon');
+    expect(urls[0]?.searchParams.get('page')).toBe('2');
+    expect(urls[0]?.searchParams.get('sort')).toBe('-name');
+    expect(languages[0]).toBe('fr');
+    expect(result).toMatchObject({
+      page: 2,
+      totalCount: 2,
+      sort: { key: 'name', direction: 'descending' },
+      rows: [
+        { code: 'salmon', name: 'Saumon' },
+        { code: 'rice', name: 'Riz' },
+      ],
+    });
+  });
+
+  it('returns a 400 problem as an error with its code', async () => {
+    server.use(
+      http.get(`${API_BASE_URL}/v1/ingredients`, () =>
+        HttpResponse.json(
+          {
+            type: 'about:blank',
+            title: 'Invalid',
+            status: 400,
+            code: 'common.validation',
+          },
+          { status: 400 },
+        ),
+      ),
+    );
+
+    await expect(searchIngredientsPage({ q: '', page: 1 })).resolves.toEqual({
+      error: { code: 'common.validation' },
+    });
+  });
+
+  it('retries without sort when the API rejects it', async () => {
+    let calls = 0;
+    server.use(
+      http.get(`${API_BASE_URL}/v1/ingredients`, ({ request }) => {
+        calls += 1;
+        if (new URL(request.url).searchParams.has('sort')) {
+          return HttpResponse.json(
+            {
+              type: 'about:blank',
+              title: 'Invalid',
+              status: 400,
+              code: 'common.invalid-sort',
+            },
+            { status: 400 },
+          );
+        }
+        return HttpResponse.json({
+          items: [],
+          page: 1,
+          pageSize: 20,
+          totalCount: 0,
+        });
+      }),
+    );
+
+    await expect(
+      searchIngredientsPage({ q: '', page: 1, sort: 'code' }),
+    ).resolves.toMatchObject({ rows: [], totalCount: 0 });
+    expect(calls).toBe(2);
+  });
+});

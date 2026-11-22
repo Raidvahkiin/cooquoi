@@ -15,6 +15,44 @@
       "summary": "Langue : {locale} · Foyers : {count}"
     }
   },
+  "foodpedia": {
+    "title": "Foodpedia",
+    "search": {
+      "label": "Rechercher un ingrédient",
+      "submit": "Rechercher"
+    },
+    "table": {
+      "label": "Ingrédients",
+      "name": "Nom",
+      "code": "Code",
+      "baseUnit": "Unité de base"
+    },
+    "empty": {
+      "title": "Aucun ingrédient trouvé",
+      "description": "Essayez une autre orthographe ou une recherche plus courte."
+    },
+    "pagination": {
+      "label": "Pages des ingrédients"
+    },
+    "units": {
+      "g": "gramme",
+      "kg": "kilogramme",
+      "ml": "millilitre",
+      "l": "litre",
+      "tsp": "cuillère à café",
+      "tbsp": "cuillère à soupe",
+      "cup": "tasse",
+      "piece": "pièce",
+      "pack": "paquet",
+      "can": "boîte",
+      "bottle": "bouteille",
+      "slice": "tranche",
+      "fillet": "filet",
+      "clove": "gousse",
+      "bunch": "botte",
+      "pinch": "pincée"
+    }
+  },
   "errors": {
     "common": {
       "validation": "La requête est invalide.",

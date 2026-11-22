@@ -11,6 +11,7 @@ export default defineConfig({
     alias: {
       '@': `${import.meta.dirname}/src`,
       'server-only': `${import.meta.dirname}/test/server-only.ts`,
+      'next/font/google': `${import.meta.dirname}/test/next-font-google.ts`,
     },
   },
   test: {
@@ -34,6 +35,10 @@ export default defineConfig({
       },
       {
         extends: true,
+        // The scan misses the JSX runtime injected by `oxc`; found at run time it reloads the page mid-run.
+        // Next.js client modules (`next/link`) read `process.env.__NEXT_*` at import.
+        define: { 'process.env': '{}' },
+        optimizeDeps: { include: ['react/jsx-dev-runtime'] },
         test: {
           // Components, in real Chromium (installed with `pnpm exec playwright install chromium`).
           name: 'browser',
