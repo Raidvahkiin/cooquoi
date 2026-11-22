@@ -135,7 +135,7 @@ Development compiles at runtime; elsewhere `TypeLoadMode.Auto` uses pre-generate
 
 ## Tests
 
-See the `dotnet-test` skill. Domain: xUnit v3 + Shouldly, rule ids in names. Integration: Alba + Testcontainers through `Cooquoi.Testing` (Docker must run). Mirrored layout: `src/…/X.cs` → `tests/…/XTests.cs`. No mocks of our own code; production code is never changed for testability.
+See the `dotnet-test` skill. Domain: xUnit v3 + Shouldly, rule ids in names. Integration: Alba + Testcontainers through `Cooquoi.Testing` (Docker must run). Mirrored layout: `src/…/X.cs` → `tests/…/XTests.cs`. No mocks of our own code; production code is never changed for testability. Wolverine tracked sessions only through `TestApi.TrackAsync` (one at a time per host: concurrent sessions steal each other's records and time out).
 
 ## Commands
 

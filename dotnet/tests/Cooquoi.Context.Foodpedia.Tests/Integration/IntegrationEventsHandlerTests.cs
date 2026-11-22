@@ -13,7 +13,7 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
     {
         var id = IngredientId.New();
 
-        var session = await InvokeAsync(new IngredientExpiryKindChanged(id, ExpiryKind.LongLife));
+        var session = await api.InvokeTracked(new IngredientExpiryKindChanged(id, ExpiryKind.LongLife));
 
         PublishedOnce<Published.IngredientExpiryKindChanged>(session)
             .ShouldBe(new Published.IngredientExpiryKindChanged(id.Value, "long-life"));
@@ -24,7 +24,7 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
     {
         var id = IngredientId.New();
 
-        var session = await InvokeAsync(new ConversionDefined(id, "fillet", 1, 200));
+        var session = await api.InvokeTracked(new ConversionDefined(id, "fillet", 1, 200));
 
         PublishedOnce<Published.ConversionDefined>(session).ShouldBe(new Published.ConversionDefined(id.Value, "fillet", 1, 200));
     }
@@ -34,7 +34,7 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
     {
         var id = IngredientId.New();
 
-        var session = await InvokeAsync(new IngredientRetired(id));
+        var session = await api.InvokeTracked(new IngredientRetired(id));
 
         PublishedOnce<Published.IngredientRetired>(session).ShouldBe(new Published.IngredientRetired(id.Value));
     }
@@ -42,7 +42,4 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
     /// <summary>The published event, seen once whether or not another context subscribes (every tracked stage records it).</summary>
     private static T PublishedOnce<T>(ITrackedSession session) =>
         session.FindEnvelopesWithMessageType<T>().Select(envelope => (T)envelope.Message!).Distinct().ShouldHaveSingleItem();
-
-    private Task<ITrackedSession> InvokeAsync(object domainEvent) =>
-        api.Host.TrackActivity().Timeout(TimeSpan.FromSeconds(30)).InvokeMessageAndWaitAsync(domainEvent);
 }

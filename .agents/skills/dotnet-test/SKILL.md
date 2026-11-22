@@ -54,8 +54,8 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
 - Callers (`Cooquoi.Testing.Callers`): `s.AsUser()`, `s.AsCurator()` (adds `realm_access` like Keycloak), `s.WithIdempotencyKey(key?)` — **every POST needs one**, reuse a key only to test replay.
 - `s.StatusCodeShouldBe(...)` for anything not 2xx (Alba expects 2xx by default); `result.ShouldBeProblemAsync(status, code)` checks status, `application/problem+json`, `code`, `traceId`.
 - Data: the seed is shared by all tests; create your own rows with unique codes and names (`Requests.NewIngredient()` uses a random suffix). Never depend on test order or mutate seed rows in a way another test reads (concurrency tests may update a seed row's synonyms, not its names or status).
-- **Tests run in parallel** and a tracked session sees the whole host: filter messages by your own ids (`MessagesOf<IngredientCreated>().ShouldContain(e => e.IngredientId.Value == id)`), never assert "no messages at all".
-- Wolverine tracking: `api.TrackedScenario(s => …)` waits for the outbox and every handler; `FindEnvelopesWithMessageType<T>()` also sees events with no subscriber.
+- **Tests run in parallel**; tracked sessions run one at a time (`TestApi.TrackAsync`, since Wolverine keeps one active session per host) but still see untracked tests' messages: filter messages by your own ids (`MessagesOf<IngredientCreated>().ShouldContain(e => e.IngredientId.Value == id)`), never assert "no messages at all".
+- Wolverine tracking: `api.TrackedScenario(s => …)` or `api.InvokeTracked(message)` (never `Host.TrackActivity()` directly) waits for the outbox and every handler; `FindEnvelopesWithMessageType<T>()` also sees events with no subscriber.
 - DB checks: `await using var db = api.CreateDbContext();` (a fresh unit of work); shadow properties through `db.Entry(x).Property("CreatedBy")`.
 - A test namespace that clashes with a request type: `using CreateIngredientRequest = …CreateIngredient.CreateIngredient;`.
 - Async APIs take `TestContext.Current.CancellationToken` (xUnit analyzer xUnit1051).

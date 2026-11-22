@@ -5,6 +5,7 @@ using Cooquoi.Context.Foodpedia.Features.GetIngredient;
 using Cooquoi.Context.Foodpedia.Tests.Support;
 using Cooquoi.Testing;
 using Microsoft.EntityFrameworkCore;
+using Published = Cooquoi.Context.Foodpedia.PublicApi.Events;
 using SetExpiryKindRequest = Cooquoi.Context.Foodpedia.Features.SetExpiryKind.SetExpiryKind;
 
 namespace Cooquoi.Context.Foodpedia.Tests.Features.SetExpiryKind;
@@ -56,6 +57,18 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
         changed.Messages.Executed.MessagesOf<IngredientExpiryKindChanged>()
             .Where(e => e.IngredientId.Value == id)
             .ShouldHaveSingleItem().ExpiryKind.ShouldBe(ExpiryKind.LongLife);
+    }
+
+    [Fact]
+    public async Task C11_the_same_kind_changes_nothing_and_publishes_nothing()
+    {
+        var id = await CreateIngredientAsync();
+
+        var unchanged = await api.TrackedScenario(Set(id, new("estimated"), "\"0\"", 204));
+
+        (await GetAsync(id)).Version.ShouldBe(0);
+        unchanged.Messages.FindEnvelopesWithMessageType<Published.IngredientExpiryKindChanged>()
+            .ShouldNotContain(envelope => ((Published.IngredientExpiryKindChanged)envelope.Message!).IngredientId == id);
     }
 
     [Fact]

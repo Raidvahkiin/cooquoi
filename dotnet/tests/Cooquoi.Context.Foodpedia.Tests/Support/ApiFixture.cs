@@ -25,14 +25,16 @@ public sealed class ApiFixture : IAsyncLifetime
 
     /// <summary>
     /// Runs the request and waits until every message it caused (outbox, projections) is handled.
-    /// The session sees the whole host, tests running in parallel included: filter by your own ids.
+    /// Tracked sessions run one at a time (<see cref="TestApi.TrackAsync"/>); untracked tests still run alongside: filter by your own ids.
     /// </summary>
     public async Task<TrackedScenario> TrackedScenario(Action<Scenario> configure)
     {
         IScenarioResult result = null!;
-        var session = await Host.TrackActivity()
-            .Timeout(TimeSpan.FromSeconds(30))
-            .ExecuteAndWaitAsync((Func<IMessageContext, Task>)(async _ => result = await Host.Scenario(configure)));
+        var session = await _api.TrackAsync(tracking =>
+            tracking.ExecuteAndWaitAsync((Func<IMessageContext, Task>)(async _ => result = await Host.Scenario(configure))));
         return new TrackedScenario(result, session);
     }
+
+    /// <summary>Invokes the message and waits until every message it caused is handled (one tracked session at a time).</summary>
+    public Task<ITrackedSession> InvokeTracked(object message) => _api.TrackAsync(tracking => tracking.InvokeMessageAndWaitAsync(message));
 }
