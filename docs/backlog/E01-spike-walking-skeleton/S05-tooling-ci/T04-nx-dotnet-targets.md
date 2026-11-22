@@ -43,9 +43,9 @@ opus (new structure; no pattern for .NET in Nx yet)
 
 ## Subtasks
 
-- [ ] T04.1 .NET Nx project(s) with `build`, `test` and `format-check`, with cache inputs and outputs (`dotnet/generated` as a build output)
-- [ ] T04.2 Contract chain: `contracts:compile` → `api-client:generate` → webapp `typecheck`, and `drift` depending on the .NET `build`. Use `dependsOn` and implicit dependencies only where Nx cannot infer them.
-- [ ] T04.3 Check: touch `contracts/contexts/foodpedia/routes.tsp` (do not commit that) and run `pnpm nx show projects --affected --base=HEAD`. Expected: contracts, api-client and the webapp. Record the answer in the report.
+- [x] T04.1 .NET Nx project(s) with `build`, `test` and `format-check`, with cache inputs and outputs (`dotnet/generated` as a build output)
+- [x] T04.2 Contract chain: `contracts:compile` → `api-client:generate` → webapp `typecheck`, and `drift` depending on the .NET `build`. Use `dependsOn` and implicit dependencies only where Nx cannot infer them.
+- [x] T04.3 Check: touch `contracts/contexts/foodpedia/routes.tsp` (do not commit that) and run `pnpm nx show projects --affected --base=HEAD`. Expected: contracts, api-client and the webapp. Record the answer in the report.
 
 ## Done when
 
@@ -55,6 +55,10 @@ opus (new structure; no pattern for .NET in Nx yet)
 
 Then: tick the subtasks, write the report (≤5 lines, including the `nx affected` answer), set the status, commit (`build(repo): Nx targets for .NET and the contract chain (E01.S05.T04)`), stop.
 
-Status: todo
+Status: done
 
-Report:
+Report: inline `@cooquoi/dotnet` (`dotnet/project.json`: build → `dotnet/generated`, test and format-check after build, cached on dotnet + aspire sources) instead of experimental `@nx/dotnet` (needs the .NET SDK for every graph computation, would add the AppHost, no format target).
+Chain: `api-client` implicitDependencies `contracts` (generate already dependsOn compile; webapp → api-client inferred from `workspace:*`; generated client committed, so typecheck needs no generate); `contracts:drift` dependsOn `@cooquoi/dotnet:build`.
+`nx affected` spans TypeSpec → client → webapp: yes, a `routes.tsp` change affects contracts, api-client, webapp; a C# change affects only `@cooquoi/dotnet`.
+No graph edge contracts → dotnet on purpose (would mark the webapp affected by every C# change): T06 must run `drift` when `@cooquoi/dotnet` is affected too.
+Verified: run-many build test format-check green (3 cached on rerun), graph shows 4 projects and the chain.

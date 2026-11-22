@@ -1,0 +1,53 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "@cooquoi/dotnet",
+  "projectType": "application",
+  "tags": ["type:app", "scope:backend", "platform:server"],
+  "namedInputs": {
+    "dotnetSources": [
+      "{projectRoot}/**/*",
+      "!{projectRoot}/**/bin/**",
+      "!{projectRoot}/**/obj/**",
+      "!{projectRoot}/generated/**",
+      "!{projectRoot}/.vscode/**",
+      "!{projectRoot}/.idea/**",
+      "!{projectRoot}/**/*.md",
+      "{workspaceRoot}/global.json",
+      "{workspaceRoot}/aspire/**/*",
+      "!{workspaceRoot}/aspire/**/bin/**",
+      "!{workspaceRoot}/aspire/**/obj/**"
+    ]
+  },
+  "targets": {
+    "build": {
+      "cache": true,
+      "executor": "nx:run-commands",
+      "inputs": ["dotnetSources"],
+      "outputs": ["{projectRoot}/generated"],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "dotnet build dotnet/Cooquoi.slnx -v q -nologo -clp:ErrorsOnly"
+      }
+    },
+    "test": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "executor": "nx:run-commands",
+      "inputs": ["dotnetSources"],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "dotnet test --solution dotnet/Cooquoi.slnx -v q --no-progress"
+      }
+    },
+    "format-check": {
+      "cache": true,
+      "dependsOn": ["build"],
+      "executor": "nx:run-commands",
+      "inputs": ["dotnetSources"],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "dotnet format dotnet/Cooquoi.slnx --verify-no-changes"
+      }
+    }
+  }
+}

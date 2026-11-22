@@ -23,6 +23,9 @@
       "scope:utility",
       "platform:all"
     ],
+    "implicitDependencies": [
+      "@cooquoi/contracts"
+    ],
     "targets": {
       "generate": {
         "cache": true,

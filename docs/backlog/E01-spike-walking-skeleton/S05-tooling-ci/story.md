@@ -31,7 +31,7 @@ One CI pipeline across every toolchain (.NET, TypeSpec, TypeScript) that fails o
 | [T01](T01-dev-setup-certs-password.md) | Dev setup: certificate trust script, fixed dev password | done | — | yes | s05-t01 |
 | [T02](T02-https-everywhere.md) | HTTPS across Aspire, API, Keycloak and webapp | todo | T01 | no | s05-t02 |
 | [T03](T03-clean-working-tree.md) | Tools stop rewriting committed files | done | — | yes | s05-t03 |
-| [T04](T04-nx-dotnet-targets.md) | Nx targets for .NET; `nx affected` across toolchains | doing | — | yes | s05-t04 |
+| [T04](T04-nx-dotnet-targets.md) | Nx targets for .NET; `nx affected` across toolchains | done | — | yes | s05-t04 |
 | [T05](T05-biome-rules-knip.md) | Biome rules (size, complexity, boundaries) and knip | todo | T03 | no | s05-t05 |
 | [T06](T06-ci-pipeline-and-findings.md) | One CI pipeline, violation checks, findings | todo | T02, T04, T05 | no | s05-t06 |
 
