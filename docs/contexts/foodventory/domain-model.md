@@ -187,13 +187,13 @@ A **consumption** or **split** in a unit with no path is rejected with `foodvent
 
 ### Expiry
 
-Expiry is **always optional, for every kind**; the user can set or change it at any time (*set expiry*). What the system proposes depends on the **effective expiry kind** (Foodpedia `printed` \| `estimated` \| `long-life`, or the household override) and the item's storage:
+Expiry is **always optional, for every kind**; the user can set or change it at any time (*set expiry*). What the system proposes depends on the **effective expiry kind** (Foodpedia `printed` \| `estimated` \| `longLife`, or the household override) and the item's storage:
 
 | Effective kind | At restock / put-away, no date given | Date typed by the user | Warnings, flags |
 |---|---|---|---|
 | `printed` (milk, yoghurt, packaged meat) | Never pre-filled; the client asks, the user may skip. | `manual`; never learned. | Flagged **missing expiry** while none. |
 | `estimated` (vegetables, bread, leftovers) | `proposed` = `addedOn` + remembered days for the storage; else the Foodpedia shelf life when the storage is none or equals the recommended storage; else none. | `manual`; at put-away into a Pantry aggregate with a storage, updates the remembered days for that storage (FV15). | Flagged **missing expiry** while none. |
-| `long-life` (rice, pasta, cans) | None. | `manual`. | Never warned, never flagged. |
+| `longLife` (rice, pasta, cans) | None. | `manual`. | Never warned, never flagged. |
 
 - At restock the storage is none, so an `estimated` item gets the Foodpedia default (recommended storage assumed).
 - On put-away, a `proposed` expiry is **recomputed** for the target storage by the table above (possibly dropped: salmon in the freezer with no remembered value). A `manual` expiry is never touched by restock, put-away or later Foodpedia changes.
@@ -221,7 +221,7 @@ For put-away, the read side offers a **suggested pantry** per item with no pantr
 | FV5 | `remaining` is ≥ 0 and never negative; an item reaching 0 is depleted and leaves the aggregate. |
 | FV6 | `normalized` follows the normalization order above; no path → unnormalized. Re-normalization is triggered by household conversion changes, Foodpedia `ConversionDefined` / `ConversionRemoved` and `BaseUnitChanged`. |
 | FV7 | Consuming by ingredient takes from items **earliest expiry first** (no expiry last), oldest `addedOn` as tie-breaker, with or without a pantry. A quantity with no conversion path is rejected (`foodventory.unit-not-convertible`), except on an item in its exact entered unit. A quantity beyond what is held consumes everything and reports the **shortfall** (manual and `MealCooked` alike). |
-| FV8 | Expiry is optional for every kind and follows *Expiry*: `printed` is never proposed, `estimated` is proposed (remembered, else Foodpedia default when storage matches), `long-life` is never warned. A manual expiry replaces a proposed one and is never changed by the system. A past date is allowed (the item is *expired*). |
+| FV8 | Expiry is optional for every kind and follows *Expiry*: `printed` is never proposed, `estimated` is proposed (remembered, else Foodpedia default when storage matches), `longLife` is never warned. A manual expiry replaces a proposed one and is never changed by the system. A past date is allowed (the item is *expired*). |
 | FV9 | Put-away / move sets a Pantry aggregate on an item; there is no move back to no pantry. Without a quantity it moves the whole item; with one (> 0, ≤ remaining, in a unit convertible to the entered unit) it **splits** the item: the new item has the moved quantity in the entered unit and keeps `source` and `addedOn`. The moved item's expiry follows FV8 for the target. A quantity equal to remaining is a whole move. |
 | FV10 | A threshold's `low` and `over` are ≥ 0 when set, and `over` > `low` when both are set. |
 | FV11 | A household conversion has `unitAmount` and `baseAmount` > 0, at most one per unit, and none for a unit universally convertible to the base unit (as Foodpedia F7). |
@@ -238,7 +238,7 @@ Errors (`ProblemDetails` codes): `foodventory.name-taken` (Conflict), `foodvento
 |---|---|
 | `StockNormalizer` | Applies the normalization order: universal factors and household conversions locally, then Foodpedia `NormalizeQuantity`. Used by restock, consumption, splits and re-normalization. |
 | `ExpiryProposer` | Effective kind + remembered shelf life + Foodpedia `ProposeShelfLife` and storage check (FV8). |
-| `ExpiryWatch` *(scheduled, daily)* | Raises `StockItemExpiringSoon` once per item entering the warning window (context config, default 3 days); never for `long-life`. |
+| `ExpiryWatch` *(scheduled, daily)* | Raises `StockItemExpiringSoon` once per item entering the warning window (context config, default 3 days); never for `longLife`. |
 
 The Foodpedia context is called **in-process** through its published API; the Foodventory context never reads Foodpedia tables.
 
@@ -280,8 +280,8 @@ Consumed: `HouseholdCreated` (Identity), `BaseUnitChanged`, `ConversionDefined`,
 | Consumption order | Earliest expiry first, oldest added as tie-breaker |
 | Consuming more than held | Clamp to zero and report the shortfall (manual and `MealCooked`) |
 | Unit with no conversion path | Reject with `foodventory.unit-not-convertible`, inviting a household conversion and retry; the exact entered unit always works |
-| Expiry kind | From the Foodpedia Ingredient aggregate (`printed` \| `estimated` \| `long-life`), with an optional household override in the IngredientStock aggregate |
-| Expiry at restock and put-away | Always optional. `printed`: never pre-filled or learned. `estimated`: remembered per storage, else Foodpedia default when storage matches, else none; a typed date at put-away updates the remembered value. `long-life`: never warned |
+| Expiry kind | From the Foodpedia Ingredient aggregate (`printed` \| `estimated` \| `longLife`), with an optional household override in the IngredientStock aggregate |
+| Expiry at restock and put-away | Always optional. `printed`: never pre-filled or learned. `estimated`: remembered per storage, else Foodpedia default when storage matches, else none; a typed date at put-away updates the remembered value. `longLife`: never warned |
 | Missing expiry | Flagged (`expiryMissing`) for `printed` / `estimated`; the Planning read model counts it as unknown, never as expiring |
 | Unusual expiry | Accepted; a hint at most, no rejection rule |
 | Expiry warning window | Query parameter `withinDays` (default 3); same default in config for `StockItemExpiringSoon`; household setting later |

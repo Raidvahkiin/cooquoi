@@ -124,7 +124,7 @@
     },
     {
       "code": "white-rice",
-      "expiryKind": "long-life",
+      "expiryKind": "longLife",
       "baseUnit": "g",
       "names": {
         "en": { "primary": "White rice" },
@@ -137,7 +137,7 @@
     },
     {
       "code": "brown-rice",
-      "expiryKind": "long-life",
+      "expiryKind": "longLife",
       "baseUnit": "g",
       "names": {
         "en": { "primary": "Brown rice" },
@@ -203,7 +203,7 @@
     },
     {
       "code": "fish-sauce",
-      "expiryKind": "long-life",
+      "expiryKind": "longLife",
       "baseUnit": "ml",
       "names": {
         "en": { "primary": "Fish sauce" },

@@ -36,7 +36,7 @@ Move (T05); household conversions in proposals (E02.S06)
 
 - [ ] T04.1 Request, validator, `ActionWithResult` contract mapping
 - [ ] T04.2 Endpoint and `StockItemViews`
-- [ ] T04.3 Integration tests: two lines of different ingredients and two of the same ingredient in one call; items have no pantry (FV3); `ItemsRestocked` (tracked session); printed → `expiryMissing`, estimated → proposed date, long-life → none; unnormalized line + proposal; retired → 422; same Idempotency-Key replays without duplicates; second household sees nothing (FV2)
+- [ ] T04.3 Integration tests: two lines of different ingredients and two of the same ingredient in one call; items have no pantry (FV3); `ItemsRestocked` (tracked session); printed → `expiryMissing`, estimated → proposed date, longLife → none; unnormalized line + proposal; retired → 422; same Idempotency-Key replays without duplicates; second household sees nothing (FV2)
 - [ ] T04.4 Drift shows only `moveStockItem` missing
 
 ## Done when

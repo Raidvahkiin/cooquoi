@@ -15,8 +15,8 @@
 ## Reference
 
 - One projection, reused: build entries from `IngredientStockRows` plus two SQL aggregates per ingredient:
-  - `expiringAmount`: sum of `normalized_amount` where `expires_on <= asOf + window` and the kind is not `long-life`.
-  - `unknownExpiryAmount`: sum where `expires_on IS NULL` and the kind is not `long-life`.
+  - `expiringAmount`: sum of `normalized_amount` where `expires_on <= asOf + window` and the kind is not `longLife`.
+  - `unknownExpiryAmount`: sum where `expires_on IS NULL` and the kind is not `longLife`.
 - `code` comes from Foodpedia P1 (one call for all ids).
 - `stateHash`: SHA-256 over the ordered `(ingredient_stock_id, version)` pairs of the household, hex. Any write bumps a version, so the hash follows (`AggregateSaveInterceptor`).
 - In-process records are `PublicApi` types (primitives + SharedKernel). The HTTP endpoint `Features/GetStockSummary/` maps them 1:1 to the contract DTO with `asOf` = today (`TimeProvider`).
@@ -37,7 +37,7 @@ Planning & Suggestion code; the cache itself; verification (T03)
 ## Subtasks
 
 - [ ] T02.1 `PublicApi` records, `GetStockSummary`, `GetStock`, registration
-- [ ] T02.2 Tests: totals with items in and out of pantries; expiring vs unknown vs long-life; unnormalized listed not summed; threshold-only ingredient listed with total 0; `stateHash` stable on read and changed after a consume; `GetStock` subset; FV2
+- [ ] T02.2 Tests: totals with items in and out of pantries; expiring vs unknown vs longLife; unnormalized listed not summed; threshold-only ingredient listed with total 0; `stateHash` stable on read and changed after a consume; `GetStock` subset; FV2
 - [ ] T02.3 `GetStockSummary` endpoint + test (same JSON as in-process for the caller)
 - [ ] T02.4 Drift `none`, catalogue green; `dotnet format`
 

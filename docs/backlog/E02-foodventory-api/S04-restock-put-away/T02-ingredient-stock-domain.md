@@ -47,7 +47,7 @@ EF mapping (T03); endpoints (T04, T05); consume and corrections (E02.S05); thres
 
 - [ ] T02.1 Ids, `Quantity`, `Expiry`, `ExpiryKind`, `FoodpediaFacts`, `NewStockLine`
 - [ ] T02.2 `StockNormalizer` + tests `FV6_…` (universal, Foodpedia default, unnormalized, never guessed)
-- [ ] T02.3 `ExpiryProposer` + tests `FV8_…` (printed, estimated with storage none / matching / other, long-life, manual kept, past date allowed)
+- [ ] T02.3 `ExpiryProposer` + tests `FV8_…` (printed, estimated with storage none / matching / other, longLife, manual kept, past date allowed)
 - [ ] T02.4 `IngredientStockAggregate.Create/Restock`, `StockItemEntity`, `ItemsRestocked` + tests `FV3_…`, `FV4_…`
 - [ ] T02.5 `MoveItem` with split, `StockItemMoved` + tests `FV9_…` (whole, split keeps source/addedOn, equal = whole, exceeds, unit not convertible, exact entered unit always works)
 

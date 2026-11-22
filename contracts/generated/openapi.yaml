@@ -607,7 +607,7 @@ components:
       enum:
         - printed
         - estimated
-        - long-life
+        - longLife
       description: How the expiry date of an ingredient is known (F12).
     Foodpedia.FoodpediaErrorCode:
       type: string

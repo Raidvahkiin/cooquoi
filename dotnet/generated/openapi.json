@@ -709,7 +709,7 @@
             "enum": [
               "printed",
               "estimated",
-              "long-life"
+              "longLife"
             ],
             "type": "string"
           },
@@ -884,7 +884,7 @@
             "enum": [
               "printed",
               "estimated",
-              "long-life"
+              "longLife"
             ],
             "type": "string"
           },
@@ -1174,7 +1174,7 @@
             "enum": [
               "printed",
               "estimated",
-              "long-life"
+              "longLife"
             ],
             "type": "string"
           }

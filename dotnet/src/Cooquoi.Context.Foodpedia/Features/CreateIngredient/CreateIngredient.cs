@@ -32,7 +32,7 @@ public sealed record CreateIngredient(
         [.. Tags.Select(TagCode.Parse)],
         [.. (Conversions ?? []).Select(c => new Conversion(SharedKernel.Unit.FromCode(c.Unit)!, c.UnitAmount, c.BaseAmount))],
         ContractEnumNames.Parse<Domain.Ingredients.ExpiryKind>(ExpiryKind),
-        ShelfLife is null ? null : new Domain.Ingredients.ShelfLife(ShelfLife.Days, Enum.Parse<Storage>(ShelfLife.RecommendedStorage, ignoreCase: true)));
+        ShelfLife is null ? null : new Domain.Ingredients.ShelfLife(ShelfLife.Days, ContractEnumNames.Parse<Storage>(ShelfLife.RecommendedStorage)));
 }
 
 /// <summary>Shape only; business rules (F1–F9) are the domain's and the endpoint's pre-checks.</summary>

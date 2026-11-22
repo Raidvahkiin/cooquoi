@@ -16,6 +16,8 @@ public sealed class FoodpediaDbContext(DbContextOptions<FoodpediaDbContext> opti
     public DbSet<TagAggregate> Tags => Set<TagAggregate>();
     public DbSet<IngredientSearchTerm> SearchTerms => Set<IngredientSearchTerm>();
 
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) => configurationBuilder.UseCamelCaseEnums();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);

@@ -1,3 +1,4 @@
+using Cooquoi.Platform.OpenApi;
 using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +14,7 @@ internal static class IdempotencyStore
         await db.Database.ExecuteSqlAsync(
             $"""
             INSERT INTO platform.idempotent_requests (subject, key, request_hash, state, created_at, claimed_at)
-            VALUES ({claim.Subject}, {claim.Key}, {claim.RequestHash}, {nameof(IdempotencyState.Claimed)}, {claim.CreatedAt}, {claim.ClaimedAt})
+            VALUES ({claim.Subject}, {claim.Key}, {claim.RequestHash}, {ContractEnumNames.ToCode(IdempotencyState.Claimed)}, {claim.CreatedAt}, {claim.ClaimedAt})
             ON CONFLICT DO NOTHING
             """,
             cancellationToken) == 1;

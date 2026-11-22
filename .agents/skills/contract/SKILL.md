@@ -48,7 +48,7 @@ The use-case id (Q1, C5…) from `docs/contexts/<context>/use-cases.md` starts t
 
 ## Steps
 
-1. **Model.** Add request/response/filter models to `models.tsp`, names from the glossary. Amounts are `decimal`. A string with a closed set of values is a TypeSpec enum or union (it becomes an OpenAPI `enum`). A field the API always sends but may be `null` is **required + nullable** (`shelfLife: ShelfLife | null`), not optional.
+1. **Model.** Add request/response/filter models to `models.tsp`, names from the glossary. Amounts are `decimal`. A string with a closed set of values is a TypeSpec enum or union (it becomes an OpenAPI `enum`) whose values are the camelCase C# member names (`longLife: "longLife"`, [ADR 0021](../../../docs/architecture/adr/0021-enum-values-camel-case.md)). A field the API always sends but may be `null` is **required + nullable** (`shelfLife: ShelfLife | null`), not optional.
 2. **Error codes.** New codes go in the context's `<Name>ErrorCode` union (`<context>.<kebab>`), common ones in `CommonErrorCode`, validator codes in `ValidationCode`. Every code the backend can send must be here and vice versa: `ErrorCatalogueTests` (architecture tests) fails both ways.
 3. **Route.** Add the op to `routes.tsp` with `@route`, `@operationId` (camelCase, the same `OperationId` as the Wolverine endpoint) and its template.
 4. **Compile and regenerate**: `pnpm nx run @cooquoi/api-client:generate` (runs `@cooquoi/contracts:compile` first). Commit `contracts/generated/openapi.yaml` and the client.

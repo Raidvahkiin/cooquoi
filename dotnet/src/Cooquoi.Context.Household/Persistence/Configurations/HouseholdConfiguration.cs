@@ -21,7 +21,7 @@ internal sealed class HouseholdConfiguration : IEntityTypeConfiguration<Househol
             membership.ToTable("memberships");
             membership.WithOwner().HasForeignKey("household_id");
             membership.Property(m => m.Id).HasColumnName("user_id").HasConversion(id => id.Value, value => new UserId(value));
-            membership.Property(m => m.Role).HasConversion<string>().HasMaxLength(20);
+            membership.Property(m => m.Role).HasMaxLength(20);
             membership.HasKey("household_id", nameof(MembershipEntity.Id));
             membership.HasIndex(m => m.Id).HasDatabaseName("ix_memberships_user_id");
         });

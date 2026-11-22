@@ -20,7 +20,7 @@ Under `aspire start`, a committed script signs in as dev@cooquoi.local and exerc
 - Dev database (Q3, decided 2026-11-22: reset, no backfill): if dev@cooquoi.local signed in before E02.S02, the household has no default Pantry aggregates. Reset the Postgres data volume first (`docker volume ls | grep postgres`) and say so in the findings.
 - Steps and expected results:
   1. `GET /v1/me`, then `GET /v1/pantries` → Fridge, Freezer, Dry goods.
-  2. Restock milk 1 L (printed, no date → `expiryMissing`), carrots 1 kg (estimated → proposed date), rice 2 kg (long-life).
+  2. Restock milk 1 L (printed, no date → `expiryMissing`), carrots 1 kg (estimated → proposed date), rice 2 kg (longLife).
   3. `GET /v1/stock-items?pantryId=none` → 3 items with suggested pantries.
   4. Move milk to the Fridge with a date 2 days out; move 400 g of carrots to the Freezer (split), the rest to the Fridge.
   5. Consume carrots 2 kg → shortfall 1 kg; the carrots leave.

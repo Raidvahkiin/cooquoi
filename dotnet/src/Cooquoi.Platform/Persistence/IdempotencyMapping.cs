@@ -17,7 +17,7 @@ public static class IdempotencyMapping
         {
             commit.ToTable(Table, PlatformDbContext.Schema, table => table.ExcludeFromMigrations());
             commit.HasKey(c => new { c.Subject, c.Key });
-            commit.Property(c => c.State).HasConversion<string>();
+            commit.Property(c => c.State);
         });
         return modelBuilder;
     }

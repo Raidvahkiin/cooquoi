@@ -2,7 +2,7 @@
 
 ## Goal
 
-Every Foodpedia ingredient has an expiry kind (`printed` | `estimated` | `long-life`). It is seeded, required on create, shown in the detail and changed by curators through `:set-expiry-kind`, which raises `IngredientExpiryKindChanged`. The Foodpedia context also publishes what the Foodventory context needs in-process: P1 `GetIngredients`, P2 `NormalizeQuantity`, P3 `ProposeShelfLife`, and the integration events it consumes.
+Every Foodpedia ingredient has an expiry kind (`printed` | `estimated` | `longLife`). It is seeded, required on create, shown in the detail and changed by curators through `:set-expiry-kind`, which raises `IngredientExpiryKindChanged`. The Foodpedia context also publishes what the Foodventory context needs in-process: P1 `GetIngredients`, P2 `NormalizeQuantity`, P3 `ProposeShelfLife`, and the integration events it consumes.
 
 ## Acceptance
 
@@ -39,3 +39,4 @@ Done 2026-11-22 in 6 commits (9af60de..517a558, plus this one). The contract has
 Verified: Foodpedia 106, Architecture 17 and Platform 14 tests pass, `drift: none`, and the webapp typecheck and tests pass. The `dotnet-review` blocker count is 0, and its should and nits are fixed in 517a558.
 Watch: Wolverine tracked-session tests are order-sensitive. An integration test for "same kind publishes nothing" made `DefineConversion` time out in the full suite, so that rule stays covered by the aggregate test only.
 Usage: weekly all-models was 75% before the review.
+Enum codes switched to camelCase by ADR 0021.

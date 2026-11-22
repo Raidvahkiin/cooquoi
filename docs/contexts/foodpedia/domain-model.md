@@ -93,7 +93,7 @@ classDiagram
 | `baseUnit` | `BaseUnit` | `gram` \| `millilitre` \| `piece`. Changeable by a curator **only with a conversion between old and new base unit** (see below). |
 | `conversions` | `Conversion[]` | Ingredient-specific units → base unit (Foodpedia defaults; households may override in Foodventory). |
 | `shelfLife` | `ShelfLife?` | Default days and recommended storage, used to propose expiry dates and storage. |
-| `expiryKind` | `printed` \| `estimated` \| `long-life` | How its expiry is known (see *ExpiryKind*). Seeded, set by curators. |
+| `expiryKind` | `printed` \| `estimated` \| `longLife` | How its expiry is known (see *ExpiryKind*). Seeded, set by curators. |
 | `tags` | `TagCode[]` | Classification: category, season, diet, allergen, family… At least one `category:` tag. |
 | `status` | `active` \| `retired` | Never deleted. Retired ingredients stay readable for existing references, but cannot be newly used. |
 | `scope` *(planned)* | `global` \| `household` | Household-private ingredients, after MVP. Not implemented; reserved so identity and uniqueness rules do not change later. |
@@ -177,7 +177,7 @@ How the Foodventory context should treat an ingredient's expiry date:
 |---|---|---|
 | `printed` | Milk, yoghurt, packaged meat, eggs, cheese | The date is on the package and differs every time: never proposed, the user types it. |
 | `estimated` | Vegetables, fruit, bread, leftovers | No printed date: proposed from shelf life (or the household's remembered value). |
-| `long-life` | Rice, pasta, cans | Keeps for months: expiry optional, never warned. |
+| `longLife` | Rice, pasta, cans | Keeps for months: expiry optional, never warned. |
 
 Households may override the kind for their own stock in the Foodventory context.
 
@@ -249,4 +249,4 @@ Events also form the **change history** of Foodpedia (who changed what, when).
 | Seed | One-shot import from Wikidata, AI-completed, curator-reviewed |
 | Curator edits | Applied immediately; events give history. Draft/publish only if several or external curators appear |
 | Deletion | Never; retire only |
-| Expiry kind | `printed` \| `estimated` \| `long-life` on every ingredient, seeded (AI-proposed, curator-reviewed) and set by curators; own event `IngredientExpiryKindChanged` (2026-11-22) |
+| Expiry kind | `printed` \| `estimated` \| `longLife` on every ingredient, seeded (AI-proposed, curator-reviewed) and set by curators; own event `IngredientExpiryKindChanged` (2026-11-22) |

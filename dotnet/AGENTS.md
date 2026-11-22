@@ -35,7 +35,7 @@ dotnet/
 │     ├─ Persistence/                       # DbContext, factory, Configurations/, Lookups/, Projections/, Seed/, Migrations/
 │     ├─ Integration/  PublicApi/           # when another context needs them
 │     │                                     # PublicApi/: I<Context>…  interface (published queries, impl internal) + records of primitives/SharedKernel;
-│     │                                     # PublicApi/Events/: integration events (ids, kebab codes), cascaded by an Integration/…Handler from domain events
+│     │                                     # PublicApi/Events/: integration events (ids, camelCase codes, [ADR 0021](../docs/architecture/adr/0021-enum-values-camel-case.md)), cascaded by an Integration/…Handler from domain events
 │     └─ <Context>Module.cs                 # Add<Context>Context(), migrate (+ seed) for development
 └─ tests/
    ├─ Cooquoi.Testing/                      # TestApi (Alba + Testcontainers), Callers, Problems — shared library
@@ -98,6 +98,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
   | Optional small value | `OwnsOne` columns on the root | shelf life |
   | Strongly typed id / value object | `HasConversion(...)` (static converters in `Configurations/`) | ids, codes, units, locales |
 
+- **Enums**: stored and sent as their camelCase code (`LongLife` → `longLife`), never `HasConversion<string>()`: `UseCamelCaseEnums()` in each DbContext's `ConfigureConventions` applies one converter ([ADR 0021](../docs/architecture/adr/0021-enum-values-camel-case.md)). Convert API strings with `ContractEnumNames.Parse`/`ToCode`.
 - Version: `IsConcurrencyToken()`; `Ignore(DomainEvents)`. Audit `created_at/by`, `updated_at/by` are shadow properties — never declare them.
 - **Uniqueness**: use-case pre-check (`Persistence/Lookups/`) + a unique index named `ux_…`, mapped to its `DomainError` in the module's `UniqueConstraints`. A rule that depends on another table (F4 "among active") gets a copied column kept by an interceptor + a partial index.
 - Read models in `Persistence/Projections/`: a `…Handler` that rebuilds from current state (naturally idempotent). Seeds call the same rebuild directly (no outbox outside a handler).

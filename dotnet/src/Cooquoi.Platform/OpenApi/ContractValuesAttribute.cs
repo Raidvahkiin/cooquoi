@@ -29,21 +29,22 @@ public sealed class ContractCodesAttribute(Type source, string member) : Contrac
     }
 }
 
-/// <summary>The kebab-case names of <typeparamref name="TEnum"/> (<c>LongLife</c> is <c>long-life</c>), as endpoints write them.</summary>
+/// <summary>The camelCase codes of <typeparamref name="TEnum"/> (<c>LongLife</c> is <c>longLife</c>), as the contract and the database write them (ADR 0021).</summary>
 public sealed class ContractEnumAttribute<TEnum> : ContractValuesAttribute
     where TEnum : struct, Enum
 {
     public override IEnumerable<string> Values => Enum.GetNames<TEnum>().Select(ContractEnumNames.ToCode);
 }
 
-/// <summary>Converts enum members to and from the kebab-case codes of the contract.</summary>
+/// <summary>Converts enum members to and from the camelCase codes of the contract (<see href="../../../docs/architecture/adr/0021-enum-values-camel-case.md">ADR 0021</see>).</summary>
 public static class ContractEnumNames
 {
     public static string ToCode<TEnum>(TEnum value) where TEnum : struct, Enum => ToCode(value.ToString());
 
-    public static string ToCode(string name) =>
-        string.Concat(name.Select((c, i) => i > 0 && char.IsUpper(c) ? "-" + char.ToLowerInvariant(c) : char.ToLowerInvariant(c).ToString()));
+    public static string ToCode(string name) => char.ToLowerInvariant(name[0]) + name[1..];
 
-    /// <summary>Only after validation: the code is one of <see cref="ContractEnumAttribute{TEnum}"/>'s values.</summary>
-    public static TEnum Parse<TEnum>(string code) where TEnum : struct, Enum => Enum.Parse<TEnum>(code.Replace("-", ""), ignoreCase: true);
+    /// <summary>Exact and case-sensitive: the code is one of <see cref="ContractEnumAttribute{TEnum}"/>'s values.</summary>
+    public static TEnum Parse<TEnum>(string code) where TEnum : struct, Enum =>
+        Enum.GetValues<TEnum>().Cast<TEnum?>().FirstOrDefault(value => ToCode(value!.Value) == code)
+        ?? throw new ArgumentException($"'{code}' is not a {typeof(TEnum).Name} code.", nameof(code));
 }

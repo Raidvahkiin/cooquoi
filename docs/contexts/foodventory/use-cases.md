@@ -23,7 +23,7 @@
 | Q2 | **Stock items** | `pantryId` (a Pantry aggregate id, or `none` for "to put away"), `needsExpiry?`, `tags?`, `sort` (`expiry` \| `name` \| `added`), `page` | `Page<StockItemView>` | J2 "what I have"; `pantryId=none` is "what's still to put away"; `needsExpiry=true` lists items with missing expiry (`printed` / `estimated` only). |
 | Q3 | **Stock by ingredient** | `q?`, `tags?`, `pantryId?`, `page` | `Page<IngredientStockView>` (ingredient, base unit, **total**, unnormalized items, earliest expiry, items with missing expiry, low/over state) | Total summed in the base unit, put away or not (FV6, FV12). |
 | Q4 | **Get ingredient stock** | `ingredientId` | Items per pantry (and with none), total, threshold, household conversions, effective expiry kind + override, remembered shelf lives | Detail and editing. |
-| Q5 | **Expiring soon** | `withinDays` (default 3), `includeExpired` (default true), `page` | `Page<StockItemView>` ordered by expiry | J2 "what expires soon"; never `long-life`; missing expiry excluded. |
+| Q5 | **Expiring soon** | `withinDays` (default 3), `includeExpired` (default true), `page` | `Page<StockItemView>` ordered by expiry | J2 "what expires soon"; never `longLife`; missing expiry excluded. |
 | Q6 | **Low stock** | `includeOverstock?`, `page` | `Page<IngredientStockView>` in low (or over) state | Only ingredients with a threshold. |
 
 ## Commands — pantries
@@ -68,7 +68,7 @@ The restock response returns each created item with its normalized quantity, pro
 | · `ingredientId`, `code`, `baseUnit`, `expiryKind` | `code` is what goes into the compact LLM line; `expiryKind` is the effective one. |
 | · `total` | Normalized total in the base unit, **put away or not**. |
 | · `earliestExpiry` | Earliest known expiry among items, or none. |
-| · `expiringAmount` | Normalized amount expiring within the window (or already expired). Never `long-life`. |
+| · `expiringAmount` | Normalized amount expiring within the window (or already expired). Never `longLife`. |
 | · `unknownExpiryAmount` | Normalized amount with missing expiry (`printed` / `estimated`): unknown, **never counted as expiring**. |
 | · `unnormalized[]` | Items without conversion: `amount`, `unit`, `expiry` — flagged, never summed. |
 | · `state` | `ok` \| `low` \| `over` \| `no-threshold`. |

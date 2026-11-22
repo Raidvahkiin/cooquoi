@@ -37,7 +37,7 @@
 | C8 | **Tag / untag** (`:tag`, `:untag`) | `tagCode` | F9 | `IngredientTagsChanged` |
 | C9 | **Retire** (`:retire`) | — | F10 | `IngredientRetired` |
 | C10 | **Restore** (`:restore`) | — | — | `IngredientRestored` |
-| C11 | **Set expiry kind** (`:set-expiry-kind`) | `printed` \| `estimated` \| `long-life` | F12 | `IngredientExpiryKindChanged` |
+| C11 | **Set expiry kind** (`:set-expiry-kind`) | `printed` \| `estimated` \| `longLife` | F12 | `IngredientExpiryKindChanged` |
 
 ## Commands — tags (curator)
 

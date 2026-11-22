@@ -16,7 +16,7 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
         var session = await api.InvokeTracked(new IngredientExpiryKindChanged(id, ExpiryKind.LongLife));
 
         PublishedOnce<Published.IngredientExpiryKindChanged>(session)
-            .ShouldBe(new Published.IngredientExpiryKindChanged(id.Value, "long-life"));
+            .ShouldBe(new Published.IngredientExpiryKindChanged(id.Value, "longLife"));
     }
 
     [Fact]

@@ -17,8 +17,8 @@
 - Endpoints copy `SearchIngredientsEndpoint`: a positional query record with `[FromQuery(Name=…)]`, `[AsParameters]`, a `SortMap<StockItemRow>` (`expiry` → `expires_on` nulls last, `added`, `name`), and `ToPageAsync`.
 - `name` sort needs Foodpedia names, which are in another schema. Sort by name in memory only on the page, or drop the `name` key. Pick one, and say so in the report and in the contract doc (fix T01 if dropped).
 - Project rows from `stock_items` joined to `ingredient_stocks` (effective kind, version) with `AsNoTracking`. Get names and the recommended storage for the page's ingredient ids in one `FoodpediaFactsProvider` call. Build views with `StockItemViews` (refactor it to take rows, not aggregates, if it takes aggregates).
-- `expiryMissing` = effective kind ≠ `long-life` and no expiry. `expiryUnusual` = false (Q8).
-- Q5: `expires_on <= today + withinDays`, plus `expires_on >= today` unless `includeExpired`, plus kind ≠ `long-life`. Order by `expires_on`, then `added_on`. "Today" comes from `TimeProvider`.
+- `expiryMissing` = effective kind ≠ `longLife` and no expiry. `expiryUnusual` = false (Q8).
+- Q5: `expires_on <= today + withinDays`, plus `expires_on >= today` unless `includeExpired`, plus kind ≠ `longLife`. Order by `expires_on`, then `added_on`. "Today" comes from `TimeProvider`.
 
 ## Skills
 
@@ -36,7 +36,7 @@ Q3, Q4, Q6 (T03); the summary (E02.S08)
 
 - [ ] T02.1 `StockItemRow` projection and `SortMap`
 - [ ] T02.2 `ListStockItems` endpoint + tests (`pantryId=<id>`, `none` with suggested pantry, `needsExpiry`, sorts, paging, FV2)
-- [ ] T02.3 `ListExpiringStockItems` endpoint + tests (window default 3, expired in/out, long-life excluded, missing expiry excluded; fake `TimeProvider` if the fixture offers one, else dates relative to today)
+- [ ] T02.3 `ListExpiringStockItems` endpoint + tests (window default 3, expired in/out, longLife excluded, missing expiry excluded; fake `TimeProvider` if the fixture offers one, else dates relative to today)
 
 ## Done when
 

@@ -142,7 +142,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
     [Fact]
     public async Task The_expiry_kind_is_stored_and_a_kebab_case_kind_is_accepted()
     {
-        var request = Requests.NewIngredient() with { ExpiryKind = "long-life" };
+        var request = Requests.NewIngredient() with { ExpiryKind = "longLife" };
         await Create(request, 201);
 
         await using var db = api.CreateDbContext();

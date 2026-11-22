@@ -15,7 +15,7 @@ internal sealed class TagConfiguration : IEntityTypeConfiguration<TagAggregate>
         builder.Ignore(tag => tag.DomainEvents);
         builder.Property(tag => tag.Code).HasConversion(TagCodeConversion.Converter).HasMaxLength(100);
         builder.HasIndex(tag => tag.Code).IsUnique().HasDatabaseName("ux_tags_code");
-        builder.Property(tag => tag.Status).HasConversion<string>().HasMaxLength(20);
+        builder.Property(tag => tag.Status).HasMaxLength(20);
 
         builder.OwnsMany(tag => tag.Labels, label =>
         {

@@ -30,7 +30,7 @@ public static class SearchIngredientsEndpoint
         var criteria = new SearchCriteria(
             text,
             [.. (query.Tags ?? []).Select(TagCode.Parse)],
-            user.IsCurator && query.Status is not null ? Enum.Parse<IngredientStatus>(query.Status, ignoreCase: true) : IngredientStatus.Active,
+            user.IsCurator && query.Status is not null ? ContractEnumNames.Parse<IngredientStatus>(query.Status) : IngredientStatus.Active,
             Locale.FromTagOrDefault(request.Headers.AcceptLanguage.FirstOrDefault()));
         var rows = IngredientSearch.Sorts.Apply(
             IngredientSearch.Rows(db, criteria),

@@ -4,6 +4,7 @@ using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.Context.Foodpedia.Persistence.Configurations;
 using Cooquoi.Context.Foodpedia.Persistence.Projections;
 using Cooquoi.Platform.Auditing;
+using Cooquoi.Platform.OpenApi;
 using Cooquoi.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,6 +59,6 @@ internal static class FoodpediaSeeder
             UnitConversion.FromCode(seed.BaseUnit),
             [.. seed.Tags.Select(TagCode.Parse)],
             [.. (seed.Conversions ?? []).Select(c => new Conversion(UnitConversion.FromCode(c.Unit), c.UnitAmount, c.BaseAmount))],
-            Enum.Parse<ExpiryKind>(seed.ExpiryKind.Replace("-", ""), ignoreCase: true),
-            seed.ShelfLife is null ? null : new ShelfLife(seed.ShelfLife.Days, Enum.Parse<Storage>(seed.ShelfLife.RecommendedStorage, ignoreCase: true))));
+            ContractEnumNames.Parse<ExpiryKind>(seed.ExpiryKind),
+            seed.ShelfLife is null ? null : new ShelfLife(seed.ShelfLife.Days, ContractEnumNames.Parse<Storage>(seed.ShelfLife.RecommendedStorage))));
 }

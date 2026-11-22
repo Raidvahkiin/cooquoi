@@ -9,14 +9,14 @@ The Foodventory context publishes `GetStockSummary(householdId, asOf, expiringWi
 - [ ] `PublicApi/StockSummaryQuery` (or similar) returns `StockSummary`:
   - `stateHash`: a hash of the household's IngredientStock versions; it changes on any stock write and is stable otherwise.
   - Per ingredient held or with a threshold: `ingredientId`, `code`, `baseUnit`, effective `expiryKind`, `total` (put away or not), `earliestExpiry`.
-  - `expiringAmount`: within the window or expired, never `long-life`.
+  - `expiringAmount`: within the window or expired, never `longLife`.
   - `unknownExpiryAmount`: missing expiry, never counted as expiring.
   - `unnormalized[]` (never summed) and `state`.
 - [ ] `GetStock` returns the same entries for a subset of ingredient ids.
 - [ ] `GET /v1/stock/summary?expiringWithinDays=3` returns the same `StockSummary` for the caller's household (open question Q11). Drift `none`.
 - [ ] Verification: `aspire/http/foodventory.http` (or `scripts/verify-foodventory.sh`) as dev@cooquoi.local does these steps, all through the API, and the summary shows the expected totals, `expiringAmount` and `state`:
   1. `GET /v1/me`; list the default Pantry aggregates.
-  2. Restock milk (printed, no date), carrots (estimated) and rice (long-life).
+  2. Restock milk (printed, no date), carrots (estimated) and rice (longLife).
   3. Read `pantryId=none`; put the milk away into the Fridge with a date; split the carrots between Fridge and Freezer.
   4. Consume more carrots than held (shortfall reported).
   5. Set a threshold on rice.

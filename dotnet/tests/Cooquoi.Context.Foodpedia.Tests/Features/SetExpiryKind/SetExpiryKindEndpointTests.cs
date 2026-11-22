@@ -12,7 +12,7 @@ namespace Cooquoi.Context.Foodpedia.Tests.Features.SetExpiryKind;
 
 public sealed class SetExpiryKindEndpointTests(ApiFixture api)
 {
-    private static readonly SetExpiryKindRequest LongLife = new("long-life");
+    private static readonly SetExpiryKindRequest LongLife = new("longLife");
 
     private async Task<Guid> CreateIngredientAsync()
     {
@@ -50,10 +50,10 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
         changed.Result.Context.Response.Headers.ETag.ToString().ShouldBe("\"1\"");
         var ingredient = await GetAsync(id);
         ingredient.Version.ShouldBe(1);
-        ingredient.ExpiryKind.ShouldBe("long-life");
+        ingredient.ExpiryKind.ShouldBe("longLife");
         await using var db = api.CreateDbContext();
         (await db.Database.SqlQuery<string>($"SELECT expiry_kind AS \"Value\" FROM foodpedia.ingredients WHERE id = {id}")
-            .SingleAsync(TestContext.Current.CancellationToken)).ShouldBe("LongLife");
+            .SingleAsync(TestContext.Current.CancellationToken)).ShouldBe("longLife");
         changed.Messages.Executed.MessagesOf<IngredientExpiryKindChanged>()
             .Where(e => e.IngredientId.Value == id)
             .ShouldHaveSingleItem().ExpiryKind.ShouldBe(ExpiryKind.LongLife);

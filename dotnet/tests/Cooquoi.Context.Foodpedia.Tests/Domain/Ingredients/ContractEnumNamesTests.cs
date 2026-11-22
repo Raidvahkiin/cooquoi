@@ -16,8 +16,15 @@ public sealed class ContractEnumNamesTests
     [Fact]
     public void The_codes_are_the_contract_strings()
     {
-        new ContractEnumAttribute<ExpiryKind>().Values.ShouldBe(["printed", "estimated", "long-life"]);
+        new ContractEnumAttribute<ExpiryKind>().Values.ShouldBe(["printed", "estimated", "longLife"]);
         new ContractEnumAttribute<IngredientStatus>().Values.ShouldBe(["active", "retired"]);
         new ContractEnumAttribute<Storage>().Values.ShouldBe(["fridge", "freezer", "room"]);
     }
+
+    [Theory]
+    [InlineData("LongLife")]
+    [InlineData("longlife")]
+    [InlineData("long-life")]
+    public void Parse_is_exact_and_case_sensitive(string code) =>
+        Should.Throw<ArgumentException>(() => ContractEnumNames.Parse<ExpiryKind>(code));
 }

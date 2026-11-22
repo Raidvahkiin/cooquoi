@@ -14,6 +14,8 @@ public sealed class HouseholdDbContext(DbContextOptions<HouseholdDbContext> opti
     public DbSet<UserProfileAggregate> UserProfiles => Set<UserProfileAggregate>();
     public DbSet<HouseholdAggregate> Households => Set<HouseholdAggregate>();
 
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) => configurationBuilder.UseCamelCaseEnums();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);

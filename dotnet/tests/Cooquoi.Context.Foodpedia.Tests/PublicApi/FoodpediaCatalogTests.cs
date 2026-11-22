@@ -22,7 +22,7 @@ public sealed class FoodpediaCatalogTests(ApiFixture api)
         ingredients.OrderBy(i => i.Code).ShouldBe(
         [
             new CatalogIngredient(salmon, "salmon", "Saumon", "active", Unit.Gram, "printed", "fridge"),
-            new CatalogIngredient(rice, "white-rice", "Riz blanc", "active", Unit.Gram, "long-life", "room"),
+            new CatalogIngredient(rice, "white-rice", "Riz blanc", "active", Unit.Gram, "longLife", "room"),
         ]);
     }
 

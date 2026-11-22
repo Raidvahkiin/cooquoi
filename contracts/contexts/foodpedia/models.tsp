@@ -23,7 +23,7 @@ union Storage {
 union ExpiryKind {
   printed: "printed",
   estimated: "estimated",
-  longLife: "long-life",
+  longLife: "longLife",
 }
 
 /** Typed filters of the ingredient search (Q1). */

@@ -24,7 +24,7 @@ Terms used identically in code, docs and conversations. When a new concept appea
 | **Dimension** | The kind of measure a unit belongs to: mass, volume or count. |
 | **Conversion** | A rule turning one unit into another. **Universal** within a dimension (1 kg = 1000 g); **ingredient-specific** across dimensions or for custom units (1 egg ≈ 60 g, 1 fillet of salmon ≈ 200 g). |
 | **Shelf life** | The default number of days an ingredient keeps, with a **recommended storage** (fridge, freezer, room). Used to propose an expiry date and a pantry. |
-| **Expiry kind** | How an ingredient's expiry is known: **printed** (on the package, differs every time: milk, yoghurt), **estimated** (from shelf life: vegetables, bread) or **long-life** (rice, pasta, cans; never warned). Households may override it. |
+| **Expiry kind** | How an ingredient's expiry is known: **printed** (on the package, differs every time: milk, yoghurt), **estimated** (from shelf life: vegetables, bread) or **longLife** (rice, pasta, cans; never warned). Households may override it. |
 | **Tag** | A namespaced label classifying ingredients: `category:` (UI grouping, at least one per ingredient), `season:`, `diet:`, `allergen:`, `family:` (links variants such as salmon and smoked salmon). Curated, with translated labels. |
 | **Variant** | A distinct ingredient close to another (smoked salmon / salmon, brown rice / white rice), linked by a `family:` tag. |
 | **Household-private ingredient** *(after MVP)* | An ingredient created by a household when it is missing from Foodpedia; visible only to that household until a curator promotes it. |

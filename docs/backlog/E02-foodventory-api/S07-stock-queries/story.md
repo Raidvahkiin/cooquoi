@@ -11,7 +11,7 @@ A household member reads their stock five ways: by pantry (including "to put awa
   - `total` (base unit, put away or not), `unnormalized[]`, `earliestExpiry`, `missingExpiryCount`, `state`.
   - `q` matches the ingredient name in the `Accept-Language` locale. The ids come from Foodpedia P1/search; see the T03 Lookup.
 - [ ] Q4 `GET /v1/stock/{ingredientId}` → items per pantry and with none, total, threshold, household conversions, effective kind + override, remembered shelf lives, `version` + ETag.
-- [ ] Q5 `GET /v1/stock-items/expiring` (`withinDays` default 3, `includeExpired` default true, paging) → ordered by expiry; never `long-life`; missing expiry excluded.
+- [ ] Q5 `GET /v1/stock-items/expiring` (`withinDays` default 3, `includeExpired` default true, paging) → ordered by expiry; never `longLife`; missing expiry excluded.
 - [ ] Q6 `GET /v1/stock/low` (`includeOverstock?`, paging) → only ingredients with a threshold, in low (or over) state.
 - [ ] FV2: no query returns another household's data. Sort keys go through a `SortMap`. Drift `none`.
 
