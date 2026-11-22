@@ -7,7 +7,6 @@ let store = createMemorySessionStore();
 export const sessionStore: SessionStore = {
   get: (id) => store.get(id),
   set: (session) => store.set(session),
-  extend: (id, ttlSeconds) => store.extend(id, ttlSeconds),
   delete: (id) => store.delete(id),
 };
 

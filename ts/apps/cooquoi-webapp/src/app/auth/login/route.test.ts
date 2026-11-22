@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { currentSession, startLoginAt } from '../../../../test/auth';
+import { loadSession } from '@/shared/auth';
+import { currentSession, signIn, startLoginAt } from '../../../../test/auth';
 import { identityEndpoints } from '../../../../test/fixtures/identity';
+import { sessionStore } from '../../../../test/session-store';
 
 describe('GET /auth/login', () => {
   it('redirects to Keycloak with PKCE (S256), a state and the callback URL', async () => {
@@ -37,4 +39,14 @@ describe('GET /auth/login', () => {
       expect((await currentSession()).pendingLogin?.returnTo).toBe('/');
     },
   );
+
+  it('starts the login under a new session id, dropping the previous session', async () => {
+    await signIn();
+    const previousSid = (await loadSession())?.sid ?? '';
+
+    await startLoginAt('/auth/login');
+
+    expect((await loadSession())?.sid).not.toBe(previousSid);
+    await expect(sessionStore.get(previousSid)).resolves.toBeUndefined();
+  });
 });

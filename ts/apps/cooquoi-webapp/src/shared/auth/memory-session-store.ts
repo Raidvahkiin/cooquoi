@@ -28,10 +28,6 @@ export function createMemorySessionStore(): SessionStore {
         expiresAt: Date.now() + ttlSeconds * 1000,
       });
     },
-    async extend(id, ttlSeconds) {
-      const entry = readEntry(id);
-      if (entry) entry.expiresAt = Date.now() + ttlSeconds * 1000;
-    },
     async delete(id) {
       entries.delete(id);
     },

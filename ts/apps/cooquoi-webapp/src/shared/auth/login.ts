@@ -2,12 +2,7 @@ import 'server-only';
 import * as oidc from 'openid-client';
 import { getEnv } from '@/shared/config/env';
 import { getOidcConfig } from './oidc';
-import {
-  deleteSession,
-  loadSession,
-  rotateSession,
-  saveSession,
-} from './session';
+import { deleteSession, loadSession, rotateSession } from './session';
 import { toAuthTokens, toSessionTtlSeconds } from './tokens';
 
 const CALLBACK_PATH = '/auth/callback';
@@ -20,12 +15,10 @@ export async function startLogin(returnTo: string): Promise<URL> {
   const codeVerifier = oidc.randomPKCECodeVerifier();
   const state = oidc.randomState();
 
-  await saveSession({
-    data: {
-      pendingLogin: { codeVerifier, state, returnTo: toSafePath(returnTo) },
-    },
-    ttlSeconds: PENDING_LOGIN_TTL_S,
-  });
+  await rotateSession(
+    { pendingLogin: { codeVerifier, state, returnTo: toSafePath(returnTo) } },
+    PENDING_LOGIN_TTL_S,
+  );
 
   return oidc.buildAuthorizationUrl(config, {
     redirect_uri: new URL(CALLBACK_PATH, getEnv().APP_URL).href,

@@ -29,12 +29,14 @@ export async function proxy(request: NextRequest) {
     get: (name) => request.cookies.get(name),
     set: response.cookies.set.bind(response.cookies),
   };
-  const tokens = (await loadSession(access))?.data.tokens;
-
-  if (tokens && isExpiringSoon(tokens)) {
-    await refreshOrSignOut(tokens, access);
+  try {
+    const tokens = (await loadSession(access))?.data.tokens;
+    if (tokens && isExpiringSoon(tokens)) {
+      await refreshOrSignOut(tokens, access);
+    }
+  } catch {
+    // Session store down: let the page run, its own session read fails into the error boundary.
   }
-
   return response;
 }
 
@@ -49,7 +51,7 @@ async function refreshOrSignOut(
     await deleteSession(access);
     return;
   }
-  // Outside the try: a store error goes to the error page, it does not sign the user out.
+  // Outside the try: a store error must not sign the user out.
   await saveSession({
     data: { tokens: refreshed },
     ttlSeconds: toSessionTtlSeconds(refreshed),

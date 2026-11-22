@@ -5,7 +5,7 @@ import type { SessionData } from './session';
 type StoredSession = {
   id: string;
   data: SessionData;
-  /** The session is gone after this many seconds unless extended. */
+  /** The session is gone after this many seconds; writing it again restarts the count. */
   ttlSeconds: number;
 };
 
@@ -14,8 +14,6 @@ export type SessionStore = {
   /** `undefined` when the session is missing, expired or unreadable. */
   get(id: string): Promise<SessionData | undefined>;
   set(session: StoredSession): Promise<void>;
-  /** Restarts the TTL of an existing session; a missing one stays missing. */
-  extend(id: string, ttlSeconds: number): Promise<void>;
   delete(id: string): Promise<void>;
 };
 

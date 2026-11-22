@@ -91,14 +91,6 @@ describe('redis session store', () => {
     expect(ttl).toBeLessThanOrEqual(60);
   });
 
-  it('restarts the TTL when the session is extended', async () => {
-    await store().set({ id: 'extend', data, ttlSeconds: 60 });
-
-    await store().extend('extend', 600);
-
-    expect(await admin.ttl('session:extend')).toBeGreaterThan(590);
-  });
-
   it('forgets a deleted session', async () => {
     await store().set({ id: 'delete', data, ttlSeconds: 60 });
 

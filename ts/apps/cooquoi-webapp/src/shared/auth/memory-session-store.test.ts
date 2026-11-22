@@ -26,25 +26,15 @@ describe('memory session store', () => {
     expect(await store.get('a')).toBeUndefined();
   });
 
-  it('restarts the TTL when the session is extended', async () => {
+  it('restarts the TTL when the session is written again', async () => {
     const store = createMemorySessionStore();
     await store.set({ id: 'a', data, ttlSeconds: 60 });
 
     vi.advanceTimersByTime(50_000);
-    await store.extend('a', 60);
+    await store.set({ id: 'a', data, ttlSeconds: 60 });
     vi.advanceTimersByTime(50_000);
 
     expect(await store.get('a')).toEqual(data);
-  });
-
-  it('does not bring back an expired session when extended', async () => {
-    const store = createMemorySessionStore();
-    await store.set({ id: 'a', data, ttlSeconds: 60 });
-
-    vi.advanceTimersByTime(60_000);
-    await store.extend('a', 60);
-
-    expect(await store.get('a')).toBeUndefined();
   });
 
   it('forgets a deleted session', async () => {

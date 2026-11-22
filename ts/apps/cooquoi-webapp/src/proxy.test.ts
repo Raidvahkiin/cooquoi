@@ -49,6 +49,7 @@ const tokensExpiringIn = (ms: number): AuthTokens => ({
 describe('proxy', () => {
   afterEach(() => {
     vi.useRealTimers();
+    vi.restoreAllMocks();
   });
 
   it('refreshes an expired access token before the page runs', async () => {
@@ -139,5 +140,16 @@ describe('proxy', () => {
 
     expect(sessionCookieOf(response)).toBe('');
     expect(await sessionStore.get(SID)).toBeUndefined();
+  });
+
+  it('lets the page run without a refresh when the session store is down', async () => {
+    const request = await requestWithSession(tokensExpiringIn(-1_000));
+    vi.spyOn(sessionStore, 'get').mockRejectedValueOnce(new Error('down'));
+
+    const response = await proxy(request);
+
+    expect(response.headers.get('x-middleware-next')).toBe('1');
+    expect(sessionCookieOf(response)).toBeUndefined();
+    expect((await storedTokens())?.accessToken).toBe('old-access');
   });
 });

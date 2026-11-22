@@ -95,7 +95,7 @@ export async function saveSession({
   await getSessionStore().set({ id: cookie.sid, data, ttlSeconds });
 }
 
-/** Moves the session to a new id, so an id known before sign-in is worthless after it (no fixation). */
+/** Writes the session under a new id, dropping the old one: an id known before a login is worthless after it (no fixation). */
 export async function rotateSession(
   data: SessionData,
   ttlSeconds: number,
