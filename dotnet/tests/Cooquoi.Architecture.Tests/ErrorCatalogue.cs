@@ -51,10 +51,7 @@ internal static class ErrorCatalogue
     public static IEnumerable<string> Locales() =>
         Directory.GetFiles(MessagesDirectory, "*.json").Select(file => Path.GetFileNameWithoutExtension(file)).Order(StringComparer.Ordinal);
 
-    private static string MessagesDirectory => RepositoryPath("ts", "apps", "cooquoi-webapp", "messages");
-
-    private static string RepositoryPath(params string[] segments) =>
-        Path.GetFullPath(Path.Combine([CooquoiArchitecture.SolutionDirectory, "..", .. segments]));
+    private static string MessagesDirectory => CooquoiArchitecture.RepositoryPath("ts", "apps", "cooquoi-webapp", "messages");
 
     /// <summary>Non-empty string leaves only: a number, array or empty string is not a translation.</summary>
     private static IEnumerable<string> Leaves(JsonElement node, string? prefix) =>
@@ -66,20 +63,10 @@ internal static class ErrorCatalogue
         };
 
     /// <summary><c>components.schemas</c> of the generated OpenAPI document that are string enums.</summary>
-    private static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ContractSchemas()
-    {
-        var openApi = RepositoryPath("contracts", "generated", "openapi.yaml");
-        var yaml = new YamlStream();
-        using (var reader = File.OpenText(openApi))
-        {
-            yaml.Load(reader);
-        }
-
-        var schemas = (YamlMappingNode)((YamlMappingNode)((YamlMappingNode)yaml.Documents[0].RootNode)["components"])["schemas"];
-        return schemas.Children
+    private static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ContractSchemas() =>
+        CooquoiArchitecture.ContractSchemas().Children
             .Where(schema => ((YamlMappingNode)schema.Value).Children.ContainsKey("enum"))
             .Select(schema => KeyValuePair.Create(
                 ((YamlScalarNode)schema.Key).Value!,
                 ((YamlSequenceNode)schema.Value["enum"]).Children.Select(value => ((YamlScalarNode)value).Value!)));
-    }
 }

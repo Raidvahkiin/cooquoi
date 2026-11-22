@@ -11,8 +11,6 @@ namespace Cooquoi.Architecture.Tests;
 /// </summary>
 public sealed class MirroredTestRulesTests
 {
-    private static string SourceRoot { get; } = Path.Combine(CooquoiArchitecture.SolutionDirectory, "src");
-
     private static string TestRoot { get; } = Path.Combine(CooquoiArchitecture.SolutionDirectory, "tests");
 
     [Fact]
@@ -30,12 +28,12 @@ public sealed class MirroredTestRulesTests
     [Fact]
     public void Use_cases_have_a_mirrored_test_file()
     {
-        var missing = Directory.EnumerateDirectories(SourceRoot, "Cooquoi.Context.*")
+        var missing = Directory.EnumerateDirectories(CooquoiArchitecture.SourceRoot, "Cooquoi.Context.*")
             .Select(context => Path.Combine(context, "Features"))
             .Where(Directory.Exists)
             .SelectMany(Directory.EnumerateDirectories)
             .Where(useCase => !HasTestFile(MirroredFolder(useCase)))
-            .Select(useCase => Path.GetRelativePath(SourceRoot, useCase));
+            .Select(useCase => Path.GetRelativePath(CooquoiArchitecture.SourceRoot, useCase));
 
         missing.Order().ShouldBeEmpty("use cases without a test file in the mirrored tests folder");
     }
@@ -45,7 +43,7 @@ public sealed class MirroredTestRulesTests
 
     private static string MirroredFolder(string sourceFolder)
     {
-        var relative = Path.GetRelativePath(SourceRoot, sourceFolder);
+        var relative = Path.GetRelativePath(CooquoiArchitecture.SourceRoot, sourceFolder);
         var separator = relative.IndexOf(Path.DirectorySeparatorChar);
         return Path.Combine(TestRoot, $"{relative[..separator]}.Tests", relative[(separator + 1)..]);
     }

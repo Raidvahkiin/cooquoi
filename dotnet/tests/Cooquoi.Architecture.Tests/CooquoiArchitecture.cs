@@ -7,6 +7,7 @@ using Raidvahkiin.Ddd;
 using Raidvahkiin.Ddd.AspNetCore;
 using Raidvahkiin.Ddd.EntityFrameworkCore.Paging;
 using System.Reflection;
+using YamlDotNet.RepresentationModel;
 
 namespace Cooquoi.Architecture.Tests;
 
@@ -35,6 +36,25 @@ internal static class CooquoiArchitecture
 
     /// <summary><c>dotnet/</c>: the folder holding <c>Cooquoi.slnx</c>, found above the test output.</summary>
     public static string SolutionDirectory { get; } = FindSolutionDirectory();
+
+    /// <summary><c>dotnet/src/</c>.</summary>
+    public static string SourceRoot { get; } = Path.Combine(SolutionDirectory, "src");
+
+    /// <summary>A path from the repository root (the folder above <c>dotnet/</c>).</summary>
+    public static string RepositoryPath(params string[] segments) =>
+        Path.GetFullPath(Path.Combine([SolutionDirectory, "..", .. segments]));
+
+    /// <summary><c>components.schemas</c> of the contract's generated OpenAPI document.</summary>
+    public static YamlMappingNode ContractSchemas()
+    {
+        var yaml = new YamlStream();
+        using (var reader = File.OpenText(RepositoryPath("contracts", "generated", "openapi.yaml")))
+        {
+            yaml.Load(reader);
+        }
+
+        return (YamlMappingNode)((YamlMappingNode)((YamlMappingNode)yaml.Documents[0].RootNode)["components"])["schemas"];
+    }
 
     private static string FindSolutionDirectory()
     {

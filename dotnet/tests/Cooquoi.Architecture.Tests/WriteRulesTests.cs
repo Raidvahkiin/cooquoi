@@ -13,15 +13,13 @@ public sealed class WriteRulesTests
     {
         var violations = SourceFiles("Features")
             .Where(file => BulkWrites.Any(File.ReadAllText(file).Contains))
-            .Select(file => Path.GetRelativePath(SourceRoot, file));
+            .Select(file => Path.GetRelativePath(CooquoiArchitecture.SourceRoot, file));
 
         violations.ShouldBeEmpty();
     }
 
-    private static string SourceRoot { get; } = Path.Combine(CooquoiArchitecture.SolutionDirectory, "src");
-
     private static IEnumerable<string> SourceFiles(string layer) =>
-        Directory.EnumerateDirectories(SourceRoot, "Cooquoi.Context.*")
+        Directory.EnumerateDirectories(CooquoiArchitecture.SourceRoot, "Cooquoi.Context.*")
             .Select(context => Path.Combine(context, layer))
             .Where(Directory.Exists)
             .SelectMany(directory => Directory.EnumerateFiles(directory, "*.cs", SearchOption.AllDirectories));
