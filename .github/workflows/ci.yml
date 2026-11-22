@@ -41,6 +41,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # Webapp component tests run in Vitest browser mode on Playwright's Chromium.
+      - name: Install Playwright Chromium
+        run: pnpm --filter @cooquoi/webapp exec playwright install --with-deps chromium
+
       - uses: nrwl/nx-set-shas@v5
 
       - name: Verify affected projects (pull request)
