@@ -36,14 +36,17 @@ components:
       type: string
       enum:
         - common.validation
+        - common.invalid-sort
         - common.not-found
         - common.unauthorized
         - common.forbidden
         - common.concurrency-conflict
         - common.version-mismatch
         - common.if-match-required
+        - common.idempotency-key-required
         - common.idempotency-key-reused
         - common.request-in-progress
+        - common.request-already-processed
         - common.unexpected
       description: Stable error codes shared by every context (ADR 0014 §9).
     Common.FieldError:
@@ -56,8 +59,8 @@ components:
           type: string
           description: JSON path of the field in the request, e.g. `names[1].primary`.
         code:
-          type: string
-          description: Stable code, e.g. `validation.required`, `validation.max-length`.
+          $ref: '#/components/schemas/Common.ValidationCode'
+          description: Stable code clients translate.
         params:
           type: object
           additionalProperties: {}
@@ -110,6 +113,19 @@ components:
           type: string
           description: W3C trace id, to correlate with logs.
       description: RFC 9457 problem details with Cooquoi extensions (ADR 0014 §10).
+    Common.ValidationCode:
+      type: string
+      enum:
+        - validation.required
+        - validation.max-length
+        - validation.min-length
+        - validation.min
+        - validation.max
+        - validation.range
+        - validation.pattern
+        - validation.invalid
+        - validation.one-of
+      description: Stable codes of field errors (`errors[].code`), shared by every validator.
     Household.HouseholdSummary:
       type: object
       required:
