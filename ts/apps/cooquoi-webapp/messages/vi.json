@@ -2,7 +2,11 @@
   "common": {
     "appName": "Cooquoi",
     "openAccount": "Mở tài khoản của tôi",
-    "signOut": "Đăng xuất"
+    "signOut": "Đăng xuất",
+    "nav": {
+      "label": "Điều hướng chính",
+      "foodpedia": "Foodpedia"
+    }
   },
   "household": {
     "account": {

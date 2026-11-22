@@ -1,8 +1,11 @@
-import { defineProject } from 'vitest/config';
+import { playwright } from '@vitest/browser-playwright';
+import { defineConfig } from 'vitest/config';
 
-export default defineProject({
+export default defineConfig({
   root: import.meta.dirname,
   cacheDir: '../../../node_modules/.vite/ts/apps/cooquoi-webapp',
+  // tsconfig keeps `jsx: preserve` for Next.js; tests compile JSX themselves.
+  oxc: { jsx: { runtime: 'automatic' } },
   resolve: {
     // Vitest does not read tsconfig `paths`: mirror `@/*` here.
     alias: {
@@ -11,17 +14,38 @@ export default defineProject({
     },
   },
   test: {
-    name: 'webapp',
-    environment: 'node',
-    include: ['src/**/*.test.ts'],
-    setupFiles: ['test/setup.ts'],
-    env: {
-      APP_URL: 'http://localhost:3000',
-      API_BASE_URL: 'http://api.test',
-      OIDC_ISSUER: 'http://identity.test/realms/cooquoi',
-      OIDC_CLIENT_ID: 'cooquoi-webapp',
-      OIDC_CLIENT_SECRET: 'test-client-secret',
-      SESSION_PASSWORD: 'test-session-password-at-least-32-chars',
-    },
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'node',
+          environment: 'node',
+          include: ['src/**/*.test.ts'],
+          setupFiles: ['test/setup.ts'],
+          env: {
+            APP_URL: 'http://localhost:3000',
+            API_BASE_URL: 'http://api.test',
+            OIDC_ISSUER: 'http://identity.test/realms/cooquoi',
+            OIDC_CLIENT_ID: 'cooquoi-webapp',
+            OIDC_CLIENT_SECRET: 'test-client-secret',
+            SESSION_PASSWORD: 'test-session-password-at-least-32-chars',
+          },
+        },
+      },
+      {
+        extends: true,
+        test: {
+          // Components, in real Chromium (installed with `pnpm exec playwright install chromium`).
+          name: 'browser',
+          include: ['src/**/*.test.tsx'],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            headless: true,
+            instances: [{ browser: 'chromium' }],
+          },
+        },
+      },
+    ],
   },
 });

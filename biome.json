@@ -18,6 +18,7 @@
       "!legacy",
       "!ts/libs/api-client/src/generated",
       "!contracts/generated",
+      "!ts/apps/cooquoi-webapp/src/shared/ui/theme/cooquoi.{css,js,d.ts,css.d.ts}",
       "!dotnet-tools.json",
       "!**/.agents",
       "!**/.cursor",

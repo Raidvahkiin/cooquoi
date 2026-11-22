@@ -6,6 +6,10 @@ packages:
 
 # One version per shared dependency, used by every project through `catalog:`.
 catalog:
+  "@astryxdesign/cli": ^0.7.17
+  "@astryxdesign/core": ^0.7.17
+  "@stylexjs/stylex": ^0.19.2
+  "@vitest/browser-playwright": 5.1.1
   "@hey-api/openapi-ts": ^0.99.0
   "@typespec/compiler": ^1.18.0
   "@typespec/http": ^1.18.0
@@ -16,12 +20,17 @@ catalog:
   next-intl: ^4.15.3
   next: 16.4.6
   openid-client: ^6.9.1
+  playwright: ^1.65.1
   react: ^19.3.1
   react-dom: ^19.3.1
   server-only: ^0.0.1
+  vitest-browser-react: ^2.3.0
   zod: ^4.6.7
 
 allowBuilds:
+  # postinstall only prints an `astryx init` nudge
+  "@astryxdesign/cli": false
+  "@astryxdesign/core": false
   "@biomejs/biome": true
   "@parcel/watcher": true
   "@swc/core": true

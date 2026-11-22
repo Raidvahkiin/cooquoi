@@ -7,7 +7,9 @@
     "dev": "next dev"
   },
   "dependencies": {
+    "@astryxdesign/core": "catalog:",
     "@cooquoi/api-client": "workspace:*",
+    "@stylexjs/stylex": "catalog:",
     "iron-session": "catalog:",
     "next": "catalog:",
     "next-intl": "catalog:",
@@ -31,6 +33,10 @@
     }
   },
   "devDependencies": {
-    "msw": "catalog:"
+    "@astryxdesign/cli": "catalog:",
+    "@vitest/browser-playwright": "catalog:",
+    "msw": "catalog:",
+    "playwright": "catalog:",
+    "vitest-browser-react": "catalog:"
   }
 }

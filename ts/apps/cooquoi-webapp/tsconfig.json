@@ -30,6 +30,7 @@
     ".next/types/**/*.ts",
     "next-env.d.ts",
     "test/**/*.ts",
+    "test/**/*.tsx",
     "vite.config.mts"
   ],
   "exclude": [

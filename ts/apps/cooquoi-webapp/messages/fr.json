@@ -2,7 +2,11 @@
   "common": {
     "appName": "Cooquoi",
     "openAccount": "Ouvrir mon compte",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "nav": {
+      "label": "Navigation principale",
+      "foodpedia": "Foodpedia"
+    }
   },
   "household": {
     "account": {

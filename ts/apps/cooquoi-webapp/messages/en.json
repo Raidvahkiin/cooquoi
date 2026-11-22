@@ -2,7 +2,11 @@
   "common": {
     "appName": "Cooquoi",
     "openAccount": "Open my account",
-    "signOut": "Sign out"
+    "signOut": "Sign out",
+    "nav": {
+      "label": "Main navigation",
+      "foodpedia": "Foodpedia"
+    }
   },
   "household": {
     "account": {

@@ -1,24 +1,24 @@
-import { getLocale, getMessages } from 'next-intl/server';
 import { NextIntlClientProvider } from 'next-intl';
+import { getLocale } from 'next-intl/server';
 import type { ReactNode } from 'react';
+import { bodyFont, UiProvider } from '@/shared/ui';
 
 export const metadata = {
   title: 'Cooquoi',
   description: 'What to cook and what to buy, from what is in your fridge.',
 };
 
-// Spike: bare shell; the Astryx theme comes in T02.
 export default async function RootLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  const [locale, messages] = await Promise.all([getLocale(), getMessages()]);
+  const locale = await getLocale();
   return (
-    <html lang={locale}>
+    <html lang={locale} className={bodyFont.variable}>
       <body>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          {children}
+        <NextIntlClientProvider>
+          <UiProvider>{children}</UiProvider>
         </NextIntlClientProvider>
       </body>
     </html>
