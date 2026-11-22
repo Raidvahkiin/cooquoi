@@ -15,7 +15,7 @@ The Household context publishes `HouseholdCreated(householdId, creatorLocale)` w
 ## Reference
 
 - Registration: switch `HouseholdModule` to `AddDbContextWithWolverineIntegration`, as in `FoodpediaModule.cs:29-38`.
-- Event: `CreatePersonal` raises a domain `HouseholdCreated(HouseholdId, Locale)`. The integration event in `PublicApi/Events/HouseholdCreated` carries `Guid HouseholdId, string Locale` and follows the S01.T04 mapping-handler pattern.
+- Event: `CreatePersonal` raises a domain `HouseholdCreatedDomainEvent(HouseholdId, Locale)`. The integration event in `PublicApi/Events/HouseholdCreatedEvent` carries `Guid HouseholdId, string Locale` and follows the S01.T04 mapping-handler pattern.
 - Transaction: `UserSignIn` saves in its own transaction under an advisory lock, so Wolverine's transactional middleware does not run there. Use Wolverine's EF Core outbox for an explicit transaction (`IDbContextOutbox<HouseholdDbContext>` and `SaveChangesAndFlushMessagesAsync`) so the event is stored in the same transaction. See Lookups.
 - Query: `PublicApi/HouseholdDirectory` (or similar), `Task<Guid?> FindHouseholdIdAsync(string issuer, string subject)`, projecting `UserProfile.DefaultHouseholdId` with `AsNoTracking`.
 
@@ -39,7 +39,7 @@ Foodventory code (T02, T03); the profile and household endpoints' responses
 
 - [ ] T01.1 Wolverine-integrated `HouseholdDbContext` registration; existing Household tests green
 - [ ] T01.2 Domain `HouseholdCreated` raised by `CreatePersonal`; domain test
-- [ ] T01.3 `UserSignIn` saves through the outbox; `PublicApi/Events/HouseholdCreated` mapping
+- [ ] T01.3 `UserSignIn` saves through the outbox; `PublicApi/Events/HouseholdCreatedEvent` mapping
 - [ ] T01.4 `PublicApi` current-household query
 - [ ] T01.5 Integration tests: first `GET /v1/me` publishes exactly one `HouseholdCreated` with the profile locale (tracked session); a second call publishes none; the query returns the id, and none for an unknown subject
 

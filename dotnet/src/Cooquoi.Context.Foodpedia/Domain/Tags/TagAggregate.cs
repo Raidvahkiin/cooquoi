@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodpedia.Domain.Tags.Events;
 using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
 
@@ -24,7 +25,7 @@ public sealed class TagAggregate : AggregateRoot<TagId>
 
         var tag = new TagAggregate { Id = TagId.New(), Code = code, Status = TagStatus.Active };
         tag._labels.AddRange(labels);
-        tag.Raise(new TagCreated(tag.Id));
+        tag.Raise(new TagCreatedDomainEvent(tag.Id));
         return tag;
     }
 }

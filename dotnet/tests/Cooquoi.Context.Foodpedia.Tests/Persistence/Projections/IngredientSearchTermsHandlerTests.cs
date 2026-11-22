@@ -1,4 +1,4 @@
-using Cooquoi.Context.Foodpedia.Domain.Ingredients;
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Cooquoi.Context.Foodpedia.Tests.Support;
 using Wolverine.Tracking;
 
@@ -13,7 +13,7 @@ public sealed class IngredientSearchTermsHandlerTests(ApiFixture api)
     [Fact]
     public void The_handler_starts_by_naming_its_system_actor()
     {
-        var chain = api.Host.GetRuntime().Handlers.ChainFor<IngredientCreated>().ShouldNotBeNull();
+        var chain = api.Host.GetRuntime().Handlers.ChainFor<IngredientCreatedDomainEvent>().ShouldNotBeNull();
 
         chain.Middleware.First().GetType().Name.ShouldBe("EnterSystemActorFrame");
     }

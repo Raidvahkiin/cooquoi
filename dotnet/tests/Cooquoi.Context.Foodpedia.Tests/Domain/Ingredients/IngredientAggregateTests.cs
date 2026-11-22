@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.Context.Foodpedia.Tests.Support;
@@ -17,7 +18,7 @@ public sealed class IngredientAggregateTests
         salmon.Status.ShouldBe(IngredientStatus.Active);
         salmon.Version.ShouldBe(0);
         salmon.Conversions.Items.ShouldHaveSingleItem().Unit.Code.ShouldBe("fillet");
-        salmon.DomainEvents.ShouldHaveSingleItem().ShouldBe(new IngredientCreated(salmon.Id));
+        salmon.DomainEvents.ShouldHaveSingleItem().ShouldBe(new IngredientCreatedDomainEvent(salmon.Id));
     }
 
     [Fact]
@@ -73,7 +74,7 @@ public sealed class IngredientAggregateTests
         salmon.DefineConversion(new Conversion(fillet, 1, 180));
 
         salmon.Conversions.Items.ShouldHaveSingleItem().ShouldBe(new Conversion(fillet, 1, 180));
-        salmon.DomainEvents.Last().ShouldBe(new ConversionDefined(salmon.Id, "fillet", 1, 180));
+        salmon.DomainEvents.Last().ShouldBe(new ConversionDefinedDomainEvent(salmon.Id, "fillet", 1, 180));
     }
 
     [Fact]
@@ -110,7 +111,7 @@ public sealed class IngredientAggregateTests
         salmon.SetExpiryKind(ExpiryKind.Estimated);
 
         salmon.ExpiryKind.ShouldBe(ExpiryKind.Estimated);
-        salmon.DomainEvents.Last().ShouldBe(new IngredientExpiryKindChanged(salmon.Id, ExpiryKind.Estimated));
+        salmon.DomainEvents.Last().ShouldBe(new IngredientExpiryKindChangedDomainEvent(salmon.Id, ExpiryKind.Estimated));
     }
 
     [Fact]
@@ -142,7 +143,7 @@ public sealed class IngredientAggregateTests
         var vietnamese = salmon.NameIn(Locale.Vietnamese);
         vietnamese.Primary.ShouldBe("Cá hồi");
         vietnamese.Synonyms.ShouldBe(["Cá salmon"]);
-        salmon.DomainEvents.Last().ShouldBe(new IngredientNamesChanged(salmon.Id));
+        salmon.DomainEvents.Last().ShouldBe(new IngredientNamesChangedDomainEvent(salmon.Id));
     }
 
     [Fact]

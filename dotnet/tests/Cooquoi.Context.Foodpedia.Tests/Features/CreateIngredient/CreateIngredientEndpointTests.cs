@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Alba;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Features.CreateIngredient;
@@ -33,7 +34,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
 
         var id = (await created.Result.ReadAsJsonAsync<CreatedIngredient>())!.Id;
         created.Result.Context.Response.Headers.Location.ToString().ShouldBe($"/v1/ingredients/{id}");
-        created.Messages.Executed.MessagesOf<IngredientCreated>().ShouldContain(e => e.IngredientId.Value == id);
+        created.Messages.Executed.MessagesOf<IngredientCreatedDomainEvent>().ShouldContain(e => e.IngredientId.Value == id);
 
         var search = await api.Scenario(s =>
         {

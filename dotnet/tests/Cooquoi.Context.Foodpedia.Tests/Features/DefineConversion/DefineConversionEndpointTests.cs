@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Alba;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Features.CreateIngredient;
@@ -49,9 +50,9 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
         var ingredient = await GetAsync(id);
         ingredient.Version.ShouldBe(1);
         ingredient.Conversions.ShouldBe([new ConversionDetail("fillet", 1, 150), new ConversionDetail("piece", 1, 400)]);
-        defined.Messages.Executed.MessagesOf<ConversionDefined>()
+        defined.Messages.Executed.MessagesOf<ConversionDefinedDomainEvent>()
             .Where(conversion => conversion.IngredientId.Value == id)
-            .ShouldHaveSingleItem().ShouldBe(new ConversionDefined(new IngredientId(id), "piece", 1, 400));
+            .ShouldHaveSingleItem().ShouldBe(new ConversionDefinedDomainEvent(new IngredientId(id), "piece", 1, 400));
     }
 
     [Fact]
@@ -103,8 +104,8 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
         var defined = await api.TrackedScenario(Define(id, new("kg", 1, 1000), "\"0\"", 422));
 
         await defined.Result.ShouldBeProblemAsync(422, "foodpedia.conversion-not-needed");
-        defined.Messages.FindEnvelopesWithMessageType<ConversionDefined>()
-            .ShouldNotContain(envelope => ((ConversionDefined)envelope.Message!).IngredientId.Value == id);
+        defined.Messages.FindEnvelopesWithMessageType<ConversionDefinedDomainEvent>()
+            .ShouldNotContain(envelope => ((ConversionDefinedDomainEvent)envelope.Message!).IngredientId.Value == id);
         (await GetAsync(id)).Version.ShouldBe(0);
     }
 

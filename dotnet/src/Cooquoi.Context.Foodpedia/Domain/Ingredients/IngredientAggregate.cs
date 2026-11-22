@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
@@ -42,7 +43,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
         };
         ingredient._names.AddRange(request.Names);
         ingredient._tags.AddRange(request.Tags.Distinct());
-        ingredient.Raise(new IngredientCreated(ingredient.Id));
+        ingredient.Raise(new IngredientCreatedDomainEvent(ingredient.Id));
         return ingredient;
     }
 
@@ -53,7 +54,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
     {
         EnsureActive();
         Conversions = Conversions.Define(conversion, BaseUnit);
-        Raise(new ConversionDefined(Id, conversion.Unit.Code, conversion.UnitAmount, conversion.BaseAmount));
+        Raise(new ConversionDefinedDomainEvent(Id, conversion.Unit.Code, conversion.UnitAmount, conversion.BaseAmount));
     }
 
     /// <summary>C11: changes how the expiry is known; nothing happens when the kind is unchanged.</summary>
@@ -66,7 +67,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
         }
 
         ExpiryKind = expiryKind;
-        Raise(new IngredientExpiryKindChanged(Id, expiryKind));
+        Raise(new IngredientExpiryKindChangedDomainEvent(Id, expiryKind));
     }
 
     /// <summary>C3: replaces the synonyms of one locale; the primary name is unchanged.</summary>
@@ -76,7 +77,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
         var index = _names.FindIndex(name => name.Locale == locale);
         Ensure.That(index >= 0, IngredientError.NameMissing, ("locale", locale.Code));
         _names[index] = _names[index].WithSynonyms(synonyms);
-        Raise(new IngredientNamesChanged(Id));
+        Raise(new IngredientNamesChangedDomainEvent(Id));
     }
 
     /// <summary>C9: hidden from new uses; existing references stay readable.</summary>
@@ -84,7 +85,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
     {
         EnsureActive();
         Status = IngredientStatus.Retired;
-        Raise(new IngredientRetired(Id));
+        Raise(new IngredientRetiredDomainEvent(Id));
     }
 
     // F10

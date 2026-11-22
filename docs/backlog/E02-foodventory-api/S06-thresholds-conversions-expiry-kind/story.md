@@ -10,7 +10,7 @@ Inside the IngredientStock aggregate, a household sets a low/over threshold, def
 - [ ] S10 `:define-conversion` / S11 `:remove-conversion`: FV11 (amounts > 0; one per unit; none for a universally convertible unit → 422 `foodventory.conversion-not-needed`). FV6: items are re-normalized, household conversion before the Foodpedia default; removing one falls back to the Foodpedia default or unnormalized. Restock proposals and consumption use household conversions.
 - [ ] S9 `:override-expiry-kind` (`kind` or none): the effective kind is override ?? Foodpedia kind; flags follow, dates untouched; `ExpiryKindOverridden`.
 - [ ] FV15: a manual expiry typed at put-away into a Pantry aggregate with a storage, for effective kind `estimated`, stores `days = expiry − addedOn` when > 0, one per storage, the last one wins (`ShelfLifeRemembered`). FV8: later proposals use the remembered days first.
-- [ ] Foodpedia events: `ConversionDefined` → re-normalize the household stocks of that ingredient; `IngredientExpiryKindChanged` → update the copied kind (dates untouched); `IngredientRetired` → items flagged `ingredientRetired`. Each handler is idempotent.
+- [ ] Foodpedia events: `ConversionDefinedEvent` → re-normalize the household stocks of that ingredient; `IngredientExpiryKindChangedEvent` → update the copied kind (dates untouched); `IngredientRetiredEvent` → items flagged `ingredientRetired`. Each handler is idempotent.
 - [ ] S8–S11 on an ingredient with no IngredientStock aggregate yet: open question Q6.
 - [ ] Domain tests `FV6_…`, `FV10_…`, `FV11_…`, `FV12_…`, `FV15_…`; integration tests; drift `none`; catalogue green.
 

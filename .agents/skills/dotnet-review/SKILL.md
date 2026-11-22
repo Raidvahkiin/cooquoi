@@ -37,7 +37,7 @@ Conventions: `dotnet/AGENTS.md`. Report findings as a list: **file:line — prob
 ### Events and handlers
 - [ ] Handler classes end in `Handler` / `Consumer` (else Wolverine ignores them — the architecture test catches it).
 - [ ] Handlers are idempotent (rebuild from state, or record the event id) and tolerate late delivery.
-- [ ] Events carry ids and primitives; integration events (other contexts) are separate `PublicApi/Events/` types with a versioned identity.
+- [ ] Events carry ids and primitives; integration events (other contexts) are separate `<Fact>Event` types in `PublicApi/Events/` with a versioned identity.
 
 ### Clean code
 - [ ] Sizes: aggregate ≤ 200 lines, value object ≤ 100, use-case files ≤ 80, methods ≤ 30; ≤ 2 parameters on domain/helper methods (else a record).

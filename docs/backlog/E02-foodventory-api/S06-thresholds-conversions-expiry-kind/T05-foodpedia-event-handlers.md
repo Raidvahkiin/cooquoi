@@ -3,9 +3,9 @@
 ## Goal
 
 The Foodventory context consumes the Foodpedia integration events from E02.S01.T04:
-- `ConversionDefined` re-normalizes every household's IngredientStock for that ingredient (FV6).
-- `IngredientExpiryKindChanged` updates the copied kind (dates untouched).
-- `IngredientRetired` flags the items (FV3).
+- `ConversionDefinedEvent` re-normalizes every household's IngredientStock for that ingredient (FV6).
+- `IngredientExpiryKindChangedEvent` updates the copied kind (dates untouched).
+- `IngredientRetiredEvent` flags the items (FV3).
 
 ## Read only
 

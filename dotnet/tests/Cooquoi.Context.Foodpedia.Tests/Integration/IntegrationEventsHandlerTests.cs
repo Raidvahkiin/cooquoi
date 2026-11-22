@@ -1,7 +1,8 @@
+using Cooquoi.Context.Foodpedia.PublicApi.Events;
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Tests.Support;
 using Wolverine.Tracking;
-using Published = Cooquoi.Context.Foodpedia.PublicApi.Events;
 
 namespace Cooquoi.Context.Foodpedia.Tests.Integration;
 
@@ -13,10 +14,10 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
     {
         var id = IngredientId.New();
 
-        var session = await api.InvokeTracked(new IngredientExpiryKindChanged(id, ExpiryKind.LongLife));
+        var session = await api.InvokeTracked(new IngredientExpiryKindChangedDomainEvent(id, ExpiryKind.LongLife));
 
-        PublishedOnce<Published.IngredientExpiryKindChanged>(session)
-            .ShouldBe(new Published.IngredientExpiryKindChanged(id.Value, "longLife"));
+        PublishedOnce<IngredientExpiryKindChangedEvent>(session)
+            .ShouldBe(new IngredientExpiryKindChangedEvent(id.Value, "longLife"));
     }
 
     [Fact]
@@ -24,9 +25,9 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
     {
         var id = IngredientId.New();
 
-        var session = await api.InvokeTracked(new ConversionDefined(id, "fillet", 1, 200));
+        var session = await api.InvokeTracked(new ConversionDefinedDomainEvent(id, "fillet", 1, 200));
 
-        PublishedOnce<Published.ConversionDefined>(session).ShouldBe(new Published.ConversionDefined(id.Value, "fillet", 1, 200));
+        PublishedOnce<ConversionDefinedEvent>(session).ShouldBe(new ConversionDefinedEvent(id.Value, "fillet", 1, 200));
     }
 
     [Fact]
@@ -34,9 +35,9 @@ public sealed class IntegrationEventsHandlerTests(ApiFixture api)
     {
         var id = IngredientId.New();
 
-        var session = await api.InvokeTracked(new IngredientRetired(id));
+        var session = await api.InvokeTracked(new IngredientRetiredDomainEvent(id));
 
-        PublishedOnce<Published.IngredientRetired>(session).ShouldBe(new Published.IngredientRetired(id.Value));
+        PublishedOnce<IngredientRetiredEvent>(session).ShouldBe(new IngredientRetiredEvent(id.Value));
     }
 
     /// <summary>The published event, seen once whether or not another context subscribes (every tracked stage records it).</summary>

@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodpedia.Domain.Tags.Events;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.Context.Foodpedia.Tests.Support;
 using Cooquoi.SharedKernel;
@@ -14,7 +15,7 @@ public sealed class TagAggregateTests
         var tag = TagAggregate.Create(Meat, [new TagLabel(Locale.English, "Meat"), new TagLabel(Locale.Vietnamese, "Thịt")]);
 
         tag.Status.ShouldBe(TagStatus.Active);
-        tag.DomainEvents.ShouldHaveSingleItem().ShouldBe(new TagCreated(tag.Id));
+        tag.DomainEvents.ShouldHaveSingleItem().ShouldBe(new TagCreatedDomainEvent(tag.Id));
     }
 
     [Fact]

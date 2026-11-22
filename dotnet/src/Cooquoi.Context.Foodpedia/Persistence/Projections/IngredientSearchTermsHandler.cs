@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,10 +11,10 @@ namespace Cooquoi.Context.Foodpedia.Persistence.Projections;
 /// </summary>
 public static class IngredientSearchTermsHandler
 {
-    public static Task Handle(IngredientCreated created, FoodpediaDbContext db, CancellationToken cancellationToken) =>
+    public static Task Handle(IngredientCreatedDomainEvent created, FoodpediaDbContext db, CancellationToken cancellationToken) =>
         RebuildAsync(db, created.IngredientId, cancellationToken);
 
-    public static Task Handle(IngredientNamesChanged changed, FoodpediaDbContext db, CancellationToken cancellationToken) =>
+    public static Task Handle(IngredientNamesChangedDomainEvent changed, FoodpediaDbContext db, CancellationToken cancellationToken) =>
         RebuildAsync(db, changed.IngredientId, cancellationToken);
 
     /// <summary>Stages the new terms; the caller saves.</summary>

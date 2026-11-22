@@ -27,6 +27,34 @@ public sealed class DomainKindRulesTests
     }
 
     [Fact]
+    public void Domain_events_and_only_they_are_named_DomainEvent_and_live_in_an_Events_namespace()
+    {
+        var mismatches = CooquoiArchitecture.DomainTypes
+            .Where(type => type.IsClass || type.IsValueType && !type.IsEnum)
+            .Where(type => typeof(IDomainEvent).IsAssignableFrom(type) != type.Name.EndsWith("DomainEvent", StringComparison.Ordinal)
+                || typeof(IDomainEvent).IsAssignableFrom(type) != IsInEventsNamespace(type))
+            .Select(type => type.FullName);
+
+        mismatches.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void Integration_events_are_named_Event_but_not_DomainEvent_and_only_they_live_in_PublicApi_Events()
+    {
+        var integrationEvents = CooquoiArchitecture.OwnAssemblies.SelectMany(assembly => assembly.GetTypes())
+            .Where(type => type.Namespace?.StartsWith("Cooquoi.Context.", StringComparison.Ordinal) == true && !type.Name.StartsWith('<'))
+            .Where(type => type.Namespace!.EndsWith(".PublicApi.Events", StringComparison.Ordinal))
+            .ToList();
+
+        integrationEvents.ShouldNotBeEmpty();
+        var mismatches = integrationEvents
+            .Where(type => !type.Name.EndsWith("Event", StringComparison.Ordinal) || type.Name.EndsWith("DomainEvent", StringComparison.Ordinal) || typeof(IDomainEvent).IsAssignableFrom(type))
+            .Select(type => type.FullName);
+
+        mismatches.ShouldBeEmpty();
+    }
+
+    [Fact]
     public void Every_other_domain_type_is_immutable()
     {
         var mutable = CooquoiArchitecture.DomainTypes
@@ -35,6 +63,8 @@ public sealed class DomainKindRulesTests
 
         mutable.ShouldBeEmpty();
     }
+
+    private static bool IsInEventsNamespace(Type type) => type.Namespace?.EndsWith(".Events", StringComparison.Ordinal) == true;
 
     private static IEnumerable<string> MutableMembers(Type type)
     {

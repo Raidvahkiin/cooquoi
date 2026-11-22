@@ -1,6 +1,6 @@
 using Cooquoi.Platform.OpenApi;
-using Ingredients = Cooquoi.Context.Foodpedia.Domain.Ingredients;
-using Published = Cooquoi.Context.Foodpedia.PublicApi.Events;
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
+using Cooquoi.Context.Foodpedia.PublicApi.Events;
 
 namespace Cooquoi.Context.Foodpedia.Integration;
 
@@ -10,11 +10,11 @@ namespace Cooquoi.Context.Foodpedia.Integration;
 /// </summary>
 public static class IntegrationEventsHandler
 {
-    public static Published.IngredientExpiryKindChanged Handle(Ingredients.IngredientExpiryKindChanged changed) =>
+    public static IngredientExpiryKindChangedEvent Handle(IngredientExpiryKindChangedDomainEvent changed) =>
         new(changed.IngredientId.Value, ContractEnumNames.ToCode(changed.ExpiryKind));
 
-    public static Published.ConversionDefined Handle(Ingredients.ConversionDefined defined) =>
+    public static ConversionDefinedEvent Handle(ConversionDefinedDomainEvent defined) =>
         new(defined.IngredientId.Value, defined.Unit, defined.UnitAmount, defined.BaseAmount);
 
-    public static Published.IngredientRetired Handle(Ingredients.IngredientRetired retired) => new(retired.IngredientId.Value);
+    public static IngredientRetiredEvent Handle(IngredientRetiredDomainEvent retired) => new(retired.IngredientId.Value);
 }

@@ -1,3 +1,5 @@
+using Cooquoi.Context.Foodpedia.PublicApi.Events;
+using Cooquoi.Context.Foodpedia.Domain.Ingredients.Events;
 using Alba;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Features.CreateIngredient;
@@ -5,7 +7,6 @@ using Cooquoi.Context.Foodpedia.Features.GetIngredient;
 using Cooquoi.Context.Foodpedia.Tests.Support;
 using Cooquoi.Testing;
 using Microsoft.EntityFrameworkCore;
-using Published = Cooquoi.Context.Foodpedia.PublicApi.Events;
 using SetExpiryKindRequest = Cooquoi.Context.Foodpedia.Features.SetExpiryKind.SetExpiryKind;
 
 namespace Cooquoi.Context.Foodpedia.Tests.Features.SetExpiryKind;
@@ -54,7 +55,7 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
         await using var db = api.CreateDbContext();
         (await db.Database.SqlQuery<string>($"SELECT expiry_kind AS \"Value\" FROM foodpedia.ingredients WHERE id = {id}")
             .SingleAsync(TestContext.Current.CancellationToken)).ShouldBe("longLife");
-        changed.Messages.Executed.MessagesOf<IngredientExpiryKindChanged>()
+        changed.Messages.Executed.MessagesOf<IngredientExpiryKindChangedDomainEvent>()
             .Where(e => e.IngredientId.Value == id)
             .ShouldHaveSingleItem().ExpiryKind.ShouldBe(ExpiryKind.LongLife);
     }
@@ -67,8 +68,8 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
         var unchanged = await api.TrackedScenario(Set(id, new("estimated"), "\"0\"", 204));
 
         (await GetAsync(id)).Version.ShouldBe(0);
-        unchanged.Messages.FindEnvelopesWithMessageType<Published.IngredientExpiryKindChanged>()
-            .ShouldNotContain(envelope => ((Published.IngredientExpiryKindChanged)envelope.Message!).IngredientId == id);
+        unchanged.Messages.FindEnvelopesWithMessageType<IngredientExpiryKindChangedEvent>()
+            .ShouldNotContain(envelope => ((IngredientExpiryKindChangedEvent)envelope.Message!).IngredientId == id);
     }
 
     [Fact]

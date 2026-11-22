@@ -30,12 +30,12 @@ dotnet/
 │  │                                        # audit actors, validation problem shape, PlatformDbContext (schema platform)
 │  ├─ Cooquoi.Api/                          # host only: Program.cs, DevelopmentDatabase
 │  └─ Cooquoi.Context.<Name>/
-│     ├─ Domain/<Aggregate>/                # pure domain
+│     ├─ Domain/<Aggregate>/                # pure domain; Events/ holds the <Fact>DomainEvent records
 │     ├─ Features/<UseCase>/                # request + validator, endpoint
 │     ├─ Persistence/                       # DbContext, factory, Configurations/, Lookups/, Projections/, Seed/, Migrations/
 │     ├─ Integration/  PublicApi/           # when another context needs them
 │     │                                     # PublicApi/: I<Context>…  interface (published queries, impl internal) + records of primitives/SharedKernel;
-│     │                                     # PublicApi/Events/: integration events (ids, camelCase codes, [ADR 0021](../docs/architecture/adr/0021-enum-values-camel-case.md)), cascaded by an Integration/…Handler from domain events
+│     │                                     # PublicApi/Events/: integration events named <Fact>Event (ids, camelCase codes, [ADR 0021](../docs/architecture/adr/0021-enum-values-camel-case.md)), cascaded by an Integration/…Handler from domain events
 │     └─ <Context>Module.cs                 # Add<Context>Context(), migrate (+ seed) for development
 └─ tests/
    ├─ Cooquoi.Testing/                      # TestApi (Alba + Testcontainers), Callers, Problems — shared library
@@ -53,6 +53,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 - Contexts never reference each other (later: only `Integration/` → another context's `PublicApi`).
 - No `ExecuteUpdate` / `ExecuteDelete` in `Features/` (source scan) — writes go through aggregates.
 - `…Aggregate` ⇔ derives `AggregateRoot<TId>`, `…Entity` ⇔ `Entity<TId>`; every other `Domain/` type is immutable (enums excepted).
+- `…DomainEvent` ⇔ implements `IDomainEvent` ⇔ in a `….Domain.<Aggregate>.Events` namespace; integration events end in `Event` (not `DomainEvent`) and are the only types in `….PublicApi.Events`.
 - A class with a `Handle`/`Consume` method is named `…Handler`/`…Consumer` — **Wolverine discovers handlers by name only and silently ignores others** (events then go "to no subscribers").
 - No use case calls another use case. Share logic through the domain or `Persistence/Lookups/`; trigger follow-up work with events.
 
@@ -113,7 +114,8 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 | Entity | `<X>Entity : Entity<TId>`, only inside its aggregate |
 | Value object | immutable `sealed record` validated in its constructor (`Ensure.That`); collections with rules are value objects (`ConversionTable`) |
 | Id | `readonly record struct <X>Id(Guid Value)` with `New()` = UUID v7 |
-| Event | `sealed record <Fact>(…) : IDomainEvent`, one per file, `Raise(...)` in every behaviour |
+| Domain event | `sealed record <Fact>DomainEvent(…) : IDomainEvent` in `Domain/<Aggregate>/Events/` (namespace `…Domain.<Aggregate>.Events`), one per file, `Raise(...)` in every behaviour |
+| Integration event | `sealed record <Fact>Event(…)` of ids and primitives in `PublicApi/Events/` (never ends in `DomainEvent`); cascaded from the domain event by an `Integration/…Handler` |
 | Errors | `static class <X>Error` of `DomainError(code, kind, template)`; codes `<context>.<kebab>`; `common.*` in `CommonError` |
 | Rule ids | the domain doc's id (F7) in a comment on the guard and in the test name |
 
