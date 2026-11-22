@@ -33,6 +33,7 @@ public sealed class GetIngredientEndpointTests(ApiFixture api)
         tofu.Synonyms.ShouldBe(["Đậu hũ"]);
         tofu.BaseUnit.ShouldBe("g");
         tofu.Conversions.ShouldBe([new ConversionDetail("pack", 1, 300)]);
+        tofu.ExpiryKind.ShouldBe("printed");
         tofu.ShelfLife.ShouldBe(new ShelfLifeDetail(5, "fridge"));
         tofu.Status.ShouldBe("active");
         result.Context.Response.Headers.ETag.ToString().ShouldBe($"\"{tofu.Version}\"");

@@ -13,6 +13,7 @@ public sealed record IngredientDetail(
     IReadOnlyList<string> Synonyms,
     [property: ContractCodes(typeof(Unit), nameof(Unit.BaseUnits))] string BaseUnit,
     IReadOnlyList<ConversionDetail> Conversions,
+    [property: ContractEnum<ExpiryKind>] string ExpiryKind,
     ShelfLifeDetail? ShelfLife,
     IReadOnlyList<string> Tags,
     [property: ContractEnum<IngredientStatus>] string Status,

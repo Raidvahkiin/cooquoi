@@ -13,6 +13,7 @@ public static class Requests
             [new("en", $"Test bream {suffix}"), new("vi", $"Cá tráp {suffix}", [$"Cá vền {suffix}"])],
             "g",
             ["category:fish-seafood", "allergen:fish"],
+            "estimated",
             [new("fillet", 1, 150)],
             new(2, "fridge"));
     }

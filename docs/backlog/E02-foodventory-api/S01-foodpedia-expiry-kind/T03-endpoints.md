@@ -35,11 +35,11 @@ Contract edits (T01; if drift shows a contract mistake, fix it there and say so)
 
 ## Subtasks
 
-- [ ] T03.1 `CreateIngredient` request, validator and mapping; create tests: missing `expiryKind` → 400
-- [ ] T03.2 `IngredientDetail.ExpiryKind`; get test asserts it
-- [ ] T03.3 `SetExpiryKind` request, validator and endpoint
-- [ ] T03.4 Integration tests: 204 + ETag + event once (tracked session), 428 without If-Match, 412 stale, 403 non-curator, 422 retired (seed or arrange one), 404
-- [ ] T03.5 `dotnet build` regenerates `dotnet/generated/openapi.json`; drift and catalogue green
+- [x] T03.1 `CreateIngredient` request, validator and mapping; create tests: missing `expiryKind` → 400
+- [x] T03.2 `IngredientDetail.ExpiryKind`; get test asserts it
+- [x] T03.3 `SetExpiryKind` request, validator and endpoint
+- [x] T03.4 Integration tests: 204 + ETag + event once (tracked session), 428 without If-Match, 412 stale, 403 non-curator, 422 retired (seed or arrange one), 404
+- [x] T03.5 `dotnet build` regenerates `dotnet/generated/openapi.json`; drift and catalogue green
 
 ## Done when
 
@@ -47,6 +47,9 @@ Contract edits (T01; if drift shows a contract mistake, fix it there and say so)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodpedia): set expiry kind endpoint (E02.S01.T03)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Changed: create requires `expiryKind`, detail returns it, `:set-expiry-kind` endpoint + 7 tests; `ContractEnum` now kebab-case (`ContractEnumNames.ToCode/Parse` in Platform) so `long-life` matches the contract; fixed Platform tests (operation list, idempotency request).
+Verified: Foodpedia, Architecture, Platform tests green for my files; `drift: none`.
+Surprising: with T04's untracked `Integration/IntegrationEventsHandler.cs` in the tree, `DefineConversionEndpointTests.Defines_the_conversion...` sees 5 `ConversionDefined` envelopes (not mine; T04 to check).

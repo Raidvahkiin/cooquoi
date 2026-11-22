@@ -42,6 +42,147 @@
         }
       }
     },
+    "/v1/ingredients/{ingredientId}:set-expiry-kind": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodpedia.Features.SetExpiryKind.SetExpiryKindEndpoint"
+        ],
+        "summary": "C11: replace-style, so the client proves which version it edited (If-Match); answers the new version as ETag.",
+        "description": "POST_v1_ingredients_ingredientId_c395d145",
+        "operationId": "setExpiryKind",
+        "parameters": [
+          {
+            "name": "ingredientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetExpiryKind"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition Required",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/ingredients": {
       "get": {
         "tags": [
@@ -315,7 +456,7 @@
           "Cooquoi.Context.Foodpedia.Features.DefineConversion.DefineConversionEndpoint"
         ],
         "summary": "C5: replace-style, so the client proves which version it edited (If-Match); answers the new version as ETag.",
-        "description": "POST_v1_ingredients_ingredientId",
+        "description": "POST_v1_ingredients_ingredientId_882df760",
         "operationId": "defineConversion",
         "parameters": [
           {
@@ -536,7 +677,8 @@
           "code",
           "names",
           "baseUnit",
-          "tags"
+          "tags",
+          "expiryKind"
         ],
         "type": "object",
         "properties": {
@@ -562,6 +704,14 @@
             "items": {
               "type": "string"
             }
+          },
+          "expiryKind": {
+            "enum": [
+              "printed",
+              "estimated",
+              "long-life"
+            ],
+            "type": "string"
           },
           "conversions": {
             "type": "array",
@@ -684,6 +834,7 @@
           "synonyms",
           "baseUnit",
           "conversions",
+          "expiryKind",
           "shelfLife",
           "tags",
           "status",
@@ -728,6 +879,14 @@
             "items": {
               "$ref": "#/components/schemas/ConversionDetail"
             }
+          },
+          "expiryKind": {
+            "enum": [
+              "printed",
+              "estimated",
+              "long-life"
+            ],
+            "type": "string"
           },
           "shelfLife": {
             "anyOf": [
@@ -1005,6 +1164,23 @@
           }
         }
       },
+      "SetExpiryKind": {
+        "required": [
+          "expiryKind"
+        ],
+        "type": "object",
+        "properties": {
+          "expiryKind": {
+            "enum": [
+              "printed",
+              "estimated",
+              "long-life"
+            ],
+            "type": "string"
+          }
+        },
+        "description": "C11: body of `POST /v1/ingredients/{id}:set-expiry-kind`; requires `If-Match`."
+      },
       "ShelfLifeDetail": {
         "required": [
           "days",
@@ -1063,6 +1239,9 @@
   "tags": [
     {
       "name": "Cooquoi.Context.Household.Features.GetMe.GetMeEndpoint"
+    },
+    {
+      "name": "Cooquoi.Context.Foodpedia.Features.SetExpiryKind.SetExpiryKindEndpoint"
     },
     {
       "name": "Cooquoi.Context.Foodpedia.Features.SearchIngredients.SearchIngredientsEndpoint"

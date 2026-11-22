@@ -13,6 +13,7 @@ public sealed record CreateIngredient(
     IReadOnlyList<CreateIngredient.Name> Names,
     [property: ContractCodes(typeof(Unit), nameof(Unit.BaseUnits))] string BaseUnit,
     IReadOnlyList<string> Tags,
+    [property: ContractEnum<ExpiryKind>] string ExpiryKind,
     IReadOnlyList<CreateIngredient.ConversionInput>? Conversions = null,
     CreateIngredient.ShelfLifeInput? ShelfLife = null)
 {
@@ -30,7 +31,7 @@ public sealed record CreateIngredient(
         SharedKernel.Unit.FromCode(BaseUnit)!,
         [.. Tags.Select(TagCode.Parse)],
         [.. (Conversions ?? []).Select(c => new Conversion(SharedKernel.Unit.FromCode(c.Unit)!, c.UnitAmount, c.BaseAmount))],
-        ExpiryKind.Estimated, // E02.S01.T03
+        ContractEnumNames.Parse<Domain.Ingredients.ExpiryKind>(ExpiryKind),
         ShelfLife is null ? null : new Domain.Ingredients.ShelfLife(ShelfLife.Days, Enum.Parse<Storage>(ShelfLife.RecommendedStorage, ignoreCase: true)));
 }
 
@@ -38,6 +39,7 @@ public sealed record CreateIngredient(
 public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredient>
 {
     private static readonly string[] Locales = ["en", "fr", "vi"];
+    private static readonly string[] ExpiryKinds = [.. new ContractEnumAttribute<ExpiryKind>().Values];
     private static readonly string[] Storages = ["fridge", "freezer", "room"];
 
     public CreateIngredientValidator()
@@ -51,6 +53,7 @@ public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredie
         });
         RuleFor(request => request.BaseUnit).Must(IsUnit).WithErrorCode(ValidationCodes.OneOf);
         RuleFor(request => request.Tags).NotEmpty();
+        RuleFor(request => request.ExpiryKind).Must(ExpiryKinds.Contains).WithErrorCode(ValidationCodes.OneOf);
         RuleForEach(request => request.Conversions).ChildRules(conversion =>
             conversion.RuleFor(c => c.Unit).Must(IsUnit).WithErrorCode(ValidationCodes.OneOf));
         RuleFor(request => request.ShelfLife!.RecommendedStorage)

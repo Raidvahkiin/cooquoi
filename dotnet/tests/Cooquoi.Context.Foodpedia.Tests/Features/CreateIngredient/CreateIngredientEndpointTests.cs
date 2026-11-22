@@ -126,7 +126,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
     [Fact]
     public async Task A_malformed_request_lists_every_field_error_as_a_JSON_path()
     {
-        var request = Requests.NewIngredient() with { Code = "", Names = [new("de", "Lachs")], BaseUnit = "stone" };
+        var request = Requests.NewIngredient() with { Code = "", Names = [new("de", "Lachs")], BaseUnit = "stone", ExpiryKind = "" };
 
         var result = await Create(request, 400);
 
@@ -135,7 +135,17 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
             .Select(error => (error.GetProperty("field").GetString(), error.GetProperty("code").GetString()))
             .ToList();
         errors.ShouldBe(
-            [("code", "validation.required"), ("names[0].locale", "validation.one-of"), ("baseUnit", "validation.one-of")],
+            [("code", "validation.required"), ("names[0].locale", "validation.one-of"), ("baseUnit", "validation.one-of"), ("expiryKind", "validation.one-of")],
             ignoreOrder: true);
+    }
+
+    [Fact]
+    public async Task The_expiry_kind_is_stored_and_a_kebab_case_kind_is_accepted()
+    {
+        var request = Requests.NewIngredient() with { ExpiryKind = "long-life" };
+        await Create(request, 201);
+
+        await using var db = api.CreateDbContext();
+        db.Ingredients.Single(i => i.Code == IngredientCode.Create(request.Code)).ExpiryKind.ShouldBe(ExpiryKind.LongLife);
     }
 }

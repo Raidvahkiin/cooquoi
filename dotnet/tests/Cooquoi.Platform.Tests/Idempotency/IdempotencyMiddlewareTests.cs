@@ -15,7 +15,7 @@ public sealed class IdempotencyMiddlewareTests(ApiFixture api)
     private static CreateIngredient NewIngredient()
     {
         var suffix = Guid.NewGuid().ToString("N")[..10];
-        return new CreateIngredient($"idem-{suffix}", [new("en", $"Idempotent {suffix}")], "g", ["category:vegetables"]);
+        return new CreateIngredient($"idem-{suffix}", [new("en", $"Idempotent {suffix}")], "g", ["category:vegetables"], "printed");
     }
 
     private Task<IScenarioResult> Post(CreateIngredient request, Guid? key, int status) =>
