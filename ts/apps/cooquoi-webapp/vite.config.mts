@@ -39,7 +39,9 @@ export default defineConfig({
         // The scan misses the JSX runtime injected by `oxc` (dev or prod, by NODE_ENV); found at run time it reloads the page mid-run.
         // Next.js client modules (`next/link`) read `process.env.__NEXT_*` at import.
         define: { 'process.env': '{}' },
-        optimizeDeps: { include: ['react/jsx-dev-runtime', 'react/jsx-runtime'] },
+        optimizeDeps: {
+          include: ['react/jsx-dev-runtime', 'react/jsx-runtime'],
+        },
         test: {
           // Components, in real Chromium (installed with `pnpm exec playwright install chromium`).
           name: 'browser',
