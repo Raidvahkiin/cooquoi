@@ -11,7 +11,8 @@
     "metadata": {
       "title": "Cooquoi",
       "description": "What to cook and what to buy, from what is in your fridge."
-    }
+    },
+    "retry": "Try again"
   },
   "household": {
     "account": {

@@ -11,7 +11,8 @@
     "metadata": {
       "title": "Cooquoi",
       "description": "Nấu gì và mua gì, dựa trên những gì có trong tủ lạnh của bạn."
-    }
+    },
+    "retry": "Thử lại"
   },
   "household": {
     "account": {

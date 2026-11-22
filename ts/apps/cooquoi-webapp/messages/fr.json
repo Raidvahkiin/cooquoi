@@ -11,7 +11,8 @@
     "metadata": {
       "title": "Cooquoi",
       "description": "Quoi cuisiner et quoi acheter, à partir de ce qu’il y a dans votre frigo."
-    }
+    },
+    "retry": "Réessayer"
   },
   "household": {
     "account": {

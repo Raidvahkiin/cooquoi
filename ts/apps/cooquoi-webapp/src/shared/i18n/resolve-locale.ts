@@ -1,9 +1,9 @@
 import 'server-only';
-import { type CommonLocale, getMe } from '@cooquoi/api-client';
+import type { CommonLocale } from '@cooquoi/api-client';
 import { headers } from 'next/headers';
 import { cache } from 'react';
 import { getSession } from '@/shared/auth';
-import { createApiClientWithToken } from '@/shared/api';
+import { fetchMe } from '@/shared/api';
 import { DEFAULT_LOCALE, isLocale, type Locale } from './locales';
 
 /**
@@ -12,13 +12,11 @@ import { DEFAULT_LOCALE, isLocale, type Locale } from './locales';
  * must render for a signed-out user.
  */
 const profileLocale = cache(async (): Promise<CommonLocale | undefined> => {
-  const session = await getSession();
-  if (!session.tokens) return undefined;
-  const accessToken = session.tokens.accessToken;
   try {
-    const client = createApiClientWithToken(accessToken);
-    const { data } = await getMe({ client, throwOnError: true });
-    return data.profile.locale;
+    const session = await getSession();
+    if (!session.tokens) return undefined;
+    const accessToken = session.tokens.accessToken;
+    return (await fetchMe(accessToken)).profile.locale;
   } catch {
     return undefined;
   }
