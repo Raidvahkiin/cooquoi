@@ -19,7 +19,9 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  lint-typecheck-test:
+  # One pipeline for every toolchain, all through Nx: lint, typecheck, test (TypeScript and .NET, including
+  # the architecture, error catalogue and mirrored-test checks), Biome, knip, `dotnet format`.
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -35,17 +37,43 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
 
+      # SDK version comes from global.json (same as local)
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+
+      # Docker is preinstalled on ubuntu-latest: Testcontainers (Postgres) uses it.
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm exec nx run-many -t lint --parallel=3
+      - uses: nrwl/nx-set-shas@v5
 
-      - name: Typecheck
-        run: pnpm exec nx run-many -t typecheck --parallel=3
+      - name: Verify affected projects (pull request)
+        if: github.event_name == 'pull_request'
+        run: pnpm exec nx affected -t lint typecheck test biome-check knip build format-check --parallel=3
 
-      - name: Test
-        run: pnpm exec nx run-many -t test --parallel=3
+      - name: Verify every project (main and tags)
+        if: github.event_name != 'pull_request'
+        run: pnpm exec nx run-many -t lint typecheck test biome-check knip build format-check --parallel=3
+
+      # Reports only: Biome's size rules are errors, so a violation already failed the step above.
+      - name: Size report
+        if: always()
+        run: |
+          {
+            echo '## Size report'
+            echo
+            echo '### Webapp files over 150 lines'
+            echo '```'
+            find ts/apps/cooquoi-webapp/src -type f \( -name '*.ts' -o -name '*.tsx' \) -print0 \
+              | xargs -0 wc -l | awk '$1 > 150 && $2 != "total"' | sort -rn
+            echo '```'
+            echo '### Functions over the Biome limits'
+            echo '```'
+            pnpm exec biome lint --only=complexity/noExcessiveLinesPerFunction --only=complexity/noExcessiveCognitiveComplexity --reporter=summary . 2>&1 | tail -40 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
 
   # ADR 0009 §6: the API's real OpenAPI document must match the TypeSpec contract.
   contract-drift:
@@ -68,9 +96,10 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # Writes dotnet/generated/openapi.json (build-time OpenAPI generation)
-      - name: Build .NET
-        run: dotnet build dotnet/Cooquoi.slnx -v q -nologo -clp:ErrorsOnly
+      # No graph edge from @cooquoi/dotnet on purpose, so drift runs whatever the change.
+      # Builds .NET (writes dotnet/generated/openapi.json), compiles the contract, then oasdiff + drift gate.
+      - name: Contract drift
+        run: pnpm exec nx run @cooquoi/contracts:drift
 
       - name: Generate contract and client
         run: pnpm exec nx run @cooquoi/api-client:generate
@@ -80,21 +109,8 @@ jobs:
           git status --porcelain contracts/generated dotnet/generated ts/libs/api-client/src/generated
           test -z "$(git status --porcelain contracts/generated dotnet/generated ts/libs/api-client/src/generated)"
 
-      # Same oasdiff as `@cooquoi/contracts:drift` (v0.2.1 runs tufin/oasdiff:v1.39.0); keep both in step.
-      - name: oasdiff (contract vs ASP.NET)
-        uses: oasdiff/oasdiff-action/diff@v0.2.1
-        with:
-          base: contracts/generated/openapi.yaml
-          revision: dotnet/generated/openapi.json
-          format: json
-          exclude-elements: description,examples,summary,tags,title
-          output-to-file: oasdiff.json
-
-      - name: Drift gate
-        run: node contracts/scripts/drift-gate.mjs oasdiff.json
-
   build-and-push-images:
-    needs: lint-typecheck-test
+    needs: [verify, contract-drift]
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     strategy:

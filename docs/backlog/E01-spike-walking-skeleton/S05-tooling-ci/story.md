@@ -33,7 +33,7 @@ One CI pipeline across every toolchain (.NET, TypeSpec, TypeScript) that fails o
 | [T03](T03-clean-working-tree.md) | Tools stop rewriting committed files | done | — | yes | s05-t03 |
 | [T04](T04-nx-dotnet-targets.md) | Nx targets for .NET; `nx affected` across toolchains | done | — | yes | s05-t04 |
 | [T05](T05-biome-rules-knip.md) | Biome rules (size, complexity, boundaries) and knip | done | T03 | no | s05-t05 |
-| [T06](T06-ci-pipeline-and-findings.md) | One CI pipeline, violation checks, findings | blocked (usage cap, resumes 14:43 CET) | T02, T04, T05 | no | s05-t06 |
+| [T06](T06-ci-pipeline-and-findings.md) | One CI pipeline, violation checks, findings | done | T02, T04, T05 | no | s05-t06 |
 
 T01, T03 and T04 touch disjoint files and can run at the same time. The story review runs after T06 (`backlog-run`).
 

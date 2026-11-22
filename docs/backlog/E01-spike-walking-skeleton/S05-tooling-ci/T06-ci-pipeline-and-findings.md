@@ -33,13 +33,13 @@ sonnet
 
 ## Subtasks
 
-- [ ] T06.1 Mirrored-test architecture test (passes on today's code, or names the missing tests and adds them)
-- [ ] T06.2 `ci.yml`:
+- [x] T06.1 Mirrored-test architecture test (passes on today's code, or names the missing tests and adds them)
+- [x] T06.2 `ci.yml`:
   - setup for .NET and Docker in the main job;
   - `nx affected` on PRs and `run-many` on main for every target;
   - the drift job on the Nx targets;
   - the size report in the step summary.
-- [ ] T06.3 Violation checks, one per rule, run locally through the same Nx target CI uses and reverted afterwards. Record each failing command in findings:
+- [x] T06.3 Violation checks, one per rule, run locally through the same Nx target CI uses and reverted afterwards. Record each failing command in findings:
   - ESLint boundary
   - Biome size or complexity
   - knip unused export
@@ -50,7 +50,7 @@ sonnet
   - contract drift
   - error catalogue: a code missing from a message catalogue
   - mirrored test: a use case without its test
-- [ ] T06.4 `S05-tooling-ci/findings.md`:
+- [x] T06.4 `S05-tooling-ci/findings.md`:
   - the violation table (rule, command, result);
   - the spike answers (`nx affected` across toolchains from T04, stable Biome rules from T05);
   - what is left.
@@ -63,6 +63,6 @@ sonnet
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`ci(repo): one pipeline across toolchains (E01.S05.T06)`), stop.
 
-Status: todo
+Status: done
 
-Report:
+Report: CI is one `verify` job (affected on PRs, run-many on main) plus a `contract-drift` job on Nx targets, with a size report. Added `MirroredTestRulesTests`, which passes on today's code. All 10 violations fail the matching Nx target and were reverted. Findings are in `findings.md`. Not run on GitHub yet; actionlint is clean.
