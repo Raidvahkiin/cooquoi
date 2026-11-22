@@ -26,6 +26,6 @@ A second Next.js app for curators, separate from the user app `@cooquoi/webapp`,
 |---|---|---|---|---|---|
 | [T01](T01-curator-app-adr.md) | ADR 0017: curator app | todo | — | yes | s06-t01 |
 
-The other tasks (scaffold the app, extract shared code to `ts/libs`, define-conversion from S04.T06, catalogue check for both apps, findings) are not planned yet: run `backlog-plan` with source "ADR 0017" once T01 is accepted and S04 is done. T01 only writes docs, so it can run alongside S04.
+The other tasks (scaffold the app, extract shared code to `ts/libs`, define-conversion from S04.T06, catalogue check for both apps, findings) are not planned yet: run `backlog-plan` with source "ADR 0017" once T01 is accepted and S04 and S07 are done (the curator app reuses the Redis session store). T01 only writes docs, so it can run alongside S04.
 
 ## Summary
