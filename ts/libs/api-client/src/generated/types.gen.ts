@@ -133,7 +133,7 @@ export type FoodpediaDefineConversion = {
 /**
  * How the expiry date of an ingredient is known (F12).
  */
-export type FoodpediaExpiryKind = 'printed' | 'estimated' | 'long-life';
+export type FoodpediaExpiryKind = 'printed' | 'estimated' | 'longLife';
 
 /**
  * Stable error codes of the Foodpedia context (`problem.code`), next to `CommonErrorCode`.
