@@ -49,8 +49,7 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
         var ingredient = await GetAsync(id);
         ingredient.Version.ShouldBe(1);
         ingredient.Conversions.ShouldBe([new ConversionDetail("fillet", 1, 150), new ConversionDetail("piece", 1, 400)]);
-        defined.Messages.FindEnvelopesWithMessageType<ConversionDefined>()
-            .Select(envelope => (ConversionDefined)envelope.Message!)
+        defined.Messages.Executed.MessagesOf<ConversionDefined>()
             .Where(conversion => conversion.IngredientId.Value == id)
             .ShouldHaveSingleItem().ShouldBe(new ConversionDefined(new IngredientId(id), "piece", 1, 400));
     }

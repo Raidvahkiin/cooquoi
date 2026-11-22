@@ -52,4 +52,4 @@ Status: done
 Report:
 Changed: create requires `expiryKind`, detail returns it, `:set-expiry-kind` endpoint + 7 tests; `ContractEnum` now kebab-case (`ContractEnumNames.ToCode/Parse` in Platform) so `long-life` matches the contract; fixed Platform tests (operation list, idempotency request).
 Verified: Foodpedia, Architecture, Platform tests green for my files; `drift: none`.
-Surprising: with T04's untracked `Integration/IntegrationEventsHandler.cs` in the tree, `DefineConversionEndpointTests.Defines_the_conversion...` sees 5 `ConversionDefined` envelopes (not mine; T04 to check).
+Follow-up: DefineConversion test now counts executed ConversionDefined (T04 handler adds envelopes); all suites green.
