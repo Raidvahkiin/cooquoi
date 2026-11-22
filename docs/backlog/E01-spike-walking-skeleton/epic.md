@@ -11,6 +11,7 @@ Build the thinnest end-to-end slices (authentication, Foodpedia) through every l
 ## Later (after E01)
 
 - Playwright end-to-end tests for the user and curator apps (decided 2026-11-22 while planning S04)
+- Curator app (E01.S06, deferred 2026-11-22): curators use the API directly until a UI is worth it; S06 keeps its T01 (ADR 0017) plan for when it resumes
 
 ## Stories
 
@@ -23,6 +24,6 @@ Build the thinnest end-to-end slices (authentication, Foodpedia) through every l
 | [E01.S05](S05-tooling-ci/story.md) | Tooling and CI (phase 5) and dev environment | done | E01.S03 |
 | [E01.S08](S08-build-tool-split/story.md) | Build tools split: Nx for TypeScript and TypeSpec, dotnet for C# | done | E01.S05 |
 | [E01.S07](S07-redis-session-store/story.md) | Redis session store for the webapp BFF | done | E01.S05 |
-| [E01.S06](S06-curator-app/story.md) | Curator app (phase 4, curator side) | todo (T01 planned) | E01.S07 (T01: —) |
+| [E01.S06](S06-curator-app/story.md) | Curator app (phase 4, curator side) | deferred (2026-11-22: curation goes through the API for now) | E01.S07 (T01: —) |
 
 Run order: S05 → S08 → S07 → S06 (decided 2026-11-22, [S04 findings](S04-foodpedia-webapp/findings.md) "Decisions" 5; S08 from [ADR 0020](../../architecture/adr/0020-build-tools-nx-and-dotnet.md)). S07 comes from [ADR 0019](../../architecture/adr/0019-webapp-sessions-in-redis.md), not from the spike plan; the S05 dev-environment work from [ADR 0018](../../architecture/adr/0018-https-everywhere-in-dev.md).

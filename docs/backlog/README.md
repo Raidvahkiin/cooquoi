@@ -27,4 +27,4 @@ Status: `todo` · `doing` · `done` · `blocked (<why>)` · `dropped`.
 
 | Id | Title | Status |
 |---|---|---|
-| [E01](E01-spike-walking-skeleton/epic.md) | Spike walking skeleton | doing |
+| [E01](E01-spike-walking-skeleton/epic.md) | Spike walking skeleton | done (S06 deferred) |

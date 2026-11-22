@@ -1,5 +1,7 @@
 # E01.S06 — Curator app (phase 4, curator side)
 
+> **Deferred 2026-11-22**: curation goes through the API for now. Resume from T01 when a curator UI is needed.
+
 ## Goal
 
 A second Next.js app for curators, separate from the user app `@cooquoi/webapp`, where a curator defines an ingredient conversion (C5) through a Server Action with `If-Match`; a stale version shows a translated error by code. Its shape (name, path, auth, shared code) is first decided in an ADR.
