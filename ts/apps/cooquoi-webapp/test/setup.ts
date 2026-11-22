@@ -1,7 +1,7 @@
 import { afterAll, afterEach, beforeAll, vi } from 'vitest';
 import { cookieJar } from './cookie-jar';
-import { clearRequestHeaders } from './request-headers';
 import { server } from './msw/node';
+import { clearRequestHeaders } from './request-headers';
 
 vi.mock('next/headers', async () => {
   const { cookieJar: jar } = await import('./cookie-jar');

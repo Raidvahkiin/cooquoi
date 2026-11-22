@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest';
-import { renderWithProviders } from '../../../../test/render';
 import fr from '../../../../messages/fr.json';
+import { renderWithProviders } from '../../../../test/render';
 import { ErrorMessage } from './error-message';
 
 it('shows the French text of a code with its params', async () => {

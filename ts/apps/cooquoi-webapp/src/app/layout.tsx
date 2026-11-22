@@ -1,6 +1,6 @@
+import type { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
-import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { bodyFont, UiProvider } from '@/shared/ui';
 

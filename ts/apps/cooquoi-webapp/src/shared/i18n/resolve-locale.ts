@@ -2,8 +2,8 @@ import 'server-only';
 import type { CommonLocale } from '@cooquoi/api-client';
 import { headers } from 'next/headers';
 import { cache } from 'react';
-import { getSession } from '@/shared/auth';
 import { fetchMe } from '@/shared/api';
+import { getSession } from '@/shared/auth';
 import { DEFAULT_LOCALE, isLocale, type Locale } from './locales';
 
 /**

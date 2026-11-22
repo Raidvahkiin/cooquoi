@@ -43,10 +43,10 @@ haiku (fully specified above)
 
 ## Subtasks
 
-- [ ] T03.1 `.gitignore` + untrack `next-env.d.ts`; verify `typecheck` without `.next`
-- [ ] T03.2 `biome.json`: ignore `dotnet/generated`
-- [ ] T03.3 `biome check --write` for import order, then the two lint errors by hand
-- [ ] T03.4 Delete the stale `.env.development.local`, add `.env.example`
+- [x] T03.1 `.gitignore` + untrack `next-env.d.ts`; verify `typecheck` without `.next`
+- [x] T03.2 `biome.json`: ignore `dotnet/generated`
+- [x] T03.3 `biome check --write` for import order, then the two lint errors by hand
+- [x] T03.4 Delete the stale `.env.development.local`, add `.env.example`
 
 ## Done when
 
@@ -56,6 +56,9 @@ haiku (fully specified above)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`chore(repo): stop tools rewriting committed files (E01.S05.T03)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- Changed: `.gitignore` + untracked `next-env.d.ts`; `biome.json` (`!dotnet/generated`); import order in 9 webapp files; `ingredient-search-form.tsx` (`<search>` wrapper), `to-api-error.ts` (`??=` moved out of the expression); deleted `.env.development.local`; added `.env.example`.
+- Verified: `biome check .` clean; typecheck passes with `.next` and `next-env.d.ts` removed (Next regenerates it); `nx:format` + webapp build twice leave status unchanged; typecheck and test green.
+- Surprising: parent commit 5e9fafa (T01) already contains my staged `next-env.d.ts` deletion; not committed by me.

@@ -78,10 +78,12 @@ function toFieldErrors(
   if (!Array.isArray(errors) || errors.length === 0) return undefined;
   const fieldErrors: NonNullable<ApiError['fieldErrors']> = {};
   for (const { field, code, params } of errors) {
-    (fieldErrors[field] ??= []).push({
+    const list = fieldErrors[field] ?? [];
+    list.push({
       code: knownCodeOrUnexpected(code),
       ...(params && { params }),
     });
+    fieldErrors[field] = list;
   }
   return fieldErrors;
 }

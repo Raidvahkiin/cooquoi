@@ -20,19 +20,21 @@ export function IngredientSearchForm({
   const t = useTranslations('foodpedia.search');
   const [value, setValue] = useState(query);
   return (
-    <form action="/foodpedia" role="search">
-      <HStack gap={2} align="end">
-        <TextInput
-          type="search"
-          htmlName="q"
-          label={t('label')}
-          value={value}
-          onChange={setValue}
-          width="100%"
-        />
-        {sort && <input type="hidden" name="sort" value={sort} />}
-        <Button type="submit" label={t('submit')} variant="primary" />
-      </HStack>
-    </form>
+    <search>
+      <form action="/foodpedia">
+        <HStack gap={2} align="end">
+          <TextInput
+            type="search"
+            htmlName="q"
+            label={t('label')}
+            value={value}
+            onChange={setValue}
+            width="100%"
+          />
+          {sort && <input type="hidden" name="sort" value={sort} />}
+          <Button type="submit" label={t('submit')} variant="primary" />
+        </HStack>
+      </form>
+    </search>
   );
 }

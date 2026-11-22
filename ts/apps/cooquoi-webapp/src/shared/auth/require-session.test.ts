@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { requestHeaders } from '../../../test/request-headers';
-import { getSession } from './session';
 import { REQUESTED_PATH_HEADER, requireAccessToken } from './require-session';
+import { getSession } from './session';
 
 vi.mock('next/navigation', () => ({
   redirect: vi.fn((url: string) => {

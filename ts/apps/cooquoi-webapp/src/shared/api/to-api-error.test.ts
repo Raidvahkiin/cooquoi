@@ -1,8 +1,8 @@
+import { createClient, createConfig } from '@cooquoi/api-client';
 import { HttpResponse, http } from 'msw';
 import { describe, expect, it } from 'vitest';
-import { server } from '../../../test/msw/node';
 import { API_BASE_URL } from '../../../test/fixtures/household';
-import { createClient, createConfig } from '@cooquoi/api-client';
+import { server } from '../../../test/msw/node';
 import { toApiError } from './to-api-error';
 
 const problem = (body: Record<string, unknown>) => ({

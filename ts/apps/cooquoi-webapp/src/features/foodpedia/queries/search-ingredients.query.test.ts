@@ -1,8 +1,8 @@
 import { delay, HttpResponse, http } from 'msw';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { getSession } from '@/shared/auth';
 import { API_BASE_URL } from '../../../../test/fixtures/household';
 import { server } from '../../../../test/msw/node';
-import { getSession } from '@/shared/auth';
 import { searchIngredientsPage } from './search-ingredients.query';
 
 const locale = vi.hoisted(() => ({ current: 'fr' }));

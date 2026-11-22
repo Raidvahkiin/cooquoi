@@ -1,6 +1,6 @@
 import { HttpResponse, http } from 'msw';
-import { API_BASE_URL } from '../../fixtures/household';
 import { ingredientSummaries } from '../../fixtures/foodpedia';
+import { API_BASE_URL } from '../../fixtures/household';
 
 const SUPPORTED = ['en', 'fr', 'vi'] as const;
 

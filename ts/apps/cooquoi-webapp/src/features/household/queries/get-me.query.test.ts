@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { meFixture } from '../../../../test/fixtures/household';
 import { getSession } from '@/shared/auth';
+import { meFixture } from '../../../../test/fixtures/household';
 import { getMe } from './get-me.query';
 
 describe('getMe', () => {
