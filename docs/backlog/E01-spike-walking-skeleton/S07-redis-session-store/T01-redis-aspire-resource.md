@@ -46,10 +46,10 @@ sonnet (resource pattern given; the ACL wiring has no pattern yet)
 
 ## Subtasks
 
-- [ ] T01.1 Package version and csproj reference
-- [ ] T01.2 `Resources/Cache.cs` with args and no volume; `Program.cs` wiring
-- [ ] T01.3 ACL file, default user off, `webapp` user and its secret parameter
-- [ ] T01.4 `Webapp.cs`: `REDIS_URL` with the `webapp` user and `WaitFor`
+- [x] T01.1 Package version and csproj reference
+- [x] T01.2 `Resources/Cache.cs` with args and no volume; `Program.cs` wiring
+- [x] T01.3 ACL file, default user off, `webapp` user and its secret parameter
+- [x] T01.4 `Webapp.cs`: `REDIS_URL` with the `webapp` user and `WaitFor`
 
 ## Done when
 
@@ -58,6 +58,10 @@ sonnet (resource pattern given; the ACL wiring has no pattern yet)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(aspire): Redis resource for webapp sessions (E01.S07.T01)`), stop.
 
-Status: todo
+Status: done (not committed, parent commits)
 
 Report:
+Changed: `Aspire.Hosting.Redis` 17.0.0, `Resources/Cache.cs` (redis 8.2, maxmemory 64mb, volatile-ttl, no persistence, no volume), `aspire/redis/users.acl` (default off, `webapp` ~session:*), `Program.cs`, `Webapp.cs`.
+ACL password is a secret, so the file is a template (`__WEBAPP_PASSWORD_SHA256__`) mounted read-only; an entrypoint hashes `redis-webapp-password` into /tmp/users.acl.
+Aspire serves TLS on the `tcp` endpoint (dev cert), so `REDIS_URL` is `rediss://webapp:<pw>@host:port` (T02 must use TLS and trust the dev CA). Built-in health check cannot pass with default user off (and ECHO is denied), so a raw AUTH+PING probe on the plain `secondary` endpoint replaces it.
+Verified: build ok; `cache` Healthy under `aspire start`; container args show the flags; webapp `SET session:x` OK, `GET foo` NOPERM. Aspire stopped.

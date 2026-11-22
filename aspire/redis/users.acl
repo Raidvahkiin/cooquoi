@@ -1,0 +1,2 @@
+user default off
+user webapp on #__WEBAPP_PASSWORD_SHA256__ ~session:* -@all +get +set +expire +del +ping +hello +auth

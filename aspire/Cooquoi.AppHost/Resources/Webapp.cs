@@ -10,6 +10,8 @@ internal static class Webapp
         this IDistributedApplicationBuilder builder,
         IResourceBuilder<DotnetProjectResource> api,
         IResourceBuilder<KeycloakResource> keycloak,
+        IResourceBuilder<RedisResource> cache,
+        IResourceBuilder<ParameterResource> redisWebappPassword,
         IResourceBuilder<ParameterResource> webappClientSecret)
     {
         var sessionPassword = builder.AddGeneratedSecret("webapp-session-password");
@@ -26,11 +28,13 @@ internal static class Webapp
             })
             .WaitFor(api)
             .WaitFor(keycloak)
+            .WaitFor(cache)
             .WithEnvironment("APP_URL", Url)
             .WithEnvironment("API_BASE_URL", api.GetEndpoint("https"))
             .WithEnvironment("OIDC_ISSUER", Identity.IssuerUrl(keycloak))
             .WithEnvironment("OIDC_CLIENT_ID", Identity.WebappClientId)
             .WithEnvironment("OIDC_CLIENT_SECRET", webappClientSecret)
+            .WithEnvironment("REDIS_URL", Cache.WebappUrl(cache, redisWebappPassword))
             .WithEnvironment("SESSION_PASSWORD", sessionPassword);
     }
 }
