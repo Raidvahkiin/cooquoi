@@ -6,9 +6,18 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Cooquoi.AppHost.Resources;
 
-internal static class Cache
+internal static class SessionStore
 {
     public const string WebappUser = "webapp";
+
+    /// <summary>
+    /// Dev-only ACL user with full rights, for inspecting sessions from the host (Redis Insight on
+    /// <c>localhost:6380</c>, plain connection). The webapp never uses it; its own user stays restricted.
+    /// </summary>
+    public const string AdminUser = "admin";
+
+    /// <summary>Fixed host port of the plain endpoint, so a saved Redis Insight connection survives restarts.</summary>
+    public const int PlainHostPort = 6380;
 
     private const string PlainEndpoint = "secondary";
     private const string AclTemplatePath = "/etc/redis/users.acl.template";
@@ -21,30 +30,34 @@ internal static class Cache
     /// <remarks>
     /// The ACL file holds the password as a SHA-256 hash and Aspire secrets are only known at
     /// startup, so the mounted file is a template: the AppHost hashes the password and the entrypoint
-    /// writes the hash (<c>REDIS_WEBAPP_PASSWORD_SHA256</c>) into a writable copy before starting
+    /// writes the hash (<c>SESSION_STORE_WEBAPP_PASSWORD_SHA256</c>, <c>SESSION_STORE_ADMIN_PASSWORD_SHA256</c>) into a writable copy before starting
     /// redis-server. The ACL file cannot hold comments: <c>+hello</c> and <c>+auth</c> (beyond get/set/expire/del)
     /// are the client handshake, <c>+ping</c> the health check. The clear password never reaches the container's env or args.
     /// </remarks>
-    public static IResourceBuilder<RedisResource> AddCooquoiCache(
+    public static IResourceBuilder<RedisResource> AddCooquoiSessionStore(
         this IDistributedApplicationBuilder builder,
-        IResourceBuilder<ParameterResource> webappPassword)
+        IResourceBuilder<ParameterResource> webappPassword,
+        IResourceBuilder<ParameterResource> adminPassword)
     {
         var aclTemplate = Path.GetFullPath(Path.Combine(builder.AppHostDirectory, "..", "redis", "users.acl"));
 
         const string script =
-            $"sed \"s/__WEBAPP_PASSWORD_SHA256__/$REDIS_WEBAPP_PASSWORD_SHA256/\" {AclTemplatePath} > {AclPath} && " +
+            $"sed -e \"s/__WEBAPP_PASSWORD_SHA256__/$SESSION_STORE_WEBAPP_PASSWORD_SHA256/\" -e \"s/__ADMIN_PASSWORD_SHA256__/$SESSION_STORE_ADMIN_PASSWORD_SHA256/\" {AclTemplatePath} > {AclPath} && " +
             $"exec redis-server --aclfile {AclPath} --maxmemory 64mb --maxmemory-policy volatile-ttl " +
             "--save \"\" --appendonly no";
 
-        var cache = builder.AddRedis("cache")
+        var sessionStore = builder.AddRedis("session-store")
             .WithImageTag("8.2")
             .WithBindMount(aclTemplate, AclTemplatePath, isReadOnly: true)
             .WithEnvironment(async context =>
             {
-                var password = await webappPassword.Resource.GetValueAsync(context.CancellationToken);
-                var hash = Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(password!)));
-                context.EnvironmentVariables["REDIS_WEBAPP_PASSWORD_SHA256"] = hash;
+                context.EnvironmentVariables["SESSION_STORE_WEBAPP_PASSWORD_SHA256"] =
+                    await Sha256Async(webappPassword, context.CancellationToken);
+                context.EnvironmentVariables["SESSION_STORE_ADMIN_PASSWORD_SHA256"] =
+                    await Sha256Async(adminPassword, context.CancellationToken);
             })
+            // Fixed host port for Redis Insight; the TLS "tcp" endpoint keeps a dynamic port.
+            .WithEndpoint(PlainEndpoint, endpoint => endpoint.Port = PlainHostPort)
             .WithEntrypoint("/bin/sh")
             .WithArgs(context =>
             {
@@ -56,15 +69,15 @@ internal static class Cache
 
         // The default user is off, so the built-in health check (default user) would never pass:
         // probe as the webapp user, over the plain endpoint (the "tcp" one serves TLS on the dev certificate).
-        foreach (var check in cache.Resource.Annotations.OfType<HealthCheckAnnotation>().ToList())
+        foreach (var check in sessionStore.Resource.Annotations.OfType<HealthCheckAnnotation>().ToList())
         {
-            cache.Resource.Annotations.Remove(check);
+            sessionStore.Resource.Annotations.Remove(check);
         }
 
-        const string checkName = "cache_webapp_check";
+        const string checkName = "session_store_webapp_check";
         builder.Services.AddHealthChecks().AddAsyncCheck(checkName, async cancellationToken =>
         {
-            var endpoint = cache.GetEndpoint(PlainEndpoint);
+            var endpoint = sessionStore.GetEndpoint(PlainEndpoint);
             var password = await webappPassword.Resource.GetValueAsync(cancellationToken);
             // A raw RESP probe: client libraries also send ECHO and others, which the ACL denies.
             // AUTH goes in cleartext to the plain endpoint, which is fine for local dev.
@@ -84,16 +97,22 @@ internal static class Cache
 
             return HealthCheckResult.Healthy();
         });
-        return cache.WithHealthCheck(checkName);
+        return sessionStore.WithHealthCheck(checkName);
+    }
+
+    private static async Task<string> Sha256Async(IResourceBuilder<ParameterResource> parameter, CancellationToken cancellationToken)
+    {
+        var password = await parameter.Resource.GetValueAsync(cancellationToken);
+        return Convert.ToHexStringLower(SHA256.HashData(Encoding.UTF8.GetBytes(password!)));
     }
 
     /// <summary>Connection URL for the webapp's ACL user: <c>rediss://webapp:password@host:port</c> (TLS on the dev certificate).</summary>
     /// <remarks>The password is not URL-encoded: it relies on the secret having <c>Special = false</c> (see <c>Secrets</c>).</remarks>
     public static ReferenceExpression WebappUrl(
-        IResourceBuilder<RedisResource> cache,
+        IResourceBuilder<RedisResource> sessionStore,
         IResourceBuilder<ParameterResource> webappPassword)
     {
-        var endpoint = cache.GetEndpoint("tcp");
+        var endpoint = sessionStore.GetEndpoint("tcp");
         return ReferenceExpression.Create($"rediss://{WebappUser}:{webappPassword}@{endpoint.Property(EndpointProperty.Host)}:{endpoint.Property(EndpointProperty.Port)}");
     }
 }

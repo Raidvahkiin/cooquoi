@@ -7,7 +7,7 @@ The webapp's `cooquoi_session` cookie carries only a session id. The tokens and 
 ## Acceptance
 
 - [x] Redis is an Aspire resource with `maxmemory` set, an eviction policy of `volatile-ttl`, no RDB/AOF and no data volume. The default user is off, and the webapp connects as its own ACL user limited to `session:*` (ADR 0019 §2). The webapp references it; nothing else does yet.
-- [ ] After sign-in the cookie is well under 200 bytes, and Redis holds `session:<id>` with a TTL equal to the refresh token lifetime. *(TTL verified; the cookie is 308 B: open decision, [findings](findings.md) item 1)*
+- [x] After sign-in the cookie is under 400 bytes (308 B measured; "well under 200" was an estimate before the iron-session seal overhead was known, [findings](findings.md) item 1), and Redis holds `session:<id>` with a TTL equal to the refresh token lifetime.
 - [x] The value in Redis is encrypted: `GET session:<id>` shows no token.
 - [x] Token refresh extends the TTL. Sign-out deletes the key and the cookie. A new sign-in gets a new id.
 - [x] Restarting Redis signs the user out cleanly: a redirect to login, not a 500.
@@ -38,10 +38,10 @@ T01 (AppHost) and T02 (webapp) touch disjoint files and can run at the same time
 
 ## Summary
 
-Status: done, with one acceptance open (cookie size, user decision)
+Status: done
 
 The cookie holds only a sealed `{ sid }` (308 B, down from 3,316 B). Tokens and the pending login are sealed in Redis under `session:<sid>`, with a TTL of the refresh lifetime (600 s while a login is pending). Refresh rewrites the session with a fresh TTL. Sign-out deletes the key, each login gets a new sid, and a Redis restart redirects to login.
 Redis 8.2 runs as the Aspire `cache` resource: 64 MB, `volatile-ttl`, no persistence, default user off. The `webapp` ACL user is limited to `~session:*`, and only its password hash reaches the container. The webapp connects over `rediss://`.
 The review fixes make the store fail fast, let the proxy tolerate store errors, rotate the sid on startLogin, and give the AppHost a health check that stops on error replies.
-Open ([findings](findings.md)): cookie size (keep iron-session, use an HMAC-signed sid, or a plain sid); a Redis outage gives a fast 500 rather than a redirect; dev inspection of Redis is awkward; eviction under memory pressure is not tested.
+Decided 2026-11-22: keep the iron-session cookie (308 B) and accept a fast error while Redis is down. Added after close: a dev admin ACL user for Redis Insight, and function-oriented names for the resource. Open ([findings](findings.md)): eviction under memory pressure is not tested.
 

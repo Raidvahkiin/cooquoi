@@ -21,7 +21,7 @@ let clientPromise: Promise<RedisClient> | undefined;
  */
 function getClient(): Promise<RedisClient> {
   clientPromise ??= createClient({
-    url: getEnv().REDIS_URL,
+    url: getEnv().SESSION_STORE_URL,
     disableOfflineQueue: true,
     socket: {
       connectTimeout: CONNECT_TIMEOUT_MS,

@@ -9,7 +9,7 @@ const testEnv = {
   OIDC_CLIENT_ID: 'cooquoi-webapp',
   OIDC_CLIENT_SECRET: 'test-client-secret',
   SESSION_PASSWORD: 'test-session-password-at-least-32-chars',
-  REDIS_URL: 'redis://localhost:6379',
+  SESSION_STORE_URL: 'redis://localhost:6379',
 };
 
 export default defineConfig({

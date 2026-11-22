@@ -35,7 +35,7 @@ Coming constraints:
 - An **Aspire resource** in development; a Coolify service on the internal network in production, never exposed publicly.
 - **TTL per session**: a pending login expires after a few minutes; a signed-in session expires with the refresh token's lifetime (Keycloak SSO idle/max), and each refresh extends it.
 - **`maxmemory`** capped (e.g. 64 MB) with an eviction policy of `volatile-ttl`; **no persistence** (no RDB, no AOF): a Redis restart signs everyone out, which is acceptable.
-- **One ACL user per client**: the default user is disabled; each client connects with its own user, restricted to its key prefix and the commands it needs (users in a mounted `users.acl`, passwords as Aspire secret parameters). The webapp user gets `~session:*` with `get`, `set`, `expire`, `del` only.
+- **One ACL user per client**: the default user is disabled; each client connects with its own user, restricted to its key prefix and the commands it needs (users in a mounted `users.acl`, passwords as Aspire secret parameters). The webapp user gets `~session:*` with `get`, `set`, `expire`, `del` only. A dev-only `admin` ACL user with full rights exists for inspection (Redis Insight); the webapp's own user stays restricted.
 
 ### 3. Sharing the instance
 

@@ -2,7 +2,7 @@ import { afterAll, describe, expect, it, vi } from 'vitest';
 import { createRedisSessionStore } from './redis-session-store';
 
 // Read on first use; nothing listens on port 1, so every connection attempt is refused.
-vi.stubEnv('REDIS_URL', 'redis://127.0.0.1:1');
+vi.stubEnv('SESSION_STORE_URL', 'redis://127.0.0.1:1');
 
 afterAll(() => {
   vi.unstubAllEnvs();

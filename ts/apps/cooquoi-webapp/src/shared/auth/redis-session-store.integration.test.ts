@@ -63,7 +63,7 @@ beforeAll(async () => {
   url.password = 'webapp-password';
   webappUrl = url.toString();
   // The store connects as the restricted user: any command outside the ACL fails the tests.
-  vi.stubEnv('REDIS_URL', webappUrl);
+  vi.stubEnv('SESSION_STORE_URL', webappUrl);
 });
 
 afterAll(async () => {

@@ -19,6 +19,10 @@ Aspire starts Postgres, Keycloak, the C# API and the Next.js webapp, and prints 
 
 The dev user is `dev@cooquoi.local`; its password is the `dev-user-password` parameter, `cooquoi-dev` by default. Override it with `dotnet user-secrets set Parameters:dev-user-password <value> --project aspire/Cooquoi.AppHost`.
 
+### Inspect sessions with Redis Insight
+
+The webapp sessions live in the `session-store` Redis. Connect Redis Insight from the host with a plain connection (no TLS): host `localhost`, port `6380` (fixed), username `admin`, password from the `session-store-admin-password` parameter (Aspire dashboard, Parameters; `dotnet user-secrets` does not hold it). Sessions are the `session:*` keys; their values are encrypted.
+
 ## Checks
 
 ```bash
