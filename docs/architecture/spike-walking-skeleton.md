@@ -127,10 +127,18 @@ The smallest domain, but every layer: Aspire, Keycloak, API, domain, persistence
 - CI drift check: ASP.NET OpenAPI vs TypeSpec (`oasdiff`)
 - Catalogue test: error codes vs contract (translations added in phase 4)
 
+**Status (2026-11-22)**: built and verified. `pnpm nx run @cooquoi/api-client:generate` regenerates the client from the contract (4 Foodpedia SDK functions, webapp typecheck and lint green); `pnpm nx run @cooquoi/contracts:drift` passes clean and fails on a deliberate `name: int32` with one line per change; `ErrorCatalogueTests` fails when a code is deleted from the contract.
+
+- **Built**: `common/` templates (`ListOperation`, `ReadOperation`, `CreateOperation`, `ActionOperation`, `ReplaceActionOperation`), `paging.tsp` (`ListQuery`, `Page`), header aliases, `Problem<TStatus>` + 8 wrappers, `ValidationCode`, `Unit`/`BaseUnit`. `contexts/foodpedia/` models, 17 error codes, 4 routes. ASP.NET document at build time (`Microsoft.Extensions.ApiDescription.Server` → `dotnet/generated/openapi.json`) with `ContractOpenApi` transformers and `OperationContract.*` metadata per endpoint; Wolverine persistence off while generating. Drift: Docker `oasdiff` v1.39.0 piped to `contracts/scripts/drift-gate.mjs`; CI job `contract-drift` (build, generate, `git diff --exit-code`, gate). `ErrorCatalogueTests` (architecture tests) compares backend codes and contract enums both ways. Skill `contract`.
+- **Contract fixes found by the drift check**: `IngredientDetail.shelfLife` and `UserProfile.email` are required + nullable (as the API sends them; the webapp maps `null` → `undefined`); `@info` version `1.0.0`.
+- **Not done**: `Accept-Language`, the `q` length limit and sort keys are doc comments only, not parameters; the catalogue test does not cover units; `@action-validator/cli` not run on the workflow (YAML parse only); the API still reads numbers from JSON strings, which the document hides.
+
 **Answers**
 
-- Can the templates express our operation kinds cleanly?
-- How noisy is the drift check in practice?
+- **Can the templates express our operation kinds cleanly?** Yes. Q1/Q2/C1/C5 are one line each (`searchIngredients is ListOperation<IngredientFilter, IngredientSummary>`). Two changes: the templates are suffixed `…Operation` (`Read`/`Create` clash with TypeSpec visibility templates under `using Cooquoi.Common`), and read/action templates take an optional `TPath` because backend routes name the id (`{ingredientId}`), not `{id}`. `ActionOperation` also answers 400 (validation, missing key); `sort` uses `explode: true` to match ASP.NET `string[]` binding.
+- **How noisy is the drift check in practice?** Noisy at first, quiet once fixed. The first run showed ~15 kinds of drift, all ASP.NET document shape except the 2 real ones above; they were fixed on the ASP.NET side without behaviour change (number formats, `decimal`, `[ContractCodes]`/`[ContractEnum<T>]` → `enum`, optional vs nullable, `explode`, `Idempotency-Key` uuid, paging defaults, server URL). What remains is 3 accepted document-level differences (`openapi` 3.1.0 vs 3.1.1, schema and parameter component names) plus excluded doc text; endpoints compare at zero. oasdiff cannot ignore single changes, hence the gate script. Ongoing cost: a new string field with a closed set needs its attribute, or the gate reports a missing `enum`; the ASP.NET document regenerates only on `dotnet build`.
+
+**Decision**: ADR 0009 (TypeSpec as source of truth) holds; the drift check is a cheap CI gate. Record the template names, `TPath` and the drift setup in ADR 0009 after the spike.
 
 **Done when**: a contract change regenerates the client and the drift check catches a deliberate mismatch.
 
@@ -170,7 +178,7 @@ The smallest domain, but every layer: Aspire, Keycloak, API, domain, persistence
 
 1. Update ADRs 0003, 0009, 0010, 0011, 0013, 0014, 0015 with what changed; mark *(spike)* items confirmed.
 2. Update `dotnet/AGENTS.md` and the webapp `AGENTS.md` from the real code. *(`dotnet/AGENTS.md` done after phase 2.)*
-3. Write the skills from real code: `contract`, `dotnet-feature`, `dotnet-test`, `dotnet-review`. *(The four .NET skills — `dotnet-domain` added — written after phase 2; `contract` with phase 3, once its templates exist.)*
+3. Write the skills from real code: `contract`, `dotnet-feature`, `dotnet-test`, `dotnet-review`. *(The four .NET skills — `dotnet-domain` added — written after phase 2; `contract` done with phase 3.)*
 4. Decide what to keep: the spike code becomes the base of the Household and Foodpedia contexts.
 
 ## Risks

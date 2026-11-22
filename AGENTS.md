@@ -53,6 +53,7 @@ Repo skills live in `.agents/skills/` (linked from `.claude/skills/`):
 | `webapp-feature` | Implement a webapp screen or slice |
 | `webapp-ui` | Build UI with Astryx and tokens |
 | `webapp-test` | Webapp tests (MSW, vi.mock, Testing Library) |
+| `contract` | Add or change an API operation, model or error code in TypeSpec; regenerate, drift check, catalogue test |
 | `api-client-sync` | Adapt the webapp after a contract change |
 | `webapp-review` | Review webapp changes |
 | `dotnet-domain` | C# aggregates, value objects, events, errors (rule ids from the domain docs) |
