@@ -14,10 +14,10 @@ public sealed class ErrorCatalogueTests
     public void Validation_codes_match_the_contract() =>
         ShouldMatch(ErrorCatalogue.BackendValidationCodes(), ErrorCatalogue.ContractValidationCodes());
 
+    public static TheoryData<string> Locales() => [.. ErrorCatalogue.Locales()];
+
     [Theory]
-    [InlineData("en")]
-    [InlineData("fr")]
-    [InlineData("vi")]
+    [MemberData(nameof(Locales))]
     public void Contract_codes_are_translated_in_every_locale(string locale)
     {
         var contract = ErrorCatalogue.ContractProblemCodes().Union(ErrorCatalogue.ContractValidationCodes()).ToHashSet(StringComparer.Ordinal);

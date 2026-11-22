@@ -42,20 +42,33 @@ internal static class ErrorCatalogue
     /// <summary>Codes with a message in the webapp catalogue of <paramref name="locale"/>: the string leaves of <c>errors</c>, named by their dotted path.</summary>
     public static IReadOnlySet<string> TranslatedCodes(string locale)
     {
-        var catalogue = Path.Combine(CooquoiArchitecture.SolutionDirectory, "..", "ts", "apps", "cooquoi-webapp", "messages", $"{locale}.json");
+        var catalogue = Path.Combine(MessagesDirectory, $"{locale}.json");
         using var document = JsonDocument.Parse(File.ReadAllText(catalogue));
         return Leaves(document.RootElement.GetProperty("errors"), prefix: null).ToHashSet(StringComparer.Ordinal);
     }
 
+    /// <summary>Locales of the webapp: one <c>messages/{locale}.json</c> catalogue each.</summary>
+    public static IEnumerable<string> Locales() =>
+        Directory.GetFiles(MessagesDirectory, "*.json").Select(file => Path.GetFileNameWithoutExtension(file)).Order(StringComparer.Ordinal);
+
+    private static string MessagesDirectory => RepositoryPath("ts", "apps", "cooquoi-webapp", "messages");
+
+    private static string RepositoryPath(params string[] segments) =>
+        Path.GetFullPath(Path.Combine([CooquoiArchitecture.SolutionDirectory, "..", .. segments]));
+
+    /// <summary>Non-empty string leaves only: a number, array or empty string is not a translation.</summary>
     private static IEnumerable<string> Leaves(JsonElement node, string? prefix) =>
-        node.ValueKind == JsonValueKind.Object
-            ? node.EnumerateObject().SelectMany(property => Leaves(property.Value, prefix is null ? property.Name : $"{prefix}.{property.Name}"))
-            : [prefix!];
+        node.ValueKind switch
+        {
+            JsonValueKind.Object => node.EnumerateObject().SelectMany(property => Leaves(property.Value, prefix is null ? property.Name : $"{prefix}.{property.Name}")),
+            JsonValueKind.String when prefix is not null && node.GetString()!.Length > 0 => [prefix],
+            _ => [],
+        };
 
     /// <summary><c>components.schemas</c> of the generated OpenAPI document that are string enums.</summary>
     private static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ContractSchemas()
     {
-        var openApi = Path.Combine(CooquoiArchitecture.SolutionDirectory, "..", "contracts", "generated", "openapi.yaml");
+        var openApi = RepositoryPath("contracts", "generated", "openapi.yaml");
         var yaml = new YamlStream();
         using (var reader = File.OpenText(openApi))
         {
