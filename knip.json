@@ -11,10 +11,7 @@
         "test/next-font-google.ts",
         "test/server-only.ts",
         "src/shared/ui/theme/cooquoi.theme.ts"
-      ],
-      "ignoreIssues": {
-        "src/shared/auth/session.ts": ["types"]
-      }
+      ]
     },
     "ts/libs/api-client": {},
     "contracts": {

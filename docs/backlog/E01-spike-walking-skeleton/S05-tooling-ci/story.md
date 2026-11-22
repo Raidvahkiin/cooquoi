@@ -6,15 +6,15 @@ One CI pipeline across every toolchain (.NET, TypeSpec, TypeScript) that fails o
 
 ## Acceptance
 
-- [ ] `aspire run` serves the dashboard, API, webapp and Keycloak on https with the .NET dev certificate; sign-in at `https://localhost:3000` works with no certificate warning and no HSTS upgrade; the session cookie is `Secure` in dev
-- [ ] A new Linux machine is set up with one documented script (`dotnet dev-certs https --trust`, PEM export, `NODE_EXTRA_CA_CERTS`)
-- [ ] Dev users sign in with a short documented password (Aspire parameter, AppHost user secrets); dev users still exist only in Development
-- [ ] `next build`, `pnpm run nx:format` and `pnpm biome check .` leave the working tree clean; no stale `.env.development.local`
-- [ ] Nx targets for .NET (build, test, format check) and TypeSpec (compile, generate client)
-- [ ] Biome v2 rules (size, complexity, boundaries) + minimal ESLint (Nx boundaries) + knip
-- [ ] CI: lint, typecheck, test across all toolchains, Biome, knip, drift check, error catalogue test, mirrored-test check, size report
-- [ ] Each rule fails CI on a deliberate violation
-- [ ] Spike answers recorded: does `nx affected` span TypeSpec → client → webapp; which Biome rules are stable enough
+- [ ] `aspire run` serves the dashboard, API, webapp and Keycloak on https with the .NET dev certificate; sign-in at `https://localhost:3000` works with no certificate warning and no HSTS upgrade; the session cookie is `Secure` in dev — *curl round trip verified (https, `Secure` cookie, no HSTS); browser shows a cert warning until `libnss3-tools` is installed and `scripts/dev-certs.sh` rerun*
+- [x] A new Linux machine is set up with one documented script (`dotnet dev-certs https --trust`, PEM export, `NODE_EXTRA_CA_CERTS`)
+- [x] Dev users sign in with a short documented password (Aspire parameter, AppHost user secrets); dev users still exist only in Development
+- [x] `next build`, `pnpm run nx:format` and `pnpm biome check .` leave the working tree clean; no stale `.env.development.local`
+- [x] Nx targets for .NET (build, test, format check) and TypeSpec (compile, generate client)
+- [x] Biome v2 rules (size, complexity, boundaries) + minimal ESLint (Nx boundaries) + knip
+- [x] CI: lint, typecheck, test across all toolchains, Biome, knip, drift check, error catalogue test, mirrored-test check, size report
+- [x] Each rule fails CI on a deliberate violation — *verified locally through the same Nx targets ([findings](findings.md)); first GitHub run pending*
+- [x] Spike answers recorded: does `nx affected` span TypeSpec → client → webapp; which Biome rules are stable enough
 
 ## Context
 
@@ -38,3 +38,7 @@ One CI pipeline across every toolchain (.NET, TypeSpec, TypeScript) that fails o
 T01, T03 and T04 touch disjoint files and can run at the same time. The story review runs after T06 (`backlog-run`).
 
 ## Summary
+
+All six tasks done and pushed (5e9fafa, f96143a, bd4a82d, 8ab686d, 4e327f5, 02f6661), plus review fixes. HTTPS everywhere in dev on the .NET dev certificate, fixed dev password `cooquoi-dev`, a clean working tree after build and format, `@cooquoi/dotnet` Nx targets with the contract chain, Biome size/complexity/boundary rules (all stable) and knip, and one CI pipeline; each of 10 rules fails its Nx target on a deliberate violation ([findings](findings.md)).
+`nx affected` spans TypeSpec → api-client → webapp; C# changes do not reach the contract, so `contract-drift` is its own job and must be a required check.
+Left: browser NSS trust (`sudo apt install libnss3-tools`), the first real GitHub CI run (`nx-set-shas`), branch protection for `verify` and `contract-drift`.

@@ -28,6 +28,6 @@ Each violation was introduced locally, run through the Nx target CI uses (`--ski
 ## What is left
 
 - `ci.yml` is linted with actionlint and parses, but has not run on GitHub (`nrwl/nx-set-shas@v5` and the Docker-dependent drift and Testcontainers steps are untested there).
-- Biome's function-size and complexity rules report 5 infos (overrides), listed in the size report.
-- `search-ingredients.query.test.ts` is 170 lines (test files are exempt from the file limit).
+- Biome's size and complexity rules are errors and `biome check .` reports no diagnostics; test files only drop the function-size and max-params rules, and keep a 300-line file cap.
+- `search-ingredients.query.test.ts` is 170 lines (test files have a 300-line file cap instead of 150).
 - Playwright e2e is out of scope (epic "Later").

@@ -15,17 +15,9 @@ export function getOidcConfig(): Promise<oidc.Configuration> {
 
 async function discoverKeycloak(): Promise<oidc.Configuration> {
   const env = getEnv();
-  const issuer = new URL(env.OIDC_ISSUER);
-  // Local Keycloak runs over plain HTTP; production always uses HTTPS.
-  const options =
-    issuer.protocol === 'http:'
-      ? { execute: [oidc.allowInsecureRequests] }
-      : undefined;
   return oidc.discovery(
-    issuer,
+    new URL(env.OIDC_ISSUER),
     env.OIDC_CLIENT_ID,
     env.OIDC_CLIENT_SECRET,
-    undefined,
-    options,
   );
 }

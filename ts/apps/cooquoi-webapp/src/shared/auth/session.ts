@@ -11,7 +11,7 @@ export type AuthTokens = {
 };
 
 /** Kept between the redirect to Keycloak and the callback. */
-export type PendingLogin = {
+type PendingLogin = {
   codeVerifier: string;
   state: string;
   returnTo: string;

@@ -20,7 +20,7 @@ Build the thinnest end-to-end slices (authentication, Foodpedia) through every l
 | [E01.S02](S02-foodpedia-backend/story.md) | Foodpedia backend (phase 2) | done | E01.S01 |
 | [E01.S03](S03-foodpedia-contract/story.md) | Contract for Foodpedia (phase 3) | done | E01.S02 |
 | [E01.S04](S04-foodpedia-webapp/story.md) | Foodpedia webapp (phase 4) | done | E01.S03 |
-| [E01.S05](S05-tooling-ci/story.md) | Tooling and CI (phase 5) and dev environment | todo | E01.S03 |
+| [E01.S05](S05-tooling-ci/story.md) | Tooling and CI (phase 5) and dev environment | done | E01.S03 |
 | [E01.S07](S07-redis-session-store/story.md) | Redis session store for the webapp BFF | todo | E01.S05 |
 | [E01.S06](S06-curator-app/story.md) | Curator app (phase 4, curator side) | todo (T01 planned) | E01.S07 (T01: —) |
 

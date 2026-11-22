@@ -1,4 +1,4 @@
-export const ISSUER = 'http://identity.test/realms/cooquoi';
+export const ISSUER = 'https://identity.test/realms/cooquoi';
 
 export const identityEndpoints = {
   authorization: `${ISSUER}/protocol/openid-connect/auth`,

@@ -45,6 +45,8 @@
         },
         "inputs": [
           "{workspaceRoot}/biome.json",
+          "{workspaceRoot}/.gitignore",
+          "{workspaceRoot}/scripts/**",
           "{workspaceRoot}/ts/**/*",
           "{workspaceRoot}/contracts/**/*",
           "{workspaceRoot}/scripts/**/*",
@@ -60,6 +62,9 @@
         },
         "inputs": [
           "{workspaceRoot}/knip.json",
+          "{workspaceRoot}/.gitignore",
+          "{workspaceRoot}/scripts/**",
+          "{workspaceRoot}/tsconfig*.json",
           "{workspaceRoot}/package.json",
           "{workspaceRoot}/pnpm-lock.yaml",
           "{workspaceRoot}/ts/**/*",

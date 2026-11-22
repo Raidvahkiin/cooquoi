@@ -123,7 +123,10 @@
             "useMaxParams": "off"
           },
           "style": {
-            "noExcessiveLinesPerFile": "off"
+            "noExcessiveLinesPerFile": {
+              "level": "error",
+              "options": { "maxLines": 300, "skipBlankLines": true }
+            }
           }
         }
       }

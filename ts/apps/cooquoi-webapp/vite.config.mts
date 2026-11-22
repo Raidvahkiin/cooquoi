@@ -27,7 +27,7 @@ export default defineConfig({
             APP_URL: 'http://localhost:3000',
             API_BASE_URL: 'http://api.test',
             COOQUOI_API_TIMEOUT_MS: '200',
-            OIDC_ISSUER: 'http://identity.test/realms/cooquoi',
+            OIDC_ISSUER: 'https://identity.test/realms/cooquoi',
             OIDC_CLIENT_ID: 'cooquoi-webapp',
             OIDC_CLIENT_SECRET: 'test-client-secret',
             SESSION_PASSWORD: 'test-session-password-at-least-32-chars',

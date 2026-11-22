@@ -6,7 +6,7 @@ const envSchema = z.object({
   API_BASE_URL: z.url(),
   /** Upper bound of one API call, so a stopped API fails fast instead of hanging the page. */
   COOQUOI_API_TIMEOUT_MS: z.coerce.number().int().positive().default(5000),
-  OIDC_ISSUER: z.url(),
+  OIDC_ISSUER: z.url({ protocol: /^https$/ }),
   OIDC_CLIENT_ID: z.string().min(1),
   OIDC_CLIENT_SECRET: z.string().min(1),
   SESSION_PASSWORD: z.string().min(32),
