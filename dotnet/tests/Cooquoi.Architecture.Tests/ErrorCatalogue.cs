@@ -3,6 +3,7 @@ using Cooquoi.Platform.Validation;
 using Raidvahkiin.Ddd;
 using Raidvahkiin.Ddd.AspNetCore;
 using System.Reflection;
+using System.Text.Json;
 using YamlDotNet.RepresentationModel;
 
 namespace Cooquoi.Architecture.Tests;
@@ -37,6 +38,19 @@ internal static class ErrorCatalogue
     public static IReadOnlySet<string> ContractValidationCodes() =>
         ContractSchemas().Single(schema => schema.Key.EndsWith(".ValidationCode", StringComparison.Ordinal)).Value
             .ToHashSet(StringComparer.Ordinal);
+
+    /// <summary>Codes with a message in the webapp catalogue of <paramref name="locale"/>: the string leaves of <c>errors</c>, named by their dotted path.</summary>
+    public static IReadOnlySet<string> TranslatedCodes(string locale)
+    {
+        var catalogue = Path.Combine(CooquoiArchitecture.SolutionDirectory, "..", "ts", "apps", "cooquoi-webapp", "messages", $"{locale}.json");
+        using var document = JsonDocument.Parse(File.ReadAllText(catalogue));
+        return Leaves(document.RootElement.GetProperty("errors"), prefix: null).ToHashSet(StringComparer.Ordinal);
+    }
+
+    private static IEnumerable<string> Leaves(JsonElement node, string? prefix) =>
+        node.ValueKind == JsonValueKind.Object
+            ? node.EnumerateObject().SelectMany(property => Leaves(property.Value, prefix is null ? property.Name : $"{prefix}.{property.Name}"))
+            : [prefix!];
 
     /// <summary><c>components.schemas</c> of the generated OpenAPI document that are string enums.</summary>
     private static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ContractSchemas()

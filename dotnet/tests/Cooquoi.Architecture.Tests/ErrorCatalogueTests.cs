@@ -2,7 +2,7 @@ namespace Cooquoi.Architecture.Tests;
 
 /// <summary>
 /// Every code the backend can return is declared in the contract (<c>contracts/</c>), and the
-/// contract declares no code the backend never returns: clients translate codes from the contract.
+/// contract declares no code the backend never returns: clients translate codes from the contract, and every webapp locale translates each one.
 /// </summary>
 public sealed class ErrorCatalogueTests
 {
@@ -13,6 +13,20 @@ public sealed class ErrorCatalogueTests
     [Fact]
     public void Validation_codes_match_the_contract() =>
         ShouldMatch(ErrorCatalogue.BackendValidationCodes(), ErrorCatalogue.ContractValidationCodes());
+
+    [Theory]
+    [InlineData("en")]
+    [InlineData("fr")]
+    [InlineData("vi")]
+    public void Contract_codes_are_translated_in_every_locale(string locale)
+    {
+        var contract = ErrorCatalogue.ContractProblemCodes().Union(ErrorCatalogue.ContractValidationCodes()).ToHashSet(StringComparer.Ordinal);
+        var translated = ErrorCatalogue.TranslatedCodes(locale);
+
+        translated.ShouldNotBeEmpty();
+        contract.Except(translated).Order().ShouldBeEmpty($"declared in the contract but missing from messages/{locale}.json");
+        translated.Except(contract).Order().ShouldBeEmpty($"translated in messages/{locale}.json but not declared in the contract");
+    }
 
     private static void ShouldMatch(IReadOnlySet<string> backend, IReadOnlySet<string> contract)
     {
