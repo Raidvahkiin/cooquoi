@@ -98,6 +98,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
   | Optional small value | `OwnsOne` columns on the root | shelf life |
   | Strongly typed id / value object | `HasConversion(...)` (static converters in `Configurations/`) | ids, codes, units, locales |
 
+- **Property names**: camelCase in every payload and store (HTTP, jsonb, messages, seed); C# members stay PascalCase. `JsonSerializerOptions` start from `JsonSerializerDefaults.Web`, no `[JsonPropertyName]`, dictionary keys written camelCase ([ADR 0022](../docs/architecture/adr/0022-property-names-camel-case.md)). Table and column names stay snake_case.
 - **Enums**: stored and sent as their camelCase code (`LongLife` → `longLife`), never `HasConversion<string>()`: `UseCamelCaseEnums()` in each DbContext's `ConfigureConventions` applies one converter ([ADR 0021](../docs/architecture/adr/0021-enum-values-camel-case.md)). Convert API strings with `ContractEnumNames.Parse`/`ToCode`.
 - Version: `IsConcurrencyToken()`; `Ignore(DomainEvents)`. Audit `created_at/by`, `updated_at/by` are shadow properties — never declare them.
 - **Uniqueness**: use-case pre-check (`Persistence/Lookups/`) + a unique index named `ux_…`, mapped to its `DomainError` in the module's `UniqueConstraints`. A rule that depends on another table (F4 "among active") gets a copied column kept by an interceptor + a partial index.

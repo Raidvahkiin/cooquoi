@@ -16,6 +16,7 @@ First release of the Foodventory context, API only: a household restocks by hand
 - Contract first: a story that adds operations starts with its contract task (`contract` skill); the pantry operations are declared in S02.T03, before the Pantry aggregate, so S03 has none. Error codes are `foodventory.*` (and `foodpedia.*`). The drift check goes green in the story's backend task.
 - Domain rules use FV1–FV15 ids (`dotnet-domain`). Endpoints use `dotnet-feature`. Tests use `dotnet-test`: domain tests named after rule ids, and Alba + Testcontainers integration tests.
 - Enum values are camelCase in the contract, JSON, database and published API ([ADR 0021](../../architecture/adr/0021-enum-values-camel-case.md)): `longLife`, `noThreshold`. Routes, actions and error codes stay kebab-case; `long-life` in the briefs names the concept, not the code.
+- Serialized property names (JSON, jsonb, events, seed) are camelCase; C# members PascalCase, columns snake_case ([ADR 0022](../../architecture/adr/0022-property-names-camel-case.md)).
 - Naming: "Foodventory context" vs "Pantry aggregate", never a bare "Pantry".
 
 ## Out of scope
