@@ -1,0 +1,28 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "ignore": ["legacy/**", "ts/libs/api-client/src/generated/**"],
+  "workspaces": {
+    ".": {
+      "entry": ["scripts/*.{mjs,ts}"],
+      "project": ["scripts/**", "*.{mts,mjs}"]
+    },
+    "ts/apps/cooquoi-webapp": {
+      "entry": [
+        "test/next-font-google.ts",
+        "test/server-only.ts",
+        "src/shared/ui/theme/cooquoi.theme.ts"
+      ],
+      "ignoreIssues": {
+        "src/shared/auth/session.ts": ["types"]
+      }
+    },
+    "ts/libs/api-client": {},
+    "contracts": {
+      "ignoreDependencies": [
+        "@typespec/http",
+        "@typespec/openapi",
+        "@typespec/openapi3"
+      ]
+    }
+  }
+}

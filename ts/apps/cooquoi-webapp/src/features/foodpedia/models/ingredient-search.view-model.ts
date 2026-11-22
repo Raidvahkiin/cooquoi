@@ -2,9 +2,9 @@ import type { FoodpediaIngredientSummary } from '@cooquoi/api-client';
 import type { IngredientSearchParams } from '../schemas/ingredient-search.schema';
 
 export type SortKey = 'relevance' | 'name' | 'code';
-export type SortDirection = 'ascending' | 'descending';
+type SortDirection = 'ascending' | 'descending';
 
-export type IngredientRow = Pick<
+type IngredientRow = Pick<
   FoodpediaIngredientSummary,
   'id' | 'code' | 'name' | 'baseUnit'
 >;

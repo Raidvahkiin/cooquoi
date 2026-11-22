@@ -36,10 +36,10 @@ sonnet
 
 ## Subtasks
 
-- [ ] T05.1 `biome.json`: size, complexity, cycles and boundary rules. Fix or justify (`biome-ignore` with a reason) every hit in the current code.
-- [ ] T05.2 knip config and dependency. Remove what it finds unused, or list a justified ignore.
-- [ ] T05.3 Nx targets `biome-check` and `knip`. Update the `AGENTS.md` "Commands" if the command changes.
-- [ ] T05.4 Note in the report which Biome rules are stable and which are nursery (spike answer).
+- [x] T05.1 `biome.json`: size, complexity, cycles and boundary rules. Fix or justify (`biome-ignore` with a reason) every hit in the current code.
+- [x] T05.2 knip config and dependency. Remove what it finds unused, or list a justified ignore.
+- [x] T05.3 Nx targets `biome-check` and `knip`. Update the `AGENTS.md` "Commands" if the command changes.
+- [x] T05.4 Note in the report which Biome rules are stable and which are nursery (spike answer).
 
 ## Done when
 
@@ -47,6 +47,12 @@ sonnet
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`build(repo): Biome size and boundary rules, knip (E01.S05.T05)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Report:
+Added to `biome.json`: file <=150, function <=30, cognitive complexity <=15, max 2 params, `noImportCycles`, and `noRestrictedImports` per folder (app, features, shared); tests and `scripts/` have lighter overrides. No existing code was flagged.
+Added `knip` (catalog, root devDependency) and `knip.json`. Removed the dead i18n barrel, unused exports, `@nx/vite`, `@types/react-dom`; ignores are the legacy folder, generated client, TypeSpec peer deps, vite test aliases, the theme entry and session.ts types.
+Nx targets `@cooquoi/monorepo:biome-check` and `:knip` live in the root `package.json`; webapp AGENTS.md Commands updated.
+Spike answer: every rule used is stable in Biome 2.6.8 (none nursery): `noExcessiveLinesPerFile`, `noExcessiveLinesPerFunction`, `noExcessiveCognitiveComplexity`, `useMaxParams`, `noImportCycles`, `noRestrictedImports`.
+Verified: `nx run-many -t biome-check knip lint typecheck test` green.

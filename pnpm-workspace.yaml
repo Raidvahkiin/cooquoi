@@ -11,6 +11,7 @@ catalog:
   "@stylexjs/stylex": ^0.19.2
   "@vitest/browser-playwright": 5.1.1
   "@hey-api/openapi-ts": ^0.99.0
+  knip: ^6.47.0
   "@typespec/compiler": ^1.18.0
   "@typespec/http": ^1.18.0
   "@typespec/openapi": ^1.18.0

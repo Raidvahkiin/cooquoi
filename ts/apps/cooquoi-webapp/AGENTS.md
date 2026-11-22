@@ -150,8 +150,8 @@ pnpm nx run @cooquoi/webapp:lint        # ESLint (Nx boundaries)
 pnpm nx run @cooquoi/webapp:typecheck
 pnpm nx run @cooquoi/webapp:test        # Vitest: node project (*.test.ts) + browser project (*.test.tsx)
 pnpm nx run @cooquoi/webapp:theme-build # astryx theme build -> cooquoi.{css,js,d.ts} (committed)
-pnpm biome check ts/apps/cooquoi-webapp
-pnpm knip --workspace ts/apps/cooquoi-webapp
+pnpm nx run @cooquoi/monorepo:biome-check  # Biome: format, size, complexity, cycles, boundaries
+pnpm nx run @cooquoi/monorepo:knip          # unused files, exports, dependencies
 ```
 
 The browser project runs in real Chromium: install it once with `pnpm exec playwright install chromium`.

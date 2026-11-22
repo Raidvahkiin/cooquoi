@@ -16,13 +16,12 @@
     "@nx/eslint-plugin": "24.0.6",
     "@nx/js": "24.0.6",
     "@nx/next": "24.0.6",
-    "@nx/vite": "24.0.6",
     "@nx/vitest": "24.0.6",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",
-    "@types/react-dom": "^19.3.0",
     "@typescript/native": "npm:typescript@^7.0.2",
     "eslint": "^10.15.0",
+    "knip": "catalog:",
     "nx": "24.0.6",
     "tslib": "^2.9.1",
     "tsx": "^4.23.15",
@@ -34,5 +33,39 @@
   "packageManager": "pnpm@12.21.0",
   "engines": {
     "node": ">=24.15.0 <25"
+  },
+  "nx": {
+    "targets": {
+      "biome-check": {
+        "cache": true,
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "{workspaceRoot}",
+          "command": "biome check ."
+        },
+        "inputs": [
+          "{workspaceRoot}/biome.json",
+          "{workspaceRoot}/ts/**/*",
+          "{workspaceRoot}/contracts/**/*",
+          "{workspaceRoot}/scripts/**/*",
+          "{workspaceRoot}/*.{json,mts,mjs}"
+        ]
+      },
+      "knip": {
+        "cache": true,
+        "executor": "nx:run-commands",
+        "options": {
+          "cwd": "{workspaceRoot}",
+          "command": "knip"
+        },
+        "inputs": [
+          "{workspaceRoot}/knip.json",
+          "{workspaceRoot}/package.json",
+          "{workspaceRoot}/pnpm-lock.yaml",
+          "{workspaceRoot}/ts/**/*",
+          "{workspaceRoot}/contracts/**/*"
+        ]
+      }
+    }
   }
 }

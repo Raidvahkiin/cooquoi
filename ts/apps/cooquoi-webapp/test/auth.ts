@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import { GET as startLogin } from '@/app/auth/login/route';
 
-export const APP_URL = 'http://localhost:3000';
+const APP_URL = 'http://localhost:3000';
 
 export function appRequest(path: string): NextRequest {
   return new NextRequest(new URL(path, APP_URL));
