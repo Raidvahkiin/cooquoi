@@ -39,6 +39,8 @@ T01, T03 and T04 touch disjoint files and can run at the same time. The story re
 
 ## Summary
 
+> Revised by [E01.S08](../S08-build-tool-split/story.md): `@cooquoi/dotnet`, `verify` and `contract-drift` below are historical; CI is now jobs `ts` and `dotnet`.
+
 All six tasks done and pushed (5e9fafa, f96143a, bd4a82d, 8ab686d, 4e327f5, 02f6661), plus review fixes. HTTPS everywhere in dev on the .NET dev certificate, fixed dev password `cooquoi-dev`, a clean working tree after build and format, `@cooquoi/dotnet` Nx targets with the contract chain, Biome size/complexity/boundary rules (all stable) and knip, and one CI pipeline; each of 10 rules fails its Nx target on a deliberate violation ([findings](findings.md)).
 `nx affected` spans TypeSpec → api-client → webapp; C# changes do not reach the contract, so `contract-drift` is its own job and must be a required check.
 Left: the first real GitHub CI run (`nx-set-shas`), branch protection for `verify` and `contract-drift`.
