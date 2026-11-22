@@ -10,6 +10,8 @@ const envSchema = z.object({
   OIDC_CLIENT_ID: z.string().min(1),
   OIDC_CLIENT_SECRET: z.string().min(1),
   SESSION_PASSWORD: z.string().min(32),
+  /** Session store; carries the webapp's ACL user and password. */
+  REDIS_URL: z.url({ protocol: /^rediss?$/ }),
 });
 
 export type Env = z.infer<typeof envSchema>;

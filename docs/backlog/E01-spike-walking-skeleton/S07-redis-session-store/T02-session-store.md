@@ -40,9 +40,9 @@ opus (new building block)
 
 ## Subtasks
 
-- [ ] T02.1 `REDIS_URL` in the env schema and the test env; `redis` and `@testcontainers/redis` in the catalog and the webapp `package.json`
-- [ ] T02.2 `SessionStore` type, session id generation, in-memory store + unit test
-- [ ] T02.3 Redis store + Testcontainers integration test: set/get, TTL set, extend, delete, missing key → `undefined`, the raw value is not readable JSON, and a user restricted to `~session:*` gets `NOPERM` on another key
+- [x] T02.1 `REDIS_URL` in the env schema and the test env; `redis` and `@testcontainers/redis` in the catalog and the webapp `package.json`
+- [x] T02.2 `SessionStore` type, session id generation, in-memory store + unit test
+- [x] T02.3 Redis store + Testcontainers integration test: set/get, TTL set, extend, delete, missing key → `undefined`, the raw value is not readable JSON, and a user restricted to `~session:*` gets `NOPERM` on another key
 
 ## Done when
 
@@ -50,6 +50,10 @@ opus (new building block)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(webapp): session store with Redis and in-memory implementations (E01.S07.T02)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- Added `SessionStore` (`session-store.ts`, `getSessionStore()` → Redis), `redis-session-store.ts` (sealed `{ data }` so a bad seal reads as missing, `SET EX`/`EXPIRE`/`DEL`, one lazy client), `memory-session-store.ts`, `session-id.ts`; `REDIS_URL` (redis/rediss) in env and test env; `redis` ^5.12 and `@testcontainers/redis` in the catalog.
+- Integration test is `*.integration.test.ts` in a new vitest project `integration` (no MSW setup: MSW intercepted the Docker API); `node` excludes it, so `--project node` skips it.
+- The store runs as a restricted ACL user mirroring `aspire/redis/users.acl`, so any command outside get/set/expire/del (+ping/hello/auth) would fail; node-redis 5 connects fine with it.
+- Verified: typecheck, lint, test (80, incl. 8 Redis via Docker), biome-check, knip green. Silenced testcontainers build scripts (`cpu-features`, `protobufjs`, `ssh2`: false in `allowBuilds`).

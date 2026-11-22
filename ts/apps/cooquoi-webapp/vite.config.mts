@@ -1,6 +1,17 @@
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
 
+const testEnv = {
+  APP_URL: 'http://localhost:3000',
+  API_BASE_URL: 'http://api.test',
+  COOQUOI_API_TIMEOUT_MS: '200',
+  OIDC_ISSUER: 'https://identity.test/realms/cooquoi',
+  OIDC_CLIENT_ID: 'cooquoi-webapp',
+  OIDC_CLIENT_SECRET: 'test-client-secret',
+  SESSION_PASSWORD: 'test-session-password-at-least-32-chars',
+  REDIS_URL: 'redis://localhost:6379',
+};
+
 export default defineConfig({
   root: import.meta.dirname,
   cacheDir: '../../../node_modules/.vite/ts/apps/cooquoi-webapp',
@@ -22,16 +33,20 @@ export default defineConfig({
           name: 'node',
           environment: 'node',
           include: ['src/**/*.test.ts'],
+          exclude: ['src/**/*.integration.test.ts'],
           setupFiles: ['test/setup.ts'],
-          env: {
-            APP_URL: 'http://localhost:3000',
-            API_BASE_URL: 'http://api.test',
-            COOQUOI_API_TIMEOUT_MS: '200',
-            OIDC_ISSUER: 'https://identity.test/realms/cooquoi',
-            OIDC_CLIENT_ID: 'cooquoi-webapp',
-            OIDC_CLIENT_SECRET: 'test-client-secret',
-            SESSION_PASSWORD: 'test-session-password-at-least-32-chars',
-          },
+          env: testEnv,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          // Against real services in Testcontainers (Docker must run); no MSW, which would intercept the Docker API.
+          name: 'integration',
+          environment: 'node',
+          include: ['src/**/*.integration.test.ts'],
+          env: testEnv,
+          hookTimeout: 120_000,
         },
       },
       {

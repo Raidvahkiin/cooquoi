@@ -9,6 +9,7 @@ catalog:
   "@astryxdesign/cli": ^0.7.17
   "@astryxdesign/core": ^0.7.17
   "@stylexjs/stylex": ^0.19.2
+  "@testcontainers/redis": ^12.2.2
   "@vitest/browser-playwright": 5.1.1
   "@hey-api/openapi-ts": ^0.99.0
   knip: ^6.47.0
@@ -23,6 +24,7 @@ catalog:
   openid-client: ^6.9.1
   playwright: ^1.65.1
   react: ^19.3.1
+  redis: ^5.12.0
   react-dom: ^19.3.1
   server-only: ^0.0.1
   vitest-browser-react: ^2.3.0
@@ -35,8 +37,12 @@ allowBuilds:
   "@biomejs/biome": true
   "@parcel/watcher": true
   "@swc/core": true
+  # testcontainers (ssh2) optional native speed-ups and a protobufjs version check: not needed
+  cpu-features: false
   esbuild: true
   nx: true
+  protobufjs: false
+  ssh2: false
 
 overrides:
   typescript: npm:@typescript/typescript6@^6.0.2
