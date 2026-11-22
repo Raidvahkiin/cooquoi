@@ -10,6 +10,7 @@
     "@cooquoi/api-client": "workspace:*",
     "iron-session": "catalog:",
     "next": "catalog:",
+    "next-intl": "catalog:",
     "openid-client": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",

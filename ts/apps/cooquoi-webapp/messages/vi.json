@@ -1,0 +1,13 @@
+{
+  "common": {
+    "appName": "Cooquoi",
+    "openAccount": "Mở tài khoản của tôi",
+    "signOut": "Đăng xuất"
+  },
+  "household": {
+    "account": {
+      "signedInAs": "Đã đăng nhập với tên {name}",
+      "summary": "Ngôn ngữ: {locale} · Số hộ gia đình: {count}"
+    }
+  }
+}

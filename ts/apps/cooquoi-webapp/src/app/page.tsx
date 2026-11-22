@@ -1,9 +1,12 @@
-// Spike: plain markup until the Astryx rebuild (phase 4).
-export default function HomePage() {
+import { getTranslations } from 'next-intl/server';
+
+// Spike: plain markup until the Astryx rebuild (T02).
+export default async function HomePage() {
+  const t = await getTranslations('common');
   return (
     <main>
-      <h1>Cooquoi</h1>
-      <a href="/account">Open my account</a>
+      <h1>{t('appName')}</h1>
+      <a href="/account">{t('openAccount')}</a>
     </main>
   );
 }

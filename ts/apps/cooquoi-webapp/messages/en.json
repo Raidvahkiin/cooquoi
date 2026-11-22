@@ -1,0 +1,13 @@
+{
+  "common": {
+    "appName": "Cooquoi",
+    "openAccount": "Open my account",
+    "signOut": "Sign out"
+  },
+  "household": {
+    "account": {
+      "signedInAs": "Signed in as {name}",
+      "summary": "Language: {locale} · Households: {count}"
+    }
+  }
+}

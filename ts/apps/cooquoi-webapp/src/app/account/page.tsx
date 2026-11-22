@@ -1,17 +1,20 @@
+import { getTranslations } from 'next-intl/server';
 import { getMe } from '@/features/household';
 
-// Spike, phase 1: plain markup; the Astryx shell comes in phase 4.
+// Spike, phase 1: plain markup; the Astryx shell comes in T02.
 export default async function AccountPage() {
-  const me = await getMe();
+  const [me, t, tCommon] = await Promise.all([
+    getMe(),
+    getTranslations('household.account'),
+    getTranslations('common'),
+  ]);
 
   return (
     <main>
-      <h1>Signed in as {me.displayName}</h1>
+      <h1>{t('signedInAs', { name: me.displayName })}</h1>
       <p>{me.email}</p>
-      <p>
-        Language: {me.locale} · Households: {me.householdCount}
-      </p>
-      <a href="/auth/logout">Sign out</a>
+      <p>{t('summary', { locale: me.locale, count: me.householdCount })}</p>
+      <a href="/auth/logout">{tCommon('signOut')}</a>
     </main>
   );
 }

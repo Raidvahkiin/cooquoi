@@ -1,0 +1,13 @@
+{
+  "common": {
+    "appName": "Cooquoi",
+    "openAccount": "Ouvrir mon compte",
+    "signOut": "Se déconnecter"
+  },
+  "household": {
+    "account": {
+      "signedInAs": "Connecté en tant que {name}",
+      "summary": "Langue : {locale} · Foyers : {count}"
+    }
+  }
+}
