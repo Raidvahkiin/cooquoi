@@ -46,6 +46,7 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | 0017 | Curator app (reserved, written by E01.S06.T01) | — |
 | [0018](architecture/adr/0018-https-everywhere-in-dev.md) | HTTPS everywhere in development | Accepted |
 | [0019](architecture/adr/0019-webapp-sessions-in-redis.md) | Server-side webapp sessions in Redis | Accepted |
+| [0020](architecture/adr/0020-build-tools-nx-and-dotnet.md) | Build tools: Nx for TypeScript and TypeSpec, the .NET toolchain for C# | Accepted |
 
 ## Work
 
