@@ -2,7 +2,7 @@
 
 Next.js App Router webapp, backend-for-frontend of the C# API. Decisions: [ADR 0008 (Astryx)](../../../docs/architecture/adr/0008-web-ui-astryx.md), [0011 (auth/BFF)](../../../docs/architecture/adr/0011-webapp-api-auth.md), [0012 (i18n)](../../../docs/architecture/adr/0012-internationalization.md), [0013 (structure)](../../../docs/architecture/adr/0013-webapp-structure.md).
 
-> **Rebuild in progress.** The old UI was removed; `src/` only holds code that follows this document (auth, household). Screens are rebuilt from scratch with Astryx.
+> **Rebuild in progress.** The old UI was removed; `src/` holds code that follows this document (auth, household, i18n, Astryx theme and AppShell, Foodpedia search). Further screens are rebuilt with Astryx.
 
 **Business logic lives in the API, never here.** The webapp loads data, sends actions, maps API data for screens, validates forms and renders UI.
 
@@ -148,12 +148,13 @@ export const consumeStockItem = defineAction(consumeStockItemSchema, async (inpu
 pnpm nx run @cooquoi/webapp:dev
 pnpm nx run @cooquoi/webapp:lint        # ESLint (Nx boundaries)
 pnpm nx run @cooquoi/webapp:typecheck
-pnpm nx run @cooquoi/webapp:test
+pnpm nx run @cooquoi/webapp:test        # Vitest: node project (*.test.ts) + browser project (*.test.tsx)
+pnpm nx run @cooquoi/webapp:theme-build # astryx theme build -> cooquoi.{css,js,d.ts} (committed)
 pnpm biome check ts/apps/cooquoi-webapp
 pnpm knip --workspace ts/apps/cooquoi-webapp
 ```
 
-`test`, Biome v2 rules and `knip` are set up during the rebuild.
+The browser project runs in real Chromium: install it once with `pnpm exec playwright install chromium`.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

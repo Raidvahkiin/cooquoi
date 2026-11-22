@@ -17,6 +17,40 @@
         }
       ],
       "realmRoles": ["default-roles-cooquoi", "catalog-curator"]
+    },
+    {
+      "username": "dev-fr@cooquoi.local",
+      "email": "dev-fr@cooquoi.local",
+      "emailVerified": true,
+      "firstName": "Dev",
+      "lastName": "FR",
+      "enabled": true,
+      "attributes": { "locale": ["fr"] },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${COOQUOI_DEV_USER_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["default-roles-cooquoi"]
+    },
+    {
+      "username": "dev-vi@cooquoi.local",
+      "email": "dev-vi@cooquoi.local",
+      "emailVerified": true,
+      "firstName": "Dev",
+      "lastName": "VI",
+      "enabled": true,
+      "attributes": { "locale": ["vi"] },
+      "credentials": [
+        {
+          "type": "password",
+          "value": "${COOQUOI_DEV_USER_PASSWORD}",
+          "temporary": false
+        }
+      ],
+      "realmRoles": ["default-roles-cooquoi"]
     }
   ]
 }

@@ -32,6 +32,7 @@ Never `vi.mock` the generated API client and never stub `fetch` by hand: that sk
 ## Setup (in `ts/apps/cooquoi-webapp/test/`)
 
 - Vitest config with **two projects**: `node` (`**/*.test.ts`) and `browser` (`**/*.test.tsx`, Playwright provider, Chromium).
+- Browser project needs: `oxc: { jsx: { runtime: 'automatic' } }`, `optimizeDeps.include` for react/jsx-dev-runtime (avoids the first-run reload flake), a `next/font/google` stub alias and `define: { 'process.env': '{}' }` for `next/link`. Astryx `TableHeaderCell` needs `scope="col"` to expose the columnheader role.
 - `msw/handlers/<feature>.ts` — default handlers per feature, built from fixtures; shared by both projects.
 - `msw/node.ts` — `setupServer(...handlers)` for the Node project (`onUnhandledFrame: 'error'`, MSW 3).
 - `msw/browser.ts` — `setupWorker(...handlers)` for the browser project.
