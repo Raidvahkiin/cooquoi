@@ -97,6 +97,42 @@ public sealed class IngredientAggregateTests
     }
 
     [Fact]
+    public void F12_create_carries_the_expiry_kind()
+    {
+        CreateSalmon().ExpiryKind.ShouldBe(ExpiryKind.Printed);
+    }
+
+    [Fact]
+    public void C11_SetExpiryKind_changes_the_kind_and_raises_IngredientExpiryKindChanged()
+    {
+        var salmon = CreateSalmon();
+
+        salmon.SetExpiryKind(ExpiryKind.Estimated);
+
+        salmon.ExpiryKind.ShouldBe(ExpiryKind.Estimated);
+        salmon.DomainEvents.Last().ShouldBe(new IngredientExpiryKindChanged(salmon.Id, ExpiryKind.Estimated));
+    }
+
+    [Fact]
+    public void C11_SetExpiryKind_to_the_same_kind_raises_nothing()
+    {
+        var salmon = CreateSalmon();
+
+        salmon.SetExpiryKind(ExpiryKind.Printed);
+
+        salmon.DomainEvents.Count.ShouldBe(1);
+    }
+
+    [Fact]
+    public void F10_a_retired_ingredient_cannot_change_its_expiry_kind()
+    {
+        var salmon = CreateSalmon();
+        salmon.Retire();
+
+        ((Action)(() => salmon.SetExpiryKind(ExpiryKind.LongLife))).ShouldFailWith(IngredientError.IngredientRetired);
+    }
+
+    [Fact]
     public void SetSynonyms_replaces_the_synonyms_of_one_locale_and_raises_IngredientNamesChanged()
     {
         var salmon = CreateSalmon();

@@ -32,6 +32,7 @@ internal sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredi
         builder.HasIndex(ingredient => ingredient.Code).IsUnique().HasDatabaseName(UniqueCodeIndex);
         builder.Property(ingredient => ingredient.BaseUnit).HasConversion(UnitConversion.Converter).HasMaxLength(20);
         builder.Property(ingredient => ingredient.Status).HasConversion<string>().HasMaxLength(20);
+        builder.Property(ingredient => ingredient.ExpiryKind).HasConversion<string>().HasMaxLength(20).HasColumnName("expiry_kind");
         builder.Property(ingredient => ingredient.Conversions).HasConversion(ConversionTableJson.Converter).HasColumnType("jsonb");
         builder.PrimitiveCollection(ingredient => ingredient.Tags)
             .HasField("_tags")

@@ -30,6 +30,7 @@ public sealed record CreateIngredient(
         SharedKernel.Unit.FromCode(BaseUnit)!,
         [.. Tags.Select(TagCode.Parse)],
         [.. (Conversions ?? []).Select(c => new Conversion(SharedKernel.Unit.FromCode(c.Unit)!, c.UnitAmount, c.BaseAmount))],
+        ExpiryKind.Estimated, // E02.S01.T03
         ShelfLife is null ? null : new Domain.Ingredients.ShelfLife(ShelfLife.Days, Enum.Parse<Storage>(ShelfLife.RecommendedStorage, ignoreCase: true)));
 }
 

@@ -17,6 +17,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
     public Unit BaseUnit { get; private set; } = Unit.Gram;
     public ConversionTable Conversions { get; private set; } = ConversionTable.Empty;
     public ShelfLife? ShelfLife { get; private set; }
+    public ExpiryKind ExpiryKind { get; private set; }
     public IReadOnlyList<TagCode> Tags => _tags;
     public IngredientStatus Status { get; private set; }
 
@@ -36,6 +37,7 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
             BaseUnit = request.BaseUnit,
             Conversions = conversions,
             ShelfLife = request.ShelfLife,
+            ExpiryKind = request.ExpiryKind,
             Status = IngredientStatus.Active,
         };
         ingredient._names.AddRange(request.Names);
@@ -53,6 +55,19 @@ public sealed class IngredientAggregate : AggregateRoot<IngredientId>
         EnsureActive();
         Conversions = Conversions.Define(conversion, BaseUnit);
         Raise(new ConversionDefined(Id, conversion.Unit.Code, conversion.UnitAmount, conversion.BaseAmount));
+    }
+
+    /// <summary>C11: changes how the expiry is known; nothing happens when the kind is unchanged.</summary>
+    public void SetExpiryKind(ExpiryKind expiryKind)
+    {
+        EnsureActive();
+        if (ExpiryKind == expiryKind)
+        {
+            return;
+        }
+
+        ExpiryKind = expiryKind;
+        Raise(new IngredientExpiryKindChanged(Id, expiryKind));
     }
 
     /// <summary>C3: replaces the synonyms of one locale; the primary name is unchanged.</summary>

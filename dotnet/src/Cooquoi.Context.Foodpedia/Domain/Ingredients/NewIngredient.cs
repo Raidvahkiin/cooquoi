@@ -10,4 +10,5 @@ public sealed record NewIngredient(
     Unit BaseUnit,
     IReadOnlyList<TagCode> Tags,
     IReadOnlyList<Conversion> Conversions,
+    ExpiryKind ExpiryKind,
     ShelfLife? ShelfLife = null);

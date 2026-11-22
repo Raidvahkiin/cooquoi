@@ -57,6 +57,12 @@ namespace Cooquoi.Context.Foodpedia.Persistence.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("created_by");
 
+                    b.Property<string>("ExpiryKind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("expiry_kind");
+
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)

@@ -39,10 +39,10 @@ Request, DTO and endpoints (T03); PublicApi and integration events (T04); contra
 
 ## Subtasks
 
-- [ ] T02.1 `ExpiryKind`, `NewIngredient.ExpiryKind`, aggregate property and `SetExpiryKind`, `IngredientExpiryKindChanged`
-- [ ] T02.2 Domain tests: `F12_…` (create carries the kind), `C11_…` (changed raises once, same kind raises nothing), `F10_…` (retired refused)
-- [ ] T02.3 EF mapping and the `AddIngredientExpiryKind` migration
-- [ ] T02.4 Seed file, `SeedFile`, seeder mapping; the existing seeder test (if any) stays green
+- [x] T02.1 `ExpiryKind`, `NewIngredient.ExpiryKind`, aggregate property and `SetExpiryKind`, `IngredientExpiryKindChanged`
+- [x] T02.2 Domain tests: `F12_…` (create carries the kind), `C11_…` (changed raises once, same kind raises nothing), `F10_…` (retired refused)
+- [x] T02.3 EF mapping and the `AddIngredientExpiryKind` migration
+- [x] T02.4 Seed file, `SeedFile`, seeder mapping; the existing seeder test (if any) stays green
 
 ## Done when
 
@@ -50,6 +50,9 @@ Request, DTO and endpoints (T03); PublicApi and integration events (T04); contra
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodpedia): expiry kind in the domain and seed (E02.S01.T02)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Added ExpiryKind, SetExpiryKind (F10, no-op when unchanged) and IngredientExpiryKindChanged; EF column `expiry_kind` (string like Status, stored PascalCase e.g. `LongLife`, not kebab), migration AddIngredientExpiryKind (default `Estimated` then dropped), seed + SeedFile + seeder mapping (accepts kebab).
+Seeder only inserts missing codes, so existing dev rows keep the migration default `Estimated`.
+Done-when green (81 tests, dotnet format clean); CreateIngredient passes `ExpiryKind.Estimated // E02.S01.T03`. T03 must map kebab to the enum.

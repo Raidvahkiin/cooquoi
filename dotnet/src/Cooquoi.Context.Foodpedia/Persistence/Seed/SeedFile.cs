@@ -11,6 +11,7 @@ internal sealed record SeedFile(IReadOnlyList<SeedFile.Tag> Tags, IReadOnlyList<
         IReadOnlyDictionary<string, Name> Names,
         IReadOnlyList<string> Tags,
         IReadOnlyList<Conversion>? Conversions,
+        string ExpiryKind,
         ShelfLife? ShelfLife);
 
     internal sealed record Name(string Primary, IReadOnlyList<string>? Synonyms);
