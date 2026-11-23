@@ -79,6 +79,15 @@ public sealed class SearchIngredientsEndpointTests(ApiFixture api)
     }
 
     [Fact]
+    public async Task A_page_far_past_the_end_is_empty_not_an_error()
+    {
+        var page = await Search("page=200000000");
+
+        page.Items.ShouldBeEmpty();
+        page.Page.ShouldBe(200000000);
+    }
+
+    [Fact]
     public async Task A_sort_outside_the_whitelist_is_a_validation_problem()
     {
         var result = await api.Scenario(s =>

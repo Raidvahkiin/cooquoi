@@ -38,9 +38,9 @@ public sealed record CreateIngredient(
 /// <summary>Shape only; business rules (F1–F9) are the domain's and the endpoint's pre-checks.</summary>
 public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredient>
 {
-    private static readonly string[] Locales = ["en", "fr", "vi"];
+    private static readonly string[] Locales = [.. Locale.All.Select(locale => locale.Code)];
     private static readonly string[] ExpiryKinds = [.. new ContractEnumAttribute<ExpiryKind>().Values];
-    private static readonly string[] Storages = ["fridge", "freezer", "room"];
+    private static readonly string[] Storages = [.. new ContractEnumAttribute<Storage>().Values];
 
     public CreateIngredientValidator()
     {

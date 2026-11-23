@@ -1,3 +1,4 @@
+using Cooquoi.Platform.Idempotency;
 using Microsoft.AspNetCore.Http;
 using Raidvahkiin.Ddd;
 
@@ -27,6 +28,11 @@ internal sealed class ConcurrencyRetryMiddleware(RequestDelegate next)
                 exception.Error == CommonError.ConcurrencyConflict && attempt < MaxAttempts && !context.Response.HasStarted)
             {
                 context.Request.Body.Position = 0;
+                // The failed save rolled back the "key committed" mark; the retry's first save must add it again.
+                if (IdempotencyClaim.Of(context) is { } claim)
+                {
+                    claim.Committed = false;
+                }
             }
         }
     }

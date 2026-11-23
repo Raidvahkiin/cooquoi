@@ -126,6 +126,32 @@ public sealed class IdempotencyMiddlewareTests(ApiFixture api)
     }
 
     [Fact]
+    public async Task A_command_retried_after_losing_a_concurrency_race_still_commits_its_key_with_it()
+    {
+        var key = Guid.NewGuid();
+        var name = $"idem_{key:N}";
+        // The command's first save finds its key row gone from under it (0 rows: EF reports a concurrency conflict), once (a sequence counts, as a rollback undoes anything else); then
+        // storing the response is refused unless the retried command marked the key committed in its own save.
+        var sql = $$"""
+                CREATE SEQUENCE platform.{{name}};
+                CREATE FUNCTION platform.{{name}}_skip() RETURNS trigger LANGUAGE plpgsql AS $f$
+                BEGIN IF nextval('platform.{{name}}') = 1 THEN RETURN NULL; END IF; RETURN NEW; END $f$;
+                CREATE TRIGGER {{name}}_skip BEFORE UPDATE ON platform.idempotent_requests
+                    FOR EACH ROW WHEN (OLD.key = '{{key}}' AND NEW.state = 'committed') EXECUTE FUNCTION platform.{{name}}_skip();
+                CREATE FUNCTION platform.{{name}}_refuse() RETURNS trigger LANGUAGE plpgsql AS $f$
+                BEGIN RAISE EXCEPTION 'response stored for a key its command did not commit'; END $f$;
+                CREATE TRIGGER {{name}}_refuse BEFORE UPDATE ON platform.idempotent_requests
+                    FOR EACH ROW WHEN (OLD.key = '{{key}}' AND NEW.state = 'completed' AND OLD.state <> 'committed') EXECUTE FUNCTION platform.{{name}}_refuse();
+                """;
+        await using (var db = api.CreateDbContext())
+        {
+            await db.Database.ExecuteSqlRawAsync(sql, TestContext.Current.CancellationToken);
+        }
+
+        await Post(NewIngredient(), key, 201);
+    }
+
+    [Fact]
     public async Task A_command_failing_before_its_save_releases_the_key()
     {
         var request = NewIngredient() with { Code = "salmon" };
