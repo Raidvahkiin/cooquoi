@@ -48,6 +48,10 @@ async function refreshOrSignOut(
   try {
     refreshed = await refreshTokens(tokens);
   } catch {
+    // Refresh tokens are single use: a parallel request may have refreshed first, and
+    // Keycloak then refuses ours. The stored token changed, so the session is still good.
+    const current = (await loadSession(access))?.data.tokens;
+    if (current && current.refreshToken !== tokens.refreshToken) return;
     await deleteSession(access);
     return;
   }

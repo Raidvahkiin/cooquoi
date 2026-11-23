@@ -29,7 +29,13 @@ describe('GET /auth/login', () => {
     expect(pendingLogin?.returnTo).toBe('/account');
   });
 
-  it.each(['//evil.test/phish', 'https://evil.test', 'account'])(
+  it.each([
+    '//evil.test/phish',
+    '/\\evil.test/phish',
+    '/\t/evil.test',
+    'https://evil.test',
+    'account',
+  ])(
     'returns to the home page instead of the unsafe target %s',
     async (returnTo) => {
       await startLoginAt(
@@ -39,6 +45,16 @@ describe('GET /auth/login', () => {
       expect((await currentSession()).pendingLogin?.returnTo).toBe('/');
     },
   );
+
+  it('keeps a same-site path with its query', async () => {
+    await startLoginAt(
+      `/auth/login?returnTo=${encodeURIComponent('/foodpedia?q=rice')}`,
+    );
+
+    expect((await currentSession()).pendingLogin?.returnTo).toBe(
+      '/foodpedia?q=rice',
+    );
+  });
 
   it('starts the login under a new session id, dropping the previous session', async () => {
     await signIn();

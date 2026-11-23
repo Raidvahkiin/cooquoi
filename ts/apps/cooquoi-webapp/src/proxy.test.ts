@@ -1,5 +1,5 @@
 import { sealData } from 'iron-session';
-import { HttpResponse, http } from 'msw';
+import { delay, HttpResponse, http } from 'msw';
 import { NextRequest } from 'next/server';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { type AuthTokens, REQUESTED_PATH_HEADER } from '@/shared/auth';
@@ -140,6 +140,35 @@ describe('proxy', () => {
 
     expect(sessionCookieOf(response)).toBe('');
     expect(await sessionStore.get(SID)).toBeUndefined();
+  });
+
+  it('keeps the session when a parallel request already used the refresh token', async () => {
+    const used = new Set<string>();
+    server.use(
+      http.post(identityEndpoints.token, async ({ request }) => {
+        const token = new URLSearchParams(await request.text()).get(
+          'refresh_token',
+        ) as string;
+        if (used.has(token)) {
+          await delay(50); // let the winning request save its tokens first
+          return HttpResponse.json({ error: 'invalid_grant' }, { status: 400 });
+        }
+        used.add(token);
+        return HttpResponse.json({
+          ...tokenResponseFixture,
+          access_token: 'new-access',
+          refresh_token: 'new-refresh',
+        });
+      }),
+    );
+    const request = await requestWithSession(tokensExpiringIn(-1_000));
+
+    await Promise.all([proxy(request), proxy(request)]);
+
+    expect(await storedTokens()).toMatchObject({
+      accessToken: 'new-access',
+      refreshToken: 'new-refresh',
+    });
   });
 
   it('lets the page run without a refresh when the session store is down', async () => {

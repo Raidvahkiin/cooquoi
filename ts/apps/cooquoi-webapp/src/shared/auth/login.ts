@@ -83,7 +83,14 @@ async function endKeycloakSession(refreshToken: string): Promise<void> {
   });
 }
 
-/** Only same-site paths: never redirect to another host after login. */
+/** Only same-site paths: resolved like the callback does, so `/\host` style tricks are caught. */
 function toSafePath(path: string): string {
-  return path.startsWith('/') && !path.startsWith('//') ? path : '/';
+  if (!path.startsWith('/')) return '/';
+  try {
+    const appUrl = new URL(getEnv().APP_URL);
+    const url = new URL(path, appUrl);
+    return url.origin === appUrl.origin ? `${url.pathname}${url.search}` : '/';
+  } catch {
+    return '/';
+  }
 }

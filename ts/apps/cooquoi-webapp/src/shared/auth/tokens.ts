@@ -31,8 +31,18 @@ export function isExpiringSoon(tokens: AuthTokens): boolean {
   return tokens.expiresAt - EXPIRY_MARGIN_MS <= Date.now();
 }
 
-export async function refreshTokens(tokens: AuthTokens): Promise<AuthTokens> {
-  const config = await getOidcConfig();
-  const response = await oidc.refreshTokenGrant(config, tokens.refreshToken);
-  return toAuthTokens(response);
+/** In-flight refreshes by refresh token: Keycloak accepts each one once, so parallel requests share the call. */
+const refreshing = new Map<string, Promise<AuthTokens>>();
+
+export function refreshTokens(tokens: AuthTokens): Promise<AuthTokens> {
+  const { refreshToken } = tokens;
+  let refresh = refreshing.get(refreshToken);
+  if (!refresh) {
+    refresh = getOidcConfig()
+      .then((config) => oidc.refreshTokenGrant(config, refreshToken))
+      .then(toAuthTokens)
+      .finally(() => refreshing.delete(refreshToken));
+    refreshing.set(refreshToken, refresh);
+  }
+  return refresh;
 }
