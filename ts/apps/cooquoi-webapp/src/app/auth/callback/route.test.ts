@@ -7,6 +7,7 @@ import {
   startLoginAt,
 } from '../../../../test/auth';
 import { cookieJar } from '../../../../test/cookie-jar';
+import { API_BASE_URL } from '../../../../test/fixtures/household';
 import {
   identityEndpoints,
   tokenResponseFixture,
@@ -55,6 +56,40 @@ describe('GET /auth/callback', () => {
       refreshToken: 'refresh-token-1',
     });
     expect(tokens?.expiresAt).toBeGreaterThan(Date.now());
+  });
+
+  it('signs in at the API once with the new access token, before redirecting', async () => {
+    const calls: Request[] = [];
+    server.use(
+      http.post(`${API_BASE_URL}/v1/me\\:sign-in`, ({ request }) => {
+        calls.push(request);
+        return new HttpResponse(null, { status: 204 });
+      }),
+    );
+
+    const response = await callbackFor('/auth/login?returnTo=/account');
+
+    expect(calls).toHaveLength(1);
+    expect(calls[0]?.headers.get('authorization')).toBe(
+      'Bearer access-token-1',
+    );
+    expect(calls[0]?.headers.get('idempotency-key')).toMatch(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/,
+    );
+    expect(response.headers.get('location')).toBe(
+      'http://localhost:3000/account',
+    );
+  });
+
+  it('fails instead of redirecting when the API sign-in fails', async () => {
+    server.use(
+      http.post(
+        `${API_BASE_URL}/v1/me\\:sign-in`,
+        () => new HttpResponse(null, { status: 500 }),
+      ),
+    );
+
+    await expect(callbackFor('/auth/login')).rejects.toThrow();
   });
 
   it('moves the signed-in session to a new id', async () => {

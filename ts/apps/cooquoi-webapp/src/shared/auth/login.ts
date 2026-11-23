@@ -31,8 +31,10 @@ export async function startLogin(returnTo: string): Promise<URL> {
   });
 }
 
-/** Exchanges the authorization code, stores the tokens, returns where to go next. */
-export async function completeLogin(callbackSearch: string): Promise<string> {
+/** Exchanges the authorization code, stores the tokens, returns where to go next and the new access token. */
+export async function completeLogin(
+  callbackSearch: string,
+): Promise<{ returnTo: string; accessToken: string }> {
   const config = await getOidcConfig();
   const pending = (await loadSession())?.data.pendingLogin;
   if (!pending) {
@@ -50,7 +52,7 @@ export async function completeLogin(callbackSearch: string): Promise<string> {
 
   const tokens = toAuthTokens(response);
   await rotateSession({ tokens }, toSessionTtlSeconds(tokens));
-  return pending.returnTo;
+  return { returnTo: pending.returnTo, accessToken: tokens.accessToken };
 }
 
 /**

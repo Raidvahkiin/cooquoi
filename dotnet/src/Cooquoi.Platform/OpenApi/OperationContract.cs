@@ -26,11 +26,16 @@ public static class OperationContract
         Problems(chain, 400, 401);
     }
 
-    /// <summary>A resource of the signed-in caller (<c>GET /v1/me</c>): 200, 401; never missing.</summary>
-    public static void OwnResource(HttpChain chain)
+    /// <summary>A resource of the signed-in caller (<c>GET /v1/me</c>): 200, 401, 404.</summary>
+    public static void OwnResource(HttpChain chain) => Problems(chain, 401, 404);
+
+    /// <summary>Body-less action, 204 without <c>ETag</c> (<c>POST /v1/me:sign-in</c>): 400, 401, 409.</summary>
+    public static void NoContentAction(HttpChain chain)
     {
-        NeverNotFound(chain);
-        Problems(chain, 401);
+        Idempotent(chain);
+        chain.Metadata.Produces(StatusCodes.Status204NoContent);
+        chain.Metadata.Finally(endpoint => endpoint.RemoveStatusCodeResponse(StatusCodes.Status200OK));
+        Problems(chain, 400, 401, 409);
     }
 
     /// <summary><c>ReadOperation</c>: 200 + <c>ETag</c>, 401, 404.</summary>

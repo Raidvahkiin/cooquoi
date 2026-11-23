@@ -10,17 +10,83 @@
     }
   ],
   "paths": {
+    "/v1/me:sign-in": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Household.Features.SignIn.SignInEndpoint"
+        ],
+        "summary": "Creates the profile and personal household on the first call, else refreshes name and email.",
+        "description": "POST_v1_me",
+        "operationId": "signIn",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/me": {
       "get": {
         "tags": [
           "Cooquoi.Context.Household.Features.GetMe.GetMeEndpoint"
         ],
-        "summary": "The signed-in user's profile and households, provisioned on first sign-in.",
+        "summary": "The signed-in user's profile and households; 404 until the first sign-in.",
         "description": "GET_v1_me",
         "operationId": "getMe",
         "responses": {
           "401": {
             "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1237,6 +1303,9 @@
     }
   ],
   "tags": [
+    {
+      "name": "Cooquoi.Context.Household.Features.SignIn.SignInEndpoint"
+    },
     {
       "name": "Cooquoi.Context.Household.Features.GetMe.GetMeEndpoint"
     },

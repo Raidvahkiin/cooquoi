@@ -14,8 +14,13 @@ export const REQUESTED_PATH_HEADER = 'x-cooquoi-requested-path';
 export async function requireAccessToken(): Promise<string> {
   const tokens = (await loadSession())?.data.tokens;
   if (!tokens) {
-    const returnTo = (await headers()).get(REQUESTED_PATH_HEADER) ?? '/';
-    redirect(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`);
+    return requireLogin();
   }
   return tokens.accessToken;
+}
+
+/** Sends the user through login, coming back to the requested page afterwards. */
+export async function requireLogin(): Promise<never> {
+  const returnTo = (await headers()).get(REQUESTED_PATH_HEADER) ?? '/';
+  redirect(`/auth/login?returnTo=${encodeURIComponent(returnTo)}`);
 }

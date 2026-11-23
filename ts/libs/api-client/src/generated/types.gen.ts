@@ -513,6 +513,10 @@ export type GetMeErrors = {
      * 401 — missing or invalid access token.
      */
     401: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
 };
 
 export type GetMeError = GetMeErrors[keyof GetMeErrors];
@@ -525,3 +529,39 @@ export type GetMeResponses = {
 };
 
 export type GetMeResponse = GetMeResponses[keyof GetMeResponses];
+
+export type SignInData = {
+    body?: never;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path?: never;
+    query?: never;
+    url: '/v1/me:sign-in';
+};
+
+export type SignInErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+};
+
+export type SignInError = SignInErrors[keyof SignInErrors];
+
+export type SignInResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type SignInResponse = SignInResponses[keyof SignInResponses];

@@ -1,5 +1,9 @@
 export { completeLogin, logout, startLogin } from './login';
-export { REQUESTED_PATH_HEADER, requireAccessToken } from './require-session';
+export {
+  REQUESTED_PATH_HEADER,
+  requireAccessToken,
+  requireLogin,
+} from './require-session';
 export {
   type AuthTokens,
   type CookieAccess,

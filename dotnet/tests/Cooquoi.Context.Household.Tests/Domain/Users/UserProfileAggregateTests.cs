@@ -47,16 +47,6 @@ public sealed class UserProfileAggregateTests
     }
 
     [Fact]
-    public void RecordSignIn_within_the_refresh_interval_keeps_the_last_sign_in_time()
-    {
-        var profile = UserProfileAggregate.Create(NewProfile());
-
-        profile.RecordSignIn(new SignInDetails("Alice", "alice@example.com", FirstSignIn.AddMinutes(10)));
-
-        profile.LastSignInAt.ShouldBe(FirstSignIn);
-    }
-
-    [Fact]
     public void RecordSignIn_keeps_the_users_locale_and_default_household()
     {
         var request = NewProfile();

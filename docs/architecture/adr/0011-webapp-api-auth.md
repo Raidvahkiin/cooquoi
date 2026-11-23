@@ -70,7 +70,7 @@ Realm roles (e.g. `catalog-curator`) are included in access tokens.
 - Two levels of checks:
   - **Role policies** for global capabilities (curating Foodpedia).
   - **Household membership** for owned resources: the household is resolved from the route or the resource, and the caller must be a member with a sufficient role.
-- **First login**: the webapp calls `GET /v1/me` after sign-in; the API creates the user's personal household if it does not exist yet (idempotent). Flutter will do the same.
+- **First login**: the webapp's OIDC callback calls `POST /v1/me:sign-in` before redirecting; the API creates the user's personal household if it does not exist yet (idempotent, ADR 0015 §2). Flutter will do the same.
 
 ### 6. Sign-out
 

@@ -43,16 +43,20 @@ Lives in the **Household context** (`Cooquoi.Context.Household`), next to `House
 - **Keycloak keeps** credentials, sign-in, email verification, social login and roles. **Cooquoi keeps** only display data and product preferences.
 - **Data minimization**: no phone, address, birthday or other attributes.
 
-### 2. Provisioning at sign-in — `GET /v1/me`
+### 2. Provisioning at sign-in — `POST /v1/me:sign-in`
 
-Called by the webapp after each sign-in (and by Flutter later):
+*Amended 2026-11-23: provisioning moved from `GET /v1/me` to an explicit sign-in command, so every read is side-effect free (page loads no longer write, and no longer race on the profile row).*
+
+Called once per login, by the webapp's OIDC callback (and by Flutter later), with an `Idempotency-Key` like every `POST`:
 
 1. Resolve the token's issuer + subject to a `UserProfile`.
 2. **First sign-in**: create the profile **and** a personal `Household` with the user as owner (`Membership` with role `owner`). The household has no stored name; clients display a translated default ("My household") until it is renamed.
-3. **Later sign-ins**: refresh `DisplayName`, `Email` and `LastSignInAt` from the token if they changed.
-4. Return the profile and the user's households.
+3. **Later sign-ins**: refresh `DisplayName`, `Email` and `LastSignInAt` from the token.
+4. Answer `204`.
 
-- **Concurrent first requests** (two tabs): the unique index on `IdentityRef` makes the second insert fail; it is retried and reads the profile created by the first.
+`GET /v1/me` only reads: the profile and the user's households, or `404 common.not-found` when the user never signed in (the webapp then restarts the login).
+
+- **Concurrent first sign-ins** (two tabs): a transaction-scoped advisory lock per identity serializes them; the unique index on `IdentityRef` stays the safety net.
 - Name or email changes made in Keycloak reach Cooquoi at the next sign-in — an accepted, small staleness.
 
 ### 3. Current user in requests
@@ -70,5 +74,5 @@ Called by the webapp after each sign-in (and by Flutter later):
 
 - Other members' names and preferences are available locally, without calling Keycloak.
 - Every context depends on a stable, provider-independent `UserId`.
-- One endpoint (`GET /v1/me`) covers provisioning and refresh for every client.
+- One command (`POST /v1/me:sign-in`) covers provisioning and refresh for every client; `GET /v1/me` is a plain read.
 - Profile name and email may be slightly stale between sign-ins.

@@ -368,8 +368,8 @@ paths:
     get:
       operationId: getMe
       description: |-
-        Returns the signed-in user's profile and households.
-        On first sign-in, creates the profile and a personal household (ADR 0015).
+        Returns the signed-in user's profile and households. Read-only: creates nothing.
+        Errors: `common.not-found` (404) before the first `signIn`.
       parameters: []
       responses:
         '200':
@@ -380,6 +380,49 @@ paths:
                 $ref: '#/components/schemas/Household.Me'
         '401':
           description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Household
+  /v1/me:sign-in:
+    post:
+      operationId: signIn
+      description: |-
+        Records a sign-in; call once per login. Creates the profile and a personal household on the
+        first call, later ones refresh name and email from the identity provider (ADR 0015).
+        Declared by hand: `ActionOperation` requires a body and an `id` path.
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
           content:
             application/problem+json:
               schema:

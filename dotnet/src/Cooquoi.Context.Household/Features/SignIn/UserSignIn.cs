@@ -6,7 +6,7 @@ using Cooquoi.Platform.Authentication;
 using Cooquoi.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 
-namespace Cooquoi.Context.Household.Features.GetMe;
+namespace Cooquoi.Context.Household.Features.SignIn;
 
 /// <summary>
 /// First sign-in creates the profile and a personal household; later sign-ins refresh
@@ -14,14 +14,13 @@ namespace Cooquoi.Context.Household.Features.GetMe;
 /// </summary>
 internal static class UserSignIn
 {
-    public static async Task<UserProfileAggregate> RecordAsync(SignInRequest request, CancellationToken cancellationToken)
+    public static async Task RecordAsync(SignInRequest request, CancellationToken cancellationToken)
     {
         var identity = new IdentityRef(request.User.Issuer, request.User.Subject);
         var profile = await request.Db.UserProfiles.FindByIdentityAsync(identity, cancellationToken)
             ?? await CreateOnceAsync(request, identity, cancellationToken);
         // Saved by Wolverine's transactional middleware after the endpoint.
         profile.RecordSignIn(new SignInDetails(request.User.DisplayName, request.User.Email, request.Now));
-        return profile;
     }
 
     /// <summary>

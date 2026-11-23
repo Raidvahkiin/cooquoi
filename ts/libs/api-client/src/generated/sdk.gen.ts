@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses } from './types.gen';
+import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses, SignInData, SignInErrors, SignInResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -80,11 +80,22 @@ export const setExpiryKind = <ThrowOnError extends boolean = false>(options: Opt
 });
 
 /**
- * Returns the signed-in user's profile and households.
- * On first sign-in, creates the profile and a personal household (ADR 0015).
+ * Returns the signed-in user's profile and households. Read-only: creates nothing.
+ * Errors: `common.not-found` (404) before the first `signIn`.
  */
 export const getMe = <ThrowOnError extends boolean = false>(options?: Options<GetMeData, ThrowOnError>): RequestResult<GetMeResponses, GetMeErrors, ThrowOnError> => (options?.client ?? client).get<GetMeResponses, GetMeErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/v1/me',
+    ...options
+});
+
+/**
+ * Records a sign-in; call once per login. Creates the profile and a personal household on the
+ * first call, later ones refresh name and email from the identity provider (ADR 0015).
+ * Declared by hand: `ActionOperation` requires a body and an `id` path.
+ */
+export const signIn = <ThrowOnError extends boolean = false>(options: Options<SignInData, ThrowOnError>): RequestResult<SignInResponses, SignInErrors, ThrowOnError> => (options.client ?? client).post<SignInResponses, SignInErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/me:sign-in',
     ...options
 });
