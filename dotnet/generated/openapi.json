@@ -1118,7 +1118,7 @@
             "format": "int64"
           }
         },
-        "description": "One page of a list query, with the total count of matching items (contract `Page/// One page of a list query, with the total count of matching items.lt;T/// One page of a list query, with the total count of matching items.gt;`)."
+        "description": "One page of a list query, with the total count of matching items (contract `Page&lt;T&gt;`)."
       },
       "ProblemDetails": {
         "required": [

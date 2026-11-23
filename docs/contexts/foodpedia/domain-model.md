@@ -192,7 +192,7 @@ Households may override the kind for their own stock in the Foodventory context.
 | F5 | A base-unit change must include a valid conversion between the old and the new base unit. |
 | F6 | A conversion's `unitAmount` and `baseAmount` are > 0. |
 | F7 | At most one conversion per unit; no conversion for a unit universally convertible to the base unit (including the base unit itself). |
-| F8 | `shelfLife.days` is > 0 when set. |
+| F8 | `shelfLife.days` is > 0 and ≤ 36500 (100 years) when set. |
 | F9 | An ingredient has at least one active `category:` tag; it may only use active tags. |
 | F10 | A retired ingredient or tag cannot be modified, except to be restored. Nothing is ever hard-deleted. |
 | F11 | Only users with the `catalog-curator` role change Foodpedia. Changes apply immediately. |

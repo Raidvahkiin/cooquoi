@@ -1,5 +1,5 @@
 import { HttpResponse, http } from 'msw';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { loadSession } from '@/shared/auth';
 import { currentSession, signIn } from '../../../../test/auth';
 import { identityEndpoints } from '../../../../test/fixtures/identity';
@@ -28,6 +28,19 @@ describe('GET /auth/logout', () => {
   });
 
   it('clears the local session and redirects home', async () => {
+    await signIn();
+
+    const response = await logout();
+
+    expect(response.headers.get('location')).toBe('http://localhost:3000/');
+    expect((await currentSession()).tokens).toBeUndefined();
+  });
+
+  it('still signs out and redirects home when Keycloak cannot be reached', async () => {
+    server.use(
+      http.post(identityEndpoints.endSession, () => HttpResponse.error()),
+    );
+    vi.spyOn(console, 'error').mockImplementation(() => {});
     await signIn();
 
     const response = await logout();

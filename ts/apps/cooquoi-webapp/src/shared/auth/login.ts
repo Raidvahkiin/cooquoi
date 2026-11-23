@@ -8,6 +8,8 @@ import { toAuthTokens, toSessionTtlSeconds } from './tokens';
 const CALLBACK_PATH = '/auth/callback';
 /** Time allowed to sign in at Keycloak and come back. */
 const PENDING_LOGIN_TTL_S = 600;
+/** Logout must not hang on a Keycloak that does not answer. */
+const END_SESSION_TIMEOUT_MS = 5_000;
 
 /** Starts the Authorization Code + PKCE flow and returns Keycloak's login URL. */
 export async function startLogin(returnTo: string): Promise<URL> {
@@ -72,15 +74,21 @@ async function endKeycloakSession(refreshToken: string): Promise<void> {
     return;
   }
   const env = getEnv();
-  await fetch(endpoint, {
-    method: 'POST',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({
-      client_id: env.OIDC_CLIENT_ID,
-      client_secret: env.OIDC_CLIENT_SECRET,
-      refresh_token: refreshToken,
-    }),
-  });
+  try {
+    await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        client_id: env.OIDC_CLIENT_ID,
+        client_secret: env.OIDC_CLIENT_SECRET,
+        refresh_token: refreshToken,
+      }),
+      signal: AbortSignal.timeout(END_SESSION_TIMEOUT_MS),
+    });
+  } catch (error) {
+    // The local session is already gone: the user is signed out here; Keycloak's SSO session idles out.
+    console.error('Keycloak logout failed:', (error as Error).message);
+  }
 }
 
 /** Only same-site paths: resolved like the callback does, so `/\host` style tricks are caught. */

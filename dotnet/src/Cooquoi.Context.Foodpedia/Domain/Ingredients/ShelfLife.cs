@@ -5,10 +5,13 @@ namespace Cooquoi.Context.Foodpedia.Domain.Ingredients;
 /// <summary>How long an ingredient keeps by default, and where; Pantry proposes expiry dates from it.</summary>
 public sealed record ShelfLife
 {
+    /// <summary>100 years: far beyond any food, and keeps <see cref="ProposeExpiry"/> inside the calendar.</summary>
+    public const int MaxDays = 36_500;
+
     public ShelfLife(int days, Storage recommendedStorage)
     {
         // F8
-        Ensure.That(days > 0, IngredientError.InvalidShelfLife, ("days", days));
+        Ensure.That(days is > 0 and <= MaxDays, IngredientError.InvalidShelfLife, ("days", days));
         Days = days;
         RecommendedStorage = recommendedStorage;
     }

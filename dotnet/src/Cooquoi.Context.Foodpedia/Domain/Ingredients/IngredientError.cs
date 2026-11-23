@@ -36,7 +36,7 @@ public static class IngredientError
         "foodpedia.conversion-not-needed", ErrorKind.BusinessRule, "'{unit}' already converts to '{baseUnit}' without an ingredient conversion.");
 
     public static readonly DomainError InvalidShelfLife = new(
-        "foodpedia.invalid-shelf-life", ErrorKind.BusinessRule, "Shelf life must be at least one day, not {days}.");
+        "foodpedia.invalid-shelf-life", ErrorKind.BusinessRule, "Shelf life must be between 1 and 36500 days, not {days}.");
 
     public static readonly DomainError CategoryTagRequired = new(
         "foodpedia.category-tag-required", ErrorKind.BusinessRule, "An ingredient needs at least one category tag.");
