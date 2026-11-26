@@ -36,7 +36,7 @@ Pantry aggregate commands and list (E02.S03); contract (T03); backfill for exist
 
 - [ ] T04.1 `PantryId`, `PantryName`, `Storage`, `NewPantry`, `PantryAggregate.Create`, `PantryCreated`, `PantryError`
 - [ ] T04.2 Domain tests `FV1_…` (trim, empty, 61 chars)
-- [ ] T04.3 `PantryConfiguration`, `name_key`, unique index, `UniqueConstraints`, migration `AddPantries`
+- [ ] T04.3 `PantryConfiguration`, `name_key`, unique index, `UniqueConstraints`, regenerated `InitialFoodventory` migration (one Initial per context until first release)
 - [ ] T04.4 `DefaultPantries` and `HouseholdCreatedHandler`
 - [ ] T04.5 Integration tests: first sign-in → three Pantry aggregates in `fr` for a `fr` user (tracked session), a second delivery creates none; unique index rejects "fridge" next to "Fridge" (persistence test)
 

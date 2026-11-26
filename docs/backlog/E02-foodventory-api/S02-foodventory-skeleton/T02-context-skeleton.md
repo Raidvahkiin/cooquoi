@@ -16,7 +16,7 @@
 ## Reference
 
 - Copy the Foodpedia project shape one to one: `FoodventoryModule.AddFoodventoryContext()` (Wolverine-integrated DbContext, `UseSchemaNpgsql(…, FoodventoryDbContext.Schema)`, `AddCooquoiInterceptors` with an empty `UniqueConstraints`), `MigrateAsync` for development (no seed), and `OnModelCreating` with `HasDefaultSchema`, `ApplyConfigurationsFromAssembly`, `AddAggregateAudit()`, `MapIdempotencyCommits()`.
-- Initial migration `InitialFoodventory` (empty model; `dotnet tool restore` first; command in `dotnet/AGENTS.md` "Persistence").
+- Initial migration `InitialFoodventory` (empty model; later tasks regenerate it, see `dotnet/AGENTS.md` "Persistence"; `dotnet tool restore` first; command in `dotnet/AGENTS.md` "Persistence").
 - `Integration/CurrentHousehold`: a scoped service that resolves the caller's household id once per request through `Household.PublicApi` (from E02.S02.T01) using `CurrentUser` (`Platform/Authentication/CurrentUser.cs:13-18`). With no household it throws `CommonError.NotFound` (open question Q2). If T01 is not done yet, write against the interface named in its brief and finish the wiring in T03.
 - Architecture: add the assembly to `OwnAssemblies`. Add pairwise rules Foodventory ↔ Foodpedia and Foodventory ↔ Household. Replace "contexts never reference each other" with "only `<Ctx>.Integration` may reference `<Other>.PublicApi`", and update the line in `dotnet/AGENTS.md` "Hard rules".
 - The AppHost needs no change (one database, schema per context: `aspire/Cooquoi.AppHost/Resources/Database.cs:7-12`).

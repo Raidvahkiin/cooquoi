@@ -17,6 +17,7 @@ First release of the Foodventory context, API only: a household restocks by hand
 - Domain rules use FV1–FV15 ids (`dotnet-domain`). Endpoints use `dotnet-feature`. Tests use `dotnet-test`: domain tests named after rule ids, and Alba + Testcontainers integration tests.
 - Enum values are camelCase in the contract, JSON, database and published API ([ADR 0021](../../architecture/adr/0021-enum-values-camel-case.md)): `longLife`, `noThreshold`. Routes, actions and error codes stay kebab-case; `long-life` in the briefs names the concept, not the code.
 - Serialized property names (JSON, jsonb, events, seed) are camelCase; C# members PascalCase, columns snake_case ([ADR 0022](../../architecture/adr/0022-property-names-camel-case.md)).
+- Events: domain events `<Fact>DomainEvent` in `Domain/<Aggregate>/Events/`, integration events `<Fact>Event` in `PublicApi/Events/` (`dotnet/AGENTS.md` "Domain"). Sign-in is `POST /v1/me:sign-in`; `GET /v1/me` is read-only. One `InitialFoodventory` migration, regenerated on each model change until first release.
 - Naming: "Foodventory context" vs "Pantry aggregate", never a bare "Pantry".
 
 ## Out of scope
@@ -45,7 +46,7 @@ Raised while planning (2026-11-22) and referenced from each story's Context. Rec
 | # | Question | Default (**Decided** when confirmed) |
 |---|---|---|
 | Q1 | How does a curl/.http script get a token for dev@cooquoi.local? Both Keycloak clients have `directAccessGrantsEnabled: false`. | A dev-only public client `cooquoi-dev-cli` with the password grant, in the dev realm import only (S08.T03) — **Decided 2026-11-22** |
-| Q2 | A caller with no household yet (never called `GET /v1/me`): what do Foodventory endpoints answer? | 404 `common.not-found` for the household; the script calls `/v1/me` first |
+| Q2 | A caller with no household yet (never called `POST /v1/me:sign-in`): what do Foodventory endpoints answer? | 404 `common.not-found` for the household; the script calls `POST /v1/me:sign-in` first |
 | Q3 | The dev Postgres has a data volume, so existing households never got `HouseholdCreated`. Backfill the default Pantry aggregates? | No backfill: reset the dev volume before S03 verification (production has no households yet) — **Decided 2026-11-22** |
 | Q4 | Error codes for shape rules the domain doc does not list (pantry name length, quantity amount, conversion amounts) | Add `foodventory.invalid-name`, `foodventory.invalid-quantity`, `foodventory.invalid-conversion-amount` (Validation), mirroring `foodpedia.*`, and add them to the domain doc's error list |
 | Q5 | Routes for Q5, Q6 and the summary, and the delete operation (no template exists) | `GET /v1/stock-items/expiring`, `GET /v1/stock/low`, `GET /v1/stock/summary` (guid constraint on `{ingredientId}`); `DELETE /v1/pantries/{id}` with `If-Match` via a new `DeleteOperation` template |

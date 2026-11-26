@@ -36,7 +36,7 @@ Handlers (T05); queries (E02.S07)
 
 ## Subtasks
 
-- [ ] T04.1 Mapping and migration
+- [ ] T04.1 Mapping and regenerated `InitialFoodventory` migration
 - [ ] T04.2 `SetThreshold` endpoint + tests (204, FV10 422, `StockRunningLow` after consume below low, tracked)
 - [ ] T04.3 `OverrideExpiryKind` endpoint + tests (printed override on an estimated ingredient: next restock has no proposal)
 - [ ] T04.4 Define/remove conversion endpoints + tests (unnormalized item becomes normalized; remove falls back; `conversion-not-needed` for `kg` on a `g` ingredient; consume in the new unit works)

@@ -7,7 +7,7 @@ The Household context publishes `HouseholdCreated(householdId, creatorLocale)` w
 ## Read only
 
 - `dotnet/AGENTS.md` "Use cases" (the own-transaction exception), "Persistence" (registration)
-- `dotnet/src/Cooquoi.Context.Household/Features/GetMe/UserSignIn.cs:32-59` (CreateOnceAsync, advisory lock, locale at `:59`)
+- `dotnet/src/Cooquoi.Context.Household/Features/SignIn/UserSignIn.cs:31-58` (CreateOnceAsync, advisory lock, locale at `:58`)
 - `dotnet/src/Cooquoi.Context.Household/Domain/Households/HouseholdAggregate.cs:19`, `HouseholdId.cs:3`, `UserProfileAggregate.cs:15-16`
 - `dotnet/src/Cooquoi.Context.Household/HouseholdModule.cs:21` vs `dotnet/src/Cooquoi.Context.Foodpedia/FoodpediaModule.cs:29-38`
 - The `PublicApi/` and `PublicApi/Events/` convention from the E02.S01.T04 report and `dotnet/AGENTS.md` "Layout"
@@ -38,10 +38,10 @@ Foodventory code (T02, T03); the profile and household endpoints' responses
 ## Subtasks
 
 - [ ] T01.1 Wolverine-integrated `HouseholdDbContext` registration; existing Household tests green
-- [ ] T01.2 Domain `HouseholdCreated` raised by `CreatePersonal`; domain test
+- [ ] T01.2 Domain `HouseholdCreatedDomainEvent` raised by `CreatePersonal`; domain test
 - [ ] T01.3 `UserSignIn` saves through the outbox; `PublicApi/Events/HouseholdCreatedEvent` mapping
 - [ ] T01.4 `PublicApi` current-household query
-- [ ] T01.5 Integration tests: first `GET /v1/me` publishes exactly one `HouseholdCreated` with the profile locale (tracked session); a second call publishes none; the query returns the id, and none for an unknown subject
+- [ ] T01.5 Integration tests: first `POST /v1/me:sign-in` publishes exactly one `HouseholdCreatedEvent` with the profile locale (tracked session); a second call publishes none; the query returns the id, and none for an unknown subject
 
 ## Done when
 

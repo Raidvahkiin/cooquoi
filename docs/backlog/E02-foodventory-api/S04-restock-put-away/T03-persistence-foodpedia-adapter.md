@@ -16,7 +16,7 @@ IngredientStock aggregates and their stock items are stored in `foodventory.ingr
 
 - `IngredientStockConfiguration`: version `IsConcurrencyToken()`, `Ignore(DomainEvents)`, unique `ux_ingredient_stocks_household_ingredient` → `StockError` conflict, or let the T04 endpoint retry (see T04). `base_unit`, `expiry_kind` columns. Columns for E02.S06 (threshold, conversions jsonb, override, remembered shelf lives) are added there, not now.
 - `stock_items`: `HasMany(Items)` to its own table (an entity with an id: `OwnsMany` with key `id`, or a mapped entity; pick what keeps `AggregateSaveInterceptor` bumping the root version on child changes, see `dotnet/AGENTS.md` "Responses and HTTP semantics" Concurrency). Columns: `household_id` (copied, for indexes), `ingredient_id` (copied), nullable `pantry_id`, entered amount/unit, remaining amount, `normalized_amount` (nullable), `expires_on`, `expiry_source`, `added_on`, `source`, `source_ref`. Indexes: `(household_id, expires_on)`, `(household_id, pantry_id)`.
-- Migration `AddIngredientStocks`.
+- Regenerate `InitialFoodventory` (one Initial per context until first release).
 - Adapter: `Integration/FoodpediaFactsProvider.GetAsync(IReadOnlyCollection<Guid> ingredientIds, Locale)` → `IReadOnlyDictionary<IngredientId, FoodpediaFacts>`. It makes one P1 call; Foodpedia default conversions come from P1 if S01.T04 exposed them, else P2 per unit. It is the only file that references Foodpedia (`Integration/` rule from E02.S02.T02).
 
 ## Skills
@@ -34,7 +34,7 @@ Endpoints (T04, T05); E02.S06 columns
 ## Subtasks
 
 - [ ] T03.1 `IngredientStockConfiguration`, stock items mapping, converters
-- [ ] T03.2 Migration `AddIngredientStocks` (check the SQL has both indexes and the unique index)
+- [ ] T03.2 Regenerate `InitialFoodventory` (check the SQL has both indexes and the unique index)
 - [ ] T03.3 `FoodpediaFactsProvider` + registration
 - [ ] T03.4 Persistence tests: round-trip with items in and out of a pantry; version bumps when only a child changes; adapter returns facts for a seeded ingredient
 

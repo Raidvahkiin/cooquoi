@@ -6,7 +6,7 @@
 
 ## Acceptance
 
-- [ ] First sign-in (`GET /v1/me` for a new user) publishes `HouseholdCreated` once, in the same transaction as the household (outbox).
+- [ ] First sign-in (`POST /v1/me:sign-in` for a new user) publishes `HouseholdCreated` once, in the same transaction as the household (outbox).
 - [ ] `Household/PublicApi` resolves the caller's household id from issuer + subject.
 - [ ] The Foodventory context has `Integration/CurrentHousehold`, which every later endpoint uses (FV2). With no household: open question Q2.
 - [ ] Default Pantry aggregates: `en` Fridge (`fridge`) / Freezer (`freezer`) / Dry goods (`room`); `fr` Réfrigérateur / Congélateur / Épicerie sèche; `vi` Tủ lạnh / Tủ đông / Đồ khô. Any other locale falls back to English. The handler is idempotent (FV14 spirit: a second delivery creates nothing).
@@ -18,7 +18,7 @@
 
 - [Foodventory domain model](../../../contexts/foodventory/domain-model.md) "Pantry (aggregate root)", FV1, FV2, "Persistence notes"
 - [ADR 0014](../../../architecture/adr/0014-backend-structure.md) (only if `dotnet/AGENTS.md` "Layout" does not answer)
-- `dotnet/src/Cooquoi.Context.Household/Features/GetMe/UserSignIn.cs:32-59`, `HouseholdModule.cs:21`
+- `dotnet/src/Cooquoi.Context.Household/Features/SignIn/UserSignIn.cs:31-58`, `HouseholdModule.cs:21`
 - `dotnet/src/Cooquoi.Context.Foodpedia/FoodpediaModule.cs:20-48`, `dotnet/src/Cooquoi.Api/Program.cs:31-67`
 - `dotnet/tests/Cooquoi.Architecture.Tests/CooquoiArchitecture.cs:17-25`, `DependencyRulesTests.cs:31-39`
 - Open questions Q2, Q3 ([epic](../epic.md#open-questions))
