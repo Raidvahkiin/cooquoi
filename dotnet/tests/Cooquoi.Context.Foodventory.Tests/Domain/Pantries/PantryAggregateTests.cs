@@ -11,11 +11,11 @@ public sealed class PantryAggregateTests
     {
         var household = Guid.NewGuid();
 
-        var pantry = PantryAggregate.Create(new NewPantry(PantryId.New(), household, new PantryName("Cellar"), Storage.Room));
+        var pantry = PantryAggregate.Create(new NewPantry(PantryId.New(), household, new PantryName("Cellar"), StorageType.Room));
 
         pantry.HouseholdId.ShouldBe(household);
         pantry.Name.Value.ShouldBe("Cellar");
-        pantry.Storage.ShouldBe(Storage.Room);
+        pantry.Storage.ShouldBe(StorageType.Room);
         pantry.DomainEvents.ShouldHaveSingleItem().ShouldBe(new PantryCreatedDomainEvent(pantry.Id));
     }
 

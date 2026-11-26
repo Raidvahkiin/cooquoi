@@ -8,7 +8,7 @@ public sealed record ShelfLife
     /// <summary>100 years: far beyond any food, and keeps <see cref="ProposeExpiry"/> inside the calendar.</summary>
     public const int MaxDays = 36_500;
 
-    public ShelfLife(int days, Storage recommendedStorage)
+    public ShelfLife(int days, StorageType recommendedStorage)
     {
         // F8
         Ensure.That(days is > 0 and <= MaxDays, IngredientError.InvalidShelfLife, ("days", days));
@@ -17,7 +17,7 @@ public sealed record ShelfLife
     }
 
     public int Days { get; }
-    public Storage RecommendedStorage { get; }
+    public StorageType RecommendedStorage { get; }
 
     /// <summary>The expiry date proposed for stock bought or opened on <paramref name="from"/>.</summary>
     public DateOnly ProposeExpiry(DateOnly from) => from.AddDays(Days);

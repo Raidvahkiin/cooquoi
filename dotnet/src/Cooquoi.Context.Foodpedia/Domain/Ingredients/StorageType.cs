@@ -1,6 +1,6 @@
 namespace Cooquoi.Context.Foodpedia.Domain.Ingredients;
 
-public enum Storage
+public enum StorageType
 {
     Fridge,
     Freezer,

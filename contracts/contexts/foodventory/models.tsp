@@ -7,7 +7,7 @@ using Cooquoi.Common;
 namespace Cooquoi.Foodventory;
 
 /** Where a Pantry aggregate keeps its stock. */
-union Storage {
+union StorageType {
   fridge: "fridge",
   freezer: "freezer",
   room: "room",
@@ -22,7 +22,7 @@ alias PantryPath = {
 model PantrySummary {
   id: Id;
   name: string;
-  storage?: Storage;
+  storage?: StorageType;
   itemCount: int32;
   version: int64;
 }
@@ -36,7 +36,7 @@ model PantryList {
 /** Body of a Pantry aggregate creation (C1). */
 model CreatePantry {
   name: string;
-  storage?: Storage;
+  storage?: StorageType;
 }
 
 /** Id of the created Pantry aggregate. */
@@ -51,5 +51,5 @@ model RenamePantry {
 
 /** Body of a storage change (C3); `null` clears it. */
 model SetPantryStorage {
-  storage: Storage | null;
+  storage: StorageType | null;
 }

@@ -3,4 +3,4 @@ using Cooquoi.Platform.OpenApi;
 
 namespace Cooquoi.Context.Foodpedia.Features.GetIngredient;
 
-public sealed record ShelfLifeDetail(int Days, [property: ContractEnum<Storage>] string RecommendedStorage);
+public sealed record ShelfLifeDetail(int Days, [property: ContractEnum<StorageType>] string RecommendedStorage);

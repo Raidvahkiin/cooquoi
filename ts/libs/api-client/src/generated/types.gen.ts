@@ -195,20 +195,20 @@ export type FoodpediaSetExpiryKind = {
  */
 export type FoodpediaShelfLife = {
     days: number;
-    recommendedStorage: FoodpediaStorage;
+    recommendedStorage: FoodpediaStorageType;
 };
 
 /**
  * Where an ingredient keeps best.
  */
-export type FoodpediaStorage = 'fridge' | 'freezer' | 'room';
+export type FoodpediaStorageType = 'fridge' | 'freezer' | 'room';
 
 /**
  * Body of a Pantry aggregate creation (C1).
  */
 export type FoodventoryCreatePantry = {
     name: string;
-    storage?: FoodventoryStorage;
+    storage?: FoodventoryStorageType;
 };
 
 /**
@@ -237,7 +237,7 @@ export type FoodventoryPantryList = {
 export type FoodventoryPantrySummary = {
     id: CommonId;
     name: string;
-    storage?: FoodventoryStorage;
+    storage?: FoodventoryStorageType;
     itemCount: number;
     version: number;
 };
@@ -253,13 +253,13 @@ export type FoodventoryRenamePantry = {
  * Body of a storage change (C3); `null` clears it.
  */
 export type FoodventorySetPantryStorage = {
-    storage: FoodventoryStorage | null;
+    storage: FoodventoryStorageType | null;
 };
 
 /**
  * Where a Pantry aggregate keeps its stock.
  */
-export type FoodventoryStorage = 'fridge' | 'freezer' | 'room';
+export type FoodventoryStorageType = 'fridge' | 'freezer' | 'room';
 
 /**
  * A household the user belongs to.

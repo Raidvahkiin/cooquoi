@@ -21,7 +21,7 @@ public sealed record CreateIngredient(
 
     public sealed record ConversionInput([property: ContractCodes(typeof(Unit), nameof(Unit.All))] string Unit, decimal UnitAmount, decimal BaseAmount);
 
-    public sealed record ShelfLifeInput(int Days, [property: ContractEnum<Storage>] string RecommendedStorage);
+    public sealed record ShelfLifeInput(int Days, [property: ContractEnum<StorageType>] string RecommendedStorage);
 
     /// <summary>Only after validation: locales and units are known.</summary>
     internal NewIngredient ToNewIngredient(IngredientId id) => new(
@@ -32,7 +32,7 @@ public sealed record CreateIngredient(
         [.. Tags.Select(TagCode.Parse)],
         [.. (Conversions ?? []).Select(c => new Conversion(SharedKernel.Unit.FromCode(c.Unit)!, c.UnitAmount, c.BaseAmount))],
         ContractEnumNames.Parse<Domain.Ingredients.ExpiryKind>(ExpiryKind),
-        ShelfLife is null ? null : new Domain.Ingredients.ShelfLife(ShelfLife.Days, ContractEnumNames.Parse<Storage>(ShelfLife.RecommendedStorage)));
+        ShelfLife is null ? null : new Domain.Ingredients.ShelfLife(ShelfLife.Days, ContractEnumNames.Parse<StorageType>(ShelfLife.RecommendedStorage)));
 }
 
 /// <summary>Shape only; business rules (F1–F9) are the domain's and the endpoint's pre-checks.</summary>
@@ -40,7 +40,7 @@ public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredie
 {
     private static readonly string[] Locales = [.. Locale.All.Select(locale => locale.Code)];
     private static readonly string[] ExpiryKinds = [.. new ContractEnumAttribute<ExpiryKind>().Values];
-    private static readonly string[] Storages = [.. new ContractEnumAttribute<Storage>().Values];
+    private static readonly string[] Storages = [.. new ContractEnumAttribute<StorageType>().Values];
 
     public CreateIngredientValidator()
     {

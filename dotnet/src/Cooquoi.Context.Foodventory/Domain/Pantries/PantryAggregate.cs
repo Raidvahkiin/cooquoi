@@ -10,7 +10,7 @@ public sealed class PantryAggregate : AggregateRoot<PantryId>
 
     public Guid HouseholdId { get; private set; }
     public PantryName Name { get; private set; } = null!;
-    public Storage? Storage { get; private set; }
+    public StorageType? Storage { get; private set; }
 
     public static PantryAggregate Create(NewPantry request)
     {

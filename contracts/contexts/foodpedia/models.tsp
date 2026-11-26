@@ -13,7 +13,7 @@ union IngredientStatus {
 }
 
 /** Where an ingredient keeps best. */
-union Storage {
+union StorageType {
   fridge: "fridge",
   freezer: "freezer",
   room: "room",
@@ -59,7 +59,7 @@ model Conversion {
 /** How long an ingredient keeps, and where. */
 model ShelfLife {
   days: int32;
-  recommendedStorage: Storage;
+  recommendedStorage: StorageType;
 }
 
 /** One ingredient in the requested locale; `version` is sent back as `If-Match`. */

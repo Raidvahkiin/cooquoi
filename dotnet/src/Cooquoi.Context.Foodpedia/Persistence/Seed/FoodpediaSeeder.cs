@@ -60,5 +60,5 @@ internal static class FoodpediaSeeder
             [.. seed.Tags.Select(TagCode.Parse)],
             [.. (seed.Conversions ?? []).Select(c => new Conversion(UnitConversion.FromCode(c.Unit), c.UnitAmount, c.BaseAmount))],
             ContractEnumNames.Parse<ExpiryKind>(seed.ExpiryKind),
-            seed.ShelfLife is null ? null : new ShelfLife(seed.ShelfLife.Days, ContractEnumNames.Parse<Storage>(seed.ShelfLife.RecommendedStorage))));
+            seed.ShelfLife is null ? null : new ShelfLife(seed.ShelfLife.Days, ContractEnumNames.Parse<StorageType>(seed.ShelfLife.RecommendedStorage))));
 }

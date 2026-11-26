@@ -12,7 +12,7 @@ public static class DefaultPantries
         [Locale.Vietnamese] = ["Tủ lạnh", "Tủ đông", "Đồ khô"],
     };
 
-    private static readonly Storage[] Storages = [Storage.Fridge, Storage.Freezer, Storage.Room];
+    private static readonly StorageType[] Storages = [StorageType.Fridge, StorageType.Freezer, StorageType.Room];
 
     public static IEnumerable<NewPantry> For(Guid householdId, Locale locale) =>
         Names.GetValueOrDefault(locale, Names[Locale.English])

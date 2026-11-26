@@ -30,7 +30,7 @@ public sealed class HouseholdCreatedHandlerTests(ApiFixture api)
         var pantries = await PantriesOf(householdId);
 
         pantries.Select(p => (p.Name.Value, p.Storage)).ShouldBe(
-            [("Réfrigérateur", Storage.Fridge), ("Congélateur", Storage.Freezer), ("Épicerie sèche", Storage.Room)], ignoreOrder: true);
+            [("Réfrigérateur", StorageType.Fridge), ("Congélateur", StorageType.Freezer), ("Épicerie sèche", StorageType.Room)], ignoreOrder: true);
 
         await api.InvokeTracked(new HouseholdCreatedEvent(householdId, "en"));
 

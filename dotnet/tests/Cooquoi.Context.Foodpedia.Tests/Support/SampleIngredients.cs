@@ -17,7 +17,7 @@ public static class SampleIngredients
         [Fish, TagCode.Parse("family:salmon")],
         [new Conversion(Unit.FromCode("fillet")!, 1, 200)],
         ExpiryKind.Printed,
-        new ShelfLife(2, Storage.Fridge));
+        new ShelfLife(2, StorageType.Fridge));
 
     public static LocalizedName Name(Locale locale, string primary, params string[] synonyms) => new(locale, primary, synonyms);
 }

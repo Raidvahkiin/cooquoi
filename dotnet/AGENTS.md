@@ -53,6 +53,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 - Contexts reach each other only from `Integration/`, and only into the other context's `PublicApi/` (project reference allowed, nothing else of it used).
 - No `ExecuteUpdate` / `ExecuteDelete` in `Features/` (source scan) — writes go through aggregates.
 - `…Aggregate` ⇔ derives `AggregateRoot<TId>`, `…Entity` ⇔ `Entity<TId>`; every other `Domain/` type is immutable (enums excepted).
+- Enums carry a kind suffix (`StorageType`, `IngredientStatus`, `ExpiryKind`, `MembershipRole`), never a bare noun (`Storage`) that reads like a class or aggregate.
 - `…DomainEvent` ⇔ implements `IDomainEvent` ⇔ in a `….Domain.<Aggregate>.Events` namespace; integration events end in `Event` (not `DomainEvent`) and are the only types in `….PublicApi.Events`.
 - A class with a `Handle`/`Consume` method is named `…Handler`/`…Consumer` — **Wolverine discovers handlers by name only and silently ignores others** (events then go "to no subscribers").
 - No use case calls another use case. Share logic through the domain or `Persistence/Lookups/`; trigger follow-up work with events.

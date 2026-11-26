@@ -1103,9 +1103,9 @@ components:
           type: integer
           format: int32
         recommendedStorage:
-          $ref: '#/components/schemas/Foodpedia.Storage'
+          $ref: '#/components/schemas/Foodpedia.StorageType'
       description: How long an ingredient keeps, and where.
-    Foodpedia.Storage:
+    Foodpedia.StorageType:
       type: string
       enum:
         - fridge
@@ -1120,7 +1120,7 @@ components:
         name:
           type: string
         storage:
-          $ref: '#/components/schemas/Foodventory.Storage'
+          $ref: '#/components/schemas/Foodventory.StorageType'
       description: Body of a Pantry aggregate creation (C1).
     Foodventory.CreatedPantry:
       type: object
@@ -1164,7 +1164,7 @@ components:
         name:
           type: string
         storage:
-          $ref: '#/components/schemas/Foodventory.Storage'
+          $ref: '#/components/schemas/Foodventory.StorageType'
         itemCount:
           type: integer
           format: int32
@@ -1187,10 +1187,10 @@ components:
       properties:
         storage:
           anyOf:
-            - $ref: '#/components/schemas/Foodventory.Storage'
+            - $ref: '#/components/schemas/Foodventory.StorageType'
             - type: 'null'
       description: Body of a storage change (C3); `null` clears it.
-    Foodventory.Storage:
+    Foodventory.StorageType:
       type: string
       enum:
         - fridge

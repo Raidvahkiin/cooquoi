@@ -10,7 +10,7 @@ public sealed class ContractEnumNamesTests
     {
         Enum.GetValues<ExpiryKind>().ShouldAllBe(kind => ContractEnumNames.Parse<ExpiryKind>(ContractEnumNames.ToCode(kind)) == kind);
         Enum.GetValues<IngredientStatus>().ShouldAllBe(status => ContractEnumNames.Parse<IngredientStatus>(ContractEnumNames.ToCode(status)) == status);
-        Enum.GetValues<Storage>().ShouldAllBe(storage => ContractEnumNames.Parse<Storage>(ContractEnumNames.ToCode(storage)) == storage);
+        Enum.GetValues<StorageType>().ShouldAllBe(storage => ContractEnumNames.Parse<StorageType>(ContractEnumNames.ToCode(storage)) == storage);
     }
 
     [Fact]
@@ -18,7 +18,7 @@ public sealed class ContractEnumNamesTests
     {
         new ContractEnumAttribute<ExpiryKind>().Values.ShouldBe(["printed", "estimated", "longLife"]);
         new ContractEnumAttribute<IngredientStatus>().Values.ShouldBe(["active", "retired"]);
-        new ContractEnumAttribute<Storage>().Values.ShouldBe(["fridge", "freezer", "room"]);
+        new ContractEnumAttribute<StorageType>().Values.ShouldBe(["fridge", "freezer", "room"]);
     }
 
     [Theory]
