@@ -25,19 +25,20 @@ public sealed partial class DomainExceptionHandler(IProblemDetailsService proble
 
     private void LogFailure(Exception exception, Problem problem)
     {
+        var kind = ProblemKind.Of(problem.Status);
         if (exception is DomainException)
         {
-            LogExpected(problem.Code, problem.Status);
+            LogExpected(kind, problem.Code, problem.Status);
         }
         else
         {
-            LogUnexpected(exception);
+            LogUnexpected(exception, kind, problem.Code);
         }
     }
 
-    [LoggerMessage(Level = LogLevel.Information, Message = "Request failed with {Code} ({Status})")]
-    private partial void LogExpected(string code, int status);
+    [LoggerMessage(Level = LogLevel.Information, Message = "Request failed: {Kind} {Code} ({Status})")]
+    private partial void LogExpected(string kind, string code, int status);
 
-    [LoggerMessage(Level = LogLevel.Error, Message = "Unexpected error")]
-    private partial void LogUnexpected(Exception exception);
+    [LoggerMessage(Level = LogLevel.Error, Message = "Request failed: {Kind} {Code} (500)")]
+    private partial void LogUnexpected(Exception exception, string kind, string code);
 }

@@ -46,6 +46,19 @@ model FieldError {
   params?: Record<unknown>;
 }
 
+/** Standard category of a problem, one per HTTP status (ADR 0021: the one SCREAMING_CASE value, for logs). */
+union ProblemKind {
+  validation: "ERR_VALIDATION",
+  unauthorized: "ERR_UNAUTHORIZED",
+  forbidden: "ERR_FORBIDDEN",
+  notFound: "ERR_NOT_FOUND",
+  conflict: "ERR_CONFLICT",
+  preconditionFailed: "ERR_PRECONDITION_FAILED",
+  businessRule: "ERR_BUSINESS_RULE",
+  preconditionRequired: "ERR_PRECONDITION_REQUIRED",
+  unexpected: "ERR_UNEXPECTED",
+}
+
 /** RFC 9457 problem details with Cooquoi extensions (ADR 0014 §10). */
 @error
 model ProblemDetails {
@@ -54,6 +67,9 @@ model ProblemDetails {
   status: int32;
   detail?: string;
   instance?: string;
+
+  /** Standard category of the problem, one per status (`ERR_*`, easy to spot in logs). */
+  kind: ProblemKind;
 
   /** Stable machine code clients translate (`<context>.<error>`). */
   code: string;

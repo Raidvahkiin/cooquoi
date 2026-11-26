@@ -828,6 +828,7 @@ components:
         - type
         - title
         - status
+        - kind
         - code
       properties:
         type:
@@ -842,6 +843,9 @@ components:
           type: string
         instance:
           type: string
+        kind:
+          $ref: '#/components/schemas/Common.ProblemKind'
+          description: Standard category of the problem, one per status (`ERR_*`, easy to spot in logs).
         code:
           type: string
           description: Stable machine code clients translate (`<context>.<error>`).
@@ -858,6 +862,19 @@ components:
           type: string
           description: W3C trace id, to correlate with logs.
       description: RFC 9457 problem details with Cooquoi extensions (ADR 0014 §10).
+    Common.ProblemKind:
+      type: string
+      enum:
+        - ERR_VALIDATION
+        - ERR_UNAUTHORIZED
+        - ERR_FORBIDDEN
+        - ERR_NOT_FOUND
+        - ERR_CONFLICT
+        - ERR_PRECONDITION_FAILED
+        - ERR_BUSINESS_RULE
+        - ERR_PRECONDITION_REQUIRED
+        - ERR_UNEXPECTED
+      description: 'Standard category of a problem, one per HTTP status (ADR 0021: the one SCREAMING_CASE value, for logs).'
     Common.Unit:
       type: string
       enum:

@@ -1794,6 +1794,7 @@
           "type",
           "title",
           "status",
+          "kind",
           "code"
         ],
         "type": "object",
@@ -1813,6 +1814,20 @@
             "type": "string"
           },
           "instance": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "ERR_VALIDATION",
+              "ERR_UNAUTHORIZED",
+              "ERR_FORBIDDEN",
+              "ERR_NOT_FOUND",
+              "ERR_CONFLICT",
+              "ERR_PRECONDITION_FAILED",
+              "ERR_BUSINESS_RULE",
+              "ERR_PRECONDITION_REQUIRED",
+              "ERR_UNEXPECTED"
+            ],
             "type": "string"
           },
           "code": {

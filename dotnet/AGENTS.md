@@ -124,7 +124,7 @@ Methods **check every rule first, then change state**. Rules needing other aggre
 
 ## Errors
 
-`ErrorKind` → HTTP in `Raidvahkiin.Ddd.AspNetCore`: `Validation` 400 · `Forbidden` 403 · `NotFound` 404 · `Conflict` 409 · `PreconditionFailed` 412 · `PreconditionRequired` 428 · `BusinessRule` 422 · anything else 500 (`common.unexpected`, no details). Every response is RFC 9457 with `code`, `params`, `traceId` (+ `errors[]` with JSON paths and `validation.*` codes for 400 — `ContractProblemDetailSource`). Endpoints never build error responses. New codes must be added to the contract (`contracts/`).
+`ErrorKind` → HTTP in `Raidvahkiin.Ddd.AspNetCore`: `Validation` 400 · `Forbidden` 403 · `NotFound` 404 · `Conflict` 409 · `PreconditionFailed` 412 · `PreconditionRequired` 428 · `BusinessRule` 422 · anything else 500 (`common.unexpected`, no details). Every response is RFC 9457 with `kind` (`ERR_*` from the status, `ProblemKind`), `title` (its English summary), `code`, `params`, `traceId` (+ `errors[]` with JSON paths and `validation.*` codes for 400 — `ContractProblemDetailSource`). Endpoints never build error responses. New codes must be added to the contract (`contracts/`).
 
 ## Audit and actors
 

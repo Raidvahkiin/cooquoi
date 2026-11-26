@@ -367,15 +367,16 @@ Why not a generic Result pattern:
 
 ### 10. Error contract
 
-RFC 9457 `ProblemDetails` with `code`, `params`, `errors[]` and `traceId`, defined once in TypeSpec (`common/errors.tsp`):
+RFC 9457 `ProblemDetails` with `kind`, `code`, `params`, `errors[]` and `traceId`, defined once in TypeSpec (`common/errors.tsp`). `kind` is the standard `ERR_*` category, one per status, for logs and coarse client handling; `title` is its short English summary; `code` is the precise error clients translate (amended 2026-11-27, ADR 0021):
 
 ```json
 {
   "type": "https://cooquoi.com/errors/foodpedia.nameTaken",
-  "title": "Name already taken",
+  "title": "Conflict",
   "status": 409,
   "detail": "An ingredient named 'Saumon' already exists in locale 'fr'.",
   "instance": "/v1/ingredients",
+  "kind": "ERR_CONFLICT",
   "code": "foodpedia.nameTaken",
   "params": { "locale": "fr", "name": "Saumon" },
   "traceId": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
@@ -387,7 +388,9 @@ Validation errors add field errors, each with a translatable code:
 ```json
 {
   "type": "https://cooquoi.com/errors/common.validation",
+  "title": "Validation failed",
   "status": 400,
+  "kind": "ERR_VALIDATION",
   "code": "common.validation",
   "errors": [
     { "field": "names[1].primary", "code": "validation.maxLength", "params": { "max": 100 } },

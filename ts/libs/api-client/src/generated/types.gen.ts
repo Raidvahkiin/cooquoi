@@ -54,6 +54,10 @@ export type CommonProblemDetails = {
     detail?: string;
     instance?: string;
     /**
+     * Standard category of the problem, one per status (`ERR_*`, easy to spot in logs).
+     */
+    kind: CommonProblemKind;
+    /**
      * Stable machine code clients translate (`<context>.<error>`).
      */
     code: string;
@@ -72,6 +76,11 @@ export type CommonProblemDetails = {
      */
     traceId?: string;
 };
+
+/**
+ * Standard category of a problem, one per HTTP status (ADR 0021: the one SCREAMING_CASE value, for logs).
+ */
+export type CommonProblemKind = 'ERR_VALIDATION' | 'ERR_UNAUTHORIZED' | 'ERR_FORBIDDEN' | 'ERR_NOT_FOUND' | 'ERR_CONFLICT' | 'ERR_PRECONDITION_FAILED' | 'ERR_BUSINESS_RULE' | 'ERR_PRECONDITION_REQUIRED' | 'ERR_UNEXPECTED';
 
 /**
  * Unit codes of the fixed unit catalogue (Foodpedia domain model); adding one is a contract change.

@@ -19,6 +19,7 @@ E02.S01 added the first multi-word enum value, `ExpiryKind.LongLife`, and showed
 - One function converts between the member and the code: `ContractEnumNames.ToCode` and `Parse` (`Cooquoi.Platform`). `ContractEnumAttribute<TEnum>` lists the codes for validation and the drift check. EF Core stores enums through one camelCase value converter applied by convention, not a per-property `HasConversion<string>()`.
 - Existing rows are converted by a migration in each context that stores enums.
 - Error codes are camelCase too: `<context>.<camelCase>` (`foodpedia.ingredientRetired`, `common.ifMatchRequired`). They travel in JSON bodies (`ProblemDetails.code`) and are message keys in the webapp, so they follow the same rule as every other JSON value (amended 2026-11-27).
+- One exception, for logs: every problem also carries `kind`, a standard `ERR_*` category derived from its status (`ERR_NOT_FOUND`, `ERR_CONFLICT`, `ERR_VALIDATION`…, `ProblemKind`), printed first in the API log line (`Request failed: ERR_CONFLICT foodventory.nameTaken (409)`). `title` is its English summary, so it no longer repeats `code`.
 - Unchanged: URL segments stay kebab-case: resource names, path segments and custom actions (`:set-expiry-kind`, `:sign-in`). Query and path parameter names are camelCase (`pageSize`, `pantryId`), like JSON properties (ADR 0022).
 
 ## Consequences

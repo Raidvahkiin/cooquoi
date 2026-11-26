@@ -4,6 +4,7 @@ using Cooquoi.Platform.OpenApi;
 using Cooquoi.Platform.Validation;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
+using Raidvahkiin.Ddd.AspNetCore;
 
 /// <summary>
 /// The OpenAPI 3.1 document of what the API really serves, shaped to compare cleanly with the TypeSpec
@@ -124,7 +125,7 @@ internal static partial class ContractOpenApi
     private static OpenApiSchema ProblemDetails(OpenApiDocument document) => new()
     {
         Type = JsonSchemaType.Object,
-        Required = new HashSet<string> { "type", "title", "status", "code" },
+        Required = new HashSet<string> { "type", "title", "status", "kind", "code" },
         Properties = new Dictionary<string, IOpenApiSchema>
         {
             ["type"] = new OpenApiSchema { Type = JsonSchemaType.String, Format = "uri" },
@@ -132,6 +133,7 @@ internal static partial class ContractOpenApi
             ["status"] = new OpenApiSchema { Type = JsonSchemaType.Integer, Format = "int32" },
             ["detail"] = new OpenApiSchema { Type = JsonSchemaType.String },
             ["instance"] = new OpenApiSchema { Type = JsonSchemaType.String },
+            ["kind"] = new OpenApiSchema { Type = JsonSchemaType.String, Enum = [.. ProblemKind.All.Select(kind => (JsonNode)JsonValue.Create(kind))] },
             ["code"] = new OpenApiSchema { Type = JsonSchemaType.String },
             ["params"] = FreeObject(),
             ["errors"] = new OpenApiSchema { Type = JsonSchemaType.Array, Items = new OpenApiSchemaReference(FieldErrorSchema, document) },
