@@ -29,7 +29,7 @@ if (ContractOpenApi.IsGeneratingDocument)
 builder.AddServiceDefaults();
 builder.AddCooquoiAuthentication();
 builder.AddCooquoiPlatform(DatabaseConnection);
-builder.AddHouseholdContext(DatabaseConnection);
+builder.AddHouseholdContext(DatabaseConnection, WolverineSchema);
 builder.AddFoodpediaContext(DatabaseConnection, WolverineSchema);
 
 builder.Services.AddProblemDetails();

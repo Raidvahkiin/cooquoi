@@ -3,6 +3,7 @@ using Cooquoi.Platform.Authentication;
 using Cooquoi.Platform.OpenApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Wolverine.EntityFrameworkCore;
 using Wolverine.Http;
 
 namespace Cooquoi.Context.Household.Features.SignIn;
@@ -19,11 +20,12 @@ public static class SignInEndpoint
     public static async Task Post(
         CurrentUser user,
         HouseholdDbContext db,
+        IDbContextOutbox outbox,
         TimeProvider time,
         HttpRequest request,
         CancellationToken cancellationToken)
     {
-        var signIn = new SignInRequest(db, user, request.Headers.AcceptLanguage.FirstOrDefault(), time.GetUtcNow());
+        var signIn = new SignInRequest(db, outbox, user, request.Headers.AcceptLanguage.FirstOrDefault(), time.GetUtcNow());
         await UserSignIn.RecordAsync(signIn, cancellationToken);
     }
 }

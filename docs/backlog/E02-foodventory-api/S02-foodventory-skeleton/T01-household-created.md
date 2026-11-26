@@ -37,11 +37,11 @@ Foodventory code (T02, T03); the profile and household endpoints' responses
 
 ## Subtasks
 
-- [ ] T01.1 Wolverine-integrated `HouseholdDbContext` registration; existing Household tests green
-- [ ] T01.2 Domain `HouseholdCreatedDomainEvent` raised by `CreatePersonal`; domain test
-- [ ] T01.3 `UserSignIn` saves through the outbox; `PublicApi/Events/HouseholdCreatedEvent` mapping
-- [ ] T01.4 `PublicApi` current-household query
-- [ ] T01.5 Integration tests: first `POST /v1/me:sign-in` publishes exactly one `HouseholdCreatedEvent` with the profile locale (tracked session); a second call publishes none; the query returns the id, and none for an unknown subject
+- [x] T01.1 Wolverine-integrated `HouseholdDbContext` registration; existing Household tests green
+- [x] T01.2 Domain `HouseholdCreatedDomainEvent` raised by `CreatePersonal`; domain test
+- [x] T01.3 `UserSignIn` saves through the outbox; `PublicApi/Events/HouseholdCreatedEvent` mapping
+- [x] T01.4 `PublicApi` current-household query
+- [x] T01.5 Integration tests: first `POST /v1/me:sign-in` publishes exactly one `HouseholdCreatedEvent` with the profile locale (tracked session); a second call publishes none; the query returns the id, and none for an unknown subject
 
 ## Done when
 
@@ -49,6 +49,9 @@ Foodventory code (T02, T03); the profile and household endpoints' responses
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(household): publish HouseholdCreated and the current household (E02.S02.T01)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- Household DbContext Wolverine-integrated; `CreatePersonal(id, owner, ownerLocale)` raises `HouseholdCreatedDomainEvent`, mapped to `PublicApi/Events/HouseholdCreatedEvent(HouseholdId, Locale)` by `Integration/IntegrationEventsHandler`; `IHouseholdDirectory.FindHouseholdIdAsync(issuer, subject, ct)` (added a `CancellationToken`).
+- Outbox: endpoint takes the non-generic `IDbContextOutbox`, `Enroll(db)` then `SaveChangesAndFlushMessagesAsync` (scrapes, saves and commits the advisory-lock transaction). Surprise: the Lightweight middleware scrapes again before its own save → duplicate event; fixed by clearing the tracked aggregates' events after the outbox save.
+- No migration change (`has-pending-model-changes` clean). Done-when green: 18/18 Household tests. Architecture `ErrorCatalogueTests` fails on T03's in-progress `foodventory.*` contract codes, not this task.

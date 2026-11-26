@@ -2,8 +2,10 @@ using System.Security.Claims;
 using Alba;
 using Cooquoi.Context.Household.Features.GetMe;
 using Cooquoi.Context.Household.Persistence.Lookups;
+using Cooquoi.Context.Household.PublicApi.Events;
 using Cooquoi.Context.Household.Tests.Support;
 using Microsoft.EntityFrameworkCore;
+using Wolverine.Tracking;
 
 namespace Cooquoi.Context.Household.Tests.Features.SignIn;
 
@@ -12,7 +14,10 @@ public sealed class SignInEndpointTests(ApiFixture api)
     private static string NewSubject() => $"subject-{Guid.NewGuid()}";
 
     private Task<IScenarioResult> SignIn(string subject, Action<Scenario>? configure = null, string name = "Alice") =>
-        api.Host.Scenario(s =>
+        api.Host.Scenario(SignInScenario(subject, configure, name));
+
+    private static Action<Scenario> SignInScenario(string subject, Action<Scenario>? configure = null, string name = "Alice") =>
+        s =>
         {
             s.Post.Url("/v1/me:sign-in");
             s.WithRequestHeader("Idempotency-Key", Guid.NewGuid().ToString());
@@ -20,7 +25,7 @@ public sealed class SignInEndpointTests(ApiFixture api)
             s.WithClaim(new Claim("name", name));
             configure?.Invoke(s);
             s.StatusCodeShouldBe(204);
-        });
+        };
 
     private async Task<MeResponse> GetMe(string subject) =>
         (await api.Host.Scenario(s =>
@@ -78,6 +83,28 @@ public sealed class SignInEndpointTests(ApiFixture api)
         await SignIn(subject, s => s.WithRequestHeader("Accept-Language", "fr-CA"));
 
         (await GetMe(subject)).Profile.Locale.ShouldBe("fr");
+    }
+
+    /// <summary>Sent once a context subscribes (T04), no-routes until then.</summary>
+    private static IEnumerable<HouseholdCreatedEvent> Published(ITrackedSession session) =>
+        session.AllRecordsInOrder()
+            .Where(record => record.MessageEventType is MessageEventType.Sent or MessageEventType.NoRoutes)
+            .Select(record => record.Envelope?.Message)
+            .OfType<HouseholdCreatedEvent>();
+
+    [Fact]
+    public async Task First_sign_in_publishes_HouseholdCreated_once_with_the_profile_locale()
+    {
+        var subject = NewSubject();
+
+        var first = await api.TrackedScenario(SignInScenario(subject, s => s.WithRequestHeader("Accept-Language", "fr-FR")));
+        var second = await api.TrackedScenario(SignInScenario(subject));
+
+        var me = await GetMe(subject);
+        var householdId = me.Profile.DefaultHouseholdId;
+        Published(first).Where(created => created.HouseholdId == householdId)
+            .ShouldHaveSingleItem().Locale.ShouldBe("fr");
+        Published(second).ShouldNotContain(created => created.HouseholdId == householdId);
     }
 
     [Fact]

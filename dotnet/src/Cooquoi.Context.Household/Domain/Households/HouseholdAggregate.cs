@@ -1,4 +1,6 @@
+using Cooquoi.Context.Household.Domain.Households.Events;
 using Cooquoi.Context.Household.Domain.Users;
+using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
 
 namespace Cooquoi.Context.Household.Domain.Households;
@@ -16,10 +18,11 @@ public sealed class HouseholdAggregate : AggregateRoot<HouseholdId>
     public IReadOnlyList<MembershipEntity> Memberships => _memberships;
 
     /// <summary>The household created for a user on first sign-in.</summary>
-    public static HouseholdAggregate CreatePersonal(HouseholdId id, UserId owner)
+    public static HouseholdAggregate CreatePersonal(HouseholdId id, UserId owner, Locale ownerLocale)
     {
         var household = new HouseholdAggregate { Id = id };
         household._memberships.Add(new MembershipEntity(owner, MembershipRole.Owner));
+        household.Raise(new HouseholdCreatedDomainEvent(id, ownerLocale));
         return household;
     }
 
