@@ -15,7 +15,7 @@
 ## Reference
 
 - Action shape: `AGENTS.md` "Examples" (`consumeStockItem`) with `defineAction` from T03
-- Query: `src/features/foodpedia/queries/search-ingredients.query.ts` (T05), with `Accept-Language`; 404 (`common.not-found`) → `notFound()`
+- Query: `src/features/foodpedia/queries/search-ingredients.query.ts` (T05), with `Accept-Language`; 404 (`common.notFound`) → `notFound()`
 - If-Match: `If-Match: "${version}"` from `IngredientDetail.version` (the ETag header is not typed in the client; `version` is the documented source)
 - MSW handlers: `test/msw/handlers/foodpedia.ts` (T05)
 - Error display: `useErrorMessage` / error component from `src/shared/ui/` (T03); unit labels `foodpedia.units.*` (T05)
@@ -33,7 +33,7 @@ sonnet
 - Files in `src/features/foodpedia/`: `queries/get-ingredient.query.ts`, `models/ingredient.view-model.ts`, `schemas/define-conversion.schema.ts` (`ingredientId`, `version`, `idempotencyKey` uuid, `unit` ∈ `CommonUnit`, `unitAmount` > 0, `baseAmount` > 0), `actions/define-conversion.action.ts`, `components/ingredient-detail/`, `components/define-conversion-form/` (client leaf with `useActionState`).
 - `Idempotency-Key`: generated once when the form renders (hidden field, `crypto.randomUUID()` on the server page), so a retried submit reuses it; a new key after a success (the page re-renders after `revalidatePath`).
 - After success: `revalidatePath('/foodpedia/[id]')`; the new conversion and version appear.
-- Stale version: API `412` `common.version-mismatch` (`{current}`, `{expected}`) → translated message + hint to reload. `403` `common.forbidden` (not a curator) → translated message. Field errors (`validation.*`, `foodpedia.invalid-conversion-amount`, `foodpedia.conversion-not-needed`) shown on the fields or the form.
+- Stale version: API `412` `common.versionMismatch` (`{current}`, `{expected}`) → translated message + hint to reload. `403` `common.forbidden` (not a curator) → translated message. Field errors (`validation.*`, `foodpedia.invalidConversionAmount`, `foodpedia.conversionNotNeeded`) shown on the fields or the form.
 - The form is shown to every signed-in user for the spike; the API enforces the `catalog-curator` role (see story open question).
 
 ## Out of scope
@@ -43,7 +43,7 @@ sonnet
 ## Subtasks
 
 - [ ] T06.1 `getIngredient` query + view model (conversions with unit labels) + Node tests (404 → `notFound`, `Accept-Language` sent)
-- [ ] T06.2 Schema + `defineConversion` action + Node tests: sends `If-Match: "3"` and `Idempotency-Key`; 204 → `ok`; 412 → `common.version-mismatch` with params; 400 → `fieldErrors`; invalid input never calls the API
+- [ ] T06.2 Schema + `defineConversion` action + Node tests: sends `If-Match: "3"` and `Idempotency-Key`; 204 → `ok`; 412 → `common.versionMismatch` with params; 400 → `fieldErrors`; invalid input never calls the API
 - [ ] T06.3 `IngredientDetail` + `DefineConversionForm` components + browser tests (fields by label, error text by code in French, unit select lists the translated units)
 - [ ] T06.4 Route `src/app/(app)/foodpedia/[ingredientId]/page.tsx`; messages in `en` / `fr` / `vi`
 

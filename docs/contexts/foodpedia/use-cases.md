@@ -47,7 +47,7 @@
 | T2 | **Set label** (`:set-label`) | `locale`, `label` | F3 | `TagLabelsChanged` |
 | T3 | **Retire tag** (`:retire`) | — | Not allowed if it is the only `category:` tag of an active ingredient (F9) | `TagRetired` |
 
-All commands: F10 (no change on retired items except restore) and F11 (curator only). Errors return `ProblemDetails` with stable codes, e.g. `foodpedia.code-taken`, `foodpedia.name-taken`, `foodpedia.conversion-not-needed`, `foodpedia.base-unit-conversion-required`, `foodpedia.category-tag-required`, `foodpedia.ingredient-retired`.
+All commands: F10 (no change on retired items except restore) and F11 (curator only). Errors return `ProblemDetails` with stable codes, e.g. `foodpedia.codeTaken`, `foodpedia.nameTaken`, `foodpedia.conversionNotNeeded`, `foodpedia.baseUnitConversionRequired`, `foodpedia.categoryTagRequired`, `foodpedia.ingredientRetired`.
 
 ## Published API for other contexts (in-process)
 

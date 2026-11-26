@@ -26,7 +26,7 @@ interface IngredientOperations {
 
   /**
    * C1: creates an ingredient. Requires the curator role.
-   * Errors: `foodpedia.code-taken`, `foodpedia.name-taken` (409), `foodpedia.unknown-tags` (422).
+   * Errors: `foodpedia.codeTaken`, `foodpedia.nameTaken` (409), `foodpedia.unknownTags` (422).
    */
   @route("/v1/ingredients")
   @operationId("createIngredient")
@@ -39,7 +39,7 @@ interface IngredientOperations {
 
   /**
    * C11: sets how the expiry date of one ingredient is known. Requires the curator role.
-   * Errors: `foodpedia.ingredient-retired` (422).
+   * Errors: `foodpedia.ingredientRetired` (422).
    */
   @route("/v1/ingredients/{ingredientId}:set-expiry-kind")
   @operationId("setExpiryKind")

@@ -16,7 +16,7 @@ An architecture test fails when a problem `code` or a field-level `validation.*`
 - Backend code sources:
   - static `DomainError` fields: `dotnet/src/BuildingBlocks/Raidvahkiin.Ddd/CommonError.cs:6-25`, `dotnet/src/Cooquoi.Context.Foodpedia/Domain/Ingredients/IngredientError.cs:8-45`, `…/Domain/Tags/TagError.cs:7-20`, `dotnet/src/Cooquoi.Platform/Idempotency/IdempotencyError.cs:8-18`
   - constants outside error classes: `common.unexpected` (`dotnet/src/BuildingBlocks/Raidvahkiin.Ddd.AspNetCore/DomainExceptionHandler.cs:14`), `common.unauthorized` (`dotnet/src/Cooquoi.Platform/Authentication/AuthenticationSetup.cs:14`)
-  - `foodpedia.duplicate-locale` is declared twice (Ingredient and Tag): compare as sets
+  - `foodpedia.duplicateLocale` is declared twice (Ingredient and Tag): compare as sets
 - Validation codes (contract union `ValidationCode`, written by T01): values of the private dictionary `dotnet/src/Cooquoi.Platform/Validation/ValidationCodes.cs:8-20` (reflection on the non-public static field) + `WithErrorCode("validation.…")` literals in `dotnet/src/**/Features/**/*.cs` (source scan, same approach as the `ExecuteUpdate` rule in `WriteRulesTests.cs`)
 - Contract side (T01/T02 done): `CommonErrorCode` and `ValidationCode` in `contracts/common/errors.tsp`, `FoodpediaErrorCode` (17 codes) in `contracts/contexts/foodpedia/errors.tsp`
 - Another session may build `dotnet/` later; you run alone now
@@ -53,6 +53,6 @@ Status: done
 
 Report:
 - Added `ErrorCatalogue` (reflection over static `DomainError` fields + 2 constants; private `ValidationCodes.ByValidator` via reflection; `WithErrorCode("validation.…")` scan of `src/**/Features`) and `ErrorCatalogueTests` (2 facts, both directions, sets). Contract read from `openapi.yaml` with `YamlDotNet` 18.1.0 (new central version; emitter output stays YAML so T04 and the client are untouched); every `…ErrorCode` enum schema counts.
-- Verified: architecture tests 12/12 green; deleting `foodpedia.unknown-tags` from the YAML fails naming it ("missing from the contract"), reverted; `dotnet format --verify-no-changes` clean.
+- Verified: architecture tests 12/12 green; deleting `foodpedia.unknownTags` from the YAML fails naming it ("missing from the contract"), reverted; `dotnet format --verify-no-changes` clean.
 - No mismatch found: backend and contract agree (15 common/idempotency codes incl. `common.unexpected`/`common.unauthorized`, 17 foodpedia, 9 validation). No contract change, no client regen.
 - Boy scout: `FindSolutionDirectory` moved from `WriteRulesTests` to `CooquoiArchitecture.SolutionDirectory`, shared by both.

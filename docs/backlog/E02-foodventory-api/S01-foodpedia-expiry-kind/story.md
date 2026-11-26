@@ -7,7 +7,7 @@ Every Foodpedia ingredient has an expiry kind (`printed` | `estimated` | `longLi
 ## Acceptance
 
 - [x] F12: create without `expiryKind` is a 400. `GET /v1/ingredients/{id}` returns `expiryKind`. All seed ingredients carry one.
-- [x] C11: `POST /v1/ingredients/{id}:set-expiry-kind` (curator, `If-Match`) returns 204 + ETag and raises `IngredientExpiryKindChanged` once. The same kind again raises nothing. A retired ingredient gives 422 `foodpedia.ingredient-retired` (F10).
+- [x] C11: `POST /v1/ingredients/{id}:set-expiry-kind` (curator, `If-Match`) returns 204 + ETag and raises `IngredientExpiryKindChanged` once. The same kind again raises nothing. A retired ingredient gives 422 `foodpedia.ingredientRetired` (F10).
 - [x] P1–P3 exist under `Cooquoi.Context.Foodpedia/PublicApi/` with unit and integration tests. P2 applies universal factors, then Foodpedia conversions, else unnormalized. P3 returns `from + days` and the recommended storage, or none.
 - [x] Integration events for `IngredientExpiryKindChanged`, `ConversionDefined` and `IngredientRetired` are published from `PublicApi/`, so the Foodventory context never references Foodpedia `Domain/`.
 - [x] Drift: `drift: none`. Error-catalogue test green. Webapp typecheck and tests green after regeneration.

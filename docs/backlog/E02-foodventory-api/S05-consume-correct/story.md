@@ -9,7 +9,7 @@ A household member consumes an ingredient (earliest expiry first, clamped, short
 - [ ] S3 `POST /v1/stock/{ingredientId}:consume` (`amount`, `unit`, `pantryId?`; Idempotency-Key, no If-Match), FV7:
   - Takes items in order of earliest expiry first (no expiry last), oldest `addedOn` as tie-breaker, with or without a pantry; `pantryId` limits it to one Pantry aggregate.
   - A quantity beyond what is held consumes everything and returns the shortfall.
-  - A unit with no path → 422 `foodventory.unit-not-convertible`, except on an item in its exact entered unit.
+  - A unit with no path → 422 `foodventory.unitNotConvertible`, except on an item in its exact entered unit.
   - Returns the consumed items and the shortfall; raises one `StockItemConsumed` per item.
 - [ ] S4 `POST /v1/stock-items/{id}:consume` (`amount`, `unit?` = entered unit): FV5, and a depleted item (0) leaves the aggregate.
 - [ ] S5 `:discard` (`reason`: `expired` | `spoiled` | `other`): the item leaves; `StockItemDiscarded`.

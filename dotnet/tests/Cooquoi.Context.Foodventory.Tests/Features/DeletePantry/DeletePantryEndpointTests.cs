@@ -56,8 +56,8 @@ public sealed class DeletePantryEndpointTests(ApiFixture api)
         var subject = await api.NewUserAsync();
         var id = await CreateAsync(subject, "Cellar");
 
-        await (await DeleteAsync(subject, id, 428, null)).ShouldBeProblemAsync(428, "common.if-match-required");
-        await (await DeleteAsync(subject, id, 412, "\"7\"")).ShouldBeProblemAsync(412, "common.version-mismatch");
+        await (await DeleteAsync(subject, id, 428, null)).ShouldBeProblemAsync(428, "common.ifMatchRequired");
+        await (await DeleteAsync(subject, id, 412, "\"7\"")).ShouldBeProblemAsync(412, "common.versionMismatch");
         (await ExistsAsync(id)).ShouldBeTrue();
     }
 
@@ -68,7 +68,7 @@ public sealed class DeletePantryEndpointTests(ApiFixture api)
         var stranger = await api.NewUserAsync();
         var id = await CreateAsync(owner, "Cellar");
 
-        await (await DeleteAsync(stranger, id, 404)).ShouldBeProblemAsync(404, "common.not-found");
+        await (await DeleteAsync(stranger, id, 404)).ShouldBeProblemAsync(404, "common.notFound");
         (await ExistsAsync(id)).ShouldBeTrue();
     }
 }

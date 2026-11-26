@@ -6,14 +6,14 @@ namespace Cooquoi.Platform.Validation;
 public static class ValidationCodes
 {
     /// <summary>Set by use cases with <c>WithErrorCode</c> for a closed set of values.</summary>
-    public const string OneOf = "validation.one-of";
+    public const string OneOf = "validation.oneOf";
 
     private static readonly Dictionary<string, string> ByValidator = new(StringComparer.Ordinal)
     {
         ["NotEmptyValidator"] = "validation.required",
         ["NotNullValidator"] = "validation.required",
-        ["MaximumLengthValidator"] = "validation.max-length",
-        ["MinimumLengthValidator"] = "validation.min-length",
+        ["MaximumLengthValidator"] = "validation.maxLength",
+        ["MinimumLengthValidator"] = "validation.minLength",
         ["GreaterThanValidator"] = "validation.min",
         ["GreaterThanOrEqualValidator"] = "validation.min",
         ["LessThanOrEqualValidator"] = "validation.max",

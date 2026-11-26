@@ -14,7 +14,7 @@ Every `CommonErrorCode`, `FoodpediaErrorCode` and `ValidationCode` of the contra
 ## Reference
 
 - Error shape the UI receives: the `error` member of `ActionResult` in `AGENTS.md:71-79`, extended with `params`
-- Problem shape: `CommonProblemDetails` `{ code, params?, errors?: { field, code, params? }[] }`; `params` carry ICU placeholders (`common.version-mismatch` → `{current}`, `{expected}`; `validation.max-length` → its max)
+- Problem shape: `CommonProblemDetails` `{ code, params?, errors?: { field, code, params? }[] }`; `params` carry ICU placeholders (`common.versionMismatch` → `{current}`, `{expected}`; `validation.maxLength` → its max)
 - Code counts (checked at planning): 13 common (7 in `CommonError.cs`, 4 in `IdempotencyError.cs`, `common.unexpected`, `common.unauthorized`), 17 foodpedia, 9 validation
 - MSW + test style: `test/msw/handlers/household.ts` (T01), `src/shared/auth/require-session.test.ts:13-40`
 
@@ -28,7 +28,7 @@ sonnet
 
 ## Decisions (settled at planning)
 
-- Messages live under one `errors` namespace, **nested by the dots of the code**: `common.version-mismatch` → `{"errors": {"common": {"version-mismatch": "…"}}}`, so `t(code)` works with next-intl's dot paths. T04's check flattens them the same way.
+- Messages live under one `errors` namespace, **nested by the dots of the code**: `common.versionMismatch` → `{"errors": {"common": {"version-mismatch": "…"}}}`, so `t(code)` works with next-intl's dot paths. T04's check flattens them the same way.
 - `toApiError(error)` in `src/shared/api/` maps a Hey API error / `ProblemDetails` to `ApiError = { code, params?, fieldErrors? }` (`fieldErrors`: `Record<field, { code, params? }[]>`). Unknown or missing code → `common.unexpected`; network failure → `common.unexpected`. T05's query uses it; the curator app's `defineAction` (E01.S06) will reuse it.
 - `ActionResult` / `defineAction` are **not** written here: the user app has no Server Action in S04 (no dead code). Keep the `AGENTS.md` `ActionResult` section, adding `params` to its error type so it matches `ApiError`.
 - Display: `ErrorMessage` component in `src/shared/ui/` on an Astryx alert/inline message (pick the component from the T02 report), taking an `ApiError`, translating with `useTranslations('errors')` (or `getTranslations` if it stays a Server Component). Messages are written in all three languages now (no English placeholders in `fr`/`vi`).
@@ -43,7 +43,7 @@ sonnet
 - [x] T03.2 `errors` namespace in `messages/en.json`, `fr.json`, `vi.json`: 13 common + 17 foodpedia + 9 validation codes, ICU params
 - [x] T03.3 `ErrorMessage` in `src/shared/ui/`
 - [x] T03.4 Node test `to-api-error.test.ts`: problem with code and params, with field errors, unknown code, network error (MSW `HttpResponse.error()`)
-- [x] T03.5 Browser test of `ErrorMessage`: `common.version-mismatch` with params renders the French text with `fr` messages; unknown code renders `common.unexpected`
+- [x] T03.5 Browser test of `ErrorMessage`: `common.versionMismatch` with params renders the French text with `fr` messages; unknown code renders `common.unexpected`
 - [x] T03.6 `AGENTS.md` "`ActionResult`": error type with `params`, one line saying it is shared with `ApiError`
 
 ## Done when

@@ -21,4 +21,4 @@ Built before the backlog existed; no task files.
 
 ## Summary
 
-Done 2026-11-21 (112 .NET tests green, verified under Aspire). Contract changes handed to S03: new codes `common.invalid-sort`, `common.idempotency-key-required`, `common.request-already-processed`, `foodpedia.*`; actions `204` + `ETag`; create `201` + `Location` + `{ id }`; reads send `ETag`.
+Done 2026-11-21 (112 .NET tests green, verified under Aspire). Contract changes handed to S03: new codes `common.invalidSort`, `common.idempotencyKeyRequired`, `common.requestAlreadyProcessed`, `foodpedia.*`; actions `204` + `ETag`; create `201` + `Location` + `{ id }`; reads send `ETag`.

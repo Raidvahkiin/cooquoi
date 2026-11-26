@@ -6,7 +6,7 @@ namespace Raidvahkiin.Ddd.EntityFrameworkCore.Interceptors;
 
 /// <summary>
 /// Turns failed saves into domain errors: an optimistic concurrency failure into
-/// <c>common.concurrency-conflict</c>, a known unique constraint (safety net behind a use-case
+/// <c>common.concurrencyConflict</c>, a known unique constraint (safety net behind a use-case
 /// pre-check) into its error. Unknown failures keep their original exception.
 /// </summary>
 /// <remarks>

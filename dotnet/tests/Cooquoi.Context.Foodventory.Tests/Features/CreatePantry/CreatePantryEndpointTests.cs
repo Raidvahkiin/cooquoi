@@ -55,7 +55,7 @@ public sealed class CreatePantryEndpointTests(ApiFixture api)
 
         var result = await PostAsync(subject, "/v1/pantries", new { name = "CAVE A VIN" }, 409);
 
-        await result.ShouldBeProblemAsync(409, "foodventory.name-taken");
+        await result.ShouldBeProblemAsync(409, "foodventory.nameTaken");
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public sealed class CreatePantryEndpointTests(ApiFixture api)
     {
         var subject = await api.NewUserAsync();
 
-        await (await PostAsync(subject, "/v1/pantries", new { name = "  " }, 422)).ShouldBeProblemAsync(422, "foodventory.invalid-name");
+        await (await PostAsync(subject, "/v1/pantries", new { name = "  " }, 422)).ShouldBeProblemAsync(422, "foodventory.invalidName");
         await (await PostAsync(subject, "/v1/pantries", new { name = "X", storage = "attic" }, 400)).ShouldBeProblemAsync(400, "common.validation");
     }
 

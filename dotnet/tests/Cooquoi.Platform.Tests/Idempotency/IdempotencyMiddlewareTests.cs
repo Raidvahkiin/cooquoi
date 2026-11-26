@@ -44,7 +44,7 @@ public sealed class IdempotencyMiddlewareTests(ApiFixture api)
     {
         var result = await Post(NewIngredient(), null, 400);
 
-        await result.ShouldBeProblemAsync(400, "common.idempotency-key-required");
+        await result.ShouldBeProblemAsync(400, "common.idempotencyKeyRequired");
     }
 
     [Fact]
@@ -71,7 +71,7 @@ public sealed class IdempotencyMiddlewareTests(ApiFixture api)
 
         var result = await Post(NewIngredient(), key, 422);
 
-        await result.ShouldBeProblemAsync(422, "common.idempotency-key-reused");
+        await result.ShouldBeProblemAsync(422, "common.idempotencyKeyReused");
     }
 
     [Fact]
@@ -94,7 +94,7 @@ public sealed class IdempotencyMiddlewareTests(ApiFixture api)
 
         var result = await Post(request, key, 409);
 
-        await result.ShouldBeProblemAsync(409, "common.request-in-progress");
+        await result.ShouldBeProblemAsync(409, "common.requestInProgress");
     }
 
     [Fact]
@@ -109,7 +109,7 @@ public sealed class IdempotencyMiddlewareTests(ApiFixture api)
         var result = await Post(request, key, 409);
 
         // It really ran again: this time the code is taken.
-        await result.ShouldBeProblemAsync(409, "foodpedia.code-taken");
+        await result.ShouldBeProblemAsync(409, "foodpedia.codeTaken");
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public sealed class IdempotencyMiddlewareTests(ApiFixture api)
 
         var result = await Post(request, key, 409);
 
-        await result.ShouldBeProblemAsync(409, "common.request-already-processed");
+        await result.ShouldBeProblemAsync(409, "common.requestAlreadyProcessed");
     }
 
     [Fact]

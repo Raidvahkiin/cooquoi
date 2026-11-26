@@ -15,8 +15,8 @@ The Foodventory context has the Pantry aggregate (`PantryId`, `HouseholdId`, `Pa
 
 ## Reference
 
-- Aggregate: copy `IngredientAggregate.Create` → `Domain/Pantries/PantryAggregate.cs` with `static Create(NewPantry)`, which raises `PantryCreated`. `PantryName` is a `sealed record` (trimmed, 1–60; FV1 length) with `foodventory.invalid-name` (open question Q4). `Storage` is the Foodventory context's own enum (`Fridge, Freezer, Room`); there is no reference to Foodpedia.
-- FV1 uniqueness: a stored `name_key` column (lower + unaccent, computed in the domain or by a generated column), unique index `ux_pantries_household_name_key` mapped to `foodventory.name-taken` (Conflict) in `UniqueConstraints`. Copy how Foodpedia does F4.
+- Aggregate: copy `IngredientAggregate.Create` → `Domain/Pantries/PantryAggregate.cs` with `static Create(NewPantry)`, which raises `PantryCreated`. `PantryName` is a `sealed record` (trimmed, 1–60; FV1 length) with `foodventory.invalidName` (open question Q4). `Storage` is the Foodventory context's own enum (`Fridge, Freezer, Room`); there is no reference to Foodpedia.
+- FV1 uniqueness: a stored `name_key` column (lower + unaccent, computed in the domain or by a generated column), unique index `ux_pantries_household_name_key` mapped to `foodventory.nameTaken` (Conflict) in `UniqueConstraints`. Copy how Foodpedia does F4.
 - Handler: `Integration/HouseholdCreatedHandler.Handle(Household.PublicApi.Events.HouseholdCreated)` checks "the household has no Pantry aggregate", then creates three. Names come from a static table in `Domain/Pantries/DefaultPantries.cs` keyed by `Locale` (en, fr, vi; fallback en). The actor is `system:foodventory.household-created` (SystemActorPolicy adds it).
 - Errors class `Domain/Pantries/PantryError.cs`: `NameTaken`, `InvalidName`, `NotEmpty` (FV13, used in E02.S03.T02). T03 already declared these codes in the contract, so the error-catalogue test passes both ways.
 

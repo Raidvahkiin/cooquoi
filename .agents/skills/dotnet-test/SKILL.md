@@ -45,7 +45,7 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
 
         var result = await api.Scenario(Define(id, new("piece", 1, 350), "\"0\"", 412));
 
-        var problem = await result.ShouldBeProblemAsync(412, "common.version-mismatch");
+        var problem = await result.ShouldBeProblemAsync(412, "common.versionMismatch");
         problem.GetProperty("params").GetProperty("current").GetInt64().ShouldBe(1);
     }
 }

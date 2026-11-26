@@ -12,7 +12,7 @@ namespace Cooquoi.Household;
 interface MeOperations {
   /**
    * Returns the signed-in user's profile and households. Read-only: creates nothing.
-   * Errors: `common.not-found` (404) before the first `signIn`.
+   * Errors: `common.notFound` (404) before the first `signIn`.
    */
   @get
   @route("/v1/me")

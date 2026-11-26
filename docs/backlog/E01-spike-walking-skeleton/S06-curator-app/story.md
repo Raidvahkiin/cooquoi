@@ -10,7 +10,7 @@ A second Next.js app for curators, separate from the user app `@cooquoi/webapp`,
 
 - [ ] ADR 0017 (curator app) accepted: app name and path, sign-in and role guard (`catalog-curator`), what moves to `ts/libs` to be shared with the user app, Aspire and deployment
 - [ ] The curator app runs under Aspire; a user without `catalog-curator` cannot use it
-- [ ] Q2 ingredient page and C5 define-conversion through a Server Action with `If-Match` and `Idempotency-Key`; a stale version shows `common.version-mismatch` translated by code
+- [ ] Q2 ingredient page and C5 define-conversion through a Server Action with `If-Match` and `Idempotency-Key`; a stale version shows `common.versionMismatch` translated by code
 - [ ] The error catalogue test covers the curator app's message catalogues too
 - [ ] Tests: Vitest Node (queries, actions, view models + MSW) and browser mode (components)
 

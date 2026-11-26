@@ -18,7 +18,7 @@ The contract declares S3–S7. No new error code is needed: `unit-not-convertibl
 - `POST /v1/stock-items/{stockItemId}:discard` `ActionOperation<DiscardStockItem, StockItemPath>`: `{ reason: DiscardReason }` (`expired` | `spoiled` | `other`).
 - `POST /v1/stock-items/{stockItemId}:adjust` `ReplaceActionOperation<AdjustStockItem, StockItemPath>`: `{ remaining: decimal }` (≥ 0, entered unit). The ETag is the IngredientStock version (`StockItemView.stockVersion`).
 - `POST /v1/stock-items/{stockItemId}:set-expiry` `ReplaceActionOperation<SetStockItemExpiry, StockItemPath>`: `{ date: plainDate | null }`.
-- Doc comments: use-case id, rules, codes (S3/S4: `foodventory.unit-not-convertible` 422 with params).
+- Doc comments: use-case id, rules, codes (S3/S4: `foodventory.unitNotConvertible` 422 with params).
 
 ## Skills
 

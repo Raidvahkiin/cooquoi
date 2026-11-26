@@ -2,7 +2,7 @@
 
 ## Goal
 
-`contracts/contexts/foodventory/` declares the pantry operations C1–C4 and Q1, the models, and the codes `foodventory.name-taken`, `foodventory.invalid-name` and `foodventory.not-empty`, with messages in the webapp catalogues. It adds two common templates: a non-paged read of a collection and a delete with `If-Match`. The client is regenerated.
+`contracts/contexts/foodventory/` declares the pantry operations C1–C4 and Q1, the models, and the codes `foodventory.nameTaken`, `foodventory.invalidName` and `foodventory.notEmpty`, with messages in the webapp catalogues. It adds two common templates: a non-paged read of a collection and a delete with `If-Match`. The client is regenerated.
 
 ## Read only
 
@@ -23,7 +23,7 @@
   - `POST /v1/pantries/{pantryId}:set-storage` `ReplaceActionOperation<SetPantryStorage, PantryPath>` (`storage` nullable).
   - `DELETE /v1/pantries/{pantryId}`: new template `DeleteOperation<TPath>` with `If-Match` and 204, the problems of `ReplaceActionOperation` (`operations.tsp:70-90`).
 - `union Storage { fridge, freezer, room }`, the Foodventory context's own type.
-- Errors: `union FoodventoryErrorCode { nameTaken: "foodventory.name-taken", invalidName: "foodventory.invalid-name", notEmpty: "foodventory.not-empty" }`. Doc comments on each route list its codes (FV1 → 409 / 400, FV13 → 422).
+- Errors: `union FoodventoryErrorCode { nameTaken: "foodventory.nameTaken", invalidName: "foodventory.invalidName", notEmpty: "foodventory.notEmpty" }`. Doc comments on each route list its codes (FV1 → 409 / 400, FV13 → 422).
 - Messages: `errors.foodventory.{name-taken,invalid-name,not-empty}` in `en`, `fr`, `vi`, copying the shape of the `foodpedia` entries.
 
 ## Skills

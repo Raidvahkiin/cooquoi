@@ -89,7 +89,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
     {
         var result = await Create(Requests.NewIngredient() with { Code = "salmon" }, 409);
 
-        var problem = await result.ShouldBeProblemAsync(409, "foodpedia.code-taken");
+        var problem = await result.ShouldBeProblemAsync(409, "foodpedia.codeTaken");
         problem.GetProperty("params").GetProperty("code").GetString().ShouldBe("salmon");
     }
 
@@ -100,7 +100,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
 
         var result = await Create(request, 409);
 
-        var problem = await result.ShouldBeProblemAsync(409, "foodpedia.name-taken");
+        var problem = await result.ShouldBeProblemAsync(409, "foodpedia.nameTaken");
         problem.GetProperty("params").GetProperty("locale").GetString().ShouldBe("fr");
     }
 
@@ -109,7 +109,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
     {
         var result = await Create(Requests.NewIngredient() with { Tags = ["category:fish-seafood", "season:monsoon"] }, 422);
 
-        await result.ShouldBeProblemAsync(422, "foodpedia.unknown-tags");
+        await result.ShouldBeProblemAsync(422, "foodpedia.unknownTags");
     }
 
     [Fact]
@@ -119,7 +119,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
 
         var result = await Create(request, 422);
 
-        await result.ShouldBeProblemAsync(422, "foodpedia.conversion-not-needed");
+        await result.ShouldBeProblemAsync(422, "foodpedia.conversionNotNeeded");
         await using var db = api.CreateDbContext();
         db.Ingredients.Any(i => i.Code == IngredientCode.Create(request.Code)).ShouldBeFalse();
     }
@@ -136,7 +136,7 @@ public sealed class CreateIngredientEndpointTests(ApiFixture api)
             .Select(error => (error.GetProperty("field").GetString(), error.GetProperty("code").GetString()))
             .ToList();
         errors.ShouldBe(
-            [("code", "validation.required"), ("names[0].locale", "validation.one-of"), ("baseUnit", "validation.one-of"), ("expiryKind", "validation.one-of")],
+            [("code", "validation.required"), ("names[0].locale", "validation.oneOf"), ("baseUnit", "validation.oneOf"), ("expiryKind", "validation.oneOf")],
             ignoreOrder: true);
     }
 

@@ -16,9 +16,9 @@ The TypeSpec contract has an `ExpiryKind` union. `expiryKind` is required in the
 ## Reference
 
 - Union: copy `union Storage` (`models.tsp:16`) as `union ExpiryKind { printed: "printed", estimated: "estimated", longLife: "long-life" }`.
-- Route: copy `defineConversion` (`routes.tsp:35-38`): `@route("/v1/ingredients/{ingredientId}:set-expiry-kind") @operationId("setExpiryKind") setExpiryKind is ReplaceActionOperation<SetExpiryKind, IngredientPath>;` with body `{ expiryKind: ExpiryKind }`. Doc comment: "C11 … Requires the curator role. Errors: `foodpedia.ingredient-retired` (422)."
+- Route: copy `defineConversion` (`routes.tsp:35-38`): `@route("/v1/ingredients/{ingredientId}:set-expiry-kind") @operationId("setExpiryKind") setExpiryKind is ReplaceActionOperation<SetExpiryKind, IngredientPath>;` with body `{ expiryKind: ExpiryKind }`. Doc comment: "C11 … Requires the curator role. Errors: `foodpedia.ingredientRetired` (422)."
 - Add `expiryKind` to `IngredientSummary` (`models.tsp:37`) only if the webapp list needs it. It does not in E02, so leave it out.
-- No new error code: F12 is a required enum (`validation.*`), and retired is the existing `foodpedia.ingredient-retired`.
+- No new error code: F12 is a required enum (`validation.*`), and retired is the existing `foodpedia.ingredientRetired`.
 
 ## Skills
 

@@ -17,7 +17,7 @@ The new IngredientStock state is persisted (threshold, household conversions, ov
 
 - Mapping: threshold `OwnsOne` columns (`threshold_low`, `threshold_over`); household conversions as jsonb (like Foodpedia's conversions); remembered shelf lives as jsonb; `expiry_kind_override` string; `ingredient_retired` bool. Migration `AddIngredientStockSettings`.
 - Endpoints `Features/SetThreshold/`, `OverrideExpiryKind/`, `DefineHouseholdConversion/`, `RemoveHouseholdConversion/`:
-  - `LoadAsync` by `(household, ingredientId)`. When it is absent, create it with facts from `FoodpediaFactsProvider`; a retired ingredient → 422 `foodventory.ingredient-retired`.
+  - `LoadAsync` by `(household, ingredientId)`. When it is absent, create it with facts from `FoodpediaFactsProvider`; a retired ingredient → 422 `foodventory.ingredientRetired`.
   - `IfMatch.Require` only when the aggregate already existed (Q6).
   - 204 + ETag.
 - Restock proposals (E02.S04.T04) now also consult household conversions: check that `RestockEndpoint` passes them, and adjust it if not.

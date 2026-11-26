@@ -1344,7 +1344,7 @@
             "type": "string"
           }
         },
-        "description": "C1: body of `POST /v1/pantries`. The name's rule (FV1) is the domain's: 422 `foodventory.invalid-name`."
+        "description": "C1: body of `POST /v1/pantries`. The name's rule (FV1) is the domain's: 422 `foodventory.invalidName`."
       },
       "CreatedIngredient": {
         "required": [
@@ -1423,14 +1423,14 @@
           "code": {
             "enum": [
               "validation.required",
-              "validation.max-length",
-              "validation.min-length",
+              "validation.maxLength",
+              "validation.minLength",
               "validation.min",
               "validation.max",
               "validation.range",
               "validation.pattern",
               "validation.invalid",
-              "validation.one-of"
+              "validation.oneOf"
             ],
             "type": "string"
           },

@@ -12,7 +12,7 @@ export type CommonBaseUnit = 'g' | 'ml' | 'piece';
 /**
  * Stable error codes shared by every context (ADR 0014 §9).
  */
-export type CommonCommonErrorCode = 'common.validation' | 'common.invalid-sort' | 'common.not-found' | 'common.unauthorized' | 'common.forbidden' | 'common.concurrency-conflict' | 'common.version-mismatch' | 'common.if-match-required' | 'common.idempotency-key-required' | 'common.idempotency-key-reused' | 'common.request-in-progress' | 'common.request-already-processed' | 'common.unexpected';
+export type CommonCommonErrorCode = 'common.validation' | 'common.invalidSort' | 'common.notFound' | 'common.unauthorized' | 'common.forbidden' | 'common.concurrencyConflict' | 'common.versionMismatch' | 'common.ifMatchRequired' | 'common.idempotencyKeyRequired' | 'common.idempotencyKeyReused' | 'common.requestInProgress' | 'common.requestAlreadyProcessed' | 'common.unexpected';
 
 /**
  * One field error of a validation problem, translatable by code.
@@ -81,7 +81,7 @@ export type CommonUnit = 'g' | 'kg' | 'ml' | 'l' | 'tsp' | 'tbsp' | 'cup' | 'pie
 /**
  * Stable codes of field errors (`errors[].code`), shared by every validator.
  */
-export type CommonValidationCode = 'validation.required' | 'validation.max-length' | 'validation.min-length' | 'validation.min' | 'validation.max' | 'validation.range' | 'validation.pattern' | 'validation.invalid' | 'validation.one-of';
+export type CommonValidationCode = 'validation.required' | 'validation.maxLength' | 'validation.minLength' | 'validation.min' | 'validation.max' | 'validation.range' | 'validation.pattern' | 'validation.invalid' | 'validation.oneOf';
 
 /**
  * How many base units one `unit` of this ingredient weighs or holds, e.g. 1 `clove` = 5 `g`.
@@ -138,7 +138,7 @@ export type FoodpediaExpiryKind = 'printed' | 'estimated' | 'longLife';
 /**
  * Stable error codes of the Foodpedia context (`problem.code`), next to `CommonErrorCode`.
  */
-export type FoodpediaFoodpediaErrorCode = 'foodpedia.code-taken' | 'foodpedia.invalid-code' | 'foodpedia.invalid-name' | 'foodpedia.english-name-required' | 'foodpedia.duplicate-locale' | 'foodpedia.name-missing' | 'foodpedia.name-taken' | 'foodpedia.invalid-base-unit' | 'foodpedia.invalid-conversion-amount' | 'foodpedia.conversion-not-needed' | 'foodpedia.invalid-shelf-life' | 'foodpedia.category-tag-required' | 'foodpedia.ingredient-retired' | 'foodpedia.invalid-tag-code' | 'foodpedia.invalid-tag-label' | 'foodpedia.english-label-required' | 'foodpedia.unknown-tags';
+export type FoodpediaFoodpediaErrorCode = 'foodpedia.codeTaken' | 'foodpedia.invalidCode' | 'foodpedia.invalidName' | 'foodpedia.englishNameRequired' | 'foodpedia.duplicateLocale' | 'foodpedia.nameMissing' | 'foodpedia.nameTaken' | 'foodpedia.invalidBaseUnit' | 'foodpedia.invalidConversionAmount' | 'foodpedia.conversionNotNeeded' | 'foodpedia.invalidShelfLife' | 'foodpedia.categoryTagRequired' | 'foodpedia.ingredientRetired' | 'foodpedia.invalidTagCode' | 'foodpedia.invalidTagLabel' | 'foodpedia.englishLabelRequired' | 'foodpedia.unknownTags';
 
 /**
  * One ingredient in the requested locale; `version` is sent back as `If-Match`.
@@ -221,7 +221,7 @@ export type FoodventoryCreatedPantry = {
 /**
  * Stable error codes of the Foodventory context (`problem.code`), next to `CommonErrorCode`.
  */
-export type FoodventoryFoodventoryErrorCode = 'foodventory.name-taken' | 'foodventory.invalid-name' | 'foodventory.not-empty';
+export type FoodventoryFoodventoryErrorCode = 'foodventory.nameTaken' | 'foodventory.invalidName' | 'foodventory.notEmpty';
 
 /**
  * The household's pantries and how many stock items still wait to be put away (Q1).

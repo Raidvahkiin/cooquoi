@@ -34,7 +34,7 @@ sonnet
 - Route `src/app/(app)/foodpedia/page.tsx`. Rows are not links yet: the ingredient page is not in S04 (curator screens are E01.S06; a user-facing Q2 page is a later story).
 - A problem from the API (other than 401, handled by auth) is returned by the query as `{ error: ApiError }` (via `toApiError`, T03) instead of thrown, and the component renders `ErrorMessage` (T03) in place of the table.
 - Base unit shown by its translated label (`foodpedia.units.<unit>` messages for the `CommonUnit` values). Empty result has a translated empty state.
-- `common.invalid-sort` from the API → render the default sort instead of failing (schema keeps sort to the known keys).
+- `common.invalidSort` from the API → render the default sort instead of failing (schema keeps sort to the known keys).
 
 ## Out of scope
 

@@ -44,4 +44,4 @@ Then: tick the subtasks, write the report (≤5 lines), set the status, commit (
 
 Status: done
 
-Report: ErrorCatalogue.TranslatedCodes(locale) + Theory over en/fr/vi (contract codes equal translated codes). Architecture tests 15/15 green; removing foodpedia.name-taken from vi.json fails naming vi and the code (reverted). Nothing left.
+Report: ErrorCatalogue.TranslatedCodes(locale) + Theory over en/fr/vi (contract codes equal translated codes). Architecture tests 15/15 green; removing foodpedia.nameTaken from vi.json fails naming vi and the code (reverted). Nothing left.

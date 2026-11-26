@@ -35,7 +35,7 @@ internal static class UserSignIn
     {
         var db = request.Db;
         await using var transaction = await db.Database.BeginTransactionAsync(cancellationToken);
-        var lockKey = $"household.sign-in:{identity.Issuer}|{identity.Subject}";
+        var lockKey = $"household.signIn:{identity.Issuer}|{identity.Subject}";
         await db.Database.ExecuteSqlAsync($"SELECT pg_advisory_xact_lock(hashtextextended({lockKey}, 0))", cancellationToken);
 
         var profile = await db.UserProfiles.FindByIdentityAsync(identity, cancellationToken);

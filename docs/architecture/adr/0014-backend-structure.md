@@ -159,8 +159,8 @@ Two problems, two mechanisms:
 
 | Problem | Mechanism |
 |---|---|
-| **Race between two commands** (two consumes on the same item; the second save would overwrite the first) | A **`Version` column on every aggregate root**, checked by EF Core on save. A conflict is **retried automatically** a few times (Wolverine retry policy) — safe because the retry reloads fresh state and re-applies the intent. Still failing → 409 `common.concurrency-conflict`. |
-| **Edit from a stale screen** (rename an ingredient someone else just renamed) | Every read DTO includes the aggregate's `version`. **Replace-style commands** (rename, set synonyms, set shelf life, set thresholds, change base unit…) require `If-Match: "<version>"`. Mismatch → **412** `common.version-mismatch`; missing → **428** `common.if-match-required`. |
+| **Race between two commands** (two consumes on the same item; the second save would overwrite the first) | A **`Version` column on every aggregate root**, checked by EF Core on save. A conflict is **retried automatically** a few times (Wolverine retry policy) — safe because the retry reloads fresh state and re-applies the intent. Still failing → 409 `common.concurrencyConflict`. |
+| **Edit from a stale screen** (rename an ingredient someone else just renamed) | Every read DTO includes the aggregate's `version`. **Replace-style commands** (rename, set synonyms, set shelf life, set thresholds, change base unit…) require `If-Match: "<version>"`. Mismatch → **412** `common.versionMismatch`; missing → **428** `common.ifMatchRequired`. |
 
 - **Intent commands** (`:consume`, `:restock`, `:discard`…) do not require `If-Match`: re-applying the intent on fresh state is correct.
 - The contract declares which commands require `If-Match` (a TypeSpec template for replace-style actions).
@@ -176,7 +176,7 @@ The same command can arrive twice (lost response and retry, offline replay, doub
 
 - The client generates a UUID **per user action** and resends the same key on retry (webapp: once per form submission; Flutter: stored with each queued action). Required on every `POST`, declared in the TypeSpec templates.
 - The server (middleware in `Cooquoi.Platform`) stores key + household + request hash + response **in the same transaction as the command**.
-- Same key + same payload → the stored response, without re-running. Same key + different payload → 422 `common.idempotency-key-reused`. Same key while the first request runs → 409 `common.request-in-progress`.
+- Same key + same payload → the stored response, without re-running. Same key + different payload → 422 `common.idempotencyKeyReused`. Same key while the first request runs → 409 `common.requestInProgress`.
 - Keys are kept **7 days** (long enough for offline queues), then removed by a cleanup job.
 
 **Event handlers**
@@ -300,7 +300,7 @@ No custom `IEventDispatcher`: it would be a pass-through over Wolverine.
 | Types | Domain types allowed | Primitives and `PublicApi` DTOs only |
 | Audience | The same context (projections, internal reactions) | Other contexts |
 | Change | Free (internal code) | Stable: additive changes only |
-| Message name | Type name | Fixed message identity, independent of the C# type: `<context>.<event>.v<n>` (e.g. `foodpedia.base-unit-changed.v1`) |
+| Message name | Type name | Fixed message identity, independent of the C# type: `<context>.<event>.v<n>` (e.g. `foodpedia.baseUnitChanged.v1`) |
 | Content | What the aggregate knows | `EventId`, `OccurredAt`, aggregate id, `HouseholdId` when relevant, data consumers need |
 
 - A **translator** in `Integration/Outgoing/` handles the relevant domain events and returns integration events as cascading messages. Only events another context needs are translated.
@@ -320,8 +320,8 @@ No custom `IEventDispatcher`: it would be a pass-through over Wolverine.
 | *(authentication)* | 401 | Missing or invalid token | Information |
 | `Forbidden` | 403 | Role or household-membership check | Warning |
 | `NotFound` | 404 | `Load` step finds nothing | Information |
-| `Conflict` | 409 | Uniqueness, concurrency (`common.concurrency-conflict`) | Information |
-| `PreconditionFailed` | 412 / 428 | `If-Match` mismatch (`common.version-mismatch`) or missing (`common.if-match-required`) | Information |
+| `Conflict` | 409 | Uniqueness, concurrency (`common.concurrencyConflict`) | Information |
+| `PreconditionFailed` | 412 / 428 | `If-Match` mismatch (`common.versionMismatch`) or missing (`common.ifMatchRequired`) | Information |
 | `BusinessRule` | 422 | `DomainException` from an aggregate | Information |
 | *(unexpected)* | 500 | Any other exception — no internal details, only `traceId` | Error |
 
@@ -331,14 +331,14 @@ No custom `IEventDispatcher`: it would be a pass-through over Wolverine.
 public sealed class IngredientError : DomainErrorDefinition<IngredientError>
 {
     public static readonly IngredientError NameTaken = new(
-        "foodpedia.name-taken", ErrorKind.Conflict,
+        "foodpedia.nameTaken", ErrorKind.Conflict,
         "An ingredient named '{name}' already exists in locale '{locale}'.");
 }
 
 throw IngredientError.NameTaken.ToException(new { locale = "fr", name = "Saumon" });
 ```
 
-- Codes are stable, `<context>.<error>` in kebab-case; `common.*` for shared ones. Never reused for another meaning.
+- Codes are stable, `<context>.<error>` in camelCase (ADR 0021); `common.*` for shared ones. Never reused for another meaning.
 - Messages are English, for developers; clients translate by `code` with `params` ([ADR 0012](0012-internationalization.md)).
 - **Catalogue test**: every error definition exists in the TypeSpec contract (a code union per context) and has translations in `en`, `fr`, `vi`.
 - Postgres unique-constraint violations are mapped by constraint name to their error code (safety net for race conditions).
@@ -371,12 +371,12 @@ RFC 9457 `ProblemDetails` with `code`, `params`, `errors[]` and `traceId`, defin
 
 ```json
 {
-  "type": "https://cooquoi.com/errors/foodpedia.name-taken",
+  "type": "https://cooquoi.com/errors/foodpedia.nameTaken",
   "title": "Name already taken",
   "status": 409,
   "detail": "An ingredient named 'Saumon' already exists in locale 'fr'.",
   "instance": "/v1/ingredients",
-  "code": "foodpedia.name-taken",
+  "code": "foodpedia.nameTaken",
   "params": { "locale": "fr", "name": "Saumon" },
   "traceId": "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01"
 }
@@ -390,7 +390,7 @@ Validation errors add field errors, each with a translatable code:
   "status": 400,
   "code": "common.validation",
   "errors": [
-    { "field": "names[1].primary", "code": "validation.max-length", "params": { "max": 100 } },
+    { "field": "names[1].primary", "code": "validation.maxLength", "params": { "max": 100 } },
     { "field": "baseUnit", "code": "validation.required" }
   ],
   "traceId": "…"

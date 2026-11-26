@@ -51,6 +51,6 @@ public sealed class AggregateVersionTests(ApiFixture api)
         b.SetSynonyms(Locale.French, ["Ail rose"]);
 
         var exception = await Should.ThrowAsync<Raidvahkiin.Ddd.DomainException>(() => second.SaveChangesAsync(cancellationToken));
-        exception.Error.Code.ShouldBe("common.concurrency-conflict");
+        exception.Error.Code.ShouldBe("common.concurrencyConflict");
     }
 }

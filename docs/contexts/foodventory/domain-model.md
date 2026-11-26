@@ -183,7 +183,7 @@ For a quantity of an ingredient, in this order:
 
 When an unknown unit is restocked, the restock response carries a **conversion proposal** for the client to show (MVP: the Foodpedia default if any, otherwise none; AI proposals later). Confirming it is a separate command (*define household conversion*).
 
-A **consumption** or **split** in a unit with no path is rejected with `foodventory.unit-not-convertible`; its details name the ingredient and unit and invite the client to define a household conversion and retry. Using an item's exact entered unit never needs a conversion.
+A **consumption** or **split** in a unit with no path is rejected with `foodventory.unitNotConvertible`; its details name the ingredient and unit and invite the client to define a household conversion and retry. Using an item's exact entered unit never needs a conversion.
 
 ### Expiry
 
@@ -220,7 +220,7 @@ For put-away, the read side offers a **suggested pantry** per item with no pantr
 | FV4 | An entered quantity has amount > 0 and a known unit, and never changes after restock. |
 | FV5 | `remaining` is ≥ 0 and never negative; an item reaching 0 is depleted and leaves the aggregate. |
 | FV6 | `normalized` follows the normalization order above; no path → unnormalized. Re-normalization is triggered by household conversion changes, Foodpedia `ConversionDefined` / `ConversionRemoved` and `BaseUnitChanged`. |
-| FV7 | Consuming by ingredient takes from items **earliest expiry first** (no expiry last), oldest `addedOn` as tie-breaker, with or without a pantry. A quantity with no conversion path is rejected (`foodventory.unit-not-convertible`), except on an item in its exact entered unit. A quantity beyond what is held consumes everything and reports the **shortfall** (manual and `MealCooked` alike). |
+| FV7 | Consuming by ingredient takes from items **earliest expiry first** (no expiry last), oldest `addedOn` as tie-breaker, with or without a pantry. A quantity with no conversion path is rejected (`foodventory.unitNotConvertible`), except on an item in its exact entered unit. A quantity beyond what is held consumes everything and reports the **shortfall** (manual and `MealCooked` alike). |
 | FV8 | Expiry is optional for every kind and follows *Expiry*: `printed` is never proposed, `estimated` is proposed (remembered, else Foodpedia default when storage matches), `longLife` is never warned. A manual expiry replaces a proposed one and is never changed by the system. A past date is allowed (the item is *expired*). |
 | FV9 | Put-away / move sets a Pantry aggregate on an item; there is no move back to no pantry. Without a quantity it moves the whole item; with one (> 0, ≤ remaining, in a unit convertible to the entered unit) it **splits** the item: the new item has the moved quantity in the entered unit and keeps `source` and `addedOn`. The moved item's expiry follows FV8 for the target. A quantity equal to remaining is a whole move. |
 | FV10 | A threshold's `low` and `over` are ≥ 0 when set, and `over` > `low` when both are set. |
@@ -230,7 +230,7 @@ For put-away, the read side offers a **suggested pantry** per item with no pantr
 | FV14 | A restock or consumption coming from an event (receipt line, cooked meal) is applied once per source reference. |
 | FV15 | A remembered shelf life is learned only for effective kind `estimated`, from a manual expiry typed at put-away into a Pantry aggregate with a storage: `days` = expiry − `addedOn`, kept only when > 0; one per storage, the last one wins. |
 
-Errors (`ProblemDetails` codes): `foodventory.name-taken` (Conflict), `foodventory.not-empty`, `foodventory.ingredient-retired`, `foodventory.unit-not-convertible`, `foodventory.quantity-exceeds-remaining`, `foodventory.invalid-threshold`, `foodventory.conversion-not-needed` (BusinessRule), not found through the common code.
+Errors (`ProblemDetails` codes): `foodventory.nameTaken` (Conflict), `foodventory.notEmpty`, `foodventory.ingredientRetired`, `foodventory.unitNotConvertible`, `foodventory.quantityExceedsRemaining`, `foodventory.invalidThreshold`, `foodventory.conversionNotNeeded` (BusinessRule), not found through the common code.
 
 ## Domain services
 
@@ -279,7 +279,7 @@ Consumed: `HouseholdCreated` (Identity), `BaseUnitChanged`, `ConversionDefined`,
 | Last pantry | No rule: a household may delete every Pantry aggregate (FV13 only requires it empty) |
 | Consumption order | Earliest expiry first, oldest added as tie-breaker |
 | Consuming more than held | Clamp to zero and report the shortfall (manual and `MealCooked`) |
-| Unit with no conversion path | Reject with `foodventory.unit-not-convertible`, inviting a household conversion and retry; the exact entered unit always works |
+| Unit with no conversion path | Reject with `foodventory.unitNotConvertible`, inviting a household conversion and retry; the exact entered unit always works |
 | Expiry kind | From the Foodpedia Ingredient aggregate (`printed` \| `estimated` \| `longLife`), with an optional household override in the IngredientStock aggregate |
 | Expiry at restock and put-away | Always optional. `printed`: never pre-filled or learned. `estimated`: remembered per storage, else Foodpedia default when storage matches, else none; a typed date at put-away updates the remembered value. `longLife`: never warned |
 | Missing expiry | Flagged (`expiryMissing`) for `printed` / `estimated`; the Planning read model counts it as unknown, never as expiring |

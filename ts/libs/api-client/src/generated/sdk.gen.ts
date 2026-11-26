@@ -31,7 +31,7 @@ export const searchIngredients = <ThrowOnError extends boolean = false>(options?
 
 /**
  * C1: creates an ingredient. Requires the curator role.
- * Errors: `foodpedia.code-taken`, `foodpedia.name-taken` (409), `foodpedia.unknown-tags` (422).
+ * Errors: `foodpedia.codeTaken`, `foodpedia.nameTaken` (409), `foodpedia.unknownTags` (422).
  */
 export const createIngredient = <ThrowOnError extends boolean = false>(options: Options<CreateIngredientData, ThrowOnError>): RequestResult<CreateIngredientResponses, CreateIngredientErrors, ThrowOnError> => (options.client ?? client).post<CreateIngredientResponses, CreateIngredientErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
@@ -67,7 +67,7 @@ export const defineConversion = <ThrowOnError extends boolean = false>(options: 
 
 /**
  * C11: sets how the expiry date of one ingredient is known. Requires the curator role.
- * Errors: `foodpedia.ingredient-retired` (422).
+ * Errors: `foodpedia.ingredientRetired` (422).
  */
 export const setExpiryKind = <ThrowOnError extends boolean = false>(options: Options<SetExpiryKindData, ThrowOnError>): RequestResult<SetExpiryKindResponses, SetExpiryKindErrors, ThrowOnError> => (options.client ?? client).post<SetExpiryKindResponses, SetExpiryKindErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
@@ -81,7 +81,7 @@ export const setExpiryKind = <ThrowOnError extends boolean = false>(options: Opt
 
 /**
  * Returns the signed-in user's profile and households. Read-only: creates nothing.
- * Errors: `common.not-found` (404) before the first `signIn`.
+ * Errors: `common.notFound` (404) before the first `signIn`.
  */
 export const getMe = <ThrowOnError extends boolean = false>(options?: Options<GetMeData, ThrowOnError>): RequestResult<GetMeResponses, GetMeErrors, ThrowOnError> => (options?.client ?? client).get<GetMeResponses, GetMeErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
@@ -111,7 +111,7 @@ export const listPantries = <ThrowOnError extends boolean = false>(options?: Opt
 
 /**
  * C1: creates a Pantry aggregate.
- * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
+ * Errors: `foodventory.nameTaken` (409), `foodventory.invalidName` (422).
  */
 export const createPantry = <ThrowOnError extends boolean = false>(options: Options<CreatePantryData, ThrowOnError>): RequestResult<CreatePantryResponses, CreatePantryErrors, ThrowOnError> => (options.client ?? client).post<CreatePantryResponses, CreatePantryErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
@@ -125,7 +125,7 @@ export const createPantry = <ThrowOnError extends boolean = false>(options: Opti
 
 /**
  * C4: deletes an empty Pantry aggregate.
- * Errors: `foodventory.not-empty` (422).
+ * Errors: `foodventory.notEmpty` (422).
  */
 export const deletePantry = <ThrowOnError extends boolean = false>(options: Options<DeletePantryData, ThrowOnError>): RequestResult<DeletePantryResponses, DeletePantryErrors, ThrowOnError> => (options.client ?? client).delete<DeletePantryResponses, DeletePantryErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
@@ -135,7 +135,7 @@ export const deletePantry = <ThrowOnError extends boolean = false>(options: Opti
 
 /**
  * C2: renames a Pantry aggregate.
- * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
+ * Errors: `foodventory.nameTaken` (409), `foodventory.invalidName` (422).
  */
 export const renamePantry = <ThrowOnError extends boolean = false>(options: Options<RenamePantryData, ThrowOnError>): RequestResult<RenamePantryResponses, RenamePantryErrors, ThrowOnError> => (options.client ?? client).post<RenamePantryResponses, RenamePantryErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],

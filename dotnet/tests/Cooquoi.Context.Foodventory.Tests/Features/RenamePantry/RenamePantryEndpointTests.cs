@@ -65,7 +65,7 @@ public sealed class RenamePantryEndpointTests(ApiFixture api)
 
         var result = await PostAsync(subject, $"/v1/pantries/{id}:rename", new { name = "cellar" }, 409, "\"0\"");
 
-        await result.ShouldBeProblemAsync(409, "foodventory.name-taken");
+        await result.ShouldBeProblemAsync(409, "foodventory.nameTaken");
     }
 
     [Fact]
@@ -75,9 +75,9 @@ public sealed class RenamePantryEndpointTests(ApiFixture api)
         var id = await CreateAsync(subject, "Cellar");
         var url = $"/v1/pantries/{id}:rename";
 
-        await (await PostAsync(subject, url, new { name = "A" }, 428)).ShouldBeProblemAsync(428, "common.if-match-required");
+        await (await PostAsync(subject, url, new { name = "A" }, 428)).ShouldBeProblemAsync(428, "common.ifMatchRequired");
         await PostAsync(subject, url, new { name = "B" }, 204, "\"0\"");
-        await (await PostAsync(subject, url, new { name = "C" }, 412, "\"0\"")).ShouldBeProblemAsync(412, "common.version-mismatch");
+        await (await PostAsync(subject, url, new { name = "C" }, 412, "\"0\"")).ShouldBeProblemAsync(412, "common.versionMismatch");
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public sealed class RenamePantryEndpointTests(ApiFixture api)
         var stranger = await api.NewUserAsync();
         var id = await CreateAsync(owner, "Cellar");
 
-        await (await PostAsync(stranger, $"/v1/pantries/{id}:rename", new { name = "Mine" }, 404, "\"0\"")).ShouldBeProblemAsync(404, "common.not-found");
-        await (await PostAsync(stranger, $"/v1/pantries/{id}:set-storage", new { storage = "fridge" }, 404, "\"0\"")).ShouldBeProblemAsync(404, "common.not-found");
+        await (await PostAsync(stranger, $"/v1/pantries/{id}:rename", new { name = "Mine" }, 404, "\"0\"")).ShouldBeProblemAsync(404, "common.notFound");
+        await (await PostAsync(stranger, $"/v1/pantries/{id}:set-storage", new { storage = "fridge" }, 404, "\"0\"")).ShouldBeProblemAsync(404, "common.notFound");
     }
 }

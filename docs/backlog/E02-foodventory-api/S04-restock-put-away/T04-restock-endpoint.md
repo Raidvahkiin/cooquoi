@@ -15,8 +15,8 @@
 
 ## Reference
 
-- Endpoint `Features/Restock/RestockEndpoint.cs`: `[WolverinePost("/v1/stock:restock")]`. Group lines by ingredient, get facts once for all ingredients, load the existing IngredientStock aggregates in one query, create the missing ones (`db.Add`), and call `Restock` on each. Wolverine saves once, so it is one transaction (use cases S1). An unknown ingredient id → 404 `common.not-found` with the id in `params`. Return 200 `RestockResult` (no `[EmptyResponse]`). Add `OperationContract.ActionWithResult` in `dotnet/src/Cooquoi.Platform/OpenApi/` if T01's template has no C# twin.
-- Race on first restock of an ingredient: two requests both create → unique violation on `ux_ingredient_stocks_household_ingredient`. Make the concurrency retry cover it (check `ConcurrencyRetryMiddleware` in `dotnet/src/Cooquoi.Platform/`), or map it to 409 `common.concurrency-conflict`. Say which in the report.
+- Endpoint `Features/Restock/RestockEndpoint.cs`: `[WolverinePost("/v1/stock:restock")]`. Group lines by ingredient, get facts once for all ingredients, load the existing IngredientStock aggregates in one query, create the missing ones (`db.Add`), and call `Restock` on each. Wolverine saves once, so it is one transaction (use cases S1). An unknown ingredient id → 404 `common.notFound` with the id in `params`. Return 200 `RestockResult` (no `[EmptyResponse]`). Add `OperationContract.ActionWithResult` in `dotnet/src/Cooquoi.Platform/OpenApi/` if T01's template has no C# twin.
+- Race on first restock of an ingredient: two requests both create → unique violation on `ux_ingredient_stocks_household_ingredient`. Make the concurrency retry cover it (check `ConcurrencyRetryMiddleware` in `dotnet/src/Cooquoi.Platform/`), or map it to 409 `common.concurrencyConflict`. Say which in the report.
 - `StockItemView` mapping: a `StockItemViews.From(item, stock, facts, pantries)` in `Features/Shared/` (or `Persistence/Projections/`), reused by T05 and E02.S07. `ingredientName` comes from P1 in the `Accept-Language` locale.
 - Validator: lines 1–50, amount > 0 (≤ 3 decimals is the domain's FV4), unit from `Unit.All` (`[ContractCodes]`).
 

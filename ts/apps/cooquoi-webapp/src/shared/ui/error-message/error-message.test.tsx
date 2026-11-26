@@ -7,7 +7,7 @@ it('shows the French text of a code with its params', async () => {
   const screen = await renderWithProviders(
     <ErrorMessage
       error={{
-        code: 'common.version-mismatch',
+        code: 'common.versionMismatch',
         params: { current: 3, expected: 2 },
       }}
     />,

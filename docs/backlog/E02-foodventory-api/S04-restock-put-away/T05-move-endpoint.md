@@ -2,7 +2,7 @@
 
 ## Goal
 
-`POST /v1/stock-items/{stockItemId}:move` puts an item away or moves it on, whole or split (FV2, FV8, FV9). Deleting a Pantry aggregate that holds items fails with `foodventory.not-empty` (FV13). Q1 returns real `itemCount` and `toPutAwayCount`.
+`POST /v1/stock-items/{stockItemId}:move` puts an item away or moves it on, whole or split (FV2, FV8, FV9). Deleting a Pantry aggregate that holds items fails with `foodventory.notEmpty` (FV13). Q1 returns real `itemCount` and `toPutAwayCount`.
 
 ## Read only
 

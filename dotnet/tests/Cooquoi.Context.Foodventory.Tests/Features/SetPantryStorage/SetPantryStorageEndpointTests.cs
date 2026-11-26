@@ -49,8 +49,8 @@ public sealed class SetPantryStorageEndpointTests(ApiFixture api)
         await PostAsync(subject, url, new { storage = (string?)null }, 204, "\"1\"");
         (await ReadAsync(id)).Storage.ShouldBeNull();
 
-        await (await PostAsync(subject, url, new { storage = "room" }, 428)).ShouldBeProblemAsync(428, "common.if-match-required");
-        await (await PostAsync(subject, url, new { storage = "room" }, 412, "\"0\"")).ShouldBeProblemAsync(412, "common.version-mismatch");
+        await (await PostAsync(subject, url, new { storage = "room" }, 428)).ShouldBeProblemAsync(428, "common.ifMatchRequired");
+        await (await PostAsync(subject, url, new { storage = "room" }, 412, "\"0\"")).ShouldBeProblemAsync(412, "common.versionMismatch");
         await (await PostAsync(subject, url, new { storage = "attic" }, 400, "\"2\"")).ShouldBeProblemAsync(400, "common.validation");
     }
 }

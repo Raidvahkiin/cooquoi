@@ -10,7 +10,7 @@ export const getMe = cache(async (): Promise<MeViewModel> => {
     return toMeViewModel(await fetchMe(await requireAccessToken()));
   } catch (error) {
     // 404: the user never signed in through the callback, so sign in again.
-    if (toApiError((error as Error).cause).code === 'common.not-found') {
+    if (toApiError((error as Error).cause).code === 'common.notFound') {
       return requireLogin();
     }
     throw error;

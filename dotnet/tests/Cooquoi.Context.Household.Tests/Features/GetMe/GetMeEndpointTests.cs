@@ -46,7 +46,7 @@ public sealed class GetMeEndpointTests(ApiFixture api)
         });
 
         var problem = await result.ReadAsJsonAsync<JsonElement>();
-        problem.GetProperty("code").GetString().ShouldBe("common.not-found");
+        problem.GetProperty("code").GetString().ShouldBe("common.notFound");
     }
 
     [Fact]

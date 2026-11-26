@@ -2,7 +2,7 @@
 
 ## Goal
 
-The contract declares S8 `:set-threshold`, S9 `:override-expiry-kind`, S10 `:define-conversion` and S11 `:remove-conversion` on `/v1/stock/{ingredientId}`. It adds the codes `foodventory.invalid-threshold`, `foodventory.conversion-not-needed` and `foodventory.invalid-conversion-amount` (open question Q4), with webapp messages.
+The contract declares S8 `:set-threshold`, S9 `:override-expiry-kind`, S10 `:define-conversion` and S11 `:remove-conversion` on `/v1/stock/{ingredientId}`. It adds the codes `foodventory.invalidThreshold`, `foodventory.conversionNotNeeded` and `foodventory.invalidConversionAmount` (open question Q4), with webapp messages.
 
 ## Read only
 

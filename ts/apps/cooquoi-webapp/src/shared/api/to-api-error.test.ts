@@ -16,13 +16,13 @@ describe('toApiError', () => {
   it('keeps the code and params of a problem', () => {
     const error = toApiError(
       problem({
-        code: 'common.version-mismatch',
+        code: 'common.versionMismatch',
         params: { current: 3, expected: 2 },
       }),
     );
 
     expect(error).toEqual({
-      code: 'common.version-mismatch',
+      code: 'common.versionMismatch',
       params: { current: 3, expected: 2 },
     });
   });
@@ -34,7 +34,7 @@ describe('toApiError', () => {
         errors: [
           {
             field: 'names[0].primary',
-            code: 'validation.max-length',
+            code: 'validation.maxLength',
             params: { maxLength: 100 },
           },
           { field: 'names[0].primary', code: 'validation.required' },
@@ -47,7 +47,7 @@ describe('toApiError', () => {
       code: 'common.validation',
       fieldErrors: {
         'names[0].primary': [
-          { code: 'validation.max-length', params: { maxLength: 100 } },
+          { code: 'validation.maxLength', params: { maxLength: 100 } },
           { code: 'validation.required' },
         ],
         code: [{ code: 'validation.pattern' }],

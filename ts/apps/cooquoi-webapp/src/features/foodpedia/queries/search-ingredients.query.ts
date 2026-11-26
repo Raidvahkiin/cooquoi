@@ -38,7 +38,7 @@ export const searchIngredientsPage = cache(
       // The API's default sort replaces one it rejects.
       if (
         result.error &&
-        toApiError(result.error).code === 'common.invalid-sort'
+        toApiError(result.error).code === 'common.invalidSort'
       ) {
         result = await search(undefined);
       }

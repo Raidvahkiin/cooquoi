@@ -66,6 +66,6 @@ public sealed class GetIngredientEndpointTests(ApiFixture api)
             s.StatusCodeShouldBe(404);
         });
 
-        await result.ShouldBeProblemAsync(404, "common.not-found");
+        await result.ShouldBeProblemAsync(404, "common.notFound");
     }
 }

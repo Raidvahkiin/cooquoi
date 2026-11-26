@@ -97,7 +97,7 @@ public sealed class SearchIngredientsEndpointTests(ApiFixture api)
             s.StatusCodeShouldBe(400);
         });
 
-        var problem = await result.ShouldBeProblemAsync(400, "common.invalid-sort");
+        var problem = await result.ShouldBeProblemAsync(400, "common.invalidSort");
         problem.GetProperty("params").GetProperty("sort").GetString().ShouldBe("createdBy");
     }
 

@@ -54,7 +54,7 @@ Called once per login, by the webapp's OIDC callback (and by Flutter later), wit
 3. **Later sign-ins**: refresh `DisplayName`, `Email` and `LastSignInAt` from the token.
 4. Answer `204`.
 
-`GET /v1/me` only reads: the profile and the user's households, or `404 common.not-found` when the user never signed in (the webapp then restarts the login).
+`GET /v1/me` only reads: the profile and the user's households, or `404 common.notFound` when the user never signed in (the webapp then restarts the login).
 
 - **Concurrent first sign-ins** (two tabs): a transaction-scoped advisory lock per identity serializes them; the unique index on `IdentityRef` stays the safety net.
 - Name or email changes made in Keycloak reach Cooquoi at the next sign-in — an accepted, small staleness.

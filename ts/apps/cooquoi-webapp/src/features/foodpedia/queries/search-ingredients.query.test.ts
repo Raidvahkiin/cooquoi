@@ -81,7 +81,7 @@ describe('searchIngredientsPage', () => {
               type: 'about:blank',
               title: 'Invalid',
               status: 400,
-              code: 'common.invalid-sort',
+              code: 'common.invalidSort',
             },
             { status: 400 },
           );

@@ -46,9 +46,9 @@ Raised while planning (2026-11-22) and referenced from each story's Context. Rec
 | # | Question | Default (**Decided** when confirmed) |
 |---|---|---|
 | Q1 | How does a curl/.http script get a token for dev@cooquoi.local? Both Keycloak clients have `directAccessGrantsEnabled: false`. | A dev-only public client `cooquoi-dev-cli` with the password grant, in the dev realm import only (S08.T03) — **Decided 2026-11-22** |
-| Q2 | A caller with no household yet (never called `POST /v1/me:sign-in`): what do Foodventory endpoints answer? | 404 `common.not-found` for the household; the script calls `POST /v1/me:sign-in` first |
+| Q2 | A caller with no household yet (never called `POST /v1/me:sign-in`): what do Foodventory endpoints answer? | 404 `common.notFound` for the household; the script calls `POST /v1/me:sign-in` first |
 | Q3 | The dev Postgres has a data volume, so existing households never got `HouseholdCreated`. Backfill the default Pantry aggregates? | No backfill: reset the dev volume before S03 verification (production has no households yet) — **Decided 2026-11-22** |
-| Q4 | Error codes for shape rules the domain doc does not list (pantry name length, quantity amount, conversion amounts) | Add `foodventory.invalid-name`, `foodventory.invalid-quantity`, `foodventory.invalid-conversion-amount` (Validation), mirroring `foodpedia.*`, and add them to the domain doc's error list |
+| Q4 | Error codes for shape rules the domain doc does not list (pantry name length, quantity amount, conversion amounts) | Add `foodventory.invalidName`, `foodventory.invalidQuantity`, `foodventory.invalidConversionAmount` (Validation), mirroring `foodpedia.*`, and add them to the domain doc's error list |
 | Q5 | Routes for Q5, Q6 and the summary, and the delete operation (no template exists) | `GET /v1/stock-items/expiring`, `GET /v1/stock/low`, `GET /v1/stock/summary` (guid constraint on `{ingredientId}`); `DELETE /v1/pantries/{id}` with `If-Match` via a new `DeleteOperation` template |
 | Q6 | Threshold, override or conversion on an ingredient with no IngredientStock aggregate yet: `If-Match` is impossible | Create it on the fly, `If-Match` required only when it exists — **Decided 2026-11-22** |
 | Q7 | Q2/Q3 `tags` filter needs Foodpedia tags across contexts | Deferred: no `tags` filter in E02 |

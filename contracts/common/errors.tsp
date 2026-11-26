@@ -7,31 +7,31 @@ namespace Cooquoi.Common;
 /** Stable error codes shared by every context (ADR 0014 §9). */
 union CommonErrorCode {
   validation: "common.validation",
-  invalidSort: "common.invalid-sort",
-  notFound: "common.not-found",
+  invalidSort: "common.invalidSort",
+  notFound: "common.notFound",
   unauthorized: "common.unauthorized",
   forbidden: "common.forbidden",
-  concurrencyConflict: "common.concurrency-conflict",
-  versionMismatch: "common.version-mismatch",
-  ifMatchRequired: "common.if-match-required",
-  idempotencyKeyRequired: "common.idempotency-key-required",
-  idempotencyKeyReused: "common.idempotency-key-reused",
-  requestInProgress: "common.request-in-progress",
-  requestAlreadyProcessed: "common.request-already-processed",
+  concurrencyConflict: "common.concurrencyConflict",
+  versionMismatch: "common.versionMismatch",
+  ifMatchRequired: "common.ifMatchRequired",
+  idempotencyKeyRequired: "common.idempotencyKeyRequired",
+  idempotencyKeyReused: "common.idempotencyKeyReused",
+  requestInProgress: "common.requestInProgress",
+  requestAlreadyProcessed: "common.requestAlreadyProcessed",
   unexpected: "common.unexpected",
 }
 
 /** Stable codes of field errors (`errors[].code`), shared by every validator. */
 union ValidationCode {
   required: "validation.required",
-  maxLength: "validation.max-length",
-  minLength: "validation.min-length",
+  maxLength: "validation.maxLength",
+  minLength: "validation.minLength",
   min: "validation.min",
   max: "validation.max",
   range: "validation.range",
   pattern: "validation.pattern",
   invalid: "validation.invalid",
-  oneOf: "validation.one-of",
+  oneOf: "validation.oneOf",
 }
 
 /** One field error of a validation problem, translatable by code. */

@@ -81,7 +81,7 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
 
         var result = await api.Scenario(Define(id, Piece, null, 428));
 
-        await result.ShouldBeProblemAsync(428, "common.if-match-required");
+        await result.ShouldBeProblemAsync(428, "common.ifMatchRequired");
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
 
         var result = await api.Scenario(Define(id, new("piece", 1, 350), "\"0\"", 412));
 
-        var problem = await result.ShouldBeProblemAsync(412, "common.version-mismatch");
+        var problem = await result.ShouldBeProblemAsync(412, "common.versionMismatch");
         problem.GetProperty("params").GetProperty("current").GetInt64().ShouldBe(1);
     }
 
@@ -103,7 +103,7 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
 
         var defined = await api.TrackedScenario(Define(id, new("kg", 1, 1000), "\"0\"", 422));
 
-        await defined.Result.ShouldBeProblemAsync(422, "foodpedia.conversion-not-needed");
+        await defined.Result.ShouldBeProblemAsync(422, "foodpedia.conversionNotNeeded");
         defined.Messages.FindEnvelopesWithMessageType<ConversionDefinedDomainEvent>()
             .ShouldNotContain(envelope => ((ConversionDefinedDomainEvent)envelope.Message!).IngredientId.Value == id);
         (await GetAsync(id)).Version.ShouldBe(0);
@@ -114,7 +114,7 @@ public sealed class DefineConversionEndpointTests(ApiFixture api)
     {
         var result = await api.Scenario(Define(Guid.CreateVersion7(), Piece, "\"0\"", 404));
 
-        await result.ShouldBeProblemAsync(404, "common.not-found");
+        await result.ShouldBeProblemAsync(404, "common.notFound");
     }
 
     [Fact]

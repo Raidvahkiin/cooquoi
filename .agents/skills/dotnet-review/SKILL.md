@@ -19,7 +19,7 @@ Conventions: `dotnet/AGENTS.md`. Report findings as a list: **file:line — prob
 - [ ] Names match kinds: `…Aggregate`, `…Entity`, plain immutable value objects; DTOs use plain glossary names.
 - [ ] Each rule is in the right place (value object / aggregate guard / pre-check + constraint / policy / validator) and carries its id (comment + test name).
 - [ ] Methods check every rule before changing state; every behaviour raises an event.
-- [ ] Errors: `<context>.<kebab>` codes, right `ErrorKind`, no reused codes; every new code exists in the contract (or is reported as missing).
+- [ ] Errors: `<context>.<camelCase>` codes (ADR 0021), right `ErrorKind`, no reused codes; every new code exists in the contract (or is reported as missing).
 
 ### Endpoints and HTTP
 - [ ] Endpoint = handler: `LoadAsync` (throws `CommonError.NotFound`) → one domain call. No business logic, no `SaveChanges`, no `try/catch`, no hand-built error responses.

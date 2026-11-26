@@ -1,4 +1,4 @@
-# ADR 0021 — Enum values are camelCase everywhere
+# ADR 0021 — Enum values and error codes are camelCase; URL segments stay kebab-case
 
 - **Status**: Accepted
 - **Date**: 2026-11-22
@@ -18,7 +18,8 @@ E02.S01 added the first multi-word enum value, `ExpiryKind.LongLife`, and showed
 - An enum value's **code** is the C# member name in camelCase: `LongLife` → `longLife`, `Active` → `active`. It is the same in the TypeSpec union, the JSON of every request and response, the seed files, the published API and integration events of a context, and the database column.
 - One function converts between the member and the code: `ContractEnumNames.ToCode` and `Parse` (`Cooquoi.Platform`). `ContractEnumAttribute<TEnum>` lists the codes for validation and the drift check. EF Core stores enums through one camelCase value converter applied by convention, not a per-property `HasConversion<string>()`.
 - Existing rows are converted by a migration in each context that stores enums.
-- Unchanged: routes and actions (`:set-expiry-kind`) and error codes (`foodpedia.ingredient-retired`) stay kebab-case. They are URL segments and identifiers, not enum values.
+- Error codes are camelCase too: `<context>.<camelCase>` (`foodpedia.ingredientRetired`, `common.ifMatchRequired`). They travel in JSON bodies (`ProblemDetails.code`) and are message keys in the webapp, so they follow the same rule as every other JSON value (amended 2026-11-27).
+- Unchanged: URL segments stay kebab-case: resource names, path segments and custom actions (`:set-expiry-kind`, `:sign-in`). Query and path parameter names are camelCase (`pageSize`, `pantryId`), like JSON properties (ADR 0022).
 
 ## Consequences
 

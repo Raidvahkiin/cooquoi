@@ -53,7 +53,7 @@ Default Pantry aggregates (Fridge, Freezer, Dry goods) are created from `Househo
 | S10 | **Define household conversion** (`:define-conversion`) | `unit`, `unitAmount`, `baseAmount` | FV11; re-normalizes items (FV6) | `HouseholdConversionDefined` |
 | S11 | **Remove household conversion** (`:remove-conversion`) | `unit` | Re-normalizes (Foodpedia default or unnormalized) | `HouseholdConversionRemoved` |
 
-The restock response returns each created item with its normalized quantity, proposed expiry and `expiryMissing`, and a **conversion proposal** for unnormalized lines. The put-away response returns the moved (or split) item with its recomputed expiry and `expiryUnusual` when a typed date is far outside the household's usual range. A `foodventory.unit-not-convertible` problem (S2–S4) carries the ingredient and unit so the client can define a household conversion (S10) and retry. Writes on an existing aggregate use `If-Match` (ETag of the IngredientStock or Pantry aggregate); restock, move and consume accept an `Idempotency-Key`.
+The restock response returns each created item with its normalized quantity, proposed expiry and `expiryMissing`, and a **conversion proposal** for unnormalized lines. The put-away response returns the moved (or split) item with its recomputed expiry and `expiryUnusual` when a typed date is far outside the household's usual range. A `foodventory.unitNotConvertible` problem (S2–S4) carries the ingredient and unit so the client can define a household conversion (S10) and retry. Writes on an existing aggregate use `If-Match` (ETag of the IngredientStock or Pantry aggregate); restock, move and consume accept an `Idempotency-Key`.
 
 ## Published API for Planning & Suggestion
 

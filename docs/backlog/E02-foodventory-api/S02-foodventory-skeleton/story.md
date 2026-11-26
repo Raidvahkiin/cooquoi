@@ -37,6 +37,6 @@ T01 (Household context), T02 (new project, `Program.cs`, architecture tests) and
 ## Summary
 
 Done 2026-11-26: `ae2adc4` (T01), `92da37a` (T03), `0d0b049` (T02), `93b98c5` (T04), plus review fixes. .NET suite 198/198, `nx test` green.
-Sign-in publishes `HouseholdCreatedEvent` through the outbox (Lightweight middleware re-scrape is avoided by clearing tracked events after the outbox save); `IHouseholdDirectory` gives the household; with no household `CurrentHousehold` throws `common.not-found` (Q2).
+Sign-in publishes `HouseholdCreatedEvent` through the outbox (Lightweight middleware re-scrape is avoided by clearing tracked events after the outbox save); `IHouseholdDirectory` gives the household; with no household `CurrentHousehold` throws `common.notFound` (Q2).
 `nx drift` is green: the four pantry routes the backend serves in E02.S03 are listed as `planned` in `contracts/scripts/drift-gate.mjs`.
-Open for S03: `HouseholdCreatedHandler` check-then-insert races on overlapping redelivery (the unique index rejects the loser as `foodventory.name-taken` and the message retries); add a transaction + advisory lock or a discard policy. `invalid-name` is 422 (BusinessRule), as in Foodpedia.
+Open for S03: `HouseholdCreatedHandler` check-then-insert races on overlapping redelivery (the unique index rejects the loser as `foodventory.nameTaken` and the message retries); add a transaction + advisory lock or a discard policy. `invalid-name` is 422 (BusinessRule), as in Foodpedia.

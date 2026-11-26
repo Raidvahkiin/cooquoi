@@ -82,8 +82,8 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 | Create | `TypedResults.Created(location, new Created<Name>(id))` (a `Created<Name>` record, e.g. `CreatedIngredient`) → 201 + `Location` |
 | Action (`POST /…/{id}:verb`) | `[EmptyResponse]` → 204; `IfMatch.SetETagAfterSave(httpContext, aggregate)` (the version is bumped during the save, after the handler) |
 
-- **Replace-style actions** call `IfMatch.Require(request, aggregate)` first: missing → 428 `common.if-match-required`, stale → 412 `common.version-mismatch`. Intent actions (`:consume`) do not.
-- **Concurrency**: every root has `Version`, bumped by `AggregateSaveInterceptor` when its row or any owned child changes. A lost race is re-run by `ConcurrencyRetryMiddleware` (3 attempts, fresh `DbContext`), then 409 `common.concurrency-conflict`.
+- **Replace-style actions** call `IfMatch.Require(request, aggregate)` first: missing → 428 `common.ifMatchRequired`, stale → 412 `common.versionMismatch`. Intent actions (`:consume`) do not.
+- **Concurrency**: every root has `Version`, bumped by `AggregateSaveInterceptor` when its row or any owned child changes. A lost race is re-run by `ConcurrencyRetryMiddleware` (3 attempts, fresh `DbContext`), then 409 `common.concurrencyConflict`.
 - **Idempotency**: every authenticated `POST` needs `Idempotency-Key` (UUID). Claimed by the middleware, marked committed inside the command's own save (`IdempotencyCommitInterceptor` — every context `DbContext` calls `MapIdempotencyCommits()`), response stored for replay; 7-day cleanup. Nothing to write per endpoint.
 
 ## Persistence
@@ -117,7 +117,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 | Id | `readonly record struct <X>Id(Guid Value)` with `New()` = UUID v7 |
 | Domain event | `sealed record <Fact>DomainEvent(…) : IDomainEvent` in `Domain/<Aggregate>/Events/` (namespace `…Domain.<Aggregate>.Events`), one per file, `Raise(...)` in every behaviour |
 | Integration event | `sealed record <Fact>Event(…)` of ids and primitives in `PublicApi/Events/` (never ends in `DomainEvent`); cascaded from the domain event by an `Integration/…Handler` |
-| Errors | `static class <X>Error` of `DomainError(code, kind, template)`; codes `<context>.<kebab>`; `common.*` in `CommonError` |
+| Errors | `static class <X>Error` of `DomainError(code, kind, template)`; codes `<context>.<camelCase>` (ADR 0021); `common.*` in `CommonError` |
 | Rule ids | the domain doc's id (F7) in a comment on the guard and in the test name |
 
 Methods **check every rule first, then change state**. Rules needing other aggregates: use-case pre-check + DB constraint. Never inject services into aggregates. Time: `TimeProvider`.

@@ -99,7 +99,7 @@ paths:
       operationId: createIngredient
       description: |-
         C1: creates an ingredient. Requires the curator role.
-        Errors: `foodpedia.code-taken`, `foodpedia.name-taken` (409), `foodpedia.unknown-tags` (422).
+        Errors: `foodpedia.codeTaken`, `foodpedia.nameTaken` (409), `foodpedia.unknownTags` (422).
       parameters:
         - name: Idempotency-Key
           in: header
@@ -283,7 +283,7 @@ paths:
       operationId: setExpiryKind
       description: |-
         C11: sets how the expiry date of one ingredient is known. Requires the curator role.
-        Errors: `foodpedia.ingredient-retired` (422).
+        Errors: `foodpedia.ingredientRetired` (422).
       parameters:
         - name: ingredientId
           in: path
@@ -370,7 +370,7 @@ paths:
       operationId: getMe
       description: |-
         Returns the signed-in user's profile and households. Read-only: creates nothing.
-        Errors: `common.not-found` (404) before the first `signIn`.
+        Errors: `common.notFound` (404) before the first `signIn`.
       parameters: []
       responses:
         '200':
@@ -454,7 +454,7 @@ paths:
       operationId: createPantry
       description: |-
         C1: creates a Pantry aggregate.
-        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
+        Errors: `foodventory.nameTaken` (409), `foodventory.invalidName` (422).
       parameters:
         - name: Idempotency-Key
           in: header
@@ -517,7 +517,7 @@ paths:
       operationId: deletePantry
       description: |-
         C4: deletes an empty Pantry aggregate.
-        Errors: `foodventory.not-empty` (422).
+        Errors: `foodventory.notEmpty` (422).
       parameters:
         - name: pantryId
           in: path
@@ -581,7 +581,7 @@ paths:
       operationId: renamePantry
       description: |-
         C2: renames a Pantry aggregate.
-        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
+        Errors: `foodventory.nameTaken` (409), `foodventory.invalidName` (422).
       parameters:
         - name: pantryId
           in: path
@@ -781,17 +781,17 @@ components:
       type: string
       enum:
         - common.validation
-        - common.invalid-sort
-        - common.not-found
+        - common.invalidSort
+        - common.notFound
         - common.unauthorized
         - common.forbidden
-        - common.concurrency-conflict
-        - common.version-mismatch
-        - common.if-match-required
-        - common.idempotency-key-required
-        - common.idempotency-key-reused
-        - common.request-in-progress
-        - common.request-already-processed
+        - common.concurrencyConflict
+        - common.versionMismatch
+        - common.ifMatchRequired
+        - common.idempotencyKeyRequired
+        - common.idempotencyKeyReused
+        - common.requestInProgress
+        - common.requestAlreadyProcessed
         - common.unexpected
       description: Stable error codes shared by every context (ADR 0014 §9).
     Common.FieldError:
@@ -882,14 +882,14 @@ components:
       type: string
       enum:
         - validation.required
-        - validation.max-length
-        - validation.min-length
+        - validation.maxLength
+        - validation.minLength
         - validation.min
         - validation.max
         - validation.range
         - validation.pattern
         - validation.invalid
-        - validation.one-of
+        - validation.oneOf
       description: Stable codes of field errors (`errors[].code`), shared by every validator.
     Foodpedia.Conversion:
       type: object
@@ -974,23 +974,23 @@ components:
     Foodpedia.FoodpediaErrorCode:
       type: string
       enum:
-        - foodpedia.code-taken
-        - foodpedia.invalid-code
-        - foodpedia.invalid-name
-        - foodpedia.english-name-required
-        - foodpedia.duplicate-locale
-        - foodpedia.name-missing
-        - foodpedia.name-taken
-        - foodpedia.invalid-base-unit
-        - foodpedia.invalid-conversion-amount
-        - foodpedia.conversion-not-needed
-        - foodpedia.invalid-shelf-life
-        - foodpedia.category-tag-required
-        - foodpedia.ingredient-retired
-        - foodpedia.invalid-tag-code
-        - foodpedia.invalid-tag-label
-        - foodpedia.english-label-required
-        - foodpedia.unknown-tags
+        - foodpedia.codeTaken
+        - foodpedia.invalidCode
+        - foodpedia.invalidName
+        - foodpedia.englishNameRequired
+        - foodpedia.duplicateLocale
+        - foodpedia.nameMissing
+        - foodpedia.nameTaken
+        - foodpedia.invalidBaseUnit
+        - foodpedia.invalidConversionAmount
+        - foodpedia.conversionNotNeeded
+        - foodpedia.invalidShelfLife
+        - foodpedia.categoryTagRequired
+        - foodpedia.ingredientRetired
+        - foodpedia.invalidTagCode
+        - foodpedia.invalidTagLabel
+        - foodpedia.englishLabelRequired
+        - foodpedia.unknownTags
       description: Stable error codes of the Foodpedia context (`problem.code`), next to `CommonErrorCode`.
     Foodpedia.IngredientDetail:
       type: object
@@ -1133,9 +1133,9 @@ components:
     Foodventory.FoodventoryErrorCode:
       type: string
       enum:
-        - foodventory.name-taken
-        - foodventory.invalid-name
-        - foodventory.not-empty
+        - foodventory.nameTaken
+        - foodventory.invalidName
+        - foodventory.notEmpty
       description: Stable error codes of the Foodventory context (`problem.code`), next to `CommonErrorCode`.
     Foodventory.PantryList:
       type: object

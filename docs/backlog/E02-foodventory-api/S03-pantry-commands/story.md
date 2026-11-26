@@ -6,7 +6,7 @@ A household member creates, renames, re-stores and deletes Pantry aggregates and
 
 ## Acceptance
 
-- [x] C1 `POST /v1/pantries`: 201 + `Location`; FV1: 409 `foodventory.name-taken` (case- and accent-insensitive: "Réfrigérateur" vs "refrigerateur"), 422 `foodventory.invalid-name` (decided in S02 review) / 400 validation.
+- [x] C1 `POST /v1/pantries`: 201 + `Location`; FV1: 409 `foodventory.nameTaken` (case- and accent-insensitive: "Réfrigérateur" vs "refrigerateur"), 422 `foodventory.invalidName` (decided in S02 review) / 400 validation.
 - [x] C2 `:rename`, C3 `:set-storage` (storage or none): 204 + ETag, `If-Match` required (428 / 412), events `PantryRenamed` / `PantryStorageChanged`; renaming to the same name raises nothing.
 - [x] C4 `DELETE /v1/pantries/{id}`: 204 with `If-Match`, `PantryDeleted`. The FV13 pre-check exists (it counts stock items in the pantry, 0 for now).
 - [x] Q1 `GET /v1/pantries`: the caller's Pantry aggregates only (FV2), with `itemCount` and `toPutAwayCount`.

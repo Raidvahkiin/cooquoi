@@ -11,7 +11,7 @@ Conventions: `dotnet/AGENTS.md`. Reference implementation: `dotnet/src/Cooquoi.C
 
 1. **Contract first** (`contract` skill). Find or add the operation in `contracts/` (route, request, response, error codes). If the contract is not written yet, write it in the same change or list what it must declare.
 2. **Domain.** New or changed rules → `dotnet-domain` skill.
-3. **Request + validator** — `Features/<UseCase>/<UseCase>.cs`: a `sealed record` (nested records for inputs) and `<UseCase>Validator : AbstractValidator<…>` for shape only (`NotEmpty`, `MaximumLength`, one-of with `.WithErrorCode("validation.one-of")`). The validator runs automatically and answers 400 in the contract shape.
+3. **Request + validator** — `Features/<UseCase>/<UseCase>.cs`: a `sealed record` (nested records for inputs) and `<UseCase>Validator : AbstractValidator<…>` for shape only (`NotEmpty`, `MaximumLength`, one-of with `.WithErrorCode("validation.oneOf")`). The validator runs automatically and answers 400 in the contract shape.
    - Query strings: a positional record whose parameters carry `[FromQuery(Name = "camelName")]`, bound with `[AsParameters]`. Paging fields `int?`, defaulted in the endpoint. **Not** init-only properties (Wolverine codegen fails at runtime).
 4. **Endpoint** — `Features/<UseCase>/<UseCase>Endpoint.cs`, `public static class`:
    ```csharp

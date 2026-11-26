@@ -2,7 +2,7 @@
 
 ## Goal
 
-The contract declares S1 `restock` and S2 `moveStockItem`, both returning a body. It also declares the shared `StockItemView` that the later queries reuse, and the error codes `foodventory.ingredient-retired`, `foodventory.unit-not-convertible`, `foodventory.quantity-exceeds-remaining` and `foodventory.invalid-quantity`, with webapp messages.
+The contract declares S1 `restock` and S2 `moveStockItem`, both returning a body. It also declares the shared `StockItemView` that the later queries reuse, and the error codes `foodventory.ingredientRetired`, `foodventory.unitNotConvertible`, `foodventory.quantityExceedsRemaining` and `foodventory.invalidQuantity`, with webapp messages.
 
 ## Read only
 

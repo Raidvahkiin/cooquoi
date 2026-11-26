@@ -24,7 +24,7 @@ describe('getMe', () => {
         HttpResponse.json(
           {
             status: 404,
-            code: 'common.not-found',
+            code: 'common.notFound',
             params: { resource: 'UserProfile' },
           },
           { status: 404 },

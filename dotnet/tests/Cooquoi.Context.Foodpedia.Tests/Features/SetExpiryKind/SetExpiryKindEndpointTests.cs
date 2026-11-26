@@ -79,7 +79,7 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
 
         var result = await api.Scenario(Set(id, LongLife, null, 428));
 
-        await result.ShouldBeProblemAsync(428, "common.if-match-required");
+        await result.ShouldBeProblemAsync(428, "common.ifMatchRequired");
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
 
         var result = await api.Scenario(Set(id, new("printed"), "\"0\"", 412));
 
-        var problem = await result.ShouldBeProblemAsync(412, "common.version-mismatch");
+        var problem = await result.ShouldBeProblemAsync(412, "common.versionMismatch");
         problem.GetProperty("params").GetProperty("current").GetInt64().ShouldBe(1);
     }
 
@@ -117,7 +117,7 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
 
         var result = await api.Scenario(Set(id, LongLife, "\"1\"", 422));
 
-        await result.ShouldBeProblemAsync(422, "foodpedia.ingredient-retired");
+        await result.ShouldBeProblemAsync(422, "foodpedia.ingredientRetired");
     }
 
     [Fact]
@@ -135,6 +135,6 @@ public sealed class SetExpiryKindEndpointTests(ApiFixture api)
     {
         var result = await api.Scenario(Set(Guid.CreateVersion7(), LongLife, "\"0\"", 404));
 
-        await result.ShouldBeProblemAsync(404, "common.not-found");
+        await result.ShouldBeProblemAsync(404, "common.notFound");
     }
 }
