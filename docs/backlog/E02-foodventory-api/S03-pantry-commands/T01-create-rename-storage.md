@@ -37,11 +37,11 @@ Delete and list (T02); stock (E02.S04)
 - [ ] T01.2 `PantryNameLookup`
 - [ ] T01.3 `CreatePantry` request, validator, endpoint, tests (201, 409 accent-insensitive, 400, FV2 isolation between two users)
 - [ ] T01.4 `RenamePantry` and `SetPantryStorage` endpoints, tests (204 + ETag, 428, 412, 404 other household, 409 rename to a taken name)
-- [ ] T01.5 `dotnet build`; drift shows only the T02 operations as missing
+- [ ] T01.5 `dotnet build`; remove the paths this task serves from `planned` in `contracts/scripts/drift-gate.mjs`; drift green
 
 ## Done when
 
-`dotnet test --project dotnet/tests/Cooquoi.Context.Foodventory.Tests -v q --no-progress` is green. `pnpm nx run @cooquoi/contracts:drift 2>&1 | tail -5` lists only `listPantries` and `deletePantry`.
+`dotnet test --project dotnet/tests/Cooquoi.Context.Foodventory.Tests -v q --no-progress` is green. `pnpm nx run @cooquoi/contracts:drift 2>&1 | tail -3` passes.
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): create, rename and set storage of Pantry aggregates (E02.S03.T01)`), stop.
 

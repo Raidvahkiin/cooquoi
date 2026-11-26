@@ -35,7 +35,7 @@ Real counts and FV13 with stock (E02.S04.T05)
 - [ ] T02.1 `OperationContract` entries for delete and non-paged read, if missing
 - [ ] T02.2 `Delete()` + `PantryDeleted`, `PantryContentsLookup`, `DeletePantry` endpoint, tests (204, 428, 412, 404 other household)
 - [ ] T02.3 `ListPantries` endpoint, tests (only own pantries, defaults present after sign-in, sorted by name)
-- [ ] T02.4 Drift and catalogue green
+- [ ] T02.4 Remove the last pantries paths and the empty `planned` entries from `contracts/scripts/drift-gate.mjs`; drift and catalogue green
 
 ## Done when
 

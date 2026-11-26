@@ -39,7 +39,20 @@ if (text === '') {
   process.exit(1);
 }
 
+/** Paths the contract declares before the backend serves them (contract first), each with the story that serves them. */
+const planned = {
+  '/v1/pantries': 'E02.S03',
+  '/v1/pantries/{pantryId}': 'E02.S03',
+  '/v1/pantries/{pantryId}:rename': 'E02.S03',
+  '/v1/pantries/{pantryId}:set-storage': 'E02.S03',
+};
+
 const diff = JSON.parse(text);
+if (diff.paths?.deleted) {
+  diff.paths.deleted = diff.paths.deleted.filter((path) => !(path in planned));
+  if (diff.paths.deleted.length === 0) delete diff.paths.deleted;
+  if (Object.keys(diff.paths).length === 0) delete diff.paths;
+}
 for (const key of Object.keys(accepted)) {
   const [parent, child] = key.split('.');
   if (child === undefined) {
@@ -61,4 +74,4 @@ if (Object.keys(diff).length > 0) {
   process.exit(1);
 }
 
-console.log(`drift: none (accepted: ${Object.keys(accepted).join(', ')})`);
+console.log(`drift: none (accepted: ${Object.keys(accepted).join(', ')}; planned: ${Object.keys(planned).length} paths)`);
