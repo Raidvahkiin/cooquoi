@@ -6,8 +6,6 @@ using Cooquoi.Platform.Concurrency;
 using Cooquoi.Platform.OpenApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using Raidvahkiin.Ddd;
 using Wolverine.Attributes;
 using Wolverine.Http;
 
@@ -20,12 +18,7 @@ public static class RenamePantryEndpoint
 
     /// <summary>Wolverine runs this before <see cref="Post"/>: 404 when the pantry is not the caller's household's (FV2).</summary>
     public static async Task<PantryAggregate> LoadAsync(Guid pantryId, CurrentHousehold household, FoodventoryDbContext db, CancellationToken cancellationToken)
-    {
-        var householdId = await household.GetIdAsync(cancellationToken);
-        var id = new PantryId(pantryId);
-        return await db.Pantries.FirstOrDefaultAsync(pantry => pantry.Id == id && pantry.HouseholdId == householdId, cancellationToken)
-            ?? throw CommonError.NotFound.ToException(("resource", "Pantry"), ("id", pantryId));
-    }
+        => await db.Pantries.LoadForHouseholdAsync(await household.GetIdAsync(cancellationToken), pantryId, cancellationToken);
 
     /// <summary>C2: replace-style, so the client proves which version it edited (If-Match); answers the new version as ETag.</summary>
     [WolverinePost("/v1/pantries/{pantryId}:rename", OperationId = "renamePantry")]

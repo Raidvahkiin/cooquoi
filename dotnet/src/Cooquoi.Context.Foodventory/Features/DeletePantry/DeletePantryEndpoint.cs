@@ -1,5 +1,4 @@
 using Cooquoi.Context.Foodventory.Domain.Pantries;
-using Cooquoi.Context.Foodventory.Features.RenamePantry;
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
 using Cooquoi.Context.Foodventory.Persistence.Lookups;
@@ -17,9 +16,9 @@ public static class DeletePantryEndpoint
     /// <summary>OpenAPI responses of the contract template.</summary>
     public static void Configure(HttpChain chain) => OperationContract.Delete(chain);
 
-    /// <summary>Wolverine runs this before <see cref="Delete"/>: same household-scoped load as the rename (FV2).</summary>
-    public static Task<PantryAggregate> LoadAsync(Guid pantryId, CurrentHousehold household, FoodventoryDbContext db, CancellationToken cancellationToken) =>
-        RenamePantryEndpoint.LoadAsync(pantryId, household, db, cancellationToken);
+    /// <summary>Wolverine runs this before <see cref="Delete"/>: 404 when the pantry is not the caller's household's (FV2).</summary>
+    public static async Task<PantryAggregate> LoadAsync(Guid pantryId, CurrentHousehold household, FoodventoryDbContext db, CancellationToken cancellationToken) =>
+        await db.Pantries.LoadForHouseholdAsync(await household.GetIdAsync(cancellationToken), pantryId, cancellationToken);
 
     /// <summary>C4: deletes an empty Pantry aggregate; the client proves which version it saw (If-Match).</summary>
     [WolverineDelete("/v1/pantries/{pantryId}", OperationId = "deletePantry")]
