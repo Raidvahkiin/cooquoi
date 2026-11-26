@@ -47,4 +47,7 @@ public sealed class PantryAggregate : AggregateRoot<PantryId>
         Storage = storage;
         Raise(new PantryStorageChangedDomainEvent(Id, storage));
     }
+
+    /// <summary>FV13 (the pantry holds no stock item) is the use case's pre-check; the caller removes the aggregate afterwards.</summary>
+    public void Delete() => Raise(new PantryDeletedDomainEvent(Id));
 }

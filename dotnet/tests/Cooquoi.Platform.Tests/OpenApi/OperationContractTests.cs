@@ -25,7 +25,7 @@ public sealed class OperationContractTests(ApiFixture api)
             .Select(operation => operation.Value.GetProperty("operationId").GetString());
 
         operationIds.ShouldBe(
-            ["getMe", "signIn", "searchIngredients", "createIngredient", "getIngredient", "defineConversion", "setExpiryKind", "createPantry", "renamePantry", "setPantryStorage"],
+            ["getMe", "signIn", "searchIngredients", "createIngredient", "getIngredient", "defineConversion", "setExpiryKind", "createPantry", "renamePantry", "setPantryStorage", "deletePantry", "listPantries"],
             ignoreOrder: true);
     }
 

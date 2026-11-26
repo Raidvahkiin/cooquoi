@@ -26,6 +26,22 @@ public static class OperationContract
         Problems(chain, 400, 401);
     }
 
+    /// <summary><c>CollectionReadOperation</c>: 200 (small collection, not paged), 401.</summary>
+    public static void CollectionRead(HttpChain chain)
+    {
+        NeverNotFound(chain);
+        Problems(chain, 401);
+    }
+
+    /// <summary><c>DeleteOperation</c>: 204 without <c>ETag</c>, requires <c>If-Match</c> (412, 428).</summary>
+    public static void Delete(HttpChain chain)
+    {
+        chain.Metadata.Produces(StatusCodes.Status204NoContent);
+        chain.Metadata.Finally(endpoint => endpoint.RemoveStatusCodeResponse(StatusCodes.Status200OK));
+        chain.Metadata.WithMetadata(new RequestHeaderMetadata(HeaderNames.IfMatch, Required: true));
+        Problems(chain, 401, 403, 404, 409, 412, 422, 428);
+    }
+
     /// <summary>A resource of the signed-in caller (<c>GET /v1/me</c>): 200, 401, 404.</summary>
     public static void OwnResource(HttpChain chain) => Problems(chain, 401, 404);
 

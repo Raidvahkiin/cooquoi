@@ -940,6 +940,36 @@
       }
     },
     "/v1/pantries": {
+      "get": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.ListPantries.ListPantriesEndpoint"
+        ],
+        "summary": "Q1: the caller's household's Pantry aggregates, by name.",
+        "description": "GET_v1_pantries",
+        "operationId": "listPantries",
+        "responses": {
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PantryList"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "Cooquoi.Context.Foodventory.Features.CreatePantry.CreatePantryEndpoint"
@@ -1029,6 +1059,110 @@
           },
           "422": {
             "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/pantries/{pantryId}": {
+      "delete": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.DeletePantry.DeletePantryEndpoint"
+        ],
+        "summary": "C4: deletes an empty Pantry aggregate; the client proves which version it saw (If-Match).",
+        "description": "DELETE_v1_pantries_pantryId",
+        "operationId": "deletePantry",
+        "parameters": [
+          {
+            "name": "pantryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition Required",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1601,6 +1735,60 @@
         },
         "description": "One page of a list query, with the total count of matching items (contract `Page&lt;T&gt;`)."
       },
+      "PantryList": {
+        "required": [
+          "pantries",
+          "toPutAwayCount"
+        ],
+        "type": "object",
+        "properties": {
+          "pantries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PantrySummary"
+            }
+          },
+          "toPutAwayCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "description": "Q1 answer: the household's pantries and how many stock items still wait to be put away."
+      },
+      "PantrySummary": {
+        "required": [
+          "id",
+          "name",
+          "itemCount",
+          "version"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "itemCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "storage": {
+            "enum": [
+              "fridge",
+              "freezer",
+              "room"
+            ],
+            "type": "string"
+          }
+        }
+      },
       "ProblemDetails": {
         "required": [
           "type",
@@ -1782,7 +1970,13 @@
       "name": "Cooquoi.Context.Foodventory.Features.RenamePantry.RenamePantryEndpoint"
     },
     {
+      "name": "Cooquoi.Context.Foodventory.Features.ListPantries.ListPantriesEndpoint"
+    },
+    {
       "name": "Cooquoi.Context.Foodventory.Features.CreatePantry.CreatePantryEndpoint"
+    },
+    {
+      "name": "Cooquoi.Context.Foodventory.Features.DeletePantry.DeletePantryEndpoint"
     }
   ]
 }

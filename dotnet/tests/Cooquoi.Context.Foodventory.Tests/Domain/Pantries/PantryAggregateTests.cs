@@ -68,4 +68,14 @@ public sealed class PantryAggregateTests
     [InlineData("vi", "Tủ lạnh")]
     public void The_default_pantries_are_named_in_the_locale(string tag, string fridge) =>
         DefaultPantries.For(Guid.NewGuid(), Locale.FromTagOrDefault(tag)).First().Name.Value.ShouldBe(fridge);
+
+    [Fact]
+    public void Delete_raises_PantryDeleted()
+    {
+        var pantry = Existing();
+
+        pantry.Delete();
+
+        pantry.DomainEvents.ShouldHaveSingleItem().ShouldBe(new PantryDeletedDomainEvent(pantry.Id));
+    }
 }

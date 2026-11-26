@@ -32,10 +32,10 @@ Real counts and FV13 with stock (E02.S04.T05)
 
 ## Subtasks
 
-- [ ] T02.1 `OperationContract` entries for delete and non-paged read, if missing
-- [ ] T02.2 `Delete()` + `PantryDeleted`, `PantryContentsLookup`, `DeletePantry` endpoint, tests (204, 428, 412, 404 other household)
-- [ ] T02.3 `ListPantries` endpoint, tests (only own pantries, defaults present after sign-in, sorted by name)
-- [ ] T02.4 Remove the last pantries paths and the empty `planned` entries from `contracts/scripts/drift-gate.mjs`; drift and catalogue green
+- [x] T02.1 `OperationContract` entries for delete and non-paged read, if missing
+- [x] T02.2 `Delete()` + `PantryDeleted`, `PantryContentsLookup`, `DeletePantry` endpoint, tests (204, 428, 412, 404 other household)
+- [x] T02.3 `ListPantries` endpoint, tests (only own pantries, defaults present after sign-in, sorted by name)
+- [x] T02.4 Remove the last pantries paths and the empty `planned` entries from `contracts/scripts/drift-gate.mjs`; drift and catalogue green
 
 ## Done when
 
@@ -43,6 +43,9 @@ Real counts and FV13 with stock (E02.S04.T05)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): delete and list Pantry aggregates (E02.S03.T02)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Changed: `OperationContract.Delete`/`CollectionRead`, `PantryAggregate.Delete()` + `PantryDeletedDomainEvent`, `PantryContentsLookup` (stub 0, E02.S04.T05), `DeletePantry` and `ListPantries` endpoints with tests; `drift-gate.mjs` back to no `planned`.
+Verified: Foodventory tests 35/35, Architecture 34/34, Platform 17/17, drift prints `drift: none`.
+Surprises: DELETE needs `[NotBody]` on the loaded aggregate; list is `[NonTransactional]` (two DbContexts); `SignedIn.NewUserAsync` now tracked so default pantries exist; no migration (model unchanged).
