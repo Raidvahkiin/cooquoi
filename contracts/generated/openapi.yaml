@@ -6,6 +6,7 @@ info:
 tags:
   - name: Household
   - name: Foodpedia
+  - name: Foodventory
 paths:
   /v1/ingredients:
     get:
@@ -429,6 +430,324 @@ paths:
                 $ref: '#/components/schemas/Common.ProblemDetails'
       tags:
         - Household
+  /v1/pantries:
+    get:
+      operationId: listPantries
+      description: "Q1: the household's pantries with their item counts, and the count of items to put away. Not paged."
+      parameters: []
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foodventory.PantryList'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+    post:
+      operationId: createPantry
+      description: |-
+        C1: creates a Pantry aggregate.
+        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '201':
+          description: The request has succeeded and a new resource has been created as a result.
+          headers:
+            Location:
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foodventory.CreatedPantry'
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.CreatePantry'
+  /v1/pantries/{pantryId}:
+    delete:
+      operationId: deletePantry
+      description: |-
+        C4: deletes an empty Pantry aggregate.
+        Errors: `foodventory.not-empty` (422).
+      parameters:
+        - name: pantryId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: If-Match
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '412':
+          description: 412 — `If-Match` does not match the current version.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '428':
+          description: 428 — `If-Match` is required.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+  /v1/pantries/{pantryId}:rename:
+    post:
+      operationId: renamePantry
+      description: |-
+        C2: renames a Pantry aggregate.
+        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+      parameters:
+        - name: pantryId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: If-Match
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '412':
+          description: 412 — `If-Match` does not match the current version.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '428':
+          description: 428 — `If-Match` is required.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.RenamePantry'
+  /v1/pantries/{pantryId}:set-storage:
+    post:
+      operationId: setPantryStorage
+      description: 'C3: sets or clears the storage of a Pantry aggregate.'
+      parameters:
+        - name: pantryId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: If-Match
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '412':
+          description: 412 — `If-Match` does not match the current version.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '428':
+          description: 428 — `If-Match` is required.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.SetPantryStorage'
 security:
   - BearerAuth: []
 components:
@@ -793,6 +1112,91 @@ components:
         - freezer
         - room
       description: Where an ingredient keeps best.
+    Foodventory.CreatePantry:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        storage:
+          $ref: '#/components/schemas/Foodventory.Storage'
+      description: Body of a Pantry aggregate creation (C1).
+    Foodventory.CreatedPantry:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          $ref: '#/components/schemas/Common.Id'
+      description: Id of the created Pantry aggregate.
+    Foodventory.FoodventoryErrorCode:
+      type: string
+      enum:
+        - foodventory.name-taken
+        - foodventory.invalid-name
+        - foodventory.not-empty
+      description: Stable error codes of the Foodventory context (`problem.code`), next to `CommonErrorCode`.
+    Foodventory.PantryList:
+      type: object
+      required:
+        - pantries
+        - toPutAwayCount
+      properties:
+        pantries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foodventory.PantrySummary'
+        toPutAwayCount:
+          type: integer
+          format: int32
+      description: The household's pantries and how many stock items still wait to be put away (Q1).
+    Foodventory.PantrySummary:
+      type: object
+      required:
+        - id
+        - name
+        - itemCount
+        - version
+      properties:
+        id:
+          $ref: '#/components/schemas/Common.Id'
+        name:
+          type: string
+        storage:
+          $ref: '#/components/schemas/Foodventory.Storage'
+        itemCount:
+          type: integer
+          format: int32
+        version:
+          type: integer
+          format: int64
+      description: One Pantry aggregate in the list; `version` is sent back as `If-Match`.
+    Foodventory.RenamePantry:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+      description: Body of a Pantry aggregate rename (C2).
+    Foodventory.SetPantryStorage:
+      type: object
+      required:
+        - storage
+      properties:
+        storage:
+          anyOf:
+            - $ref: '#/components/schemas/Foodventory.Storage'
+            - type: 'null'
+      description: Body of a storage change (C3); `null` clears it.
+    Foodventory.Storage:
+      type: string
+      enum:
+        - fridge
+        - freezer
+        - room
+      description: Where a Pantry aggregate keeps its stock.
     Household.HouseholdSummary:
       type: object
       required:

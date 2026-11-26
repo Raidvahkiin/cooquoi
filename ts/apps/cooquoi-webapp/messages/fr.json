@@ -93,6 +93,11 @@
       "english-label-required": "Une étiquette doit avoir un libellé en anglais.",
       "unknown-tags": "Étiquettes inconnues ou retirées : {codes}."
     },
+    "foodventory": {
+      "name-taken": "Un garde-manger nommé « {name} » existe déjà.",
+      "invalid-name": "« {name} » n’est pas un nom de garde-manger valide.",
+      "not-empty": "Un garde-manger qui contient encore des articles ne peut pas être supprimé."
+    },
     "validation": {
       "required": "Ce champ est obligatoire.",
       "max-length": "Utilisez au plus {maxLength} caractères.",

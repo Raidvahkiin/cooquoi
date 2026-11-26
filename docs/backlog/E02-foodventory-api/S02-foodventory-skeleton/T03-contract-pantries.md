@@ -44,11 +44,11 @@ C# code (T04, E02.S03); stock operations (E02.S04.T01)
 
 ## Subtasks
 
-- [ ] T03.1 Folder, `main.tsp` import, `Storage`, models
-- [ ] T03.2 `CollectionReadOperation` and `DeleteOperation` templates
-- [ ] T03.3 Five routes with doc comments (use-case ids C1–C4, Q1)
-- [ ] T03.4 Error union and webapp messages (en, fr, vi)
-- [ ] T03.5 `pnpm nx run @cooquoi/api-client:generate`; commit `openapi.yaml` and the client
+- [x] T03.1 Folder, `main.tsp` import, `Storage`, models
+- [x] T03.2 `CollectionReadOperation` and `DeleteOperation` templates
+- [x] T03.3 Five routes with doc comments (use-case ids C1–C4, Q1)
+- [x] T03.4 Error union and webapp messages (en, fr, vi)
+- [x] T03.5 `pnpm nx run @cooquoi/api-client:generate`; commit `openapi.yaml` and the client
 
 ## Done when
 
@@ -56,6 +56,10 @@ C# code (T04, E02.S03); stock operations (E02.S04.T01)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(contracts): Foodventory pantry operations (E02.S02.T03)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Foodventory namespace added (models, 5 routes C1–C4 + Q1, `FoodventoryErrorCode`), templates `CollectionReadOperation` and `DeleteOperation`; client regenerated, messages in en/fr/vi.
+ADR 0009 allows `DELETE` for CRUD-shaped data, so C4 is `DELETE /v1/pantries/{pantryId}` with `If-Match` (204).
+`Foodventory.Storage` and `Foodpedia.Storage` are separate OpenAPI schemas (namespaced, no clash); backend needs `[ContractCodes]`/enum on both.
+Drift and catalogue test stay red until T04 / S03.T02.

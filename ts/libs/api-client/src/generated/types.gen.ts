@@ -204,6 +204,64 @@ export type FoodpediaShelfLife = {
 export type FoodpediaStorage = 'fridge' | 'freezer' | 'room';
 
 /**
+ * Body of a Pantry aggregate creation (C1).
+ */
+export type FoodventoryCreatePantry = {
+    name: string;
+    storage?: FoodventoryStorage;
+};
+
+/**
+ * Id of the created Pantry aggregate.
+ */
+export type FoodventoryCreatedPantry = {
+    id: CommonId;
+};
+
+/**
+ * Stable error codes of the Foodventory context (`problem.code`), next to `CommonErrorCode`.
+ */
+export type FoodventoryFoodventoryErrorCode = 'foodventory.name-taken' | 'foodventory.invalid-name' | 'foodventory.not-empty';
+
+/**
+ * The household's pantries and how many stock items still wait to be put away (Q1).
+ */
+export type FoodventoryPantryList = {
+    pantries: Array<FoodventoryPantrySummary>;
+    toPutAwayCount: number;
+};
+
+/**
+ * One Pantry aggregate in the list; `version` is sent back as `If-Match`.
+ */
+export type FoodventoryPantrySummary = {
+    id: CommonId;
+    name: string;
+    storage?: FoodventoryStorage;
+    itemCount: number;
+    version: number;
+};
+
+/**
+ * Body of a Pantry aggregate rename (C2).
+ */
+export type FoodventoryRenamePantry = {
+    name: string;
+};
+
+/**
+ * Body of a storage change (C3); `null` clears it.
+ */
+export type FoodventorySetPantryStorage = {
+    storage: FoodventoryStorage | null;
+};
+
+/**
+ * Where a Pantry aggregate keeps its stock.
+ */
+export type FoodventoryStorage = 'fridge' | 'freezer' | 'room';
+
+/**
  * A household the user belongs to.
  */
 export type HouseholdHouseholdSummary = {
@@ -565,3 +623,244 @@ export type SignInResponses = {
 };
 
 export type SignInResponse = SignInResponses[keyof SignInResponses];
+
+export type ListPantriesData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/v1/pantries';
+};
+
+export type ListPantriesErrors = {
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+};
+
+export type ListPantriesError = ListPantriesErrors[keyof ListPantriesErrors];
+
+export type ListPantriesResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FoodventoryPantryList;
+};
+
+export type ListPantriesResponse = ListPantriesResponses[keyof ListPantriesResponses];
+
+export type CreatePantryData = {
+    body: FoodventoryCreatePantry;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path?: never;
+    query?: never;
+    url: '/v1/pantries';
+};
+
+export type CreatePantryErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+};
+
+export type CreatePantryError = CreatePantryErrors[keyof CreatePantryErrors];
+
+export type CreatePantryResponses = {
+    /**
+     * The request has succeeded and a new resource has been created as a result.
+     */
+    201: FoodventoryCreatedPantry;
+};
+
+export type CreatePantryResponse = CreatePantryResponses[keyof CreatePantryResponses];
+
+export type DeletePantryData = {
+    body?: never;
+    headers: {
+        'If-Match': string;
+    };
+    path: {
+        pantryId: CommonId;
+    };
+    query?: never;
+    url: '/v1/pantries/{pantryId}';
+};
+
+export type DeletePantryErrors = {
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 412 — `If-Match` does not match the current version.
+     */
+    412: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+    /**
+     * 428 — `If-Match` is required.
+     */
+    428: CommonProblemDetails;
+};
+
+export type DeletePantryError = DeletePantryErrors[keyof DeletePantryErrors];
+
+export type DeletePantryResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type DeletePantryResponse = DeletePantryResponses[keyof DeletePantryResponses];
+
+export type RenamePantryData = {
+    body: FoodventoryRenamePantry;
+    headers: {
+        'Idempotency-Key': string;
+        'If-Match': string;
+    };
+    path: {
+        pantryId: CommonId;
+    };
+    query?: never;
+    url: '/v1/pantries/{pantryId}:rename';
+};
+
+export type RenamePantryErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 412 — `If-Match` does not match the current version.
+     */
+    412: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+    /**
+     * 428 — `If-Match` is required.
+     */
+    428: CommonProblemDetails;
+};
+
+export type RenamePantryError = RenamePantryErrors[keyof RenamePantryErrors];
+
+export type RenamePantryResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type RenamePantryResponse = RenamePantryResponses[keyof RenamePantryResponses];
+
+export type SetPantryStorageData = {
+    body: FoodventorySetPantryStorage;
+    headers: {
+        'Idempotency-Key': string;
+        'If-Match': string;
+    };
+    path: {
+        pantryId: CommonId;
+    };
+    query?: never;
+    url: '/v1/pantries/{pantryId}:set-storage';
+};
+
+export type SetPantryStorageErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 412 — `If-Match` does not match the current version.
+     */
+    412: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+    /**
+     * 428 — `If-Match` is required.
+     */
+    428: CommonProblemDetails;
+};
+
+export type SetPantryStorageError = SetPantryStorageErrors[keyof SetPantryStorageErrors];
+
+export type SetPantryStorageResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type SetPantryStorageResponse = SetPantryStorageResponses[keyof SetPantryStorageResponses];

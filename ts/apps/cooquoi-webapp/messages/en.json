@@ -93,6 +93,11 @@
       "english-label-required": "A tag needs an English label.",
       "unknown-tags": "Unknown or retired tags: {codes}."
     },
+    "foodventory": {
+      "name-taken": "A pantry named “{name}” already exists.",
+      "invalid-name": "“{name}” is not a valid pantry name.",
+      "not-empty": "A pantry that still holds items cannot be deleted."
+    },
     "validation": {
       "required": "This field is required.",
       "max-length": "Use at most {maxLength} characters.",

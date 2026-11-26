@@ -85,3 +85,28 @@ op ReplaceActionOperation<TBody extends {}, TPath extends {} = { @path id: Id }>
   | PreconditionFailedProblem
   | UnprocessableProblem
   | PreconditionRequiredProblem;
+
+/** Reads a small collection that is not paged: no filters, sort or paging. */
+@get
+op CollectionReadOperation<T>():
+  | {
+      @body body: T;
+    }
+  | UnauthorizedProblem;
+
+/** Deletes a resource; requires `If-Match`. */
+@delete
+op DeleteOperation<TPath extends {} = { @path id: Id }>(
+  ...TPath,
+  ...IfMatchHeader,
+):
+  | {
+      @statusCode _: 204;
+    }
+  | UnauthorizedProblem
+  | ForbiddenProblem
+  | NotFoundProblem
+  | ConflictProblem
+  | PreconditionFailedProblem
+  | UnprocessableProblem
+  | PreconditionRequiredProblem;

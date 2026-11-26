@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses, SignInData, SignInErrors, SignInResponses } from './types.gen';
+import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, CreatePantryData, CreatePantryErrors, CreatePantryResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, DeletePantryData, DeletePantryErrors, DeletePantryResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, ListPantriesData, ListPantriesErrors, ListPantriesResponses, RenamePantryData, RenamePantryErrors, RenamePantryResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses, SetPantryStorageData, SetPantryStorageErrors, SetPantryStorageResponses, SignInData, SignInErrors, SignInResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -98,4 +98,64 @@ export const signIn = <ThrowOnError extends boolean = false>(options: Options<Si
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/v1/me:sign-in',
     ...options
+});
+
+/**
+ * Q1: the household's pantries with their item counts, and the count of items to put away. Not paged.
+ */
+export const listPantries = <ThrowOnError extends boolean = false>(options?: Options<ListPantriesData, ThrowOnError>): RequestResult<ListPantriesResponses, ListPantriesErrors, ThrowOnError> => (options?.client ?? client).get<ListPantriesResponses, ListPantriesErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/pantries',
+    ...options
+});
+
+/**
+ * C1: creates a Pantry aggregate.
+ * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+ */
+export const createPantry = <ThrowOnError extends boolean = false>(options: Options<CreatePantryData, ThrowOnError>): RequestResult<CreatePantryResponses, CreatePantryErrors, ThrowOnError> => (options.client ?? client).post<CreatePantryResponses, CreatePantryErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/pantries',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * C4: deletes an empty Pantry aggregate.
+ * Errors: `foodventory.not-empty` (422).
+ */
+export const deletePantry = <ThrowOnError extends boolean = false>(options: Options<DeletePantryData, ThrowOnError>): RequestResult<DeletePantryResponses, DeletePantryErrors, ThrowOnError> => (options.client ?? client).delete<DeletePantryResponses, DeletePantryErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/pantries/{pantryId}',
+    ...options
+});
+
+/**
+ * C2: renames a Pantry aggregate.
+ * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+ */
+export const renamePantry = <ThrowOnError extends boolean = false>(options: Options<RenamePantryData, ThrowOnError>): RequestResult<RenamePantryResponses, RenamePantryErrors, ThrowOnError> => (options.client ?? client).post<RenamePantryResponses, RenamePantryErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/pantries/{pantryId}:rename',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * C3: sets or clears the storage of a Pantry aggregate.
+ */
+export const setPantryStorage = <ThrowOnError extends boolean = false>(options: Options<SetPantryStorageData, ThrowOnError>): RequestResult<SetPantryStorageResponses, SetPantryStorageErrors, ThrowOnError> => (options.client ?? client).post<SetPantryStorageResponses, SetPantryStorageErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/pantries/{pantryId}:set-storage',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
