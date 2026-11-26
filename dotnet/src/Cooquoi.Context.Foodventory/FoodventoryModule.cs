@@ -1,11 +1,14 @@
 using System.Reflection;
+using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
+using Cooquoi.Context.Foodventory.Persistence.Configurations;
 using Cooquoi.Platform;
 using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Raidvahkiin.Ddd;
 using Raidvahkiin.Ddd.EntityFrameworkCore;
 using Wolverine.EntityFrameworkCore;
 
@@ -13,6 +16,12 @@ namespace Cooquoi.Context.Foodventory;
 
 public static class FoodventoryModule
 {
+    /// <summary>Unique constraints mapped to their error when a race passes the use-case pre-check.</summary>
+    private static readonly Dictionary<string, DomainError> UniqueConstraints = new(StringComparer.Ordinal)
+    {
+        [PantryConfiguration.UniqueNameIndex] = PantryError.NameTaken,
+    };
+
     /// <summary>Assembly scanned by Wolverine for this context's endpoints and handlers.</summary>
     public static Assembly Assembly => typeof(FoodventoryModule).Assembly;
 
@@ -23,7 +32,7 @@ public static class FoodventoryModule
         builder.Services.AddDbContextWithWolverineIntegration<FoodventoryDbContext>(
             (services, options) => options
                 .UseSchemaNpgsql(connectionString, FoodventoryDbContext.Schema)
-                .AddCooquoiInterceptors(services),
+                .AddCooquoiInterceptors(services, UniqueConstraints),
             wolverineSchema);
         builder.Services.AddScoped<CurrentHousehold>();
         return builder;

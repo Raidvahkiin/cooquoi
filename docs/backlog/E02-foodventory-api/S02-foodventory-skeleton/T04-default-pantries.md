@@ -34,11 +34,11 @@ Pantry aggregate commands and list (E02.S03); contract (T03); backfill for exist
 
 ## Subtasks
 
-- [ ] T04.1 `PantryId`, `PantryName`, `Storage`, `NewPantry`, `PantryAggregate.Create`, `PantryCreated`, `PantryError`
-- [ ] T04.2 Domain tests `FV1_…` (trim, empty, 61 chars)
-- [ ] T04.3 `PantryConfiguration`, `name_key`, unique index, `UniqueConstraints`, regenerated `InitialFoodventory` migration (one Initial per context until first release)
-- [ ] T04.4 `DefaultPantries` and `HouseholdCreatedHandler`
-- [ ] T04.5 Integration tests: first sign-in → three Pantry aggregates in `fr` for a `fr` user (tracked session), a second delivery creates none; unique index rejects "fridge" next to "Fridge" (persistence test)
+- [x] T04.1 `PantryId`, `PantryName`, `Storage`, `NewPantry`, `PantryAggregate.Create`, `PantryCreated`, `PantryError`
+- [x] T04.2 Domain tests `FV1_…` (trim, empty, 61 chars)
+- [x] T04.3 `PantryConfiguration`, `name_key`, unique index, `UniqueConstraints`, regenerated `InitialFoodventory` migration (one Initial per context until first release)
+- [x] T04.4 `DefaultPantries` and `HouseholdCreatedHandler`
+- [x] T04.5 Integration tests: first sign-in → three Pantry aggregates in `fr` for a `fr` user (tracked session), a second delivery creates none; unique index rejects "fridge" next to "Fridge" (persistence test)
 
 ## Done when
 
@@ -46,6 +46,9 @@ Pantry aggregate commands and list (E02.S03); contract (T03); backfill for exist
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): default Pantry aggregates on HouseholdCreated (E02.S02.T04)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Added the Pantry aggregate (`PantryAggregate`, `PantryName`, `PantryError`, `PantryCreatedDomainEvent`), `DefaultPantries`, `HouseholdCreatedHandler` (reacts to `HouseholdCreatedEvent`), `PantryConfiguration`, the `UniqueConstraints` map and a regenerated `InitialFoodventory` migration.
+`name_key` is a stored Postgres column `foodventory.immutable_unaccent(lower(name))` (hand-written function in the migration, as Foodpedia): `InvariantGlobalization` makes .NET accent stripping unreliable.
+Verified: Foodventory tests 16/16, Architecture tests 34/34 (ErrorCatalogueTests green), build and `dotnet format` clean. Reset the local Aspire Postgres volume (migration regenerated).

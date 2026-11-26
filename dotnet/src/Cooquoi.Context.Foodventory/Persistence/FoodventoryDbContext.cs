@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Raidvahkiin.Ddd.EntityFrameworkCore.Interceptors;
@@ -9,11 +10,14 @@ public sealed class FoodventoryDbContext(DbContextOptions<FoodventoryDbContext> 
 {
     public const string Schema = "foodventory";
 
+    public DbSet<PantryAggregate> Pantries => Set<PantryAggregate>();
+
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) => configurationBuilder.UseCamelCaseEnums();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema(Schema);
+        modelBuilder.HasPostgresExtension("unaccent");
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(FoodventoryDbContext).Assembly);
         modelBuilder.AddAggregateAudit();
         modelBuilder.MapIdempotencyCommits();
