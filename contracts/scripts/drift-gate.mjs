@@ -41,10 +41,8 @@ if (text === '') {
 
 /** Paths the contract declares before the backend serves them (contract first), each with the story that serves them. */
 const planned = {
-  '/v1/pantries': 'E02.S03',
+  '/v1/pantries': 'E02.S03', // path served (POST); its GET list is still planned
   '/v1/pantries/{pantryId}': 'E02.S03',
-  '/v1/pantries/{pantryId}:rename': 'E02.S03',
-  '/v1/pantries/{pantryId}:set-storage': 'E02.S03',
 };
 
 const diff = JSON.parse(text);
@@ -53,6 +51,15 @@ if (diff.paths?.deleted) {
   if (diff.paths.deleted.length === 0) delete diff.paths.deleted;
   if (Object.keys(diff.paths).length === 0) delete diff.paths;
 }
+// A planned path the backend serves in part: its operations still missing are planned too.
+for (const [path, change] of Object.entries(diff.paths?.modified ?? {})) {
+  if (!(path in planned) || !change.operations?.deleted) continue;
+  delete change.operations.deleted;
+  if (Object.keys(change.operations).length === 0) delete change.operations;
+  if (Object.keys(change).length === 0) delete diff.paths.modified[path];
+}
+if (diff.paths?.modified && Object.keys(diff.paths.modified).length === 0) delete diff.paths.modified;
+if (diff.paths && Object.keys(diff.paths).length === 0) delete diff.paths;
 for (const key of Object.keys(accepted)) {
   const [parent, child] = key.split('.');
   if (child === undefined) {

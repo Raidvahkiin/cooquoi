@@ -24,4 +24,27 @@ public sealed class PantryAggregate : AggregateRoot<PantryId>
         pantry.Raise(new PantryCreatedDomainEvent(pantry.Id));
         return pantry;
     }
+
+    /// <summary>FV1 (uniqueness among the household's pantries) is the use case's pre-check; a same name is a no-op.</summary>
+    public void Rename(PantryName name)
+    {
+        if (name == Name)
+        {
+            return;
+        }
+
+        Name = name;
+        Raise(new PantryRenamedDomainEvent(Id, name.Value));
+    }
+
+    public void SetStorage(StorageType? storage)
+    {
+        if (storage == Storage)
+        {
+            return;
+        }
+
+        Storage = storage;
+        Raise(new PantryStorageChangedDomainEvent(Id, storage));
+    }
 }

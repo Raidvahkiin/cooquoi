@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Cooquoi.Context.Household.PublicApi;
 
-internal sealed class HouseholdDirectory(HouseholdDbContext db) : IHouseholdDirectory
+/// <remarks>Public only so Wolverine's generated code can construct it (a non-public type forces service location).</remarks>
+public sealed class HouseholdDirectory(HouseholdDbContext db) : IHouseholdDirectory
 {
     public async Task<Guid?> FindHouseholdIdAsync(string issuer, string subject, CancellationToken cancellationToken)
     {
