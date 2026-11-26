@@ -21,6 +21,10 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_by = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     version = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
@@ -41,6 +45,10 @@ namespace Cooquoi.Context.Household.Persistence.Migrations
                     locale = table.Column<string>(type: "character varying(8)", maxLength: 8, nullable: false),
                     default_household_id = table.Column<Guid>(type: "uuid", nullable: false),
                     last_sign_in_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    created_by = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    updated_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    updated_by = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
                     version = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

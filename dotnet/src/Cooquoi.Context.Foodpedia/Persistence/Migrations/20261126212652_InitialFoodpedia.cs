@@ -49,6 +49,7 @@ namespace Cooquoi.Context.Foodpedia.Persistence.Migrations
                     conversions = table.Column<string>(type: "jsonb", nullable: false),
                     shelf_life_days = table.Column<int>(type: "integer", nullable: true),
                     shelf_life_storage = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    expiry_kind = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     tags = table.Column<string[]>(type: "text[]", nullable: false),
                     status = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -166,8 +167,6 @@ namespace Cooquoi.Context.Foodpedia.Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql("DROP FUNCTION IF EXISTS foodpedia.immutable_unaccent(text) CASCADE;");
-
             migrationBuilder.DropTable(
                 name: "ingredient_names",
                 schema: "foodpedia");
@@ -187,6 +186,8 @@ namespace Cooquoi.Context.Foodpedia.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "tags",
                 schema: "foodpedia");
+
+            migrationBuilder.Sql("DROP FUNCTION IF EXISTS foodpedia.immutable_unaccent(text) CASCADE;");
         }
     }
 }

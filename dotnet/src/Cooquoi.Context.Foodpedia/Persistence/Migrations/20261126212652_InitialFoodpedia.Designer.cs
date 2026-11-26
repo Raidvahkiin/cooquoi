@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cooquoi.Context.Foodpedia.Persistence.Migrations
 {
     [DbContext(typeof(FoodpediaDbContext))]
-    [Migration("20261122203621_CamelCaseEnumCodes")]
-    partial class CamelCaseEnumCodes
+    [Migration("20261126212652_InitialFoodpedia")]
+    partial class InitialFoodpedia
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

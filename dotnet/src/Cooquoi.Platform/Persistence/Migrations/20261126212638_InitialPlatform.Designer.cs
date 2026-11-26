@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cooquoi.Platform.Persistence.Migrations
 {
     [DbContext(typeof(PlatformDbContext))]
-    [Migration("20261122203631_CamelCaseEnumCodes")]
-    partial class CamelCaseEnumCodes
+    [Migration("20261126212638_InitialPlatform")]
+    partial class InitialPlatform
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

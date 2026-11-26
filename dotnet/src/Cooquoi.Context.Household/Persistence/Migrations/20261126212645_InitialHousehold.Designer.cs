@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cooquoi.Context.Household.Persistence.Migrations
 {
     [DbContext(typeof(HouseholdDbContext))]
-    [Migration("20261121220551_AddAuditColumns")]
-    partial class AddAuditColumns
+    [Migration("20261126212645_InitialHousehold")]
+    partial class InitialHousehold
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
