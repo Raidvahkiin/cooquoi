@@ -35,12 +35,12 @@ Pantry aggregate and handlers (T03); Household changes (T01)
 
 ## Subtasks
 
-- [ ] T02.1 Projects, csproj references (Household and Foodpedia only for `Integration/`), slnx
-- [ ] T02.2 `FoodventoryDbContext`, design-time factory, module, initial migration
-- [ ] T02.3 `Program.cs` (`AddFoodventoryContext`, `Discovery.IncludeAssembly`), `DevelopmentDatabase`
-- [ ] T02.4 `Integration/CurrentHousehold`
-- [ ] T02.5 Architecture tests: assemblies, pair rules, the `Integration/` → `PublicApi/` rule; `dotnet/AGENTS.md` line
-- [ ] T02.6 Test project with `Support/ApiFixture` (copy Foodpedia's) and one smoke test (the schema exists after startup)
+- [x] T02.1 Projects, csproj references (Household and Foodpedia only for `Integration/`), slnx
+- [x] T02.2 `FoodventoryDbContext`, design-time factory, module, initial migration
+- [x] T02.3 `Program.cs` (`AddFoodventoryContext`, `Discovery.IncludeAssembly`), `DevelopmentDatabase`
+- [x] T02.4 `Integration/CurrentHousehold`
+- [x] T02.5 Architecture tests: assemblies, pair rules, the `Integration/` → `PublicApi/` rule; `dotnet/AGENTS.md` line
+- [x] T02.6 Test project with `Support/ApiFixture` (copy Foodpedia's) and one smoke test (the schema exists after startup)
 
 ## Done when
 
@@ -48,6 +48,6 @@ Pantry aggregate and handlers (T03); Household changes (T01)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): context skeleton (E02.S02.T02)`), stop.
 
-Status: todo
+Status: done
 
 Report:

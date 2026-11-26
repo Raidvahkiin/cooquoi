@@ -50,7 +50,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 
 - `Domain/` uses only `Raidvahkiin.Ddd` and `Cooquoi.SharedKernel`.
 - `Raidvahkiin.*` never references `Cooquoi.*`; `SharedKernel` depends only on `Raidvahkiin.Ddd`.
-- Contexts never reference each other (later: only `Integration/` → another context's `PublicApi`).
+- Contexts reach each other only from `Integration/`, and only into the other context's `PublicApi/` (project reference allowed, nothing else of it used).
 - No `ExecuteUpdate` / `ExecuteDelete` in `Features/` (source scan) — writes go through aggregates.
 - `…Aggregate` ⇔ derives `AggregateRoot<TId>`, `…Entity` ⇔ `Entity<TId>`; every other `Domain/` type is immutable (enums excepted).
 - `…DomainEvent` ⇔ implements `IDomainEvent` ⇔ in a `….Domain.<Aggregate>.Events` namespace; integration events end in `Event` (not `DomainEvent`) and are the only types in `….PublicApi.Events`.

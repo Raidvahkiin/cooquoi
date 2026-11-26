@@ -1,4 +1,5 @@
 using Cooquoi.Context.Foodpedia;
+using Cooquoi.Context.Foodventory;
 using Cooquoi.Context.Household;
 using Cooquoi.Platform;
 using Cooquoi.Platform.Auditing;
@@ -31,6 +32,7 @@ builder.AddCooquoiAuthentication();
 builder.AddCooquoiPlatform(DatabaseConnection);
 builder.AddHouseholdContext(DatabaseConnection, WolverineSchema);
 builder.AddFoodpediaContext(DatabaseConnection, WolverineSchema);
+builder.AddFoodventoryContext(DatabaseConnection, WolverineSchema);
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<DomainExceptionHandler>();
@@ -46,6 +48,7 @@ builder.Host.UseWolverine(options =>
 {
     options.Discovery.IncludeAssembly(HouseholdModule.Assembly);
     options.Discovery.IncludeAssembly(FoodpediaModule.Assembly);
+    options.Discovery.IncludeAssembly(FoodventoryModule.Assembly);
 
     // Outbox: domain events are stored with the aggregate change, delivered after commit (ADR 0003).
     options.PersistMessagesWithPostgresql(builder.Configuration.RequiredConnectionString(DatabaseConnection), WolverineSchema);

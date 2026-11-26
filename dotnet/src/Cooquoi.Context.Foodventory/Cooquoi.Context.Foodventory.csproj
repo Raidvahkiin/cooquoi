@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
+    <PackageReference Include="WolverineFx.EntityFrameworkCore" />
+    <PackageReference Include="WolverineFx.Http.FluentValidation" />
+    <ProjectReference Include="../Cooquoi.Platform/Cooquoi.Platform.csproj" />
+    <ProjectReference Include="../Cooquoi.SharedKernel/Cooquoi.SharedKernel.csproj" />
+    <!-- Only Integration/ may use them, and only their PublicApi/ (architecture tests). -->
+    <ProjectReference Include="../Cooquoi.Context.Foodpedia/Cooquoi.Context.Foodpedia.csproj" />
+    <ProjectReference Include="../Cooquoi.Context.Household/Cooquoi.Context.Household.csproj" />
+  </ItemGroup>
+</Project>

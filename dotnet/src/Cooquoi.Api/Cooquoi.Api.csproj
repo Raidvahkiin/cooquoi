@@ -15,6 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="../BuildingBlocks/Raidvahkiin.Ddd.AspNetCore/Raidvahkiin.Ddd.AspNetCore.csproj" />
     <ProjectReference Include="../Cooquoi.Context.Foodpedia/Cooquoi.Context.Foodpedia.csproj" />
+    <ProjectReference Include="../Cooquoi.Context.Foodventory/Cooquoi.Context.Foodventory.csproj" />
     <ProjectReference Include="../Cooquoi.Context.Household/Cooquoi.Context.Household.csproj" />
     <ProjectReference Include="../Cooquoi.Platform/Cooquoi.Platform.csproj" />
     <ProjectReference Include="../Cooquoi.ServiceDefaults/Cooquoi.ServiceDefaults.csproj" />

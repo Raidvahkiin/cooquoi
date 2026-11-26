@@ -27,15 +27,22 @@ public sealed class DependencyRulesTests
             .Should().NotDependOnAny(Types().That().ResideInNamespaceMatching(@"^(Microsoft|Cooquoi\.(?!SharedKernel)|Raidvahkiin\.Ddd\.)"))
             .Check(CooquoiArchitecture.Value);
 
-    [Fact]
-    public void Foodpedia_does_not_reach_into_Household() =>
-        Types().That().ResideInNamespaceMatching(@"^Cooquoi\.Context\.Foodpedia(\..+)?$")
-            .Should().NotDependOnAny(Types().That().ResideInNamespaceMatching(@"^Cooquoi\.Context\.Household(\..+)?$"))
+    private static readonly string[] Contexts = ["Household", "Foodpedia", "Foodventory"];
+
+    public static TheoryData<string, string> ContextPairs =>
+        [.. Contexts.SelectMany(from => Contexts.Where(to => to != from).Select(to => (from, to)))];
+
+    [Theory]
+    [MemberData(nameof(ContextPairs))]
+    public void Only_Integration_reaches_into_another_context(string from, string to) =>
+        Types().That().ResideInNamespaceMatching($@"^Cooquoi\.Context\.{from}(?!\.Integration(\.|$))(\..+)?$")
+            .Should().NotDependOnAny(Types().That().ResideInNamespaceMatching($@"^Cooquoi\.Context\.{to}(\..+)?$"))
             .Check(CooquoiArchitecture.Value);
 
-    [Fact]
-    public void Household_does_not_reach_into_Foodpedia() =>
-        Types().That().ResideInNamespaceMatching(@"^Cooquoi\.Context\.Household(\..+)?$")
-            .Should().NotDependOnAny(Types().That().ResideInNamespaceMatching(@"^Cooquoi\.Context\.Foodpedia(\..+)?$"))
+    [Theory]
+    [MemberData(nameof(ContextPairs))]
+    public void Integration_uses_only_the_PublicApi_of_another_context(string from, string to) =>
+        Types().That().ResideInNamespaceMatching($@"^Cooquoi\.Context\.{from}\.Integration(\..+)?$")
+            .Should().NotDependOnAny(Types().That().ResideInNamespaceMatching($@"^Cooquoi\.Context\.{to}(?!\.PublicApi(\.|$))(\..+)?$"))
             .Check(CooquoiArchitecture.Value);
 }

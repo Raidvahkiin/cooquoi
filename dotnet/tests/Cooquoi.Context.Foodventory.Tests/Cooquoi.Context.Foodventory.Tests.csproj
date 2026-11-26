@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../Cooquoi.Testing/Cooquoi.Testing.csproj" />
+    <ProjectReference Include="../../src/Cooquoi.Context.Foodventory/Cooquoi.Context.Foodventory.csproj" />
+  </ItemGroup>
+</Project>

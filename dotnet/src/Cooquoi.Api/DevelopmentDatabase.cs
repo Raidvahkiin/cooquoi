@@ -1,4 +1,5 @@
 using Cooquoi.Context.Foodpedia;
+using Cooquoi.Context.Foodventory;
 using Cooquoi.Context.Household;
 using Cooquoi.Platform;
 
@@ -14,6 +15,7 @@ internal sealed class DevelopmentDatabase(IServiceProvider services) : IHostedSe
         await services.MigratePlatformDatabaseAsync(cancellationToken);
         await services.MigrateHouseholdDatabaseAsync(cancellationToken);
         await services.MigrateAndSeedFoodpediaDatabaseAsync(cancellationToken);
+        await services.MigrateFoodventoryDatabaseAsync(cancellationToken);
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
