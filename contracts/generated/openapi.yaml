@@ -454,7 +454,7 @@ paths:
       operationId: createPantry
       description: |-
         C1: creates a Pantry aggregate.
-        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
       parameters:
         - name: Idempotency-Key
           in: header
@@ -581,7 +581,7 @@ paths:
       operationId: renamePantry
       description: |-
         C2: renames a Pantry aggregate.
-        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+        Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
       parameters:
         - name: pantryId
           in: path

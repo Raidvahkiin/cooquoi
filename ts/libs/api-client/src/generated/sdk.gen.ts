@@ -111,7 +111,7 @@ export const listPantries = <ThrowOnError extends boolean = false>(options?: Opt
 
 /**
  * C1: creates a Pantry aggregate.
- * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+ * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
  */
 export const createPantry = <ThrowOnError extends boolean = false>(options: Options<CreatePantryData, ThrowOnError>): RequestResult<CreatePantryResponses, CreatePantryErrors, ThrowOnError> => (options.client ?? client).post<CreatePantryResponses, CreatePantryErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
@@ -135,7 +135,7 @@ export const deletePantry = <ThrowOnError extends boolean = false>(options: Opti
 
 /**
  * C2: renames a Pantry aggregate.
- * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+ * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
  */
 export const renamePantry = <ThrowOnError extends boolean = false>(options: Options<RenamePantryData, ThrowOnError>): RequestResult<RenamePantryResponses, RenamePantryErrors, ThrowOnError> => (options.client ?? client).post<RenamePantryResponses, RenamePantryErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],

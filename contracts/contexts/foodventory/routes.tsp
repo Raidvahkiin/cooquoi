@@ -17,7 +17,7 @@ interface PantryOperations {
 
   /**
    * C1: creates a Pantry aggregate.
-   * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+   * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
    */
   @route("/v1/pantries")
   @operationId("createPantry")
@@ -25,7 +25,7 @@ interface PantryOperations {
 
   /**
    * C2: renames a Pantry aggregate.
-   * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (400).
+   * Errors: `foodventory.name-taken` (409), `foodventory.invalid-name` (422).
    */
   @route("/v1/pantries/{pantryId}:rename")
   @operationId("renamePantry")

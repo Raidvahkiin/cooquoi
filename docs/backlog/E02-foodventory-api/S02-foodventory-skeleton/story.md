@@ -6,13 +6,13 @@
 
 ## Acceptance
 
-- [ ] First sign-in (`POST /v1/me:sign-in` for a new user) publishes `HouseholdCreated` once, in the same transaction as the household (outbox).
-- [ ] `Household/PublicApi` resolves the caller's household id from issuer + subject.
-- [ ] The Foodventory context has `Integration/CurrentHousehold`, which every later endpoint uses (FV2). With no household: open question Q2.
-- [ ] Default Pantry aggregates: `en` Fridge (`fridge`) / Freezer (`freezer`) / Dry goods (`room`); `fr` Réfrigérateur / Congélateur / Épicerie sèche; `vi` Tủ lạnh / Tủ đông / Đồ khô. Any other locale falls back to English. The handler is idempotent (FV14 spirit: a second delivery creates nothing).
-- [ ] FV1 is enforced in `PantryName` (1–60 trimmed) and by a unique index on a case- and accent-insensitive key per household.
-- [ ] Contract: the `Cooquoi.Foodventory` namespace with the pantry operations (C1–C4, Q1) and their error codes, so E02.S03 only implements them.
-- [ ] Architecture tests: Foodventory in `OwnAssemblies`; contexts still never reference each other, except `Integration/` → another context's `PublicApi/`.
+- [x] First sign-in (`POST /v1/me:sign-in` for a new user) publishes `HouseholdCreated` once, in the same transaction as the household (outbox).
+- [x] `Household/PublicApi` resolves the caller's household id from issuer + subject.
+- [x] The Foodventory context has `Integration/CurrentHousehold`, which every later endpoint uses (FV2). With no household: open question Q2.
+- [x] Default Pantry aggregates: `en` Fridge (`fridge`) / Freezer (`freezer`) / Dry goods (`room`); `fr` Réfrigérateur / Congélateur / Épicerie sèche; `vi` Tủ lạnh / Tủ đông / Đồ khô. Any other locale falls back to English. The handler is idempotent (FV14 spirit: a second delivery creates nothing).
+- [x] FV1 is enforced in `PantryName` (1–60 trimmed) and by a unique index on a case- and accent-insensitive key per household.
+- [x] Contract: the `Cooquoi.Foodventory` namespace with the pantry operations (C1–C4, Q1) and their error codes, so E02.S03 only implements them.
+- [x] Architecture tests: Foodventory in `OwnAssemblies`; contexts still never reference each other, except `Integration/` → another context's `PublicApi/`.
 
 ## Context
 
@@ -27,13 +27,16 @@
 
 | Id | Title | Status | Depends on | Parallel-safe | Session |
 |---|---|---|---|---|---|
-| [T01](T01-household-created.md) | Household: `HouseholdCreated` through the outbox and a current-household query | todo | E02.S01.T04 (convention) | yes | |
-| [T02](T02-context-skeleton.md) | Foodventory context skeleton and architecture rules | todo | E02.S01.T04 | yes | |
-| [T03](T03-contract-pantries.md) | Contract: Foodventory namespace, Pantry aggregate operations and errors | todo | — | yes | |
-| [T04](T04-default-pantries.md) | Pantry aggregate and default Pantry aggregates on `HouseholdCreated` | todo | T01, T02, T03 | no | |
+| [T01](T01-household-created.md) | Household: `HouseholdCreated` through the outbox and a current-household query | done | E02.S01.T04 (convention) | yes | s02-t01 |
+| [T02](T02-context-skeleton.md) | Foodventory context skeleton and architecture rules | done | E02.S01.T04 | yes | subagent (opus) |
+| [T03](T03-contract-pantries.md) | Contract: Foodventory namespace, Pantry aggregate operations and errors | done | — | yes | subagent (sonnet) |
+| [T04](T04-default-pantries.md) | Pantry aggregate and default Pantry aggregates on `HouseholdCreated` | done | T01, T02, T03 | no | subagent (sonnet) |
 
 T01 (Household context), T02 (new project, `Program.cs`, architecture tests) and T03 (TypeSpec, webapp messages) touch disjoint files and can run together. T01 only needs the `PublicApi/` convention from E02.S01.T04; it can start from that task's report.
 
 ## Summary
 
-(written when done)
+Done 2026-11-26: `ae2adc4` (T01), `92da37a` (T03), `0d0b049` (T02), `93b98c5` (T04), plus review fixes. .NET suite 198/198, `nx test` green.
+Sign-in publishes `HouseholdCreatedEvent` through the outbox (Lightweight middleware re-scrape is avoided by clearing tracked events after the outbox save); `IHouseholdDirectory` gives the household; with no household `CurrentHousehold` throws `common.not-found` (Q2).
+`nx drift` stays red until E02.S03: the contract declares the four pantry routes the backend does not serve yet.
+Open for S03: `HouseholdCreatedHandler` check-then-insert races on overlapping redelivery (the unique index rejects the loser as `foodventory.name-taken` and the message retries); add a transaction + advisory lock or a discard policy. `invalid-name` is 422 (BusinessRule), as in Foodpedia.
