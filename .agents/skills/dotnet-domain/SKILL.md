@@ -36,6 +36,7 @@ Conventions: `dotnet/AGENTS.md` (Domain, Errors). Reference: `dotnet/src/Cooquoi
 ## Do not
 
 - Inject services, `DbContext`, `TimeProvider` or `HttpContext` into aggregates — pass values (a `DateTimeOffset now`) or a parameter record.
+- Call `<X>Id.New()`, `Guid.NewGuid()` or read the clock inside the domain: take the id or date as a parameter.
 - Add setters (other than private on aggregates/entities) or mutable collections to value objects — the architecture test fails.
 - Name an aggregate without `Aggregate` or a non-aggregate with it.
 - Validate request shape in the domain *instead of* the validator, or business rules in the validator.

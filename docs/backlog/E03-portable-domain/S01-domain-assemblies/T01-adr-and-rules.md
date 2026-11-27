@@ -64,13 +64,13 @@ sonnet
 
 ## Subtasks
 
-- [ ] T01.1 `docs/architecture/adr/0023-domain-only-assemblies.md`: Status `Accepted`, with Context, Decision, Consequences and Alternatives. Alternatives considered: keep one project with the namespace rule only (rejected: not referenceable, no AOT analyzers); one shared `Cooquoi.Domain` for all contexts (rejected: merges the contexts' models).
-- [ ] T01.2 ADR 0014 §1 tree and the §1 and §5 notes; `docs/README.md` ADR table row for 0023.
-- [ ] T01.3 `dotnet/AGENTS.md` (also the "tests/" part of the Layout tree and the Naming line: `Cooquoi.Context.<Name>.Domain.Tests/` for unit tests, `Cooquoi.Context.<Name>.Tests/` for `Features/`, `Persistence/`, `Integration/`, `PublicApi/`):
+- [x] T01.1 `docs/architecture/adr/0023-domain-only-assemblies.md`: Status `Accepted`, with Context, Decision, Consequences and Alternatives. Alternatives considered: keep one project with the namespace rule only (rejected: not referenceable, no AOT analyzers); one shared `Cooquoi.Domain` for all contexts (rejected: merges the contexts' models).
+- [x] T01.2 ADR 0014 §1 tree and the §1 and §5 notes; `docs/README.md` ADR table row for 0023.
+- [x] T01.3 `dotnet/AGENTS.md` (also the "tests/" part of the Layout tree and the Naming line: `Cooquoi.Context.<Name>.Domain.Tests/` for unit tests, `Cooquoi.Context.<Name>.Tests/` for `Features/`, `Persistence/`, `Integration/`, `PublicApi/`):
   - "Layout": add `Cooquoi.Context.<Name>.Domain/` and say that `Domain/` moved there.
   - "Domain": add a "Portable" row with no ambient ids or time (callers pass `<X>Id.New()` and `today`), no I/O, async or DI, and AOT-compatible.
   - Replace "Time: `TimeProvider`" with "Time: passed in as a value; `TimeProvider` only in endpoints and handlers".
-- [ ] T01.4 `.agents/skills/dotnet-domain/SKILL.md` "Do not": add "Call `<X>Id.New()`, `Guid.NewGuid()` or read the clock inside the domain: take the id or date as a parameter".
+- [x] T01.4 `.agents/skills/dotnet-domain/SKILL.md` "Do not": add "Call `<X>Id.New()`, `Guid.NewGuid()` or read the clock inside the domain: take the id or date as a parameter".
 
 ## Done when
 
@@ -83,6 +83,8 @@ Then:
 - commit `docs(adr): 0023 domain-only assemblies per context (E03.S01.T01)`;
 - stop.
 
-Status: todo
+Status: done
 
-Report:
+Report: ADR 0023 written; ADR 0014 tree and §1, §5 notes amended; README index row; dotnet/AGENTS.md (Layout, Naming, Domain Portable row, Time) and dotnet-domain "Do not" updated.
+Verified: grep 0023 shows index row, ADR 0014 notes and AGENTS.md; biome-check run below.
+Left: nothing (Hard rules line "Domain/ uses only..." kept as is, reworded by T04).

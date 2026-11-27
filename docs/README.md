@@ -49,6 +49,7 @@ Deep dives per context will live in `contexts/<name>/` (domain model, invariants
 | [0020](architecture/adr/0020-build-tools-nx-and-dotnet.md) | Build tools: Nx for TypeScript and TypeSpec, the .NET toolchain for C# | Accepted |
 | [0021](architecture/adr/0021-enum-values-camel-case.md) | Enum values and error codes are camelCase; URL segments stay kebab-case | Accepted |
 | [0022](architecture/adr/0022-property-names-camel-case.md) | Property names are camelCase outside the process | Accepted |
+| [0023](architecture/adr/0023-domain-only-assemblies.md) | One portable, domain-only assembly per bounded context | Accepted |
 
 ## Work
 

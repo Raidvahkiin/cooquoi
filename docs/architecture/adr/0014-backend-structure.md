@@ -12,6 +12,8 @@ The backend is a C# modular monolith ([ADR 0002](0002-csharp-backend-with-aspire
 
 ### 1. Solution layout
 
+> Amended by ADR 0023: each context's domain is its own `Cooquoi.Context.<Name>.Domain` project.
+
 ```
 aspire/                          # repo root — runtime orchestration of the whole system
 └─ Cooquoi.AppHost/
@@ -35,11 +37,13 @@ dotnet/
 │  ├─ Cooquoi.Api/               # host: composition, OpenAPI, module registration
 │  ├─ Cooquoi.Context.Household/         # one project per bounded context
 │  ├─ Cooquoi.Context.Foodpedia/
-│  └─ Cooquoi.Context.Foodventory/
+│  ├─ Cooquoi.Context.Foodventory/
+│  └─ Cooquoi.Context.Foodventory.Domain/   # domain-only, portable (ADR 0023); same for each context
 └─ tests/
    ├─ Raidvahkiin.Ddd.Tests/
    ├─ Cooquoi.Context.Foodpedia.Tests/   # one test project per context
    ├─ Cooquoi.Context.Foodventory.Tests/
+   ├─ Cooquoi.Context.Foodventory.Domain.Tests/   # unit tests of the domain project (ADR 0023)
    ├─ Cooquoi.Api.Tests/         # contract drift, auth, error catalogue, host-level behaviour
    └─ Cooquoi.Architecture.Tests/
 ```
@@ -112,6 +116,8 @@ If a use case needs two entry points (HTTP and a message), its core becomes a Wo
   - An adapter that only forwards calls unchanged is a pass-through: the port should be redesigned in the consumer's terms.
 
 ### 5. Dependency rules (architecture tests)
+
+> Amended by ADR 0023: each context's domain is its own `Cooquoi.Context.<Name>.Domain` project.
 
 - `Raidvahkiin.*` depends on nothing from Cooquoi; `Raidvahkiin.Ddd` depends on nothing at all.
 - `Cooquoi.SharedKernel` depends only on `Raidvahkiin.Ddd`.

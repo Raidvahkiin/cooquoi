@@ -29,8 +29,9 @@ dotnet/
 │  ├─ Cooquoi.Platform/                     # auth + curator policy, CurrentUser, IfMatch, idempotency, concurrency retry,
 │  │                                        # audit actors, validation problem shape, PlatformDbContext (schema platform)
 │  ├─ Cooquoi.Api/                          # host only: Program.cs, DevelopmentDatabase
-│  └─ Cooquoi.Context.<Name>/
-│     ├─ Domain/<Aggregate>/                # pure domain; Events/ holds the <Fact>DomainEvent records
+│  ├─ Cooquoi.Context.<Name>.Domain/        # pure, portable domain project (ADR 0023): what was Domain/ moved here
+│  │  └─ <Aggregate>/                       # namespaces unchanged (…Domain.<Aggregate>); Events/ holds the <Fact>DomainEvent records
+│  └─ Cooquoi.Context.<Name>/               # references its .Domain project
 │     ├─ Features/<UseCase>/                # request + validator, endpoint
 │     ├─ Persistence/                       # DbContext, factory, Configurations/, Lookups/, Projections/, Seed/, Migrations/
 │     ├─ Integration/  PublicApi/           # when another context needs them
@@ -39,12 +40,13 @@ dotnet/
 │     └─ <Context>Module.cs                 # Add<Context>Context(), migrate (+ seed) for development
 └─ tests/
    ├─ Cooquoi.Testing/                      # TestApi (Alba + Testcontainers), Callers, Problems — shared library
-   ├─ Cooquoi.Context.<Name>.Tests/         # Domain/ (unit), Features/ + Persistence/ (integration), Support/
+   ├─ Cooquoi.Context.<Name>.Domain.Tests/  # unit tests, same folders as the domain types; references only the Domain project
+   ├─ Cooquoi.Context.<Name>.Tests/         # Features/, Persistence/, Integration/, PublicApi/ (integration), Support/
    ├─ Cooquoi.Platform.Tests/
    └─ Cooquoi.Architecture.Tests/
 ```
 
-Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Cooquoi.Context.<Name>.Tests`. A test namespace named like a type clashes with it (`…Tests.Features.CreateIngredient` vs `CreateIngredient`): alias the type (`using CreateIngredientRequest = …;`).
+Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), unit tests `Cooquoi.Context.<Name>.Domain.Tests`, integration tests `Cooquoi.Context.<Name>.Tests`. A test namespace named like a type clashes with it (`…Tests.Features.CreateIngredient` vs `CreateIngredient`): alias the type (`using CreateIngredientRequest = …;`).
 
 ## Hard rules (architecture tests in `Cooquoi.Architecture.Tests`)
 
@@ -119,9 +121,10 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 | Domain event | `sealed record <Fact>DomainEvent(…) : IDomainEvent` in `Domain/<Aggregate>/Events/` (namespace `…Domain.<Aggregate>.Events`), one per file, `Raise(...)` in every behaviour |
 | Integration event | `sealed record <Fact>Event(…)` of ids and primitives in `PublicApi/Events/` (never ends in `DomainEvent`); cascaded from the domain event by an `Integration/…Handler` |
 | Errors | `static class <X>Error` of `DomainError(code, kind, template)`; codes `<context>.<camelCase>` (ADR 0021); `common.*` in `CommonError` |
+| Portable | no ambient ids or time (callers pass `<X>Id.New()` and `today`), no I/O, async or DI; AOT-compatible (ADR 0023) |
 | Rule ids | the domain doc's id (F7) in a comment on the guard and in the test name |
 
-Methods **check every rule first, then change state**. Rules needing other aggregates: use-case pre-check + DB constraint. Never inject services into aggregates. Time: `TimeProvider`.
+Methods **check every rule first, then change state**. Rules needing other aggregates: use-case pre-check + DB constraint. Never inject services into aggregates. Time: passed in as a value; `TimeProvider` only in endpoints and handlers.
 
 ## Errors
 
