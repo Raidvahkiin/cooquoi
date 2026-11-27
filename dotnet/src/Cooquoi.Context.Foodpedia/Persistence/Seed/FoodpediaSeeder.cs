@@ -48,6 +48,7 @@ internal static class FoodpediaSeeder
 
     private static TagAggregate ToTag(SeedFile.Tag seed) =>
         TagAggregate.Create(
+            TagId.New(),
             TagCode.Parse(seed.Code),
             [.. seed.Labels.Select(label => new TagLabel(Locale.FromTagOrDefault(label.Key), label.Value))]);
 

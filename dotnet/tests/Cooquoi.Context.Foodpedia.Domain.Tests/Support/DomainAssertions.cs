@@ -1,6 +1,6 @@
 using Raidvahkiin.Ddd;
 
-namespace Cooquoi.Context.Foodpedia.Tests.Support;
+namespace Cooquoi.Context.Foodpedia.Domain.Tests.Support;
 
 public static class DomainAssertions
 {

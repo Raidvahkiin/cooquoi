@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../../src/Cooquoi.Context.Foodpedia.Domain/Cooquoi.Context.Foodpedia.Domain.csproj" />
+  </ItemGroup>
+</Project>

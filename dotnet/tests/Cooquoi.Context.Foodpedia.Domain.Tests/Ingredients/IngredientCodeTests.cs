@@ -1,7 +1,7 @@
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
-using Cooquoi.Context.Foodpedia.Tests.Support;
+using Cooquoi.Context.Foodpedia.Domain.Tests.Support;
 
-namespace Cooquoi.Context.Foodpedia.Tests.Domain.Ingredients;
+namespace Cooquoi.Context.Foodpedia.Domain.Tests.Ingredients;
 
 public sealed class IngredientCodeTests
 {

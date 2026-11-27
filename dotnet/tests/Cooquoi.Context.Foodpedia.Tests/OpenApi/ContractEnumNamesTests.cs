@@ -1,7 +1,7 @@
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Platform.OpenApi;
 
-namespace Cooquoi.Context.Foodpedia.Tests.Domain.Ingredients;
+namespace Cooquoi.Context.Foodpedia.Tests.OpenApi;
 
 public sealed class ContractEnumNamesTests
 {

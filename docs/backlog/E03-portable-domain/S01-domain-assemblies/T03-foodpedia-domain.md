@@ -38,10 +38,10 @@ sonnet
 
 ## Subtasks
 
-- [ ] T03.1 Project, `git mv`, references, `Cooquoi.slnx`, `OwnAssemblies`.
-- [ ] T03.2 `TagId` from the caller; update the callers and the tests.
-- [ ] T03.3 Domain test project: `git mv` the tests, move `DomainAssertions`, link `SampleIngredients`, move `ContractEnumNamesTests`. `ls dotnet/tests/Cooquoi.Context.Foodpedia.Tests/Domain` fails.
-- [ ] T03.4 `grep -rn '\.New()\|Guid.NewGuid\|DateTime\.\|TimeProvider' dotnet/src/Cooquoi.Context.Foodpedia.Domain` prints nothing.
+- [x] T03.1 Project, `git mv`, references, `Cooquoi.slnx`, `OwnAssemblies`.
+- [x] T03.2 `TagId` from the caller; update the callers and the tests.
+- [x] T03.3 Domain test project: `git mv` the tests, move `DomainAssertions`, link `SampleIngredients`, move `ContractEnumNamesTests`. `ls dotnet/tests/Cooquoi.Context.Foodpedia.Tests/Domain` fails.
+- [x] T03.4 `grep -rn '\.New()\|Guid.NewGuid\|DateTime\.\|TimeProvider' dotnet/src/Cooquoi.Context.Foodpedia.Domain` prints nothing.
 
 ## Done when
 
@@ -58,6 +58,9 @@ Then:
 - commit `refactor(foodpedia): domain-only assembly, domain tests and caller-supplied tag id (E03.S01.T03)`;
 - stop.
 
-Status: todo
+Status: done
 
 Report:
+New `Cooquoi.Context.Foodpedia.Domain` (AOT) and `.Domain.Tests` projects; `git mv` of Domain and its tests, `DomainAssertions`/`SampleIngredients` moved (the latter linked back), `ContractEnumNamesTests` now in `Tests/OpenApi`.
+`TagAggregate.Create` takes `TagId`; seeder and tests pass `TagId.New()`. Added to slnx and `OwnAssemblies`. No regex analyzer hits.
+Build 0 warnings, format clean, 318 tests green, `drift: none`; T03.4 grep empty. PublicApi exposes no domain type.

@@ -2,7 +2,7 @@ using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Cooquoi.SharedKernel;
 
-namespace Cooquoi.Context.Foodpedia.Tests.Support;
+namespace Cooquoi.Context.Foodpedia.Domain.Tests.Support;
 
 /// <summary>Valid domain inputs; each test changes only what it is about.</summary>
 public static class SampleIngredients

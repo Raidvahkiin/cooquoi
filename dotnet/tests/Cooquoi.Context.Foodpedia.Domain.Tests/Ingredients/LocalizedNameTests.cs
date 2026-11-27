@@ -1,8 +1,8 @@
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
-using Cooquoi.Context.Foodpedia.Tests.Support;
+using Cooquoi.Context.Foodpedia.Domain.Tests.Support;
 using Cooquoi.SharedKernel;
 
-namespace Cooquoi.Context.Foodpedia.Tests.Domain.Ingredients;
+namespace Cooquoi.Context.Foodpedia.Domain.Tests.Ingredients;
 
 public sealed class LocalizedNameTests
 {

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="../Cooquoi.Testing/Cooquoi.Testing.csproj" />
+    <Compile Include="../Cooquoi.Context.Foodpedia.Domain.Tests/Support/SampleIngredients.cs" Link="Support/SampleIngredients.cs" />
     <ProjectReference Include="../../src/Cooquoi.Context.Foodpedia/Cooquoi.Context.Foodpedia.csproj" />
   </ItemGroup>
 </Project>

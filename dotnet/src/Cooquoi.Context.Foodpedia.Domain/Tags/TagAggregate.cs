@@ -15,7 +15,7 @@ public sealed class TagAggregate : AggregateRoot<TagId>
     public IReadOnlyList<TagLabel> Labels => _labels;
     public TagStatus Status { get; private set; }
 
-    public static TagAggregate Create(TagCode code, IReadOnlyList<TagLabel> labels)
+    public static TagAggregate Create(TagId id, TagCode code, IReadOnlyList<TagLabel> labels)
     {
         // F2
         Ensure.That(labels.Any(label => label.Locale == Locale.English), TagError.EnglishLabelRequired);
@@ -23,7 +23,7 @@ public sealed class TagAggregate : AggregateRoot<TagId>
         var duplicate = labels.GroupBy(label => label.Locale).FirstOrDefault(group => group.Count() > 1);
         Ensure.That(duplicate is null, TagError.DuplicateLocale, ("locale", duplicate?.Key.Code));
 
-        var tag = new TagAggregate { Id = TagId.New(), Code = code, Status = TagStatus.Active };
+        var tag = new TagAggregate { Id = id, Code = code, Status = TagStatus.Active };
         tag._labels.AddRange(labels);
         tag.Raise(new TagCreatedDomainEvent(tag.Id));
         return tag;

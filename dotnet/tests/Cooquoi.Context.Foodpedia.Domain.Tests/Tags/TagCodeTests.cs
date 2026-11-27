@@ -1,7 +1,7 @@
 using Cooquoi.Context.Foodpedia.Domain.Tags;
-using Cooquoi.Context.Foodpedia.Tests.Support;
+using Cooquoi.Context.Foodpedia.Domain.Tests.Support;
 
-namespace Cooquoi.Context.Foodpedia.Tests.Domain.Tags;
+namespace Cooquoi.Context.Foodpedia.Domain.Tests.Tags;
 
 public sealed class TagCodeTests
 {

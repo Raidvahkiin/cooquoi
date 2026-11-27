@@ -1,6 +1,7 @@
 using Cooquoi.Context.Foodpedia;
 using Cooquoi.Context.Foodventory;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
+using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Household;
 using Cooquoi.Platform;
 using Cooquoi.SharedKernel;
@@ -25,6 +26,7 @@ internal static class CooquoiArchitecture
         typeof(PlatformModule).Assembly,
         typeof(HouseholdModule).Assembly,
         typeof(FoodpediaModule).Assembly,
+        typeof(IngredientAggregate).Assembly,
         typeof(FoodventoryModule).Assembly,
         typeof(IngredientStockAggregate).Assembly,
     ];
