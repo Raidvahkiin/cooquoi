@@ -4,6 +4,7 @@ using Cooquoi.Context.Foodventory.Persistence;
 using Cooquoi.Context.Foodventory.Persistence.Lookups;
 using Cooquoi.Platform.Concurrency;
 using Cooquoi.Platform.OpenApi;
+using Cooquoi.SharedKernel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Wolverine.Attributes;
@@ -37,7 +38,7 @@ public static class AdjustStockItemEndpoint
         IfMatch.SetETagAfterSave(http, stock);
         var itemId = new StockItemId(stockItemId);
         var unit = stock.EnteredUnitOf(itemId);
-        var facts = await foodpedia.GetOneAsync(stock.IngredientId, unit, http.Request, cancellationToken);
+        var facts = await foodpedia.GetOneAsync(stock.IngredientId, unit, Locale.FromTagOrDefault(http.Request.Headers.AcceptLanguage.FirstOrDefault()), cancellationToken);
         stock.AdjustItem(itemId, request.Remaining, facts);
     }
 }

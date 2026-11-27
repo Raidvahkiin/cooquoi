@@ -35,7 +35,7 @@ public static class ConsumeStockItemEndpoint
     {
         var itemId = new StockItemId(stockItemId);
         var unit = request.Unit is null ? stock.EnteredUnitOf(itemId) : Unit.FromCode(request.Unit)!;
-        var facts = await foodpedia.GetOneAsync(stock.IngredientId, unit, http, cancellationToken);
+        var facts = await foodpedia.GetOneAsync(stock.IngredientId, unit, Locale.FromTagOrDefault(http.Headers.AcceptLanguage.FirstOrDefault()), cancellationToken);
 
         return ConsumeResult.From(stock.ConsumeItem(itemId, new Quantity(request.Amount, unit), facts));
     }

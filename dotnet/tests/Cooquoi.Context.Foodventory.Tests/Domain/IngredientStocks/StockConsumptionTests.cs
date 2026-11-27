@@ -105,6 +105,30 @@ public sealed class StockConsumptionTests
     }
 
     [Fact]
+    public void FV7_a_unit_without_a_path_is_consumed_when_the_request_is_met_before_an_item_in_another_unit_is_reached()
+    {
+        var (stock, items) = Stock((3m, TestFacts.Can, Today, 0), (100m, Unit.Gram, null, 0));
+
+        var result = stock.ConsumeFromStock(new Quantity(1m, TestFacts.Can), null, Facts);
+
+        result.Shortfall.ShouldBeNull();
+        result.Consumed.ShouldHaveSingleItem().Amount.ShouldBe(new Quantity(1m, TestFacts.Can));
+        items[0].Remaining.ShouldBe(2m);
+        items[1].Remaining.ShouldBe(100m);
+    }
+
+    [Fact]
+    public void FV7_a_pantry_holding_none_answers_a_full_shortfall_even_when_the_unit_has_no_path()
+    {
+        var (stock, items) = Stock((3m, TestFacts.Can, null, 0));
+
+        var result = stock.ConsumeFromStock(new Quantity(2m, TestFacts.Can), PantryId.New(), Facts);
+
+        result.Shortfall.ShouldBe(new Quantity(2m, TestFacts.Can));
+        items[0].Remaining.ShouldBe(3m);
+    }
+
+    [Fact]
     public void FV7_a_unnormalized_item_in_another_unit_is_skipped_and_counted_in_the_shortfall()
     {
         var (stock, items) = Stock((3m, TestFacts.Can, null, 0));

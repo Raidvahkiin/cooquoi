@@ -25,17 +25,11 @@ internal static class StockConsumption
         return rounded;
     }
 
-    /// <summary>The plan, or <c>null</c> when the unit has no conversion path and a candidate item is not held in it as entered.</summary>
+    /// <summary>The plan, or <c>null</c> when the unit has no conversion path and an item not held in it as entered is reached before the request is met.</summary>
     internal static Plan? Prepare(IEnumerable<StockItemEntity> candidates, Quantity request, FoodpediaFacts facts)
     {
         var requestBase = StockNormalizer.Normalize(request.Amount, request.Unit, facts);
         var ordered = candidates.OrderBy(item => item.Expiry?.Date ?? DateOnly.MaxValue).ThenBy(item => item.AddedOn).ToList();
-        // no path: only items in the exact unit can be compared
-        if (requestBase is null && (ordered.Count == 0 || ordered.Exists(item => item.Entered.Unit != request.Unit)))
-        {
-            return null;
-        }
-
         var left = request.Amount;
         var steps = new List<Step>();
         foreach (var item in ordered.TakeWhile(_ => left > 0))
@@ -49,6 +43,11 @@ internal static class StockConsumption
             else if (item.Entered.Unit == request.Unit)
             {
                 capacity = item.Remaining;
+            }
+            else if (requestBase is null)
+            {
+                // no path: an item that cannot be compared and is reached before the request is met rejects the unit
+                return null;
             }
             else
             {

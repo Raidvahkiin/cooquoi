@@ -43,14 +43,13 @@ public static class ConsumeIngredientEndpoint
         CancellationToken cancellationToken)
     {
         var unit = Unit.FromCode(request.Unit)!;
-        var facts = await foodpedia.GetOneAsync(stock.IngredientId, unit, http, cancellationToken);
-
         // FV2: a pantry of another household (or none) is a 404, as for a move
         if (request.PantryId is { } target)
         {
             await db.Pantries.AsNoTracking().LoadForHouseholdAsync(stock.HouseholdId, target, cancellationToken);
         }
 
+        var facts = await foodpedia.GetOneAsync(stock.IngredientId, unit, Locale.FromTagOrDefault(http.Headers.AcceptLanguage.FirstOrDefault()), cancellationToken);
         var result = stock.ConsumeFromStock(new Quantity(request.Amount, unit), request.PantryId is { } pantryId ? new PantryId(pantryId) : null, facts);
         return ConsumeResult.From(result);
     }
