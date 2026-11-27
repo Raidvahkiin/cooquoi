@@ -29,6 +29,7 @@ Status: `todo` · `doing` · `done` · `blocked (<why>)` · `dropped`.
 |---|---|---|
 | [E01](E01-spike-walking-skeleton/epic.md) | Spike walking skeleton | done (S06 deferred) |
 | [E02](E02-foodventory-api/epic.md) | Foodventory API: manual stock (roadmap step 1) | todo |
+| [E03](E03-portable-domain/epic.md) | Portable domain and offline-ready API (before E02.S06) | todo |
 
 ## Roadmap after E01
 

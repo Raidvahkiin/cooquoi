@@ -33,7 +33,7 @@ Receipt or product scan (`ReceiptScanned`), `MealCooked` consumption (no stub), 
 | [E02.S03](S03-pantry-commands/story.md) | Pantry aggregate commands and list | done | E02.S02 |
 | [E02.S04](S04-restock-put-away/story.md) | IngredientStock aggregate: restock and put away | done | E02.S01, E02.S03 |
 | [E02.S05](S05-consume-correct/story.md) | Consume, discard, adjust, set expiry | done | E02.S04 |
-| [E02.S06](S06-thresholds-conversions-expiry-kind/story.md) | Thresholds, household conversions, expiry kind override, remembered shelf life | todo | E02.S05 |
+| [E02.S06](S06-thresholds-conversions-expiry-kind/story.md) | Thresholds, household conversions, expiry kind override, remembered shelf life | todo | E02.S05, E03.S01 |
 | [E02.S07](S07-stock-queries/story.md) | Stock queries | todo | E02.S06 |
 | [E02.S08](S08-planning-read-model/story.md) | Planning read model and verification under Aspire | todo | E02.S07 |
 
