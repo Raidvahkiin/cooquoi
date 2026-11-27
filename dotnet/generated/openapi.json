@@ -1048,7 +1048,7 @@
           "Cooquoi.Context.Foodventory.Features.MoveStockItem.MoveStockItemEndpoint"
         ],
         "summary": "S2: puts away or moves an item, whole or split; no If-Match, like the other intent actions.",
-        "description": "POST_v1_stock_items_stockItemId",
+        "description": "POST_v1_stock_items_stockItemId_feba5056",
         "operationId": "moveStockItem",
         "parameters": [
           {
@@ -1388,10 +1388,377 @@
           }
         }
       }
+    },
+    "/v1/stock-items/{stockItemId}:consume": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.ConsumeStockItem.ConsumeStockItemEndpoint"
+        ],
+        "summary": "S4: consumes part of one item, in its entered unit unless given; no If-Match. 404 when the item is not held by the household (FV2).",
+        "description": "POST_v1_stock_items_stockItemId_16b2d94d",
+        "operationId": "consumeStockItem",
+        "parameters": [
+          {
+            "name": "stockItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsumeStockItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumeResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/stock/{ingredientId}:consume": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.ConsumeIngredient.ConsumeIngredientEndpoint"
+        ],
+        "summary": "S3: consumes an ingredient, earliest expiry first (FV7); no If-Match, like the other intent actions.",
+        "description": "POST_v1_stock_ingredientId",
+        "operationId": "consumeIngredient",
+        "parameters": [
+          {
+            "name": "ingredientId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConsumeIngredient"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsumeResult"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ConsumeIngredient": {
+        "required": [
+          "amount",
+          "unit"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
+            "type": "string"
+          },
+          "pantryId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": "S3: body of `POST /v1/stock/{ingredientId}:consume`; PantryId limits it to one Pantry aggregate. Amounts are the domain's (FV4): 422 `foodventory.invalidQuantity`."
+      },
+      "ConsumeResult": {
+        "required": [
+          "consumed"
+        ],
+        "type": "object",
+        "properties": {
+          "consumed": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConsumedItem"
+            }
+          },
+          "shortfall": {
+            "required": [
+              "amount",
+              "unit"
+            ],
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "format": "decimal"
+              },
+              "unit": {
+                "enum": [
+                  "g",
+                  "kg",
+                  "ml",
+                  "l",
+                  "tsp",
+                  "tbsp",
+                  "cup",
+                  "piece",
+                  "pack",
+                  "can",
+                  "bottle",
+                  "slice",
+                  "fillet",
+                  "clove",
+                  "bunch",
+                  "pinch"
+                ],
+                "type": "string"
+              }
+            }
+          }
+        },
+        "description": "Response of S3 and S4: the items touched, and the amount that could not be covered."
+      },
+      "ConsumeStockItem": {
+        "required": [
+          "amount"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
+            "type": "string"
+          }
+        },
+        "description": "S4: body of `POST /v1/stock-items/{stockItemId}:consume`; Unit defaults to the entered unit. Amounts are the domain's (FV4): 422 `foodventory.invalidQuantity`."
+      },
+      "ConsumedItem": {
+        "required": [
+          "stockItemId",
+          "amount",
+          "depleted"
+        ],
+        "type": "object",
+        "properties": {
+          "stockItemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "$ref": "#/components/schemas/QuantityView"
+          },
+          "depleted": {
+            "type": "boolean"
+          }
+        },
+        "description": "One stock item touched by a consume; Depleted when nothing remains."
+      },
       "ConversionDetail": {
         "required": [
           "unit",
@@ -2699,6 +3066,12 @@
     },
     {
       "name": "Cooquoi.Context.Foodventory.Features.DeletePantry.DeletePantryEndpoint"
+    },
+    {
+      "name": "Cooquoi.Context.Foodventory.Features.ConsumeStockItem.ConsumeStockItemEndpoint"
+    },
+    {
+      "name": "Cooquoi.Context.Foodventory.Features.ConsumeIngredient.ConsumeIngredientEndpoint"
     }
   ]
 }

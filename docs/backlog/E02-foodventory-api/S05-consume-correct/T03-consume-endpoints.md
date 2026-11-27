@@ -32,8 +32,8 @@ S5–S7 (T04)
 
 ## Subtasks
 
-- [ ] T03.1 `ConsumeIngredient` request, validator, endpoint; tests: two items with different expiries → earliest first; shortfall; `pantryId` filter; unit not convertible → 422 with params; events per item (tracked); idempotent replay
-- [ ] T03.2 `ConsumeStockItem` request, validator, endpoint; tests: default unit, deplete removes the item, FV2 other household 404
+- [x] T03.1 `ConsumeIngredient` request, validator, endpoint; tests: two items with different expiries → earliest first; shortfall; `pantryId` filter; unit not convertible → 422 with params; events per item (tracked); idempotent replay
+- [x] T03.2 `ConsumeStockItem` request, validator, endpoint; tests: default unit, deplete removes the item, FV2 other household 404
 
 ## Done when
 
@@ -41,6 +41,7 @@ S5–S7 (T04)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): consume endpoints (E02.S05.T03)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+ConsumeIngredient (S3) and ConsumeStockItem (S4) endpoints with 10 integration tests; ConsumptionResult now lists consumed items (id, amount in entered unit, depleted), mapped to ConsumeResult. 118 tests green, format clean, drift lists only discard, adjust, set-expiry (T04). Note: consuming a unit with no conversion when a base-unit request is used yields a shortfall, not 422 (domain T02 behaviour). S4 LoadAsync delegates to MoveStockItemEndpoint.LoadAsync.

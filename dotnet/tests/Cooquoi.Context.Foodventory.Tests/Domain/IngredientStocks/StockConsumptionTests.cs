@@ -36,6 +36,8 @@ public sealed class StockConsumptionTests
         var result = stock.Consume(new Quantity(350m, Unit.Gram), null, Facts);
 
         result.Shortfall.ShouldBeNull();
+        result.Consumed.Select(c => c.ItemId).ShouldBe([items[3].Id, items[2].Id, items[1].Id, items[0].Id]);
+        result.Consumed.Select(c => c.Depleted).ShouldBe([true, true, true, false]);
         stock.DomainEvents.OfType<StockItemConsumedDomainEvent>().Select(e => e.ItemId)
             .ShouldBe([items[3].Id, items[2].Id, items[1].Id, items[0].Id]);
         stock.Items.ShouldHaveSingleItem().Id.ShouldBe(items[0].Id);

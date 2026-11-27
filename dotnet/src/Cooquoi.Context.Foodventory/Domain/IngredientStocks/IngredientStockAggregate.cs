@@ -179,7 +179,8 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
             Raise(new StockItemConsumedDomainEvent(Id, item.Id, step.Taken, item.Entered.Unit, shortfall));
         }
 
-        return new ConsumptionResult(plan.Shortfall);
+        return new ConsumptionResult(
+            [.. plan.Steps.Select(step => new ConsumedStockItem(step.Item.Id, new Quantity(step.Taken, step.Item.Entered.Unit), step.Depleted))], plan.Shortfall);
     }
 
     private StockItemEntity Find(StockItemId itemId) =>
