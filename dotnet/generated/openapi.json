@@ -657,6 +657,147 @@
         }
       }
     },
+    "/v1/stock-items/{stockItemId}:set-expiry": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.SetStockItemExpiry.SetStockItemExpiryEndpoint"
+        ],
+        "summary": "S7: sets or clears the expiry date, which becomes manual (replace-style: If-Match).",
+        "description": "POST_v1_stock_items_stockItemId_a37cff87",
+        "operationId": "setStockItemExpiry",
+        "parameters": [
+          {
+            "name": "stockItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetStockItemExpiry"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition Required",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/pantries/{pantryId}:set-storage": {
       "post": {
         "tags": [
@@ -1285,6 +1426,119 @@
         }
       }
     },
+    "/v1/stock-items/{stockItemId}:discard": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.DiscardStockItem.DiscardStockItemEndpoint"
+        ],
+        "summary": "S5: throws an item away with a reason; no If-Match, like the other intent actions.",
+        "description": "POST_v1_stock_items_stockItemId_82bf86f1",
+        "operationId": "discardStockItem",
+        "parameters": [
+          {
+            "name": "stockItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscardStockItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/pantries/{pantryId}": {
       "delete": {
         "tags": [
@@ -1612,10 +1866,164 @@
           }
         }
       }
+    },
+    "/v1/stock-items/{stockItemId}:adjust": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.AdjustStockItem.AdjustStockItemEndpoint"
+        ],
+        "summary": "S6: corrects the remaining amount after a stock check (replace-style: If-Match); 0 depletes the item.",
+        "description": "POST_v1_stock_items_stockItemId_1ee3cdd8",
+        "operationId": "adjustStockItem",
+        "parameters": [
+          {
+            "name": "stockItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "If-Match",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustStockItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "headers": {
+              "ETag": {
+                "required": true,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Precondition Failed",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Precondition Required",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "AdjustStockItem": {
+        "required": [
+          "remaining"
+        ],
+        "type": "object",
+        "properties": {
+          "remaining": {
+            "type": "number",
+            "format": "decimal"
+          }
+        },
+        "description": "S6: body of `POST /v1/stock-items/{stockItemId}:adjust`; requires `If-Match`. The amount is in the entered unit (FV4: 422 `foodventory.invalidQuantity`)."
+      },
       "ConsumeIngredient": {
         "required": [
           "amount",
@@ -2043,6 +2451,23 @@
           }
         },
         "description": "C5: body of `POST /v1/ingredients/{id}:define-conversion`; requires `If-Match`."
+      },
+      "DiscardStockItem": {
+        "required": [
+          "reason"
+        ],
+        "type": "object",
+        "properties": {
+          "reason": {
+            "enum": [
+              "expired",
+              "spoiled",
+              "other"
+            ],
+            "type": "string"
+          }
+        },
+        "description": "S5: body of `POST /v1/stock-items/{stockItemId}:discard`."
       },
       "ExpiryView": {
         "required": [
@@ -2846,6 +3271,26 @@
         },
         "description": "C3: body of `POST /v1/pantries/{pantryId}:set-storage`; requires `If-Match`. A null storage clears it."
       },
+      "SetStockItemExpiry": {
+        "required": [
+          "date"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "description": "S7: body of `POST /v1/stock-items/{stockItemId}:set-expiry`; requires `If-Match`. A null date clears the expiry."
+      },
       "ShelfLifeDetail": {
         "required": [
           "days",
@@ -3047,6 +3492,9 @@
       "name": "Cooquoi.Context.Foodpedia.Features.DefineConversion.DefineConversionEndpoint"
     },
     {
+      "name": "Cooquoi.Context.Foodventory.Features.SetStockItemExpiry.SetStockItemExpiryEndpoint"
+    },
+    {
       "name": "Cooquoi.Context.Foodventory.Features.SetPantryStorage.SetPantryStorageEndpoint"
     },
     {
@@ -3065,6 +3513,9 @@
       "name": "Cooquoi.Context.Foodventory.Features.CreatePantry.CreatePantryEndpoint"
     },
     {
+      "name": "Cooquoi.Context.Foodventory.Features.DiscardStockItem.DiscardStockItemEndpoint"
+    },
+    {
       "name": "Cooquoi.Context.Foodventory.Features.DeletePantry.DeletePantryEndpoint"
     },
     {
@@ -3072,6 +3523,9 @@
     },
     {
       "name": "Cooquoi.Context.Foodventory.Features.ConsumeIngredient.ConsumeIngredientEndpoint"
+    },
+    {
+      "name": "Cooquoi.Context.Foodventory.Features.AdjustStockItem.AdjustStockItemEndpoint"
     }
   ]
 }

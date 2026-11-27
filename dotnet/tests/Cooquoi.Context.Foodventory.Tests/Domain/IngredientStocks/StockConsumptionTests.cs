@@ -33,7 +33,7 @@ public sealed class StockConsumptionTests
             (100m, Unit.Gram, Today.AddDays(5), 4),
             (100m, Unit.Gram, Today.AddDays(2), 0));
 
-        var result = stock.Consume(new Quantity(350m, Unit.Gram), null, Facts);
+        var result = stock.ConsumeFromStock(new Quantity(350m, Unit.Gram), null, Facts);
 
         result.Shortfall.ShouldBeNull();
         result.Consumed.Select(c => c.ItemId).ShouldBe([items[3].Id, items[2].Id, items[1].Id, items[0].Id]);
@@ -52,7 +52,7 @@ public sealed class StockConsumptionTests
         var pantry = new PantryTarget(PantryId.New(), StorageType.Fridge);
         stock.MoveItem(items[1].Id, pantry, null, null, Facts);
 
-        stock.Consume(new Quantity(30m, Unit.Gram), pantry.PantryId, Facts);
+        stock.ConsumeFromStock(new Quantity(30m, Unit.Gram), pantry.PantryId, Facts);
 
         items[0].Remaining.ShouldBe(100m);
         items[1].Remaining.ShouldBe(70m);
@@ -63,7 +63,7 @@ public sealed class StockConsumptionTests
     {
         var (stock, _) = Stock((200m, Unit.Gram, null, 0), (300m, Unit.Gram, null, 1));
 
-        var result = stock.Consume(new Quantity(1m, Unit.Kilogram), null, Facts);
+        var result = stock.ConsumeFromStock(new Quantity(1m, Unit.Kilogram), null, Facts);
 
         result.Shortfall.ShouldBe(new Quantity(0.5m, Unit.Kilogram));
         stock.Items.ShouldBeEmpty();
@@ -75,7 +75,7 @@ public sealed class StockConsumptionTests
     {
         var (stock, items) = Stock((2m, TestFacts.Pack, null, 0));
 
-        stock.Consume(new Quantity(250m, Unit.Gram), null, Facts);
+        stock.ConsumeFromStock(new Quantity(250m, Unit.Gram), null, Facts);
 
         items[0].Remaining.ShouldBe(1.5m);
         items[0].Normalized.ShouldBe(750m);
@@ -88,7 +88,7 @@ public sealed class StockConsumptionTests
     {
         var (stock, items) = Stock((3m, TestFacts.Can, null, 0), (100m, Unit.Gram, Today, 0));
 
-        var result = stock.Consume(new Quantity(5m, TestFacts.Can), null, Facts);
+        var result = stock.ConsumeFromStock(new Quantity(5m, TestFacts.Can), null, Facts);
 
         result.Shortfall.ShouldBe(new Quantity(2m, TestFacts.Can));
         stock.Items.ShouldBe([items[1]]);
@@ -99,7 +99,7 @@ public sealed class StockConsumptionTests
     {
         var (stock, _) = Stock((100m, Unit.Gram, null, 0));
 
-        Rejected(() => stock.Consume(new Quantity(1m, TestFacts.Can), null, Facts)).Error.ShouldBe(IngredientStockError.UnitNotConvertible);
+        Rejected(() => stock.ConsumeFromStock(new Quantity(1m, TestFacts.Can), null, Facts)).Error.ShouldBe(IngredientStockError.UnitNotConvertible);
     }
 
     [Fact]

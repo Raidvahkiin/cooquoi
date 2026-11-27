@@ -31,10 +31,10 @@ Thresholds and conversions (E02.S06)
 
 ## Subtasks
 
-- [ ] T04.1 `DiscardStockItem` endpoint + tests (204, item gone, event, reason validated)
-- [ ] T04.2 `AdjustStockItem` endpoint + tests (204 + ETag, above entered, 0 depletes, 428, 412)
-- [ ] T04.3 `SetStockItemExpiry` endpoint + tests (manual, cleared, past date, 428, 412)
-- [ ] T04.4 Drift `none`, catalogue green
+- [x] T04.1 `DiscardStockItem` endpoint + tests (204, item gone, event, reason validated)
+- [x] T04.2 `AdjustStockItem` endpoint + tests (204 + ETag, above entered, 0 depletes, 428, 412)
+- [x] T04.3 `SetStockItemExpiry` endpoint + tests (manual, cleared, past date, 428, 412)
+- [x] T04.4 Drift `none`, catalogue green
 
 ## Done when
 
@@ -42,6 +42,8 @@ Thresholds and conversions (E02.S06)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): discard, adjust and set expiry (E02.S05.T04)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Three endpoints + shared StockItemLookup (Move, Consume, new ones use it) + OperationContract.Action; 309 tests green, drift none.
+Also fixed: aggregate Consume renamed ConsumeFromStock (architecture handler-name rule), OperationContractTests operation ids.

@@ -41,7 +41,7 @@ public static class ConsumeIngredientEndpoint
         var facts = (await foodpedia.GetAsync(
             [stock.IngredientId], [unit], cancellationToken, Locale.FromTagOrDefault(http.Headers.AcceptLanguage.FirstOrDefault())))[stock.IngredientId];
 
-        var result = stock.Consume(new Quantity(request.Amount, unit), request.PantryId is { } pantryId ? new PantryId(pantryId) : null, facts);
+        var result = stock.ConsumeFromStock(new Quantity(request.Amount, unit), request.PantryId is { } pantryId ? new PantryId(pantryId) : null, facts);
         return ConsumeResult.From(result);
     }
 }

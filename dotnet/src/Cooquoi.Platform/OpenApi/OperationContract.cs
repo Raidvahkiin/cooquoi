@@ -76,6 +76,13 @@ public static class OperationContract
         Problems(chain, 400, 401, 403, 404, 409, 422);
     }
 
+    /// <summary><c>ActionOperation</c>: 204 + <c>ETag</c>, no <c>If-Match</c>.</summary>
+    public static void Action(HttpChain chain)
+    {
+        NoContentWithETag(chain);
+        Problems(chain, 400, 401, 403, 404, 409, 422);
+    }
+
     /// <summary><c>ReplaceActionOperation</c>: 204 + <c>ETag</c>, requires <c>If-Match</c> (412, 428).</summary>
     public static void ReplaceAction(HttpChain chain)
     {

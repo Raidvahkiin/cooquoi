@@ -108,7 +108,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
     }
 
     /// <summary>FV7: consumes <paramref name="amount"/> from the items of <paramref name="pantryId"/> (all when none), earliest expiry first.</summary>
-    public ConsumptionResult Consume(Quantity amount, PantryId? pantryId, FoodpediaFacts facts) =>
+    public ConsumptionResult ConsumeFromStock(Quantity amount, PantryId? pantryId, FoodpediaFacts facts) =>
         ConsumeFrom(_items.Where(item => pantryId is null || item.PantryId == pantryId), amount, facts);
 
     /// <summary>FV7 on one item: a quantity beyond its remaining consumes it all and reports the shortfall.</summary>

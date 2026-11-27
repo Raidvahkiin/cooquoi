@@ -2,6 +2,7 @@ using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks.Events;
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
+using Cooquoi.Context.Foodventory.Persistence.Lookups;
 using Cooquoi.Context.Foodventory.Persistence.Projections;
 using Cooquoi.Platform.OpenApi;
 using Cooquoi.SharedKernel;
@@ -20,14 +21,8 @@ public static class MoveStockItemEndpoint
     public static void Configure(HttpChain chain) => OperationContract.ActionWithResult(chain);
 
     /// <summary>Wolverine runs this before <see cref="Post"/>: 404 when the item is not held by the caller's household (FV2).</summary>
-    public static async Task<IngredientStockAggregate> LoadAsync(Guid stockItemId, CurrentHousehold household, FoodventoryDbContext db, CancellationToken cancellationToken)
-    {
-        var householdId = await household.GetIdAsync(cancellationToken);
-        var id = new StockItemId(stockItemId);
-        return await db.IngredientStocks.FirstOrDefaultAsync(
-                stock => stock.HouseholdId == householdId && stock.Items.Any(item => item.Id == id), cancellationToken)
-            ?? throw CommonError.NotFound.ToException(("resource", "StockItem"), ("id", stockItemId));
-    }
+    public static async Task<IngredientStockAggregate> LoadAsync(Guid stockItemId, CurrentHousehold household, FoodventoryDbContext db, CancellationToken cancellationToken) =>
+        await db.IngredientStocks.LoadForHouseholdAsync(await household.GetIdAsync(cancellationToken), stockItemId, cancellationToken);
 
     /// <summary>S2: puts away or moves an item, whole or split; no If-Match, like the other intent actions.</summary>
     [WolverinePost("/v1/stock-items/{stockItemId}:move", OperationId = "moveStockItem")]
