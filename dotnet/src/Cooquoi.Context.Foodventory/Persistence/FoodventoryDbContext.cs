@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,8 @@ public sealed class FoodventoryDbContext(DbContextOptions<FoodventoryDbContext> 
     public const string Schema = "foodventory";
 
     public DbSet<PantryAggregate> Pantries => Set<PantryAggregate>();
+
+    public DbSet<IngredientStockAggregate> IngredientStocks => Set<IngredientStockAggregate>();
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder) => configurationBuilder.UseCamelCaseEnums();
 

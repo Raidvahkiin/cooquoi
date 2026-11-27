@@ -32,9 +32,11 @@ public static class FoodventoryModule
         builder.Services.AddDbContextWithWolverineIntegration<FoodventoryDbContext>(
             (services, options) => options
                 .UseSchemaNpgsql(connectionString, FoodventoryDbContext.Schema)
-                .AddCooquoiInterceptors(services, UniqueConstraints),
+                .AddCooquoiInterceptors(services, UniqueConstraints)
+                .AddInterceptors(new StockItemOwnerInterceptor()),
             wolverineSchema);
         builder.Services.AddScoped<CurrentHousehold>();
+        builder.Services.AddScoped<FoodpediaFactsProvider>();
         return builder;
     }
 

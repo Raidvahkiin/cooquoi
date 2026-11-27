@@ -33,10 +33,10 @@ Endpoints (T04, T05); E02.S06 columns
 
 ## Subtasks
 
-- [ ] T03.1 `IngredientStockConfiguration`, stock items mapping, converters
-- [ ] T03.2 Regenerate `InitialFoodventory` (check the SQL has both indexes and the unique index)
-- [ ] T03.3 `FoodpediaFactsProvider` + registration
-- [ ] T03.4 Persistence tests: round-trip with items in and out of a pantry; version bumps when only a child changes; adapter returns facts for a seeded ingredient
+- [x] T03.1 `IngredientStockConfiguration`, stock items mapping, converters
+- [x] T03.2 Regenerate `InitialFoodventory` (check the SQL has both indexes and the unique index)
+- [x] T03.3 `FoodpediaFactsProvider` + registration
+- [x] T03.4 Persistence tests: round-trip with items in and out of a pantry; version bumps when only a child changes; adapter returns facts for a seeded ingredient
 
 ## Done when
 
@@ -44,6 +44,8 @@ Endpoints (T04, T05); E02.S06 columns
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): ingredient stock persistence and Foodpedia adapter (E02.S04.T03)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Items are an `OwnsMany` child table `stock_items` (so the interceptor bumps the root version); `Entered`/`Expiry` are nested `OwnsOne`; `StockItemOwnerInterceptor` copies household_id, ingredient_id and expires_on onto item rows for the two indexes. `InitialFoodventory` regenerated (unaccent SQL kept).
+`FoodpediaFactsProvider.GetAsync(ids, units, ct)` returns `Dictionary<Guid, FoodpediaFacts>` (P1 + P2 per non-universal unit + P3 for shelf life days). Not mapped: `source_ref` (no domain field yet). Tests: Foodventory 70, Architecture 34, green.

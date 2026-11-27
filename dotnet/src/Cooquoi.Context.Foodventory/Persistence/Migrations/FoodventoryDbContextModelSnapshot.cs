@@ -24,6 +24,65 @@ namespace Cooquoi.Context.Foodventory.Persistence.Migrations
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "unaccent");
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Cooquoi.Context.Foodventory.Domain.IngredientStocks.IngredientStockAggregate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<string>("BaseUnit")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("base_unit");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("created_by");
+
+                    b.Property<string>("ExpiryKind")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("expiry_kind");
+
+                    b.Property<Guid>("HouseholdId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("household_id");
+
+                    b.Property<Guid>("IngredientId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("ingredient_id");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)")
+                        .HasColumnName("updated_by");
+
+                    b.Property<long>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("bigint")
+                        .HasColumnName("version");
+
+                    b.HasKey("Id")
+                        .HasName("pk_ingredient_stocks");
+
+                    b.HasIndex("HouseholdId", "IngredientId")
+                        .IsUnique()
+                        .HasDatabaseName("ux_ingredient_stocks_household_ingredient");
+
+                    b.ToTable("ingredient_stocks", "foodventory");
+                });
+
             modelBuilder.Entity("Cooquoi.Context.Foodventory.Domain.Pantries.PantryAggregate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -106,6 +165,134 @@ namespace Cooquoi.Context.Foodventory.Persistence.Migrations
                         {
                             t.ExcludeFromMigrations();
                         });
+                });
+
+            modelBuilder.Entity("Cooquoi.Context.Foodventory.Domain.IngredientStocks.IngredientStockAggregate", b =>
+                {
+                    b.OwnsMany("Cooquoi.Context.Foodventory.Domain.IngredientStocks.StockItemEntity", "Items", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateOnly>("AddedOn")
+                                .HasColumnType("date")
+                                .HasColumnName("added_on");
+
+                            b1.Property<DateOnly?>("ExpiresOn")
+                                .ValueGeneratedOnUpdateSometimes()
+                                .HasColumnType("date")
+                                .HasColumnName("expires_on");
+
+                            b1.Property<Guid>("HouseholdId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("household_id");
+
+                            b1.Property<Guid>("IngredientId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("ingredient_id");
+
+                            b1.Property<decimal?>("Normalized")
+                                .HasPrecision(18, 6)
+                                .HasColumnType("numeric(18,6)")
+                                .HasColumnName("normalized_amount");
+
+                            b1.Property<Guid?>("PantryId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("pantry_id");
+
+                            b1.Property<decimal>("Remaining")
+                                .HasPrecision(18, 3)
+                                .HasColumnType("numeric(18,3)")
+                                .HasColumnName("remaining_amount");
+
+                            b1.Property<string>("Source")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("source");
+
+                            b1.Property<Guid>("ingredient_stock_id")
+                                .HasColumnType("uuid")
+                                .HasColumnName("ingredient_stock_id");
+
+                            b1.HasKey("Id")
+                                .HasName("pk_stock_items");
+
+                            b1.HasIndex("ingredient_stock_id")
+                                .HasDatabaseName("ix_stock_items_ingredient_stock_id");
+
+                            b1.HasIndex("HouseholdId", "ExpiresOn")
+                                .HasDatabaseName("ix_stock_items_household_expires_on");
+
+                            b1.HasIndex("HouseholdId", "PantryId")
+                                .HasDatabaseName("ix_stock_items_household_pantry");
+
+                            b1.ToTable("stock_items", "foodventory");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ingredient_stock_id")
+                                .HasConstraintName("fk_stock_items_ingredient_stocks_ingredient_stock_id");
+
+                            b1.OwnsOne("Cooquoi.Context.Foodventory.Domain.IngredientStocks.Expiry", "Expiry", b2 =>
+                                {
+                                    b2.Property<Guid>("StockItemEntityId")
+                                        .HasColumnType("uuid")
+                                        .HasColumnName("id");
+
+                                    b2.Property<DateOnly>("Date")
+                                        .ValueGeneratedOnUpdateSometimes()
+                                        .HasColumnType("date")
+                                        .HasColumnName("expires_on");
+
+                                    b2.Property<string>("Source")
+                                        .IsRequired()
+                                        .HasMaxLength(20)
+                                        .HasColumnType("character varying(20)")
+                                        .HasColumnName("expiry_source");
+
+                                    b2.HasKey("StockItemEntityId");
+
+                                    b2.ToTable("stock_items", "foodventory");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("StockItemEntityId")
+                                        .HasConstraintName("fk_stock_items_stock_items_id");
+                                });
+
+                            b1.OwnsOne("Cooquoi.Context.Foodventory.Domain.IngredientStocks.Quantity", "Entered", b2 =>
+                                {
+                                    b2.Property<Guid>("StockItemEntityId")
+                                        .HasColumnType("uuid")
+                                        .HasColumnName("id");
+
+                                    b2.Property<decimal>("Amount")
+                                        .HasPrecision(18, 3)
+                                        .HasColumnType("numeric(18,3)")
+                                        .HasColumnName("entered_amount");
+
+                                    b2.Property<string>("Unit")
+                                        .IsRequired()
+                                        .HasMaxLength(20)
+                                        .HasColumnType("character varying(20)")
+                                        .HasColumnName("entered_unit");
+
+                                    b2.HasKey("StockItemEntityId");
+
+                                    b2.ToTable("stock_items", "foodventory");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("StockItemEntityId")
+                                        .HasConstraintName("fk_stock_items_stock_items_id");
+                                });
+
+                            b1.Navigation("Entered")
+                                .IsRequired();
+
+                            b1.Navigation("Expiry");
+                        });
+
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }
