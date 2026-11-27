@@ -45,11 +45,11 @@ EF mapping (T03); endpoints (T04, T05); consume and corrections (E02.S05); thres
 
 ## Subtasks
 
-- [ ] T02.1 Ids, `Quantity`, `Expiry`, `ExpiryKind`, `FoodpediaFacts`, `NewStockLine`
-- [ ] T02.2 `StockNormalizer` + tests `FV6_…` (universal, Foodpedia default, unnormalized, never guessed)
-- [ ] T02.3 `ExpiryProposer` + tests `FV8_…` (printed, estimated with storage none / matching / other, longLife, manual kept, past date allowed)
-- [ ] T02.4 `IngredientStockAggregate.Create/Restock`, `StockItemEntity`, `ItemsRestocked` + tests `FV3_…`, `FV4_…`
-- [ ] T02.5 `MoveItem` with split, `StockItemMoved` + tests `FV9_…` (whole, split keeps source/addedOn, equal = whole, exceeds, unit not convertible, exact entered unit always works)
+- [x] T02.1 Ids, `Quantity`, `Expiry`, `ExpiryKind`, `FoodpediaFacts`, `NewStockLine`
+- [x] T02.2 `StockNormalizer` + tests `FV6_…` (universal, Foodpedia default, unnormalized, never guessed)
+- [x] T02.3 `ExpiryProposer` + tests `FV8_…` (printed, estimated with storage none / matching / other, longLife, manual kept, past date allowed)
+- [x] T02.4 `IngredientStockAggregate.Create/Restock`, `StockItemEntity`, `ItemsRestocked` + tests `FV3_…`, `FV4_…`
+- [x] T02.5 `MoveItem` with split, `StockItemMoved` + tests `FV9_…` (whole, split keeps source/addedOn, equal = whole, exceeds, unit not convertible, exact entered unit always works)
 
 ## Done when
 
@@ -57,6 +57,10 @@ EF mapping (T03); endpoints (T04, T05); consume and corrections (E02.S05); thres
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): IngredientStock aggregate, restock and move (E02.S04.T02)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- Changed: `Domain/IngredientStocks/` (aggregate 112 lines, `StockItemEntity`, `Quantity`, `Expiry`+`ExpirySource`, `ExpiryKind`, `StockSourceType`, `FoodpediaFacts`, `NewStockLine`, `PantryTarget`, `StockError`, `StockNormalizer`, `ExpiryProposer`, 3 `…DomainEvent`s incl. `IngredientStockCreated`); `PantryId`, `StorageType` moved to shared `Domain/` (usings fixed in Features, Persistence, tests).
+- `FoodpediaFacts.DefaultFactors` = base amount of one unit (use case fills it from P2 `NormalizeQuantity(1, unit)` per unit used, incl. the item's entered unit for a move). Split amounts round to 3 decimals.
+- Verified: Foodventory tests 66/66 (32 new domain), architecture 34/34, `dotnet format` clean.
+- Left: household conversions and remembered shelf life (E02.S06 seams in `StockNormalizer`, `ExpiryProposer`, FV15 in `MoveItem`); EF mapping of the moved types and the item list for T03.

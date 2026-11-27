@@ -1,5 +1,5 @@
+using Cooquoi.Context.Foodventory.Domain;
 using System.Text.Json.Serialization;
-using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Platform.OpenApi;
 
 namespace Cooquoi.Context.Foodventory.Features.ListPantries;

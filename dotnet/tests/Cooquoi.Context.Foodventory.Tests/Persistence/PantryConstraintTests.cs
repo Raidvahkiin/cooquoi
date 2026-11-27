@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Tests.Support;
 using Raidvahkiin.Ddd;

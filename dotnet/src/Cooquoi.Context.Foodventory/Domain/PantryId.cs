@@ -1,4 +1,4 @@
-namespace Cooquoi.Context.Foodventory.Domain.Pantries;
+namespace Cooquoi.Context.Foodventory.Domain;
 
 public readonly record struct PantryId(Guid Value)
 {

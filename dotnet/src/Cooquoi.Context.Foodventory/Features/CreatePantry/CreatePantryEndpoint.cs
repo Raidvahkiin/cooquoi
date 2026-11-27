@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;

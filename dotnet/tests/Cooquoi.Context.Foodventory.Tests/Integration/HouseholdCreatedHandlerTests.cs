@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain;
 using System.Security.Claims;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Tests.Support;

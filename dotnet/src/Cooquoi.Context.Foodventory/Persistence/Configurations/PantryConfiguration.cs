@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
