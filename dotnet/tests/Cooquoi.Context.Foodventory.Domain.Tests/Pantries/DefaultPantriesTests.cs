@@ -2,7 +2,7 @@ using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.SharedKernel;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.Pantries;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.Pantries;
 
 public sealed class DefaultPantriesTests
 {
@@ -15,7 +15,7 @@ public sealed class DefaultPantriesTests
     {
         var household = Guid.NewGuid();
 
-        var pantries = DefaultPantries.For(household, Locale.FromTagOrDefault(tag)).ToList();
+        var pantries = DefaultPantries.For(household, Locale.FromTagOrDefault(tag), PantryId.New).ToList();
 
         pantries.Select(pantry => (pantry.Name.Value, pantry.Storage)).ShouldBe([
             (fridge, StorageType.Fridge),

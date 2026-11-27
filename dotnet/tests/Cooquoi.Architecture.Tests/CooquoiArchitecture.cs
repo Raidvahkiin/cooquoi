@@ -1,5 +1,6 @@
 using Cooquoi.Context.Foodpedia;
 using Cooquoi.Context.Foodventory;
+using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.Context.Household;
 using Cooquoi.Platform;
 using Cooquoi.SharedKernel;
@@ -25,6 +26,7 @@ internal static class CooquoiArchitecture
         typeof(HouseholdModule).Assembly,
         typeof(FoodpediaModule).Assembly,
         typeof(FoodventoryModule).Assembly,
+        typeof(IngredientStockAggregate).Assembly,
     ];
 
     public static readonly ArchUnitNET.Domain.Architecture Value = new ArchUnitNET.Loader.ArchLoader()

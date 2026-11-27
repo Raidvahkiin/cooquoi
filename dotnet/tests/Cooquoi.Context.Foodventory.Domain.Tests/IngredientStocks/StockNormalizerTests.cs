@@ -1,7 +1,7 @@
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.SharedKernel;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.IngredientStocks;
 
 public sealed class StockNormalizerTests
 {

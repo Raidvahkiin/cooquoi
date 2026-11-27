@@ -4,7 +4,7 @@ using Cooquoi.Context.Foodventory.Domain.IngredientStocks.Events;
 using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.IngredientStocks;
 
 public sealed class StockConsumptionTests
 {
@@ -16,7 +16,7 @@ public sealed class StockConsumptionTests
         var stock = IngredientStockAggregate.Create(new NewIngredientStock(IngredientStockId.New(), Guid.NewGuid(), Facts));
         var items = lines
             .Select(line => stock.Restock(
-                [new NewStockLine(new Quantity(line.Amount, line.Unit), line.Expiry, StockSourceType.Manual)], Facts, Today.AddDays(-line.AddedDaysAgo))[0])
+                [new NewStockLine(StockItemId.New(), new Quantity(line.Amount, line.Unit), line.Expiry, StockSourceType.Manual)], Facts, Today.AddDays(-line.AddedDaysAgo))[0])
             .ToList();
         stock.ClearDomainEvents();
         return (stock, items);
@@ -50,7 +50,7 @@ public sealed class StockConsumptionTests
     {
         var (stock, items) = Stock((100m, Unit.Gram, Today.AddDays(1), 0), (100m, Unit.Gram, Today.AddDays(9), 0));
         var pantry = new PantryTarget(PantryId.New(), StorageType.Fridge);
-        stock.MoveItem(items[1].Id, pantry, null, null, Facts);
+        stock.MoveItem(items[1].Id, pantry, null, null, Facts, StockItemId.New());
 
         stock.ConsumeFromStock(new Quantity(30m, Unit.Gram), pantry.PantryId, Facts);
 

@@ -1,7 +1,7 @@
 using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.IngredientStocks;
 
 public sealed class ExpiryProposerTests
 {

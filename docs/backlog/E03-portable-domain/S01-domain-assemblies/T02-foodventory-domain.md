@@ -60,12 +60,12 @@ sonnet
 
 ## Subtasks
 
-- [ ] T02.1 Create the domain project and `git mv` the folders. Add the references and the `Cooquoi.slnx` entry.
-- [ ] T02.2 Make the domain compile without `.New()`: restock line ids, the `MoveItem` split id, default pantry ids. Update the callers (endpoints, handler) and the domain tests.
-- [ ] T02.3 AOT flags on `Raidvahkiin.Ddd` and `Cooquoi.SharedKernel`; fix any analyzer warning in the code.
-- [ ] T02.4 Add the domain assembly to `OwnAssemblies`.
-- [ ] T02.5 Domain test project: create it, `git mv` the domain tests, add the `TestFacts` link in the context test project, and change `MirroredPath` with its temporary fallback. `ls dotnet/tests/Cooquoi.Context.Foodventory.Tests/Domain` fails.
-- [ ] T02.6 `grep -rn '\.New()\|Guid.NewGuid\|DateTime\.\|TimeProvider' dotnet/src/Cooquoi.Context.Foodventory.Domain` prints nothing.
+- [x] T02.1 Create the domain project and `git mv` the folders. Add the references and the `Cooquoi.slnx` entry.
+- [x] T02.2 Make the domain compile without `.New()`: restock line ids, the `MoveItem` split id, default pantry ids. Update the callers (endpoints, handler) and the domain tests.
+- [x] T02.3 AOT flags on `Raidvahkiin.Ddd` and `Cooquoi.SharedKernel`; fix any analyzer warning in the code.
+- [x] T02.4 Add the domain assembly to `OwnAssemblies`.
+- [x] T02.5 Domain test project: create it, `git mv` the domain tests, add the `TestFacts` link in the context test project, and change `MirroredPath` with its temporary fallback. `ls dotnet/tests/Cooquoi.Context.Foodventory.Tests/Domain` fails.
+- [x] T02.6 `grep -rn '\.New()\|Guid.NewGuid\|DateTime\.\|TimeProvider' dotnet/src/Cooquoi.Context.Foodventory.Domain` prints nothing.
 
 ## Done when
 
@@ -81,6 +81,9 @@ Then:
 - commit `refactor(foodventory): domain-only assembly, domain tests and caller-supplied ids (E03.S01.T02)`;
 - stop.
 
-Status: todo
+Status: done
 
 Report:
+Domain assembly and `Domain.Tests` created (git mv, namespaces kept); ids now caller-supplied: `NewStockLine.Id`, `MoveItem(..., splitId)`, `DefaultPantries.For(..., Func<PantryId>)`. AOT flags on `Raidvahkiin.Ddd`, `SharedKernel` and the domain: no analyzer warning.
+`TestFacts` is linked into the context tests; `MirroredPath` uses the new layout with a fallback (`// shortcut: removed in E03.S01.T04`); domain assembly added to `OwnAssemblies`.
+Verified: build 0 warnings, format clean, 318/318 tests, drift none, domain grep empty.

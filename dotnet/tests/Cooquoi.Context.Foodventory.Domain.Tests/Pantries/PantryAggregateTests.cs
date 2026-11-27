@@ -2,7 +2,7 @@ using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Domain.Pantries.Events;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.Pantries;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.Pantries;
 
 public sealed class PantryAggregateTests
 {

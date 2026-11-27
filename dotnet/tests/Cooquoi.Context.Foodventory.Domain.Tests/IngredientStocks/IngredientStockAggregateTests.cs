@@ -4,7 +4,7 @@ using Cooquoi.Context.Foodventory.Domain.IngredientStocks.Events;
 using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.IngredientStocks;
 
 public sealed class IngredientStockAggregateTests
 {
@@ -22,7 +22,7 @@ public sealed class IngredientStockAggregateTests
     private static (IngredientStockAggregate Stock, StockItemEntity Item) WithItem(decimal amount = 2m, Unit? unit = null)
     {
         var stock = Existing();
-        var item = stock.Restock([new NewStockLine(new Quantity(amount, unit ?? TestFacts.Pack), null, StockSourceType.Receipt)], Facts, TestFacts.Today)[0];
+        var item = stock.Restock([new NewStockLine(StockItemId.New(), new Quantity(amount, unit ?? TestFacts.Pack), null, StockSourceType.Receipt)], Facts, TestFacts.Today)[0];
         stock.ClearDomainEvents();
         return (stock, item);
     }
@@ -46,8 +46,8 @@ public sealed class IngredientStockAggregateTests
 
         var items = stock.Restock(
             [
-                new NewStockLine(new Quantity(2m, TestFacts.Pack), null, StockSourceType.Manual),
-                new NewStockLine(new Quantity(1m, TestFacts.Can), typed, StockSourceType.Manual),
+                new NewStockLine(StockItemId.New(), new Quantity(2m, TestFacts.Pack), null, StockSourceType.Manual),
+                new NewStockLine(StockItemId.New(), new Quantity(1m, TestFacts.Can), typed, StockSourceType.Manual),
             ],
             Facts,
             TestFacts.Today);
@@ -68,7 +68,7 @@ public sealed class IngredientStockAggregateTests
         var stock = Existing();
 
         Should.Throw<DomainException>(() => stock.Restock(
-                [new NewStockLine(new Quantity(1m, Unit.Gram), null, StockSourceType.Manual)], TestFacts.Of(active: false), TestFacts.Today))
+                [new NewStockLine(StockItemId.New(), new Quantity(1m, Unit.Gram), null, StockSourceType.Manual)], TestFacts.Of(active: false), TestFacts.Today))
             .Error.ShouldBe(IngredientStockError.IngredientRetired);
         stock.Items.ShouldBeEmpty();
     }
@@ -78,7 +78,7 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, item) = WithItem();
 
-        stock.MoveItem(item.Id, Freezer, null, null, Facts);
+        stock.MoveItem(item.Id, Freezer, null, null, Facts, StockItemId.New());
 
         stock.Items.ShouldHaveSingleItem().PantryId.ShouldBe(Freezer.PantryId);
         item.Expiry.ShouldBeNull();
@@ -90,11 +90,11 @@ public sealed class IngredientStockAggregateTests
     public void FV9_moving_the_whole_item_to_its_own_pantry_changes_nothing_and_raises_no_event()
     {
         var (stock, item) = WithItem();
-        stock.MoveItem(item.Id, Fridge, null, null, Facts);
+        stock.MoveItem(item.Id, Fridge, null, null, Facts, StockItemId.New());
         stock.ClearDomainEvents();
         var expiry = item.Expiry;
 
-        stock.MoveItem(item.Id, Fridge, null, null, Facts);
+        stock.MoveItem(item.Id, Fridge, null, null, Facts, StockItemId.New());
 
         item.PantryId.ShouldBe(Fridge.PantryId);
         item.Expiry.ShouldBe(expiry);
@@ -106,7 +106,7 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, item) = WithItem();
 
-        var error = Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(0.1m, Unit.Gram), null, Facts));
+        var error = Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(0.1m, Unit.Gram), null, Facts, StockItemId.New()));
 
         error.Error.ShouldBe(IngredientStockError.InvalidQuantity);
         error.Parameters["amount"].ShouldBe(0.1m);
@@ -119,7 +119,7 @@ public sealed class IngredientStockAggregateTests
         var (stock, item) = WithItem();
         var typed = TestFacts.Today.AddDays(30);
 
-        stock.MoveItem(item.Id, Freezer, null, typed, Facts);
+        stock.MoveItem(item.Id, Freezer, null, typed, Facts, StockItemId.New());
 
         item.Expiry.ShouldBe(new Expiry(typed, ExpirySource.Manual));
     }
@@ -129,7 +129,7 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, item) = WithItem();
 
-        stock.MoveItem(item.Id, Fridge, new Quantity(250m, Unit.Gram), null, Facts);
+        stock.MoveItem(item.Id, Fridge, new Quantity(250m, Unit.Gram), null, Facts, StockItemId.New());
 
         var split = stock.Items.Where(candidate => candidate.Id != item.Id).ShouldHaveSingleItem();
         split.PantryId.ShouldBe(Fridge.PantryId);
@@ -150,7 +150,7 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, item) = WithItem();
 
-        stock.MoveItem(item.Id, Fridge, new Quantity(1m, Unit.Kilogram), null, Facts);
+        stock.MoveItem(item.Id, Fridge, new Quantity(1m, Unit.Kilogram), null, Facts, StockItemId.New());
 
         stock.Items.ShouldHaveSingleItem().PantryId.ShouldBe(Fridge.PantryId);
     }
@@ -160,7 +160,7 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, item) = WithItem();
 
-        Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(3m, TestFacts.Pack), null, Facts))
+        Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(3m, TestFacts.Pack), null, Facts, StockItemId.New()))
             .Error.ShouldBe(IngredientStockError.QuantityExceedsRemaining);
         item.PantryId.ShouldBeNull();
     }
@@ -170,7 +170,7 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, item) = WithItem();
 
-        var error = Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(1m, TestFacts.Can), null, Facts));
+        var error = Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(1m, TestFacts.Can), null, Facts, StockItemId.New()));
 
         error.Error.ShouldBe(IngredientStockError.UnitNotConvertible);
         error.Parameters["unit"].ShouldBe("can");
@@ -181,7 +181,7 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, item) = WithItem(3m, TestFacts.Can);
 
-        stock.MoveItem(item.Id, Fridge, new Quantity(1m, TestFacts.Can), null, Facts);
+        stock.MoveItem(item.Id, Fridge, new Quantity(1m, TestFacts.Can), null, Facts, StockItemId.New());
 
         stock.Items.Count.ShouldBe(2);
         item.Remaining.ShouldBe(2m);
@@ -193,6 +193,6 @@ public sealed class IngredientStockAggregateTests
     {
         var (stock, _) = WithItem();
 
-        Should.Throw<DomainException>(() => stock.MoveItem(StockItemId.New(), Fridge, null, null, Facts)).Error.ShouldBe(CommonError.NotFound);
+        Should.Throw<DomainException>(() => stock.MoveItem(StockItemId.New(), Fridge, null, null, Facts, StockItemId.New())).Error.ShouldBe(CommonError.NotFound);
     }
 }

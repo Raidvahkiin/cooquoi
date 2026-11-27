@@ -20,7 +20,7 @@ public sealed record Restock([property: MinLength(1)] IReadOnlyList<Restock.Line
     {
         /// <summary>Only after validation: the unit is known.</summary>
         internal NewStockLine ToNewStockLine() =>
-            new(new Quantity(Amount, SharedKernel.Unit.FromCode(Unit)!), Expiry, StockSourceType.Manual);
+            new(StockItemId.New(), new Quantity(Amount, SharedKernel.Unit.FromCode(Unit)!), Expiry, StockSourceType.Manual);
     }
 }
 

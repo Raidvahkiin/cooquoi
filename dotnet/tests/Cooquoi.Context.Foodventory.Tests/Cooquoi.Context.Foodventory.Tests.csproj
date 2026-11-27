@@ -2,5 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="../Cooquoi.Testing/Cooquoi.Testing.csproj" />
     <ProjectReference Include="../../src/Cooquoi.Context.Foodventory/Cooquoi.Context.Foodventory.csproj" />
+    <!-- A test project must not reference another one: compile the shared helper instead. -->
+    <Compile Include="../Cooquoi.Context.Foodventory.Domain.Tests/IngredientStocks/TestFacts.cs" Link="Support/TestFacts.cs" />
   </ItemGroup>
 </Project>

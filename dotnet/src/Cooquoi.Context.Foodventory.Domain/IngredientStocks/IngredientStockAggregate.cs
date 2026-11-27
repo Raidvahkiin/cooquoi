@@ -44,7 +44,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
         Ensure.That(facts.Active, IngredientStockError.IngredientRetired, ("ingredientId", IngredientId));
 
         var items = lines.Select(line => StockItemEntity.Create(
-                StockItemId.New(),
+                line.Id,
                 pantryId: null,
                 line.Quantity,
                 StockNormalizer.Normalize(line.Quantity.Amount, line.Quantity.Unit, facts),
@@ -60,10 +60,11 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
     }
 
     /// <summary>
-    /// FV9: puts away or moves the whole item, or splits off <paramref name="amount"/> into a new item in the target.
+    /// FV9: puts away or moves the whole item, or splits off <paramref name="amount"/> into a new item (<paramref name="splitId"/>) in the target.
     /// A typed <paramref name="expiry"/> is manual; otherwise a proposed one is recomputed for the target storage (FV8).
     /// </summary>
-    public void MoveItem(StockItemId itemId, PantryTarget target, Quantity? amount, DateOnly? expiry, FoodpediaFacts facts)
+    public void MoveItem(
+        StockItemId itemId, PantryTarget target, Quantity? amount, DateOnly? expiry, FoodpediaFacts facts, StockItemId splitId)
     {
         var item = Find(itemId);
         var moved = amount is null ? item.Remaining : StockConsumption.ToEnteredUnit(IngredientId, item, amount, facts);
@@ -95,7 +96,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
 
         var unit = item.Entered.Unit;
         var split = StockItemEntity.Create(
-            StockItemId.New(),
+            splitId,
             target.PantryId,
             new Quantity(moved, unit),
             StockNormalizer.Normalize(moved, unit, facts),

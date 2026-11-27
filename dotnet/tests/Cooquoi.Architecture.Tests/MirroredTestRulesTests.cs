@@ -52,8 +52,12 @@ public sealed class MirroredTestRulesTests
     {
         var parts = @namespace.Split('.');
         var contextName = string.Join('.', parts.TakeWhile(part => part != "Domain"));
-        var folders = parts.SkipWhile(part => part != "Domain");
-        return Path.Combine([TestRoot, $"{contextName}.Tests", .. folders, fileName]);
+        var folders = parts.SkipWhile(part => part != "Domain").ToArray();
+        var domainTests = Path.Combine(TestRoot, $"{contextName}.Domain.Tests");
+        // shortcut: removed in E03.S01.T04 (the other contexts still keep their domain tests under Tests/Domain)
+        return Directory.Exists(domainTests)
+            ? Path.Combine([domainTests, .. folders.Skip(1), fileName])
+            : Path.Combine([TestRoot, $"{contextName}.Tests", .. folders, fileName]);
     }
 
     private static bool IsAggregate(Type type) => IsDerivedFrom(type, typeof(AggregateRoot<>));

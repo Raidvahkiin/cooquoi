@@ -1,7 +1,7 @@
 using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.Context.Foodventory.Integration;
-using Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
+using Cooquoi.Context.Foodventory.Domain.Tests.IngredientStocks;
 using Cooquoi.Context.Foodventory.Tests.Support;
 using Cooquoi.Platform.OpenApi;
 using Cooquoi.Platform.Persistence;
@@ -30,14 +30,14 @@ public sealed class IngredientStockPersistenceTests(ApiFixture api)
         var stock = NewStock(household, facts);
         stock.Restock(
             [
-                new NewStockLine(new Quantity(2m, TestFacts.Pack), null, StockSourceType.Receipt),
-                new NewStockLine(new Quantity(1.5m, Unit.Kilogram), new DateOnly(2026, 12, 1), StockSourceType.Manual),
-                new NewStockLine(new Quantity(3m, TestFacts.Can), null, StockSourceType.Manual),
+                new NewStockLine(StockItemId.New(), new Quantity(2m, TestFacts.Pack), null, StockSourceType.Receipt),
+                new NewStockLine(StockItemId.New(), new Quantity(1.5m, Unit.Kilogram), new DateOnly(2026, 12, 1), StockSourceType.Manual),
+                new NewStockLine(StockItemId.New(), new Quantity(3m, TestFacts.Can), null, StockSourceType.Manual),
             ],
             facts,
             TestFacts.Today);
         var pantry = new PantryTarget(PantryId.New(), StorageType.Fridge);
-        stock.MoveItem(stock.Items[0].Id, pantry, new Quantity(1m, TestFacts.Pack), expiry: null, facts);
+        stock.MoveItem(stock.Items[0].Id, pantry, new Quantity(1m, TestFacts.Pack), expiry: null, facts, StockItemId.New());
         await Save(stock);
 
         await using var db = api.CreateDbContext();
@@ -66,13 +66,13 @@ public sealed class IngredientStockPersistenceTests(ApiFixture api)
     {
         var facts = TestFacts.Of();
         var stock = NewStock(Guid.NewGuid(), facts);
-        stock.Restock([new NewStockLine(new Quantity(2m, TestFacts.Pack), null, StockSourceType.Manual)], facts, TestFacts.Today);
+        stock.Restock([new NewStockLine(StockItemId.New(), new Quantity(2m, TestFacts.Pack), null, StockSourceType.Manual)], facts, TestFacts.Today);
         await Save(stock);
 
         await using var db = api.CreateDbContext();
         var tracked = await db.IngredientStocks.SingleAsync(s => s.Id == stock.Id, CancellationToken);
         var before = tracked.Version;
-        tracked.MoveItem(tracked.Items[0].Id, new PantryTarget(PantryId.New(), StorageType.Fridge), amount: null, expiry: null, facts);
+        tracked.MoveItem(tracked.Items[0].Id, new PantryTarget(PantryId.New(), StorageType.Fridge), amount: null, expiry: null, facts, StockItemId.New());
         await db.SaveChangesAsync(CancellationToken);
 
         tracked.Version.ShouldBe(before + 1);
@@ -83,7 +83,7 @@ public sealed class IngredientStockPersistenceTests(ApiFixture api)
     {
         var facts = TestFacts.Of();
         var stock = NewStock(Guid.NewGuid(), facts);
-        stock.Restock([new NewStockLine(new Quantity(2m, TestFacts.Pack), null, StockSourceType.Manual)], facts, TestFacts.Today);
+        stock.Restock([new NewStockLine(StockItemId.New(), new Quantity(2m, TestFacts.Pack), null, StockSourceType.Manual)], facts, TestFacts.Today);
         await Save(stock);
         var itemId = stock.Items[0].Id;
         var typed = new DateOnly(2027, 1, 15);
@@ -91,7 +91,7 @@ public sealed class IngredientStockPersistenceTests(ApiFixture api)
         await using (var db = api.CreateDbContext())
         {
             var tracked = await db.IngredientStocks.SingleAsync(s => s.Id == stock.Id, CancellationToken);
-            tracked.MoveItem(itemId, new PantryTarget(PantryId.New(), StorageType.Fridge), amount: null, expiry: typed, facts);
+            tracked.MoveItem(itemId, new PantryTarget(PantryId.New(), StorageType.Fridge), amount: null, expiry: typed, facts, StockItemId.New());
             await db.SaveChangesAsync(CancellationToken);
         }
 

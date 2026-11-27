@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="../../src/Cooquoi.Context.Foodventory.Domain/Cooquoi.Context.Foodventory.Domain.csproj" />
+  </ItemGroup>
+</Project>

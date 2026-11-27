@@ -2,7 +2,7 @@ using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.IngredientStocks;
 
 public sealed class QuantityTests
 {

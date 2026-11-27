@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Persistence;
 using Cooquoi.Context.Household.PublicApi.Events;
@@ -16,6 +17,6 @@ public static class HouseholdCreatedHandler
             return;
         }
 
-        db.Pantries.AddRange(DefaultPantries.For(created.HouseholdId, Locale.FromTagOrDefault(created.Locale)).Select(PantryAggregate.Create));
+        db.Pantries.AddRange(DefaultPantries.For(created.HouseholdId, Locale.FromTagOrDefault(created.Locale), PantryId.New).Select(PantryAggregate.Create));
     }
 }

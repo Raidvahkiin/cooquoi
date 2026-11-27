@@ -2,7 +2,7 @@ using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.SharedKernel;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.IngredientStocks;
 
 /// <summary>Foodpedia facts of an ingredient in grams, 1 pack = 500 g, 5 days in the fridge.</summary>
 internal static class TestFacts

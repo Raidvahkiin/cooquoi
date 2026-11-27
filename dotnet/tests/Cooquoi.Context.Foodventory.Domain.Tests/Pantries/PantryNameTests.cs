@@ -1,7 +1,7 @@
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Raidvahkiin.Ddd;
 
-namespace Cooquoi.Context.Foodventory.Tests.Domain.Pantries;
+namespace Cooquoi.Context.Foodventory.Domain.Tests.Pantries;
 
 public sealed class PantryNameTests
 {

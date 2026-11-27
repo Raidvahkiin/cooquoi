@@ -2,5 +2,7 @@
   <PropertyGroup>
     <Description>DDD building blocks: aggregate roots, domain events, error definitions.</Description>
     <IsPackable>true</IsPackable>
+    <IsAotCompatible>true</IsAotCompatible>
+    <VerifyReferenceAotCompatibility>true</VerifyReferenceAotCompatibility>
   </PropertyGroup>
 </Project>

@@ -14,7 +14,7 @@ public static class DefaultPantries
         [Locale.Vietnamese] = [("Tủ lạnh", StorageType.Fridge), ("Tủ đông", StorageType.Freezer), ("Đồ khô", StorageType.Room)],
     };
 
-    public static IEnumerable<NewPantry> For(Guid householdId, Locale locale) =>
+    public static IEnumerable<NewPantry> For(Guid householdId, Locale locale, Func<PantryId> newId) =>
         ByLocale.GetValueOrDefault(locale, ByLocale[Locale.English])
-            .Select(pantry => new NewPantry(PantryId.New(), householdId, new PantryName(pantry.Name), pantry.Storage));
+            .Select(pantry => new NewPantry(newId(), householdId, new PantryName(pantry.Name), pantry.Storage));
 }

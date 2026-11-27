@@ -51,7 +51,7 @@ public static class MoveStockItemEndpoint
         var facts = (await foodpedia.GetAsync(
             [stock.IngredientId], units, cancellationToken, Locale.FromTagOrDefault(http.Headers.AcceptLanguage.FirstOrDefault())))[stock.IngredientId];
 
-        stock.MoveItem(itemId, new PantryTarget(target.Id, target.Storage), requested, request.Expiry, facts);
+        stock.MoveItem(itemId, new PantryTarget(target.Id, target.Storage), requested, request.Expiry, facts, StockItemId.New());
 
         // A no-op move (same pantry, same expiry) raises no event, so the save does not bump the version.
         var moved = stock.DomainEvents.OfType<StockItemMovedDomainEvent>().LastOrDefault();
