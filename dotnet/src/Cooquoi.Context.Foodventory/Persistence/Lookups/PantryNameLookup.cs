@@ -1,5 +1,6 @@
 using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
+using Cooquoi.Context.Foodventory.Persistence.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Cooquoi.Context.Foodventory.Persistence.Lookups;
@@ -14,7 +15,7 @@ public static class PantryNameLookup
         var lowered = name.Value.ToLowerInvariant();
         return pantries.AnyAsync(
             pantry => pantry.HouseholdId == householdId
-                && EF.Property<string>(pantry, "NameKey") == EF.Functions.Unaccent(lowered)
+                && EF.Property<string>(pantry, PantryConfiguration.NameKey) == EF.Functions.Unaccent(lowered)
                 && (except == null || pantry.Id != except),
             cancellationToken);
     }

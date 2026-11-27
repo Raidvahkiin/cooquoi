@@ -17,5 +17,5 @@ public sealed class QuantityTests
     [InlineData(-1)]
     [InlineData(0.0001)]
     public void FV4_a_zero_negative_or_too_precise_amount_is_rejected(decimal amount) =>
-        Should.Throw<DomainException>(() => new Quantity(amount, Unit.Piece)).Error.ShouldBe(StockError.InvalidQuantity);
+        Should.Throw<DomainException>(() => new Quantity(amount, Unit.Piece)).Error.ShouldBe(IngredientStockError.InvalidQuantity);
 }

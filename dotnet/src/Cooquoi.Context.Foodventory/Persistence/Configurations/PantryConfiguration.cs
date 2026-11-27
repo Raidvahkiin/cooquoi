@@ -1,3 +1,4 @@
+using Cooquoi.Platform.Persistence;
 using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +9,7 @@ namespace Cooquoi.Context.Foodventory.Persistence.Configurations;
 internal sealed class PantryConfiguration : IEntityTypeConfiguration<PantryAggregate>
 {
     /// <summary>FV1 safety net: one pantry per household and name, ignoring case and accents.</summary>
-    private const string NameKey = "NameKey";
+    public const string NameKey = "NameKey";
 
     public const string UniqueNameIndex = "ux_pantries_household_name_key";
 
@@ -24,7 +25,7 @@ internal sealed class PantryConfiguration : IEntityTypeConfiguration<PantryAggre
             .HasConversion(name => name.Value, value => new PantryName(value))
             .HasMaxLength(PantryName.MaxLength);
         builder.Property<string>(NameKey).HasComputedColumnSql($"{FoodventoryDbContext.Schema}.{PantryNameKey.UnaccentFunction}(lower(name))", stored: true);
-        builder.Property(pantry => pantry.Storage).HasMaxLength(20);
+        builder.Property(pantry => pantry.Storage).HasMaxLength(ColumnLengths.Code);
         builder.HasIndex([nameof(PantryAggregate.HouseholdId), NameKey]).IsUnique().HasDatabaseName(UniqueNameIndex);
     }
 }

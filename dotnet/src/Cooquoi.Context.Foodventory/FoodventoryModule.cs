@@ -3,6 +3,7 @@ using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
 using Cooquoi.Context.Foodventory.Persistence.Configurations;
+using Cooquoi.Context.Foodventory.Persistence.Interceptors;
 using Cooquoi.Platform;
 using Cooquoi.Platform.Persistence;
 using Microsoft.EntityFrameworkCore;

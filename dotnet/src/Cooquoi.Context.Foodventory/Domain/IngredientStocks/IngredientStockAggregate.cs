@@ -13,7 +13,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
 
     public Guid HouseholdId { get; private set; }
     public Guid IngredientId { get; private set; }
-    public Unit BaseUnit { get; private set; } = Unit.Gram;
+    public Unit BaseUnit { get; private set; } = null!;
     public ExpiryKind ExpiryKind { get; private set; }
 
     /// <summary>Items currently held (remaining &gt; 0).</summary>
@@ -40,7 +40,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
     public IReadOnlyList<StockItemEntity> Restock(IReadOnlyList<NewStockLine> lines, FoodpediaFacts facts, DateOnly today)
     {
         // FV3
-        Ensure.That(facts.Active, StockError.IngredientRetired, ("ingredientId", IngredientId));
+        Ensure.That(facts.Active, IngredientStockError.IngredientRetired, ("ingredientId", IngredientId));
 
         var items = lines.Select(line => StockItemEntity.Create(
                 StockItemId.New(),
@@ -70,7 +70,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
         // FV9
         Ensure.That(
             moved <= item.Remaining,
-            StockError.QuantityExceedsRemaining,
+            IngredientStockError.QuantityExceedsRemaining,
             ("amount", moved),
             ("unit", item.Entered.Unit.Code),
             ("remaining", item.Remaining));
@@ -83,8 +83,13 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
 
         if (moved == item.Remaining)
         {
+            if (from == target.PantryId && newExpiry == item.Expiry)
+            {
+                return;
+            }
+
             item.MoveTo(target.PantryId, newExpiry);
-            Raise(new StockItemMovedDomainEvent(Id, item.Id, from, target.PantryId, moved, item.Entered.Unit.Code, SplitItemId: null));
+            Raise(new StockItemMovedDomainEvent(Id, item.Id, from, target.PantryId, moved, item.Entered.Unit, SplitItemId: null));
             return;
         }
 
@@ -99,14 +104,17 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
             item.Source);
         item.Reduce(moved, StockNormalizer.Normalize(item.Remaining - moved, unit, facts));
         _items.Add(split);
-        Raise(new StockItemMovedDomainEvent(Id, item.Id, from, target.PantryId, moved, unit.Code, split.Id));
+        Raise(new StockItemMovedDomainEvent(Id, item.Id, from, target.PantryId, moved, unit, split.Id));
     }
 
     private decimal ToEnteredUnit(StockItemEntity item, Quantity amount, FoodpediaFacts facts)
     {
         var converted = StockNormalizer.Convert(amount, item.Entered.Unit, facts)
-            ?? throw StockError.UnitNotConvertible.ToException(("ingredientId", IngredientId), ("unit", amount.Unit.Code));
+            ?? throw IngredientStockError.UnitNotConvertible.ToException(("ingredientId", IngredientId), ("unit", amount.Unit.Code));
         // a quantity holds 3 decimals: the split item and the remainder must too
-        return decimal.Round(converted, 3);
+        var rounded = decimal.Round(converted, 3);
+        // FV4: an amount too small for the entered unit would end as "0 is not a valid quantity"
+        Ensure.That(rounded > 0, IngredientStockError.InvalidQuantity, ("amount", amount.Amount), ("unit", amount.Unit.Code));
+        return rounded;
     }
 }

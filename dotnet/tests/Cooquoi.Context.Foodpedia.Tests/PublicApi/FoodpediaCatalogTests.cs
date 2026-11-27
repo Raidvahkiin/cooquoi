@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Cooquoi.Context.Foodpedia.Tests.PublicApi;
 
-/// <summary>P1–P3 as another context calls them, against the seeded database.</summary>
+/// <summary>P1 and P2 as another context calls them, against the seeded database.</summary>
 public sealed class FoodpediaCatalogTests(ApiFixture api)
 {
     private static CancellationToken CancellationToken => TestContext.Current.CancellationToken;
@@ -21,8 +21,8 @@ public sealed class FoodpediaCatalogTests(ApiFixture api)
 
         ingredients.OrderBy(i => i.Code).ShouldBe(
         [
-            new CatalogIngredient(salmon, "salmon", "Saumon", "active", Unit.Gram, "printed", "fridge"),
-            new CatalogIngredient(rice, "white-rice", "Riz blanc", "active", Unit.Gram, "longLife", "room"),
+            new CatalogIngredient(salmon, "salmon", "Saumon", true, Unit.Gram, "printed", 2, "fridge"),
+            new CatalogIngredient(rice, "white-rice", "Riz blanc", true, Unit.Gram, "longLife", 365, "room"),
         ]);
     }
 
@@ -45,42 +45,26 @@ public sealed class FoodpediaCatalogTests(ApiFixture api)
         var ingredient = (await Catalog().GetIngredientsAsync([retired.Id.Value], Locale.Vietnamese, CancellationToken)).ShouldHaveSingleItem();
 
         ingredient.Name.ShouldBe(retired.NameIn(Locale.English).Primary);
-        ingredient.Status.ShouldBe("retired");
+        ingredient.IsActive.ShouldBeFalse();
+        ingredient.ShelfLifeDays.ShouldBeNull();
         ingredient.RecommendedStorage.ShouldBeNull();
     }
 
     [Fact]
-    public async Task P2_normalizes_through_universal_units_and_conversions()
+    public async Task P2_gives_the_default_factor_of_several_units_for_several_ingredients_in_one_call()
     {
         var egg = await SeedIdAsync("egg");
         var salmon = await SeedIdAsync("salmon");
+        var fillet = Unit.FromCode("fillet")!;
 
-        (await Catalog().NormalizeQuantityAsync(egg, 0.12m, Unit.Kilogram, CancellationToken)).ShouldBe(new NormalizedQuantity(2, Unit.Piece));
-        (await Catalog().NormalizeQuantityAsync(salmon, 2, Unit.FromCode("fillet")!, CancellationToken)).ShouldBe(new NormalizedQuantity(400, Unit.Gram));
+        var factors = await Catalog().GetDefaultFactorsAsync(
+            [egg, salmon, Guid.NewGuid()], [Unit.Kilogram, fillet, Unit.FromCode("can")!], CancellationToken);
+
+        factors.Keys.ShouldBe([egg, salmon], ignoreOrder: true);
+        factors[egg][Unit.Kilogram].ShouldBeInRange(16.66m, 16.67m);
+        factors[egg].Keys.ShouldBe([Unit.Kilogram]);
+        factors[salmon].ShouldBe(new Dictionary<Unit, decimal> { [fillet] = 200m });
     }
-
-    [Fact]
-    public async Task P2_leaves_a_quantity_without_a_path_or_ingredient_unnormalized()
-    {
-        var salmon = await SeedIdAsync("salmon");
-
-        (await Catalog().NormalizeQuantityAsync(salmon, 1, Unit.FromCode("can")!, CancellationToken)).ShouldBeNull();
-        (await Catalog().NormalizeQuantityAsync(Guid.NewGuid(), 1, Unit.Gram, CancellationToken)).ShouldBeNull();
-    }
-
-    [Fact]
-    public async Task P3_proposes_the_expiry_and_storage_from_the_shelf_life()
-    {
-        var salmon = await SeedIdAsync("salmon");
-
-        var proposal = await Catalog().ProposeShelfLifeAsync(salmon, new DateOnly(2026, 11, 22), CancellationToken);
-
-        proposal.ShouldBe(new ProposedShelfLife(new DateOnly(2026, 11, 24), "fridge"));
-    }
-
-    [Fact]
-    public async Task P3_proposes_nothing_for_an_unknown_ingredient() =>
-        (await Catalog().ProposeShelfLifeAsync(Guid.NewGuid(), new DateOnly(2026, 11, 22), CancellationToken)).ShouldBeNull();
 
     private IFoodpediaCatalog Catalog() => api.Host.Services.CreateScope().ServiceProvider.GetRequiredService<IFoodpediaCatalog>();
 

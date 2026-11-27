@@ -9,7 +9,7 @@ public sealed record Quantity
     public Quantity(decimal amount, Unit unit)
     {
         // FV4 (a known unit: Unit only holds catalogue units)
-        Ensure.That(amount > 0 && decimal.Round(amount, 3) == amount, StockError.InvalidQuantity, ("amount", amount));
+        Ensure.That(amount > 0 && decimal.Round(amount, 3) == amount, IngredientStockError.InvalidQuantity, ("amount", amount));
         Amount = amount;
         Unit = unit;
     }

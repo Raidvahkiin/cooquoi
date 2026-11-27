@@ -28,28 +28,21 @@ public sealed class FoodpediaCatalog(FoodpediaDbContext db) : IFoodpediaCatalog
         return [.. rows.Select(row => row.ToCatalogIngredient(locale))];
     }
 
-    public async Task<NormalizedQuantity?> NormalizeQuantityAsync(
-        Guid ingredientId, decimal amount, Unit unit, CancellationToken cancellationToken)
+    public async Task<IReadOnlyDictionary<Guid, IReadOnlyDictionary<Unit, decimal>>> GetDefaultFactorsAsync(
+        IReadOnlyCollection<Guid> ingredientIds, IReadOnlyCollection<Unit> units, CancellationToken cancellationToken)
     {
-        var id = new IngredientId(ingredientId);
-        var row = await db.Ingredients.AsNoTracking()
-            .Where(ingredient => ingredient.Id == id)
-            .Select(ingredient => new ConversionRow(ingredient.BaseUnit, ingredient.Conversions))
-            .FirstOrDefaultAsync(cancellationToken);
-        var baseAmount = row?.Conversions.Normalize(amount, unit, row.BaseUnit);
-        return baseAmount is null ? null : new NormalizedQuantity(baseAmount.Value, row!.BaseUnit);
-    }
-
-    public async Task<ProposedShelfLife?> ProposeShelfLifeAsync(Guid ingredientId, DateOnly from, CancellationToken cancellationToken)
-    {
-        var id = new IngredientId(ingredientId);
-        var shelfLife = await db.Ingredients.AsNoTracking()
-            .Where(ingredient => ingredient.Id == id)
-            .Select(ingredient => ingredient.ShelfLife)
-            .FirstOrDefaultAsync(cancellationToken);
-        return shelfLife is null
-            ? null
-            : new ProposedShelfLife(shelfLife.ProposeExpiry(from), ContractEnumNames.ToCode(shelfLife.RecommendedStorage));
+        var ids = ingredientIds.Select(id => new IngredientId(id)).ToList();
+        var rows = await db.Ingredients.AsNoTracking()
+            .Where(ingredient => ids.Contains(ingredient.Id))
+            .Select(ingredient => new ConversionRow(ingredient.Id, ingredient.BaseUnit, ingredient.Conversions))
+            .ToListAsync(cancellationToken);
+        return rows.ToDictionary(
+            row => row.Id.Value,
+            row => (IReadOnlyDictionary<Unit, decimal>)units
+                .Where(unit => !unit.ConvertsUniversallyTo(row.BaseUnit))
+                .Select(unit => (Unit: unit, Factor: row.Conversions.Normalize(1m, unit, row.BaseUnit)))
+                .Where(pair => pair.Factor is not null)
+                .ToDictionary(pair => pair.Unit, pair => pair.Factor!.Value));
     }
 
     private sealed record IngredientRow(
@@ -65,11 +58,12 @@ public sealed class FoodpediaCatalog(FoodpediaDbContext db) : IFoodpediaCatalog
             Id.Value,
             Code.Value,
             LocalizedName.Pick(Names, locale).Primary,
-            ContractEnumNames.ToCode(Status),
+            Status == IngredientStatus.Active,
             BaseUnit,
             ContractEnumNames.ToCode(ExpiryKind),
+            ShelfLife?.Days,
             ShelfLife is null ? null : ContractEnumNames.ToCode(ShelfLife.RecommendedStorage));
     }
 
-    private sealed record ConversionRow(Unit BaseUnit, ConversionTable Conversions);
+    private sealed record ConversionRow(IngredientId Id, Unit BaseUnit, ConversionTable Conversions);
 }

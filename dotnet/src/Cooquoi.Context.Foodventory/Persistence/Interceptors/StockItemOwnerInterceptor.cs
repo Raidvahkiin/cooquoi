@@ -2,7 +2,7 @@ using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
-namespace Cooquoi.Context.Foodventory.Persistence.Configurations;
+namespace Cooquoi.Context.Foodventory.Persistence.Interceptors;
 
 /// <summary>Copies each stock's household and ingredient onto its item rows, so the read-side indexes need no join.</summary>
 internal sealed class StockItemOwnerInterceptor : SaveChangesInterceptor
@@ -30,8 +30,8 @@ internal sealed class StockItemOwnerInterceptor : SaveChangesInterceptor
             foreach (var item in stock.Entity.Items)
             {
                 var entry = context!.Entry(item);
-                entry.Property<Guid>(IngredientStockConfiguration.HouseholdIdProperty).CurrentValue = stock.Entity.HouseholdId;
-                entry.Property<Guid>(IngredientStockConfiguration.IngredientIdProperty).CurrentValue = stock.Entity.IngredientId;
+                entry.Property<Guid>(Configurations.IngredientStockConfiguration.HouseholdIdProperty).CurrentValue = stock.Entity.HouseholdId;
+                entry.Property<Guid>(Configurations.IngredientStockConfiguration.IngredientIdProperty).CurrentValue = stock.Entity.IngredientId;
             }
         }
     }

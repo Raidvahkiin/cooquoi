@@ -1,5 +1,6 @@
 using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
+using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
 using Cooquoi.Context.Foodventory.Persistence.Lookups;
 using Cooquoi.Platform.Concurrency;
@@ -18,7 +19,7 @@ public static class SetPantryStorageEndpoint
 
     /// <summary>Wolverine runs this before <see cref="Post"/>: 404 when the pantry is not the caller's household's (FV2).</summary>
     public static async Task<PantryAggregate> LoadAsync(
-        Guid pantryId, Integration.CurrentHousehold household, Persistence.FoodventoryDbContext db, CancellationToken cancellationToken) =>
+        Guid pantryId, CurrentHousehold household, FoodventoryDbContext db, CancellationToken cancellationToken) =>
         await db.Pantries.LoadForHouseholdAsync(await household.GetIdAsync(cancellationToken), pantryId, cancellationToken);
 
     /// <summary>C3: replace-style (If-Match); answers the new version as ETag.</summary>

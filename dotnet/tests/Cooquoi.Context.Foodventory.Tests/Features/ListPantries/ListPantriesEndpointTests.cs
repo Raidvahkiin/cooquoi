@@ -26,6 +26,25 @@ public sealed class ListPantriesEndpointTests(ApiFixture api)
     }
 
     [Fact]
+    public async Task Pantries_are_sorted_ignoring_case_and_accents()
+    {
+        var subject = await api.NewUserAsync();
+        foreach (var name in new[] { "Zz zebra", "zz Élan", "ZZ apple" })
+        {
+            await api.Host.Scenario(s =>
+            {
+                s.AsUser(subject).WithIdempotencyKey();
+                s.Post.Json(new { name, storage = "room" }).ToUrl("/v1/pantries");
+                s.StatusCodeShouldBe(201);
+            });
+        }
+
+        var names = (await ListAsync(subject)).Pantries.Select(p => p.Name).Where(name => name.StartsWith("zz", StringComparison.OrdinalIgnoreCase));
+
+        names.ShouldBe(["ZZ apple", "zz Élan", "Zz zebra"]);
+    }
+
+    [Fact]
     public async Task Only_the_callers_household_pantries_are_listed()
     {
         var owner = await api.NewUserAsync();

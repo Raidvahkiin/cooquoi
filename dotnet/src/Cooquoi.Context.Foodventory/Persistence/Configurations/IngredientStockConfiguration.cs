@@ -1,3 +1,4 @@
+using Cooquoi.Platform.Persistence;
 using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.SharedKernel;
@@ -29,8 +30,8 @@ internal sealed class IngredientStockConfiguration : IEntityTypeConfiguration<In
         builder.Ignore(stock => stock.DomainEvents);
         builder.Ignore(stock => stock.Total);
 
-        builder.Property(stock => stock.BaseUnit).HasConversion(UnitConverter).HasMaxLength(20);
-        builder.Property(stock => stock.ExpiryKind).HasMaxLength(20);
+        builder.Property(stock => stock.BaseUnit).HasConversion(UnitConverter).HasMaxLength(ColumnLengths.Code);
+        builder.Property(stock => stock.ExpiryKind).HasMaxLength(ColumnLengths.Code);
         builder.HasIndex(stock => new { stock.HouseholdId, stock.IngredientId }).IsUnique().HasDatabaseName(UniqueIngredientIndex);
 
         builder.OwnsMany(stock => stock.Items, item =>
@@ -40,7 +41,7 @@ internal sealed class IngredientStockConfiguration : IEntityTypeConfiguration<In
             item.HasKey(entity => entity.Id);
             item.Property(entity => entity.Id).HasConversion(id => id.Value, value => new StockItemId(value)).ValueGeneratedNever();
             item.Property(entity => entity.PantryId).HasConversion(PantryIdConverter);
-            item.Property(entity => entity.Source).HasMaxLength(20);
+            item.Property(entity => entity.Source).HasMaxLength(ColumnLengths.Code);
             item.Property(entity => entity.Remaining).HasColumnName("remaining_amount").HasPrecision(18, 3);
             item.Property(entity => entity.Normalized).HasColumnName("normalized_amount").HasPrecision(18, 6);
 
@@ -51,12 +52,12 @@ internal sealed class IngredientStockConfiguration : IEntityTypeConfiguration<In
             item.OwnsOne(entity => entity.Entered, entered =>
             {
                 entered.Property(quantity => quantity.Amount).HasColumnName("entered_amount").HasPrecision(18, 3);
-                entered.Property(quantity => quantity.Unit).HasColumnName("entered_unit").HasConversion(UnitConverter).HasMaxLength(20);
+                entered.Property(quantity => quantity.Unit).HasColumnName("entered_unit").HasConversion(UnitConverter).HasMaxLength(ColumnLengths.Code);
             });
             item.OwnsOne(entity => entity.Expiry, expiry =>
             {
                 expiry.Property(value => value.Date).HasColumnName("expires_on");
-                expiry.Property(value => value.Source).HasColumnName("expiry_source").HasMaxLength(20);
+                expiry.Property(value => value.Source).HasColumnName("expiry_source").HasMaxLength(ColumnLengths.Code);
             });
 
             // the expiry index (household, expires_on) is raw SQL in the migration: owned properties cannot be indexed from here

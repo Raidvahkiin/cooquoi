@@ -1,4 +1,5 @@
 using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
+using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
 
 namespace Cooquoi.Context.Foodventory.Domain.IngredientStocks.Events;
@@ -13,5 +14,5 @@ public sealed record StockItemMovedDomainEvent(
     PantryId? FromPantryId,
     PantryId ToPantryId,
     decimal Amount,
-    string Unit,
+    Unit Unit,
     StockItemId? SplitItemId) : IDomainEvent;

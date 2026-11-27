@@ -3,7 +3,7 @@ using Raidvahkiin.Ddd;
 namespace Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 
 /// <summary>Errors of the IngredientStock aggregate; rule ids from the domain model.</summary>
-public static class StockError
+public static class IngredientStockError
 {
     public static readonly DomainError IngredientRetired = new(
         "foodventory.ingredientRetired", ErrorKind.BusinessRule, "Ingredient '{ingredientId}' is retired and cannot be restocked.");

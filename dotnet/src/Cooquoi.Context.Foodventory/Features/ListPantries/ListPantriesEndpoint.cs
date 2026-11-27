@@ -1,5 +1,6 @@
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
+using Cooquoi.Context.Foodventory.Persistence.Configurations;
 using Cooquoi.Context.Foodventory.Persistence.Lookups;
 using Cooquoi.Platform.OpenApi;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +24,8 @@ public static class ListPantriesEndpoint
         var householdId = await household.GetIdAsync(cancellationToken);
         var pantries = await db.Pantries.AsNoTracking()
             .Where(pantry => pantry.HouseholdId == householdId)
-            .OrderBy(pantry => pantry.Name)
+            .OrderBy(pantry => EF.Property<string>(pantry, PantryConfiguration.NameKey))
+            .ThenBy(pantry => pantry.Name)
             .ToListAsync(cancellationToken);
         var (perPantry, toPutAway) = await PantryContentsLookup.CountForHouseholdAsync(db, householdId, cancellationToken);
         return new PantryList(

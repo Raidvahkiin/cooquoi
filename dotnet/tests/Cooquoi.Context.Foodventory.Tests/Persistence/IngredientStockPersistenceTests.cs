@@ -3,6 +3,8 @@ using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;
 using Cooquoi.Context.Foodventory.Tests.Support;
+using Cooquoi.Platform.OpenApi;
+using Cooquoi.Platform.Persistence;
 using Cooquoi.SharedKernel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -74,6 +76,42 @@ public sealed class IngredientStockPersistenceTests(ApiFixture api)
         await db.SaveChangesAsync(CancellationToken);
 
         tracked.Version.ShouldBe(before + 1);
+    }
+
+    [Fact]
+    public async Task A_moved_item_keeps_a_single_expiry_column_and_a_changed_expiry_round_trips()
+    {
+        var facts = TestFacts.Of();
+        var stock = NewStock(Guid.NewGuid(), facts);
+        stock.Restock([new NewStockLine(new Quantity(2m, TestFacts.Pack), null, StockSourceType.Manual)], facts, TestFacts.Today);
+        await Save(stock);
+        var itemId = stock.Items[0].Id;
+        var typed = new DateOnly(2027, 1, 15);
+
+        await using (var db = api.CreateDbContext())
+        {
+            var tracked = await db.IngredientStocks.SingleAsync(s => s.Id == stock.Id, CancellationToken);
+            tracked.MoveItem(itemId, new PantryTarget(PantryId.New(), StorageType.Fridge), amount: null, expiry: typed, facts);
+            await db.SaveChangesAsync(CancellationToken);
+        }
+
+        await using var read = api.CreateDbContext();
+        var loaded = await read.IngredientStocks.AsNoTracking().SingleAsync(s => s.Id == stock.Id, CancellationToken);
+        loaded.Items.Single().Expiry.ShouldBe(new Expiry(typed, ExpirySource.Manual));
+        (await read.Database.SqlQueryRaw<DateOnly>("select expires_on as \"Value\" from foodventory.stock_items where id = {0}", itemId.Value)
+            .SingleAsync(CancellationToken)).ShouldBe(typed);
+        (await read.Database.SqlQueryRaw<int>(
+            "select count(*)::int as \"Value\" from pg_indexes where indexname = 'ix_stock_items_household_expires_on'").SingleAsync(CancellationToken))
+            .ShouldBe(1);
+    }
+
+    [Fact]
+    public void Every_enum_and_unit_code_fits_the_code_columns()
+    {
+        var enumCodes = new[] { typeof(ExpiryKind), typeof(StockSourceType), typeof(ExpirySource), typeof(StorageType) }
+            .SelectMany(type => Enum.GetValues(type).Cast<Enum>().Select(value => ContractEnumNames.ToCode(value.ToString())));
+
+        enumCodes.Concat(Unit.All.Select(unit => unit.Code)).ShouldAllBe(code => code.Length <= ColumnLengths.Code);
     }
 
     [Fact]

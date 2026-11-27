@@ -1,3 +1,4 @@
+using Cooquoi.Platform.Persistence;
 using Cooquoi.Context.Foodpedia.Domain.Tags;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,7 +16,7 @@ internal sealed class TagConfiguration : IEntityTypeConfiguration<TagAggregate>
         builder.Ignore(tag => tag.DomainEvents);
         builder.Property(tag => tag.Code).HasConversion(TagCodeConversion.Converter).HasMaxLength(100);
         builder.HasIndex(tag => tag.Code).IsUnique().HasDatabaseName("ux_tags_code");
-        builder.Property(tag => tag.Status).HasMaxLength(20);
+        builder.Property(tag => tag.Status).HasMaxLength(ColumnLengths.Code);
 
         builder.OwnsMany(tag => tag.Labels, label =>
         {

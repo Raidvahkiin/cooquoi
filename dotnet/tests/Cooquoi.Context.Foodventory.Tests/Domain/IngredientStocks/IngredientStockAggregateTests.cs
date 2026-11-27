@@ -69,7 +69,7 @@ public sealed class IngredientStockAggregateTests
 
         Should.Throw<DomainException>(() => stock.Restock(
                 [new NewStockLine(new Quantity(1m, Unit.Gram), null, StockSourceType.Manual)], TestFacts.Of(active: false), TestFacts.Today))
-            .Error.ShouldBe(StockError.IngredientRetired);
+            .Error.ShouldBe(IngredientStockError.IngredientRetired);
         stock.Items.ShouldBeEmpty();
     }
 
@@ -83,7 +83,34 @@ public sealed class IngredientStockAggregateTests
         stock.Items.ShouldHaveSingleItem().PantryId.ShouldBe(Freezer.PantryId);
         item.Expiry.ShouldBeNull();
         stock.DomainEvents.ShouldHaveSingleItem().ShouldBe(
-            new StockItemMovedDomainEvent(stock.Id, item.Id, null, Freezer.PantryId, 2m, "pack", null));
+            new StockItemMovedDomainEvent(stock.Id, item.Id, null, Freezer.PantryId, 2m, TestFacts.Pack, null));
+    }
+
+    [Fact]
+    public void FV9_moving_the_whole_item_to_its_own_pantry_changes_nothing_and_raises_no_event()
+    {
+        var (stock, item) = WithItem();
+        stock.MoveItem(item.Id, Fridge, null, null, Facts);
+        stock.ClearDomainEvents();
+        var expiry = item.Expiry;
+
+        stock.MoveItem(item.Id, Fridge, null, null, Facts);
+
+        item.PantryId.ShouldBe(Fridge.PantryId);
+        item.Expiry.ShouldBe(expiry);
+        stock.DomainEvents.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void FV4_an_amount_that_rounds_to_zero_in_the_entered_unit_is_rejected_with_the_typed_amount_and_unit()
+    {
+        var (stock, item) = WithItem();
+
+        var error = Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(0.1m, Unit.Gram), null, Facts));
+
+        error.Error.ShouldBe(IngredientStockError.InvalidQuantity);
+        error.Parameters["amount"].ShouldBe(0.1m);
+        error.Parameters["unit"].ShouldBe("g");
     }
 
     [Fact]
@@ -115,7 +142,7 @@ public sealed class IngredientStockAggregateTests
         item.Normalized.ShouldBe(750m);
         stock.Total.ShouldBe(1000m);
         stock.DomainEvents.ShouldHaveSingleItem().ShouldBe(
-            new StockItemMovedDomainEvent(stock.Id, item.Id, null, Fridge.PantryId, 0.5m, "pack", split.Id));
+            new StockItemMovedDomainEvent(stock.Id, item.Id, null, Fridge.PantryId, 0.5m, TestFacts.Pack, split.Id));
     }
 
     [Fact]
@@ -134,7 +161,7 @@ public sealed class IngredientStockAggregateTests
         var (stock, item) = WithItem();
 
         Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(3m, TestFacts.Pack), null, Facts))
-            .Error.ShouldBe(StockError.QuantityExceedsRemaining);
+            .Error.ShouldBe(IngredientStockError.QuantityExceedsRemaining);
         item.PantryId.ShouldBeNull();
     }
 
@@ -145,7 +172,7 @@ public sealed class IngredientStockAggregateTests
 
         var error = Should.Throw<DomainException>(() => stock.MoveItem(item.Id, Fridge, new Quantity(1m, TestFacts.Can), null, Facts));
 
-        error.Error.ShouldBe(StockError.UnitNotConvertible);
+        error.Error.ShouldBe(IngredientStockError.UnitNotConvertible);
         error.Parameters["unit"].ShouldBe("can");
     }
 

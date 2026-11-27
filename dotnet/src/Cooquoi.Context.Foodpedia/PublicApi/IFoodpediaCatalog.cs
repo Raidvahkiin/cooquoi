@@ -4,7 +4,7 @@ namespace Cooquoi.Context.Foodpedia.PublicApi;
 
 /// <summary>
 /// The Foodpedia context's published queries (ADR 0010 §1), resolved from DI by other contexts.
-/// Codes (<c>status</c>, <c>expiryKind</c>, storage) are the contract's kebab-case values.
+/// Codes (<c>expiryKind</c>, storage) are the contract's camelCase values (ADR 0021).
 /// </summary>
 public interface IFoodpediaCatalog
 {
@@ -12,10 +12,10 @@ public interface IFoodpediaCatalog
     Task<IReadOnlyList<CatalogIngredient>> GetIngredientsAsync(
         IReadOnlyCollection<Guid> ingredientIds, Locale locale, CancellationToken cancellationToken);
 
-    /// <summary>P2: the quantity in the ingredient's base unit using Foodpedia defaults; <c>null</c> when unnormalized or the ingredient is unknown.</summary>
-    Task<NormalizedQuantity?> NormalizeQuantityAsync(
-        Guid ingredientId, decimal amount, Unit unit, CancellationToken cancellationToken);
-
-    /// <summary>P3: the expiry proposed from the ingredient's shelf life; <c>null</c> when it has none or is unknown.</summary>
-    Task<ProposedShelfLife?> ProposeShelfLifeAsync(Guid ingredientId, DateOnly from, CancellationToken cancellationToken);
+    /// <summary>
+    /// P2: for each known ingredient, the amount in its base unit of one of each of <paramref name="units"/> using Foodpedia defaults;
+    /// a unit that converts universally to the base unit, or has no conversion path (unnormalized), is left out.
+    /// </summary>
+    Task<IReadOnlyDictionary<Guid, IReadOnlyDictionary<Unit, decimal>>> GetDefaultFactorsAsync(
+        IReadOnlyCollection<Guid> ingredientIds, IReadOnlyCollection<Unit> units, CancellationToken cancellationToken);
 }

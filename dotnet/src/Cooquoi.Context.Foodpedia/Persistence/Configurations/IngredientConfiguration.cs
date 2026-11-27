@@ -1,3 +1,4 @@
+using Cooquoi.Platform.Persistence;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -30,9 +31,9 @@ internal sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredi
             .HasConversion(code => code.Value, value => IngredientCode.Create(value))
             .HasMaxLength(IngredientCode.MaxLength);
         builder.HasIndex(ingredient => ingredient.Code).IsUnique().HasDatabaseName(UniqueCodeIndex);
-        builder.Property(ingredient => ingredient.BaseUnit).HasConversion(UnitConversion.Converter).HasMaxLength(20);
-        builder.Property(ingredient => ingredient.Status).HasMaxLength(20);
-        builder.Property(ingredient => ingredient.ExpiryKind).HasMaxLength(20).HasColumnName("expiry_kind");
+        builder.Property(ingredient => ingredient.BaseUnit).HasConversion(UnitConversion.Converter).HasMaxLength(ColumnLengths.Code);
+        builder.Property(ingredient => ingredient.Status).HasMaxLength(ColumnLengths.Code);
+        builder.Property(ingredient => ingredient.ExpiryKind).HasMaxLength(ColumnLengths.Code).HasColumnName("expiry_kind");
         builder.Property(ingredient => ingredient.Conversions).HasConversion(ConversionTableJson.Converter).HasColumnType("jsonb");
         builder.PrimitiveCollection(ingredient => ingredient.Tags)
             .HasField("_tags")
@@ -42,7 +43,7 @@ internal sealed class IngredientConfiguration : IEntityTypeConfiguration<Ingredi
         builder.OwnsOne(ingredient => ingredient.ShelfLife, shelfLife =>
         {
             shelfLife.Property(s => s.Days).HasColumnName("shelf_life_days");
-            shelfLife.Property(s => s.RecommendedStorage).HasColumnName("shelf_life_storage").HasMaxLength(20);
+            shelfLife.Property(s => s.RecommendedStorage).HasColumnName("shelf_life_storage").HasMaxLength(ColumnLengths.Code);
         });
 
         builder.OwnsMany(ingredient => ingredient.Names, name =>
