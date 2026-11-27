@@ -93,4 +93,14 @@ public sealed class SetStockItemExpiryEndpointTests(ApiFixture api)
 
         await (await PostAsync(subject, item.Id, new { date = "2031-01-01" }, "\"0\"", 412)).ShouldBeProblemAsync(412, "common.versionMismatch");
     }
+
+    [Fact]
+    public async Task FV2_another_households_item_is_not_found()
+    {
+        var owner = await api.NewUserAsync();
+        var stranger = await api.NewUserAsync();
+        var item = await RestockAsync(owner, "egg", 6, "piece");
+
+        await (await PostAsync(stranger, item.Id, new { date = "2030-01-01" }, "\"0\"", 404)).ShouldBeProblemAsync(404, "common.notFound");
+    }
 }

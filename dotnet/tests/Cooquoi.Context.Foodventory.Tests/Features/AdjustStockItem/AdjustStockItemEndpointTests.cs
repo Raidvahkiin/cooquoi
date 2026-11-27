@@ -7,6 +7,7 @@ using Cooquoi.Context.Foodventory.Features.Restock;
 using Cooquoi.Context.Foodventory.Persistence;
 using Cooquoi.Context.Foodventory.Persistence.Projections;
 using Cooquoi.Context.Foodventory.Tests.Support;
+using Cooquoi.SharedKernel;
 using Cooquoi.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,7 +60,9 @@ public sealed class AdjustStockItemEndpointTests(ApiFixture api)
         var result = await PostAsync(subject, item.Id, new { remaining = 9 }, "\"0\"", 204);
 
         result.Context.Response.Headers.ETag.ToString().ShouldBe("\"1\"");
-        (await FindAsync(item.Id))!.Remaining.ShouldBe(9m);
+        var kept = (await FindAsync(item.Id))!;
+        kept.Remaining.ShouldBe(9m);
+        kept.Entered.ShouldBe(new Quantity(6m, Unit.Piece));
     }
 
     [Fact]
@@ -100,5 +103,15 @@ public sealed class AdjustStockItemEndpointTests(ApiFixture api)
         await PostAsync(subject, item.Id, new { remaining = 3 }, "\"0\"", 204);
 
         await (await PostAsync(subject, item.Id, new { remaining = 2 }, "\"0\"", 412)).ShouldBeProblemAsync(412, "common.versionMismatch");
+    }
+
+    [Fact]
+    public async Task FV2_another_households_item_is_not_found()
+    {
+        var owner = await api.NewUserAsync();
+        var stranger = await api.NewUserAsync();
+        var item = await RestockAsync(owner, "egg", 6, "piece");
+
+        await (await PostAsync(stranger, item.Id, new { remaining = 3 }, "\"0\"", 404)).ShouldBeProblemAsync(404, "common.notFound");
     }
 }

@@ -95,6 +95,17 @@ public sealed class StockConsumptionTests
     }
 
     [Fact]
+    public void FV7_a_unnormalized_item_in_another_unit_is_skipped_and_counted_in_the_shortfall()
+    {
+        var (stock, items) = Stock((3m, TestFacts.Can, null, 0));
+
+        var result = stock.ConsumeFromStock(new Quantity(100m, Unit.Gram), null, Facts);
+
+        result.Shortfall.ShouldBe(new Quantity(100m, Unit.Gram));
+        stock.Items.ShouldBe([items[0]]);
+    }
+
+    [Fact]
     public void FV7_a_unit_without_a_path_and_no_item_in_it_is_rejected()
     {
         var (stock, _) = Stock((100m, Unit.Gram, null, 0));
