@@ -2,7 +2,7 @@ using Cooquoi.Context.Household.Domain.Households;
 using Cooquoi.Context.Household.Domain.Users;
 using Cooquoi.SharedKernel;
 
-namespace Cooquoi.Context.Household.Tests.Domain.Users;
+namespace Cooquoi.Context.Household.Domain.Tests.Users;
 
 public sealed class UserProfileAggregateTests
 {

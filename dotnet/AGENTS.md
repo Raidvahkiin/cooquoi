@@ -50,7 +50,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), unit tests
 
 ## Hard rules (architecture tests in `Cooquoi.Architecture.Tests`)
 
-- `Domain/` uses only `Raidvahkiin.Ddd` and `Cooquoi.SharedKernel`.
+- `Domain/` (the `Cooquoi.Context.<Name>.Domain` assemblies) references only `Raidvahkiin.Ddd`, `Cooquoi.SharedKernel` and the BCL, and each `….Domain.Tests` project only its own domain project; no domain type calls `<Id>.New()`, `Guid.NewGuid` or the clock (`DateTime.Now`/`UtcNow`/`Today`, `DateTimeOffset.Now`/`UtcNow`, `TimeProvider`).
 - `Raidvahkiin.*` never references `Cooquoi.*`; `SharedKernel` depends only on `Raidvahkiin.Ddd`.
 - Contexts reach each other only from `Integration/`, and only into the other context's `PublicApi/` (project reference allowed, nothing else of it used).
 - No `ExecuteUpdate` / `ExecuteDelete` in `Features/` (source scan) — writes go through aggregates.

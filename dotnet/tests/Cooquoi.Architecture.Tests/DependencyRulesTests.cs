@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 using ArchUnitNET.xUnitV3;
 using static ArchUnitNET.Fluent.ArchRuleDefinition;
 
@@ -13,6 +14,37 @@ public sealed class DependencyRulesTests
         Types().That().ResideInNamespaceMatching(Domain)
             .Should().NotDependOnAny(Types().That().ResideInNamespaceMatching(
                 @"^(Microsoft|Wolverine|Npgsql|FluentValidation|Cooquoi\.Platform|Raidvahkiin\.Ddd\.(AspNetCore|EntityFrameworkCore)|Cooquoi\.Context\.\w+\.(Features|Persistence|Integration))(\..+)?$"))
+            .Check(CooquoiArchitecture.Value);
+
+    [Fact]
+    public void Domain_assemblies_reference_only_the_building_blocks_and_the_shared_kernel()
+    {
+        var domains = CooquoiArchitecture.OwnAssemblies
+            .Where(assembly => Regex.IsMatch(assembly.GetName().Name!, @"^Cooquoi\.Context\.\w+\.Domain$"))
+            .ToArray();
+        domains.Length.ShouldBe(3);
+
+        var foreign = domains.SelectMany(assembly => assembly.GetReferencedAssemblies().Select(reference => reference.Name!))
+            .Distinct()
+            .Where(name => name is not ("Raidvahkiin.Ddd" or "Cooquoi.SharedKernel" or "netstandard" or "mscorlib") && !name.StartsWith("System.", StringComparison.Ordinal));
+        foreign.Order().ShouldBeEmpty("domain assembly references outside Raidvahkiin.Ddd, Cooquoi.SharedKernel and the BCL");
+
+        var testProjects = Directory.GetFiles(CooquoiArchitecture.SolutionDirectory, "Cooquoi.Context.*.Domain.Tests.csproj", SearchOption.AllDirectories);
+        testProjects.Length.ShouldBe(3);
+        foreach (var project in testProjects)
+        {
+            var references = Regex.Matches(File.ReadAllText(project), "<ProjectReference Include=\"([^\"]+)\"").Select(match => match.Groups[1].Value).ToArray();
+            references.ShouldHaveSingleItem(project);
+            references[0].ShouldEndWith(Path.GetFileName(project).Replace(".Tests.csproj", ".csproj"), Case.Sensitive, project);
+        }
+    }
+
+    [Fact]
+    public void Domain_never_creates_ids_or_reads_the_clock() =>
+        Types().That().ResideInNamespaceMatching(Domain)
+            .Should().NotCallAny(MethodMembers().That()
+                .HaveFullNameMatching(@"System\.(Guid::NewGuid|DateTime::get_(Now|UtcNow|Today)|DateTimeOffset::get_(Now|UtcNow)|TimeProvider::)")
+                .Or().HaveFullNameMatching(@"\w+Id::New\("))
             .Check(CooquoiArchitecture.Value);
 
     [Fact]

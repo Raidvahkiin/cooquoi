@@ -4,6 +4,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" />
     <PackageReference Include="WolverineFx.EntityFrameworkCore" />
     <PackageReference Include="WolverineFx.Http" />
+    <ProjectReference Include="../Cooquoi.Context.Household.Domain/Cooquoi.Context.Household.Domain.csproj" />
     <ProjectReference Include="../Cooquoi.Platform/Cooquoi.Platform.csproj" />
     <ProjectReference Include="../Cooquoi.SharedKernel/Cooquoi.SharedKernel.csproj" />
   </ItemGroup>

@@ -44,11 +44,11 @@ sonnet
 
 ## Subtasks
 
-- [ ] T04.1 Household domain project, `git mv`, references, `Cooquoi.slnx`, `OwnAssemblies`.
-- [ ] T04.1b Household domain test project, `git mv` the domain tests, and remove the `MirroredPath` fallback.
-- [ ] T04.2 Test 1 (assembly references). Check it fails if a domain csproj gets a `PackageReference`, then revert that.
-- [ ] T04.3 Test 2 (no ids or clock). Check it fails on a temporary `PantryId.New()` in a domain file, then revert that.
-- [ ] T04.4 The `dotnet/AGENTS.md` "Hard rules" lines.
+- [x] T04.1 Household domain project, `git mv`, references, `Cooquoi.slnx`, `OwnAssemblies`.
+- [x] T04.1b Household domain test project, `git mv` the domain tests, and remove the `MirroredPath` fallback.
+- [x] T04.2 Test 1 (assembly references). Check it fails if a domain csproj gets a `PackageReference`, then revert that.
+- [x] T04.3 Test 2 (no ids or clock). Check it fails on a temporary `PantryId.New()` in a domain file, then revert that.
+- [x] T04.4 The `dotnet/AGENTS.md` "Hard rules" lines.
 
 ## Done when
 
@@ -64,6 +64,9 @@ Then:
 - commit `refactor(household): domain-only assembly, domain tests and domain assembly architecture tests (E03.S01.T04)`;
 - stop.
 
-Status: todo
+Status: done
 
 Report:
+Household context domain moved to `Cooquoi.Context.Household.Domain` (+ `.Domain.Tests`), `MirroredPath` fallback removed.
+Two new architecture tests in `DependencyRulesTests` (assembly references and test-project references; no `<Id>.New()`/`Guid.NewGuid`/clock). Both verified to fail on a probe, then reverted (test 1 fails at build via the AOT check).
+Build 0 warnings, 320 tests green (318 + 2), `dotnet/AGENTS.md` Hard rules line updated.

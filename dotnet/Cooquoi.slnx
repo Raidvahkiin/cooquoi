@@ -5,6 +5,7 @@
     <Project Path="src/Cooquoi.Context.Foodpedia.Domain/Cooquoi.Context.Foodpedia.Domain.csproj" />
     <Project Path="src/Cooquoi.Context.Foodventory.Domain/Cooquoi.Context.Foodventory.Domain.csproj" />
     <Project Path="src/Cooquoi.Context.Foodventory/Cooquoi.Context.Foodventory.csproj" />
+    <Project Path="src/Cooquoi.Context.Household.Domain/Cooquoi.Context.Household.Domain.csproj" />
     <Project Path="src/Cooquoi.Context.Household/Cooquoi.Context.Household.csproj" />
     <Project Path="src/Cooquoi.Platform/Cooquoi.Platform.csproj" />
     <Project Path="src/Cooquoi.ServiceDefaults/Cooquoi.ServiceDefaults.csproj" />
@@ -21,6 +22,7 @@
     <Project Path="tests/Cooquoi.Context.Foodpedia.Domain.Tests/Cooquoi.Context.Foodpedia.Domain.Tests.csproj" />
     <Project Path="tests/Cooquoi.Context.Foodventory.Domain.Tests/Cooquoi.Context.Foodventory.Domain.Tests.csproj" />
     <Project Path="tests/Cooquoi.Context.Foodventory.Tests/Cooquoi.Context.Foodventory.Tests.csproj" />
+    <Project Path="tests/Cooquoi.Context.Household.Domain.Tests/Cooquoi.Context.Household.Domain.Tests.csproj" />
     <Project Path="tests/Cooquoi.Context.Household.Tests/Cooquoi.Context.Household.Tests.csproj" />
     <Project Path="tests/Cooquoi.Platform.Tests/Cooquoi.Platform.Tests.csproj" />
     <Project Path="tests/Cooquoi.Testing/Cooquoi.Testing.csproj" />

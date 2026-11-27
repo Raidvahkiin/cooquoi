@@ -3,7 +3,7 @@ using Cooquoi.Context.Household.Domain.Households.Events;
 using Cooquoi.Context.Household.Domain.Users;
 using Cooquoi.SharedKernel;
 
-namespace Cooquoi.Context.Household.Tests.Domain.Households;
+namespace Cooquoi.Context.Household.Domain.Tests.Households;
 
 public sealed class HouseholdAggregateTests
 {
