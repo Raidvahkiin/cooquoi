@@ -29,6 +29,6 @@ public static class SetPantryStorageEndpoint
     {
         IfMatch.Require(http.Request, pantry);
         IfMatch.SetETagAfterSave(http, pantry);
-        pantry.SetStorage(request.Storage is null ? null : ContractEnumNames.Parse<StorageType>(request.Storage));
+        pantry.SetStorage(ContractEnumNames.ParseOptional<StorageType>(request.Storage));
     }
 }

@@ -9,13 +9,11 @@ namespace Cooquoi.Context.Foodventory.Features.CreatePantry;
 public sealed record CreatePantry(string Name, [property: ContractEnum<StorageType>] string? Storage = null)
 {
     internal NewPantry ToNewPantry(PantryId id, Guid householdId) =>
-        new(id, householdId, new PantryName(Name), Storage is null ? null : ContractEnumNames.Parse<StorageType>(Storage));
+        new(id, householdId, new PantryName(Name), ContractEnumNames.ParseOptional<StorageType>(Storage));
 }
 
 public sealed class CreatePantryValidator : AbstractValidator<CreatePantry>
 {
-    private static readonly string[] Storages = [.. new ContractEnumAttribute<StorageType>().Values];
-
     public CreatePantryValidator() =>
-        RuleFor(request => request.Storage!).Must(Storages.Contains).WithErrorCode(ValidationCodes.OneOf).When(request => request.Storage is not null);
+        RuleFor(request => request.Storage).IsContractEnum<CreatePantry, StorageType>().When(request => request.Storage is not null);
 }

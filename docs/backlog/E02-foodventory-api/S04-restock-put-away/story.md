@@ -10,7 +10,7 @@ A household member restocks several ingredients in one request (S1). Every item 
 - [ ] FV6: normalization order universal → household conversion (none yet) → Foodpedia P2 → unnormalized, never guessed.
 - [ ] FV8 at restock: `printed` gets no expiry and `expiryMissing`. `estimated` gets `addedOn` + Foodpedia shelf life (proposed). `longLife` gets none and is not flagged. A typed date is `manual`, and a past date is allowed.
 - [ ] S2 `POST /v1/stock-items/{id}:move` (`pantryId` required, optional `amount` + `unit`, optional `expiry`): FV2 (another household's pantry or item → 404). FV9: no move back to none; a split creates a new item with the moved quantity in the entered unit, keeping `source` and `addedOn`. A quantity equal to remaining is a whole move; above it → 422 `foodventory.quantityExceedsRemaining`; a unit with no path → 422 `foodventory.unitNotConvertible` with ingredient and unit in `params`. FV8: a `proposed` expiry is recomputed for the target storage, a `manual` one is never touched. `StockItemMoved` carries from (none) / to / quantity / new item id.
-- [ ] FV13 now counts real stock items: deleting a Pantry aggregate that holds one → 422 `foodventory.notEmpty`. Q1 `itemCount` and `toPutAwayCount` are real.
+- [ ] FV13 now counts real stock items: deleting a Pantry aggregate that holds one → 422 `foodventory.notEmpty`. Q1 `itemCount` and `toPutAwayCount` are real. **Required to close the story**: the S03 stubs (`PantryContentsLookup` returning 0, literal counts in `ListPantriesEndpoint`, `// E02.S04.T05` markers) are gone, checked by the story review.
 - [ ] Domain tests named `FV3_…` to `FV9_…`; integration tests per endpoint; drift `none`; error-catalogue test green.
 
 ## Context

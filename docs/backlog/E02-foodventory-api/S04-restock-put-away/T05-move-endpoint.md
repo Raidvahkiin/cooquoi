@@ -39,6 +39,8 @@ FV15 learning (E02.S06.T02); consume and corrections (E02.S05)
 
 `dotnet test --solution dotnet/Cooquoi.slnx -v q --no-progress && pnpm nx run @cooquoi/contracts:drift 2>&1 | tail -3` passes and prints `drift: none`.
 
+**Required, the task is not done otherwise:** the S03 stubs are gone. `git grep -n "E02.S04.T05\|IDE0060" dotnet/src/Cooquoi.Context.Foodventory` prints nothing: `PantryContentsLookup.CountItemsAsync` queries `stock_items` (no `Task.FromResult(0)`, no `#pragma`), and `ListPantriesEndpoint` returns real `itemCount` and `toPutAwayCount` (no literal `0`). The T05.3 tests prove both: delete with an item → 422 `foodventory.notEmpty`; Q1 counts match the items restocked and moved.
+
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): put away and move stock items (E02.S04.T05)`), stop.
 
 Status: todo

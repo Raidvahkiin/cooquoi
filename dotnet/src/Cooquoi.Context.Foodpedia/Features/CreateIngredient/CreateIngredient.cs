@@ -39,8 +39,6 @@ public sealed record CreateIngredient(
 public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredient>
 {
     private static readonly string[] Locales = [.. Locale.All.Select(locale => locale.Code)];
-    private static readonly string[] ExpiryKinds = [.. new ContractEnumAttribute<ExpiryKind>().Values];
-    private static readonly string[] Storages = [.. new ContractEnumAttribute<StorageType>().Values];
 
     public CreateIngredientValidator()
     {
@@ -53,11 +51,11 @@ public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredie
         });
         RuleFor(request => request.BaseUnit).Must(IsUnit).WithErrorCode(ValidationCodes.OneOf);
         RuleFor(request => request.Tags).NotEmpty();
-        RuleFor(request => request.ExpiryKind).Must(ExpiryKinds.Contains).WithErrorCode(ValidationCodes.OneOf);
+        RuleFor(request => request.ExpiryKind).IsContractEnum<CreateIngredient, ExpiryKind>();
         RuleForEach(request => request.Conversions).ChildRules(conversion =>
             conversion.RuleFor(c => c.Unit).Must(IsUnit).WithErrorCode(ValidationCodes.OneOf));
         RuleFor(request => request.ShelfLife!.RecommendedStorage)
-            .Must(Storages.Contains).WithErrorCode(ValidationCodes.OneOf)
+            .IsContractEnum<CreateIngredient, StorageType>()
             .When(request => request.ShelfLife is not null);
     }
 

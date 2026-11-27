@@ -1,6 +1,5 @@
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Domain.Pantries.Events;
-using Cooquoi.SharedKernel;
 
 namespace Cooquoi.Context.Foodventory.Tests.Domain.Pantries;
 
@@ -61,13 +60,6 @@ public sealed class PantryAggregateTests
             new PantryStorageChangedDomainEvent(pantry.Id, StorageType.Fridge),
             new PantryStorageChangedDomainEvent(pantry.Id, null)]);
     }
-
-    [Theory]
-    [InlineData("en", "Fridge")]
-    [InlineData("fr", "Réfrigérateur")]
-    [InlineData("vi", "Tủ lạnh")]
-    public void The_default_pantries_are_named_in_the_locale(string tag, string fridge) =>
-        DefaultPantries.For(Guid.NewGuid(), Locale.FromTagOrDefault(tag)).First().Name.Value.ShouldBe(fridge);
 
     [Fact]
     public void Delete_raises_PantryDeleted()

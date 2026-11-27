@@ -43,8 +43,19 @@ public static class ContractEnumNames
 
     public static string ToCode(string name) => char.ToLowerInvariant(name[0]) + name[1..];
 
+    /// <summary>Whether <paramref name="code"/> is one of <typeparamref name="TEnum"/>'s codes (exact, case-sensitive).</summary>
+    public static bool IsCode<TEnum>(string code) where TEnum : struct, Enum => Codes<TEnum>.All.Contains(code);
+
+    /// <summary><see cref="Parse{TEnum}"/> for an optional field: <c>null</c> stays <c>null</c>.</summary>
+    public static TEnum? ParseOptional<TEnum>(string? code) where TEnum : struct, Enum => code is null ? null : Parse<TEnum>(code);
+
     /// <summary>Exact and case-sensitive: the code is one of <see cref="ContractEnumAttribute{TEnum}"/>'s values.</summary>
     public static TEnum Parse<TEnum>(string code) where TEnum : struct, Enum =>
         Enum.GetValues<TEnum>().Cast<TEnum?>().FirstOrDefault(value => ToCode(value!.Value) == code)
         ?? throw new ArgumentException($"'{code}' is not a {typeof(TEnum).Name} code.", nameof(code));
+
+    private static class Codes<TEnum> where TEnum : struct, Enum
+    {
+        public static readonly HashSet<string> All = new(Enum.GetNames<TEnum>().Select(ToCode), StringComparer.Ordinal);
+    }
 }
