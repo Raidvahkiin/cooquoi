@@ -76,6 +76,21 @@ public sealed class MoveStockItemEndpointTests(ApiFixture api)
     }
 
     [Fact]
+    public async Task Moving_the_whole_item_to_its_own_pantry_changes_nothing_and_keeps_the_version()
+    {
+        var subject = await api.NewUserAsync();
+        var pantry = await CreatePantryAsync(subject, "fridge");
+        var item = await RestockAsync(subject, "salmon", 2, "fillet");
+        await MoveOkAsync(subject, item.Id, new { pantryId = pantry });
+
+        var again = await MoveOkAsync(subject, item.Id, new { pantryId = pantry });
+
+        again.Remainder.ShouldBeNull();
+        again.Moved.PantryId.ShouldBe(pantry);
+        again.Moved.StockVersion.ShouldBe(1);
+    }
+
+    [Fact]
     public async Task A_partial_amount_splits_the_item_and_the_new_one_goes_to_the_pantry()
     {
         var subject = await api.NewUserAsync();

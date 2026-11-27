@@ -58,9 +58,11 @@ public static class MoveStockItemEndpoint
 
         stock.MoveItem(itemId, new PantryTarget(target.Id, target.Storage), requested, request.Expiry, facts);
 
-        var version = (int)stock.Version + 1;
+        // A no-op move (same pantry, same expiry) raises no event, so the save does not bump the version.
+        var moved = stock.DomainEvents.OfType<StockItemMovedDomainEvent>().LastOrDefault();
+        var version = (int)stock.Version + (moved is null ? 0 : 1);
         StockItemView View(StockItemId id) => StockItemViews.From(stock.Items.Single(item => item.Id == id), stock, facts, pantries, version);
-        var split = stock.DomainEvents.OfType<StockItemMovedDomainEvent>().Last().SplitItemId;
+        var split = moved?.SplitItemId;
         return split is { } splitId ? new MoveResult(View(splitId), View(itemId)) : new MoveResult(View(itemId));
     }
 }
