@@ -15,7 +15,7 @@ using YamlDotNet.RepresentationModel;
 
 namespace Cooquoi.Architecture.Tests;
 
-/// <summary>Every Cooquoi and Raidvahkiin assembly, loaded once (plus EF Core, to see calls into it).</summary>
+/// <summary>Every Cooquoi and Raidvahkiin assembly, loaded once (plus EF Core and CoreLib, to see calls into them).</summary>
 internal static class CooquoiArchitecture
 {
     public static readonly Assembly[] OwnAssemblies =
@@ -34,7 +34,7 @@ internal static class CooquoiArchitecture
     ];
 
     public static readonly ArchUnitNET.Domain.Architecture Value = new ArchUnitNET.Loader.ArchLoader()
-        .LoadAssemblies([.. OwnAssemblies, typeof(DbContext).Assembly, typeof(RelationalQueryableExtensions).Assembly])
+        .LoadAssemblies([.. OwnAssemblies, typeof(DbContext).Assembly, typeof(RelationalQueryableExtensions).Assembly, typeof(Guid).Assembly])
         .Build();
 
     public static IEnumerable<Type> DomainTypes =>

@@ -40,12 +40,19 @@ public sealed class DependencyRulesTests
     }
 
     [Fact]
-    public void Domain_never_creates_ids_or_reads_the_clock() =>
+    public void Domain_never_creates_ids_or_reads_the_clock()
+    {
         Types().That().ResideInNamespaceMatching(Domain)
             .Should().NotCallAny(MethodMembers().That()
                 .HaveFullNameMatching(@"System\.(Guid::NewGuid|DateTime::get_(Now|UtcNow|Today)|DateTimeOffset::get_(Now|UtcNow)|TimeProvider::)")
                 .Or().HaveFullNameMatching(@"\w+Id::New\("))
             .Check(CooquoiArchitecture.Value);
+
+        // Only the `<X>Id.New()` factories (ADR 0023 §3) may mint a time-ordered Guid.
+        Types().That().ResideInNamespaceMatching(Domain).And().DoNotHaveNameEndingWith("Id")
+            .Should().NotCallAny(MethodMembers().That().HaveFullNameMatching(@"System\.Guid::CreateVersion7"))
+            .Check(CooquoiArchitecture.Value);
+    }
 
     [Fact]
     public void Building_blocks_never_reference_Cooquoi() =>
