@@ -50,7 +50,9 @@ public sealed class RestockEndpointTests(ApiFixture api)
         result.Items.Where(item => item.IngredientId == salmon).Select(item => item.Normalized!.Amount).Order().ShouldBe([100m, 400m]);
         result.Items.Where(item => item.IngredientId == salmon).Select(item => item.StockVersion).Distinct().ShouldBe([0]);
         result.Items.First(item => item.IngredientId == egg).IngredientName.ShouldBe("Egg");
-        tracked.FindEnvelopesWithMessageType<ItemsRestockedDomainEvent>().Select(envelope => envelope.Message).Distinct().Count().ShouldBe(2);
+        // the tracked session also sees events of tests running at the same time: keep this request's
+        tracked.FindEnvelopesWithMessageType<ItemsRestockedDomainEvent>().Select(envelope => envelope.Message).OfType<ItemsRestockedDomainEvent>().Distinct()
+            .Count(e => e.ItemIds.Any(id => result.Items.Any(item => item.Id == id.Value))).ShouldBe(2);
     }
 
     [Fact]

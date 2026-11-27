@@ -30,10 +30,10 @@ FV15 learning (E02.S06.T02); consume and corrections (E02.S05)
 
 ## Subtasks
 
-- [ ] T05.1 Request, validator (amount and unit both or neither), endpoint
-- [ ] T05.2 Integration tests: put away whole; split (two items, the new one in the pantry, same addedOn); amount = remaining is whole; exceeds → 422; unit not convertible → 422 with params; estimated proposed expiry recomputed for a fridge vs freezer; manual expiry untouched; other household's pantry → 404; `StockItemMoved` (tracked)
-- [ ] T05.3 FV13 lookup + delete test (422 with an item, 204 after moving it out); Q1 counts test
-- [ ] T05.4 Drift `none`, catalogue green
+- [x] T05.1 Request, validator (amount and unit both or neither), endpoint
+- [x] T05.2 Integration tests: put away whole; split (two items, the new one in the pantry, same addedOn); amount = remaining is whole; exceeds → 422; unit not convertible → 422 with params; estimated proposed expiry recomputed for a fridge vs freezer; manual expiry untouched; other household's pantry → 404; `StockItemMoved` (tracked)
+- [x] T05.3 FV13 lookup + delete test (422 with an item, 204 after moving it out); Q1 counts test
+- [x] T05.4 Drift `none`, catalogue green
 
 ## Done when
 
@@ -43,6 +43,10 @@ FV15 learning (E02.S06.T02); consume and corrections (E02.S05)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): put away and move stock items (E02.S04.T05)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Move endpoint (`Features/MoveStockItem`), `PantryContentsLookup` now counts `stock_items` (FV13 and Q1 per pantry plus to-put-away), S03 stubs gone (grep empty).
+Tests added for S2, FV13 and Q1; 271 solution tests green, `drift: none`.
+Fix found on the way: replacing an item's owned `Expiry` failed (shadow `ExpiresOn` shared its column); shadow property and interceptor line removed, expiry index now raw SQL in the regenerated `InitialFoodventory` migration.
+Restock tracked-event test now filters to its own items (shared host sees other tests' events).

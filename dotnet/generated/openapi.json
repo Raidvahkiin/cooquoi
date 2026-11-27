@@ -1042,6 +1042,118 @@
         }
       }
     },
+    "/v1/stock-items/{stockItemId}:move": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.MoveStockItem.MoveStockItemEndpoint"
+        ],
+        "summary": "S2: puts away or moves an item, whole or split; no If-Match, like the other intent actions.",
+        "description": "POST_v1_stock_items_stockItemId",
+        "operationId": "moveStockItem",
+        "parameters": [
+          {
+            "name": "stockItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveStockItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MoveResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/pantries": {
       "get": {
         "tags": [
@@ -1897,6 +2009,183 @@
         },
         "description": "Response of `GET /v1/me`, matching the contract (contracts/contexts/household)."
       },
+      "MoveResult": {
+        "required": [
+          "moved"
+        ],
+        "type": "object",
+        "properties": {
+          "moved": {
+            "$ref": "#/components/schemas/StockItemView"
+          },
+          "remainder": {
+            "required": [
+              "id",
+              "ingredientId",
+              "ingredientName",
+              "entered",
+              "remaining",
+              "expiryKind",
+              "expiryMissing",
+              "expiryUnusual",
+              "ingredientRetired",
+              "addedOn",
+              "stockVersion"
+            ],
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "ingredientId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "ingredientName": {
+                "type": "string"
+              },
+              "entered": {
+                "$ref": "#/components/schemas/QuantityView"
+              },
+              "remaining": {
+                "$ref": "#/components/schemas/QuantityView"
+              },
+              "expiryKind": {
+                "enum": [
+                  "printed",
+                  "estimated",
+                  "longLife"
+                ],
+                "type": "string"
+              },
+              "expiryMissing": {
+                "type": "boolean"
+              },
+              "expiryUnusual": {
+                "type": "boolean"
+              },
+              "ingredientRetired": {
+                "type": "boolean"
+              },
+              "addedOn": {
+                "type": "string",
+                "format": "date"
+              },
+              "stockVersion": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "pantryId": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "normalized": {
+                "required": [
+                  "amount",
+                  "unit"
+                ],
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "format": "decimal"
+                  },
+                  "unit": {
+                    "enum": [
+                      "g",
+                      "kg",
+                      "ml",
+                      "l",
+                      "tsp",
+                      "tbsp",
+                      "cup",
+                      "piece",
+                      "pack",
+                      "can",
+                      "bottle",
+                      "slice",
+                      "fillet",
+                      "clove",
+                      "bunch",
+                      "pinch"
+                    ],
+                    "type": "string"
+                  }
+                }
+              },
+              "expiry": {
+                "required": [
+                  "date",
+                  "source"
+                ],
+                "type": "object",
+                "properties": {
+                  "date": {
+                    "type": "string",
+                    "format": "date"
+                  },
+                  "source": {
+                    "enum": [
+                      "proposed",
+                      "manual"
+                    ],
+                    "type": "string"
+                  }
+                }
+              },
+              "suggestedPantryId": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "description": "One stock item as the API shows it; StockVersion is the ETag of its IngredientStock aggregate."
+          }
+        },
+        "description": "The moved item, and the source item when a split left a remainder."
+      },
+      "MoveStockItem": {
+        "required": [
+          "pantryId"
+        ],
+        "type": "object",
+        "properties": {
+          "pantryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
+            "type": "string"
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date"
+          }
+        },
+        "description": "S2: body of `POST /v1/stock-items/{stockItemId}:move`; without Amount the whole item moves."
+      },
       "Name": {
         "required": [
           "locale",
@@ -2398,6 +2687,9 @@
     },
     {
       "name": "Cooquoi.Context.Foodventory.Features.RenamePantry.RenamePantryEndpoint"
+    },
+    {
+      "name": "Cooquoi.Context.Foodventory.Features.MoveStockItem.MoveStockItemEndpoint"
     },
     {
       "name": "Cooquoi.Context.Foodventory.Features.ListPantries.ListPantriesEndpoint"

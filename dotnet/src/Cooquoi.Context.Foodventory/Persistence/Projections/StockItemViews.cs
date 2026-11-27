@@ -46,7 +46,7 @@ public static class StockItemViews
             new QuantityView(item.Remaining, unit),
             ContractEnumNames.ToCode(stock.ExpiryKind),
             item.Expiry is null && stock.ExpiryKind != ExpiryKind.LongLife,
-            // shortcut: the unusual-date hint (Q8) is not computed yet, so never set; E02.S04.T05 fills it on put-away
+            // shortcut: the unusual-date hint (Q8) is not computed yet, so never set
             ExpiryUnusual: false,
             !facts.Active,
             item.AddedOn,

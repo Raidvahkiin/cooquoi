@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Cooquoi.Context.Foodventory.Persistence.Migrations
 {
     [DbContext(typeof(FoodventoryDbContext))]
-    [Migration("20261127001654_InitialFoodventory")]
+    [Migration("20261127004842_InitialFoodventory")]
     partial class InitialFoodventory
     {
         /// <inheritdoc />
@@ -182,11 +182,6 @@ namespace Cooquoi.Context.Foodventory.Persistence.Migrations
                                 .HasColumnType("date")
                                 .HasColumnName("added_on");
 
-                            b1.Property<DateOnly?>("ExpiresOn")
-                                .ValueGeneratedOnUpdateSometimes()
-                                .HasColumnType("date")
-                                .HasColumnName("expires_on");
-
                             b1.Property<Guid>("HouseholdId")
                                 .HasColumnType("uuid")
                                 .HasColumnName("household_id");
@@ -225,9 +220,6 @@ namespace Cooquoi.Context.Foodventory.Persistence.Migrations
                             b1.HasIndex("ingredient_stock_id")
                                 .HasDatabaseName("ix_stock_items_ingredient_stock_id");
 
-                            b1.HasIndex("HouseholdId", "ExpiresOn")
-                                .HasDatabaseName("ix_stock_items_household_expires_on");
-
                             b1.HasIndex("HouseholdId", "PantryId")
                                 .HasDatabaseName("ix_stock_items_household_pantry");
 
@@ -244,7 +236,6 @@ namespace Cooquoi.Context.Foodventory.Persistence.Migrations
                                         .HasColumnName("id");
 
                                     b2.Property<DateOnly>("Date")
-                                        .ValueGeneratedOnUpdateSometimes()
                                         .HasColumnType("date")
                                         .HasColumnName("expires_on");
 

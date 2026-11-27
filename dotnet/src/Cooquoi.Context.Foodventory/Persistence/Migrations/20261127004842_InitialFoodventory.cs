@@ -1,4 +1,5 @@
 ﻿using System;
+using Cooquoi.Context.Foodventory.Persistence;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -108,16 +109,13 @@ namespace Cooquoi.Context.Foodventory.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_stock_items_household_expires_on",
-                schema: "foodventory",
-                table: "stock_items",
-                columns: new[] { "household_id", "expires_on" });
-
-            migrationBuilder.CreateIndex(
                 name: "ix_stock_items_household_pantry",
                 schema: "foodventory",
                 table: "stock_items",
                 columns: new[] { "household_id", "pantry_id" });
+
+            // Hand-written: the owned Expiry cannot be indexed from the model (a shadow copy of the date breaks replacing the expiry).
+            migrationBuilder.Sql("CREATE INDEX ix_stock_items_household_expires_on ON foodventory.stock_items (household_id, expires_on);");
 
             migrationBuilder.CreateIndex(
                 name: "ix_stock_items_ingredient_stock_id",

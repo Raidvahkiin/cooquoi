@@ -1,5 +1,6 @@
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
+using Cooquoi.Context.Foodventory.Persistence.Lookups;
 using Cooquoi.Platform.OpenApi;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,10 @@ public static class ListPantriesEndpoint
             .Where(pantry => pantry.HouseholdId == householdId)
             .OrderBy(pantry => pantry.Name)
             .ToListAsync(cancellationToken);
-        // E02.S04.T05: real item and to-put-away counts
+        var (perPantry, toPutAway) = await PantryContentsLookup.CountForHouseholdAsync(db, householdId, cancellationToken);
         return new PantryList(
             [.. pantries.Select(pantry => new PantrySummary(
-                pantry.Id.Value, pantry.Name.Value, 0, pantry.Version, pantry.Storage is { } storage ? ContractEnumNames.ToCode(storage) : null))],
-            0);
+                pantry.Id.Value, pantry.Name.Value, perPantry.GetValueOrDefault(pantry.Id), pantry.Version, pantry.Storage is { } storage ? ContractEnumNames.ToCode(storage) : null))],
+            toPutAway);
     }
 }

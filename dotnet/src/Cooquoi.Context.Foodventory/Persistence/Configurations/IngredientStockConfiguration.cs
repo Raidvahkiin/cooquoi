@@ -15,7 +15,6 @@ internal sealed class IngredientStockConfiguration : IEntityTypeConfiguration<In
 
     public const string HouseholdIdProperty = "HouseholdId";
     public const string IngredientIdProperty = "IngredientId";
-    public const string ExpiresOnProperty = "ExpiresOn";
 
     private static readonly ValueConverter<Unit, string> UnitConverter = new(unit => unit.Code, code => Unit.FromCode(code)!);
 
@@ -60,9 +59,7 @@ internal sealed class IngredientStockConfiguration : IEntityTypeConfiguration<In
                 expiry.Property(value => value.Source).HasColumnName("expiry_source").HasMaxLength(20);
             });
 
-            // shares the column of Expiry.Date (nested owned properties cannot be indexed from here); set by the interceptor
-            item.Property<DateOnly?>(ExpiresOnProperty).HasColumnName("expires_on");
-            item.HasIndex(HouseholdIdProperty, ExpiresOnProperty).HasDatabaseName("ix_stock_items_household_expires_on");
+            // the expiry index (household, expires_on) is raw SQL in the migration: owned properties cannot be indexed from here
             item.HasIndex(HouseholdIdProperty, nameof(StockItemEntity.PantryId)).HasDatabaseName("ix_stock_items_household_pantry");
         });
         builder.Navigation(stock => stock.Items).UsePropertyAccessMode(PropertyAccessMode.Field);

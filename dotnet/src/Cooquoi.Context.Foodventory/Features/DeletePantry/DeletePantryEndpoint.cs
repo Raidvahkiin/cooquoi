@@ -29,7 +29,7 @@ public static class DeletePantryEndpoint
     {
         IfMatch.Require(http.Request, pantry);
         // FV13
-        if (await PantryContentsLookup.CountItemsAsync(pantry.Id, cancellationToken) > 0)
+        if (await PantryContentsLookup.CountItemsAsync(db, pantry.Id, cancellationToken) > 0)
         {
             throw PantryError.NotEmpty.ToException();
         }

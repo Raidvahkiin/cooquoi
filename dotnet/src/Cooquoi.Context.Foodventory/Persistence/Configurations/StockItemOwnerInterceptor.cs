@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace Cooquoi.Context.Foodventory.Persistence.Configurations;
 
-/// <summary>Copies each stock's household, ingredient and expiry date onto its item rows, so the read-side indexes need no join.</summary>
+/// <summary>Copies each stock's household and ingredient onto its item rows, so the read-side indexes need no join.</summary>
 internal sealed class StockItemOwnerInterceptor : SaveChangesInterceptor
 {
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -32,7 +32,6 @@ internal sealed class StockItemOwnerInterceptor : SaveChangesInterceptor
                 var entry = context!.Entry(item);
                 entry.Property<Guid>(IngredientStockConfiguration.HouseholdIdProperty).CurrentValue = stock.Entity.HouseholdId;
                 entry.Property<Guid>(IngredientStockConfiguration.IngredientIdProperty).CurrentValue = stock.Entity.IngredientId;
-                entry.Property<DateOnly?>(IngredientStockConfiguration.ExpiresOnProperty).CurrentValue = item.Expiry?.Date;
             }
         }
     }
