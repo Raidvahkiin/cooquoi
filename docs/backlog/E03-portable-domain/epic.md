@@ -28,7 +28,7 @@ Prepare the backend for an offline-capable mobile app without deciding its UI st
 
 | Id | Title | Status | Depends on |
 |---|---|---|---|
-| [E03.S01](S01-domain-assemblies/story.md) | Domain-only assemblies per context | todo | E02.S05 |
+| [E03.S01](S01-domain-assemblies/story.md) | Domain-only assemblies per context | done | E02.S05 |
 | E03.S02 | Offline-ready contract: client-generated ids, `occurredOn`, batch put-away, writes return state, stock snapshot with ETag | todo (to plan) | E03.S01 |
 
 E02.S06 depends on E03.S01: S06 grows the IngredientStock aggregate, and moving files under a story in progress causes conflicts.
