@@ -84,14 +84,24 @@ public sealed class StockConsumptionTests
     }
 
     [Fact]
-    public void FV7_a_unit_without_a_path_is_consumed_from_items_in_that_exact_unit_and_other_items_are_skipped()
+    public void FV7_a_unit_without_a_path_is_consumed_when_every_item_holds_it_as_entered()
     {
-        var (stock, items) = Stock((3m, TestFacts.Can, null, 0), (100m, Unit.Gram, Today, 0));
+        var (stock, _) = Stock((3m, TestFacts.Can, null, 0), (1m, TestFacts.Can, null, 1));
 
         var result = stock.ConsumeFromStock(new Quantity(5m, TestFacts.Can), null, Facts);
 
-        result.Shortfall.ShouldBe(new Quantity(2m, TestFacts.Can));
-        stock.Items.ShouldBe([items[1]]);
+        result.Shortfall.ShouldBe(new Quantity(1m, TestFacts.Can));
+        stock.Items.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void FV7_a_unit_without_a_path_is_rejected_when_an_item_is_in_another_unit()
+    {
+        var (stock, items) = Stock((3m, TestFacts.Can, null, 0), (100m, Unit.Gram, Today, 0));
+
+        Rejected(() => stock.ConsumeFromStock(new Quantity(5m, TestFacts.Can), null, Facts)).Error.ShouldBe(IngredientStockError.UnitNotConvertible);
+        stock.Items.Count.ShouldBe(2);
+        items[0].Remaining.ShouldBe(3m);
     }
 
     [Fact]
@@ -172,6 +182,17 @@ public sealed class StockConsumptionTests
         stock.AdjustItem(items[0].Id, 0m, Facts);
 
         stock.Items.ShouldBeEmpty();
+    }
+
+    [Fact]
+    public void FV4_adjust_to_the_same_remaining_is_a_no_op()
+    {
+        var (stock, items) = Stock((2m, TestFacts.Pack, null, 0));
+        stock.ClearDomainEvents();
+
+        stock.AdjustItem(items[0].Id, 2m, Facts);
+
+        stock.DomainEvents.ShouldBeEmpty();
     }
 
     [Fact]

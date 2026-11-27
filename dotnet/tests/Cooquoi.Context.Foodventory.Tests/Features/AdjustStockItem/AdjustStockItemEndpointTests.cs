@@ -83,7 +83,9 @@ public sealed class AdjustStockItemEndpointTests(ApiFixture api)
         var subject = await api.NewUserAsync();
         var item = await RestockAsync(subject, "egg", 6, "piece");
 
-        await (await PostAsync(subject, item.Id, new { remaining = -1 }, "\"0\"", 422)).ShouldBeProblemAsync(422, "foodventory.invalidQuantity");
+        var problem = await (await PostAsync(subject, item.Id, new { remaining = -1 }, "\"0\"", 422)).ShouldBeProblemAsync(422, "foodventory.invalidQuantity");
+
+        problem.GetProperty("params").GetProperty("remaining").GetDecimal().ShouldBe(-1m);
     }
 
     [Fact]

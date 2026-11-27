@@ -66,7 +66,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
     public void MoveItem(StockItemId itemId, PantryTarget target, Quantity? amount, DateOnly? expiry, FoodpediaFacts facts)
     {
         var item = Find(itemId);
-        var moved = amount is null ? item.Remaining : ToEnteredUnit(item, amount, facts);
+        var moved = amount is null ? item.Remaining : StockConsumption.ToEnteredUnit(IngredientId, item, amount, facts);
         // FV9
         Ensure.That(
             moved <= item.Remaining,
@@ -128,7 +128,12 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
     {
         var item = Find(itemId);
         // FV4, FV5
-        Ensure.That(remaining >= 0 && decimal.Round(remaining, 3) == remaining, IngredientStockError.InvalidQuantity, ("amount", remaining));
+        Ensure.That(remaining >= 0 && decimal.Round(remaining, 3) == remaining, IngredientStockError.InvalidQuantity, ("remaining", remaining));
+
+        if (remaining == item.Remaining)
+        {
+            return;
+        }
 
         var unit = item.Entered.Unit;
         if (remaining == 0)
@@ -179,22 +184,13 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
             Raise(new StockItemConsumedDomainEvent(Id, item.Id, step.Taken, item.Entered.Unit, shortfall));
         }
 
-        return new ConsumptionResult(
-            [.. plan.Steps.Select(step => new ConsumedStockItem(step.Item.Id, new Quantity(step.Taken, step.Item.Entered.Unit), step.Depleted))], plan.Shortfall);
+        return plan.ToResult();
     }
+
+    /// <summary>The unit the item was entered in.</summary>
+    public Unit EnteredUnitOf(StockItemId itemId) => Find(itemId).Entered.Unit;
 
     private StockItemEntity Find(StockItemId itemId) =>
         _items.FirstOrDefault(candidate => candidate.Id == itemId)
         ?? throw CommonError.NotFound.ToException(("resource", "StockItem"), ("id", itemId.Value));
-
-    private decimal ToEnteredUnit(StockItemEntity item, Quantity amount, FoodpediaFacts facts)
-    {
-        var converted = StockNormalizer.Convert(amount, item.Entered.Unit, facts)
-            ?? throw IngredientStockError.UnitNotConvertible.ToException(("ingredientId", IngredientId), ("unit", amount.Unit.Code));
-        // a quantity holds 3 decimals: the split item and the remainder must too
-        var rounded = decimal.Round(converted, 3);
-        // FV4: an amount too small for the entered unit would end as "0 is not a valid quantity"
-        Ensure.That(rounded > 0, IngredientStockError.InvalidQuantity, ("amount", amount.Amount), ("unit", amount.Unit.Code));
-        return rounded;
-    }
 }

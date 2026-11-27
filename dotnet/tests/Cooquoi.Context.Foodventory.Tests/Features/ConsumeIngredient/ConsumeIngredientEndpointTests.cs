@@ -2,7 +2,6 @@ using Alba;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Persistence;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks.Events;
-using Cooquoi.Context.Foodventory.Features.ConsumeIngredient;
 using Cooquoi.Context.Foodventory.Features.CreatePantry;
 using Cooquoi.Context.Foodventory.Features.Restock;
 using Cooquoi.Context.Foodventory.Persistence.Projections;
@@ -121,6 +120,33 @@ public sealed class ConsumeIngredientEndpointTests(ApiFixture api)
         var subject = await api.NewUserAsync();
 
         await (await ConsumeAsync(subject, await SeedIdAsync("egg"), new { amount = 1, unit = "piece" }, 404)).ShouldBeProblemAsync(404, "common.notFound");
+    }
+
+    [Fact]
+    public async Task An_ingredient_whose_items_are_all_consumed_is_not_found()
+    {
+        var subject = await api.NewUserAsync();
+        await RestockAsync(subject, "egg", 2, "piece");
+        var egg = await SeedIdAsync("egg");
+        await ConsumeAsync(subject, egg, new { amount = 2, unit = "piece" }, 200);
+
+        await (await ConsumeAsync(subject, egg, new { amount = 1, unit = "piece" }, 404)).ShouldBeProblemAsync(404, "common.notFound");
+    }
+
+    [Fact]
+    public async Task A_pantry_of_another_household_is_not_found()
+    {
+        var subject = await api.NewUserAsync();
+        var stranger = await api.NewUserAsync();
+        await RestockAsync(subject, "egg", 2, "piece");
+        var pantry = (await (await api.Host.Scenario(s =>
+        {
+            s.AsUser(stranger).WithIdempotencyKey();
+            s.Post.Json(new { name = $"Pantry {Guid.NewGuid():N}", storage = "fridge" }).ToUrl("/v1/pantries");
+            s.StatusCodeShouldBe(201);
+        })).ReadAsJsonAsync<CreatedPantry>())!.Id;
+
+        await (await ConsumeAsync(subject, await SeedIdAsync("egg"), new { amount = 1, unit = "piece", pantryId = pantry }, 404)).ShouldBeProblemAsync(404, "common.notFound");
     }
 
     [Fact]

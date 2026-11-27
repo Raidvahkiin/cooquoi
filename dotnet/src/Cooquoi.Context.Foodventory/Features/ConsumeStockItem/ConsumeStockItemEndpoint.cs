@@ -1,8 +1,8 @@
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
-using Cooquoi.Context.Foodventory.Features.ConsumeIngredient;
 using Cooquoi.Context.Foodventory.Integration;
 using Cooquoi.Context.Foodventory.Persistence;
 using Cooquoi.Context.Foodventory.Persistence.Lookups;
+using Cooquoi.Context.Foodventory.Persistence.Projections;
 using Cooquoi.Platform.OpenApi;
 using Cooquoi.SharedKernel;
 using Microsoft.AspNetCore.Authorization;
@@ -34,9 +34,8 @@ public static class ConsumeStockItemEndpoint
         CancellationToken cancellationToken)
     {
         var itemId = new StockItemId(stockItemId);
-        var unit = request.Unit is null ? stock.Items.Single(item => item.Id == itemId).Entered.Unit : Unit.FromCode(request.Unit)!;
-        var facts = (await foodpedia.GetAsync(
-            [stock.IngredientId], [unit], cancellationToken, Locale.FromTagOrDefault(http.Headers.AcceptLanguage.FirstOrDefault())))[stock.IngredientId];
+        var unit = request.Unit is null ? stock.EnteredUnitOf(itemId) : Unit.FromCode(request.Unit)!;
+        var facts = await foodpedia.GetOneAsync(stock.IngredientId, unit, http, cancellationToken);
 
         return ConsumeResult.From(stock.ConsumeItem(itemId, new Quantity(request.Amount, unit), facts));
     }

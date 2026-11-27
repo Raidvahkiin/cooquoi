@@ -1,7 +1,6 @@
 using Alba;
 using Cooquoi.Context.Foodpedia.Domain.Ingredients;
 using Cooquoi.Context.Foodpedia.Persistence;
-using Cooquoi.Context.Foodventory.Features.ConsumeIngredient;
 using Cooquoi.Context.Foodventory.Features.Restock;
 using Cooquoi.Context.Foodventory.Persistence.Projections;
 using Cooquoi.Context.Foodventory.Tests.Support;
