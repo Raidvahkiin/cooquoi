@@ -34,10 +34,10 @@ Move (T05); household conversions in proposals (E02.S06)
 
 ## Subtasks
 
-- [ ] T04.1 Request, validator, `ActionWithResult` contract mapping
-- [ ] T04.2 Endpoint and `StockItemViews`
-- [ ] T04.3 Integration tests: two lines of different ingredients and two of the same ingredient in one call; items have no pantry (FV3); `ItemsRestocked` (tracked session); printed → `expiryMissing`, estimated → proposed date, longLife → none; unnormalized line + proposal; retired → 422; same Idempotency-Key replays without duplicates; second household sees nothing (FV2)
-- [ ] T04.4 Drift shows only `moveStockItem` missing
+- [x] T04.1 Request, validator, `ActionWithResult` contract mapping
+- [x] T04.2 Endpoint and `StockItemViews`
+- [x] T04.3 Integration tests: two lines of different ingredients and two of the same ingredient in one call; items have no pantry (FV3); `ItemsRestocked` (tracked session); printed → `expiryMissing`, estimated → proposed date, longLife → none; unnormalized line + proposal; retired → 422; same Idempotency-Key replays without duplicates; second household sees nothing (FV2)
+- [x] T04.4 Drift shows only `moveStockItem` missing
 
 ## Done when
 
@@ -45,6 +45,10 @@ Move (T05); household conversions in proposals (E02.S06)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): restock endpoint (E02.S04.T04)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- `POST /v1/stock:restock` (`Features/Restock/`), `OperationContract.ActionWithResult`, `Persistence/Projections/StockItemViews` (reuse in T05); `FoodpediaFacts.Name` + optional locale on the provider; `FoodpediaCatalog` made public (Wolverine codegen otherwise service-locates it); nullable `decimal?` gets `format: decimal` in the OpenAPI transformer.
+- Race on first restock: `ux_ingredient_stocks_household_ingredient` mapped to `common.concurrencyConflict` in `UniqueConstraints`, so `ConcurrencyRetryMiddleware` retries and finds the winner's stock (not tested: needs a real race).
+- Verified: whole solution 261/261 (Foodventory 79), `dotnet format` clean, drift lists only `moveStockItem`.
+- Left: `expiryUnusual` always false (T05 fills it on put-away); items come back grouped by ingredient, not in line order.

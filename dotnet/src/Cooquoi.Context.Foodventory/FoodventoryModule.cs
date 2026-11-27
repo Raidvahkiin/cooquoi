@@ -20,6 +20,8 @@ public static class FoodventoryModule
     private static readonly Dictionary<string, DomainError> UniqueConstraints = new(StringComparer.Ordinal)
     {
         [PantryConfiguration.UniqueNameIndex] = PantryError.NameTaken,
+        // a concurrent first restock of an ingredient: the retry finds the stock the winner created
+        [IngredientStockConfiguration.UniqueIngredientIndex] = CommonError.ConcurrencyConflict,
     };
 
     /// <summary>Assembly scanned by Wolverine for this context's endpoints and handlers.</summary>

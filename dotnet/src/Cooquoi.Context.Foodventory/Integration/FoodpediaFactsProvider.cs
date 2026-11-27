@@ -14,9 +14,9 @@ public sealed class FoodpediaFactsProvider(IFoodpediaCatalog catalog)
 
     /// <summary>Facts of the known ingredients (unknown ids are left out), with the default factor of each of <paramref name="units"/> that does not convert universally.</summary>
     public async Task<IReadOnlyDictionary<Guid, FoodpediaFacts>> GetAsync(
-        IReadOnlyCollection<Guid> ingredientIds, IReadOnlyCollection<Unit> units, CancellationToken cancellationToken)
+        IReadOnlyCollection<Guid> ingredientIds, IReadOnlyCollection<Unit> units, CancellationToken cancellationToken, Locale? locale = null)
     {
-        var known = await catalog.GetIngredientsAsync(ingredientIds, Locale.English, cancellationToken);
+        var known = await catalog.GetIngredientsAsync(ingredientIds, locale ?? Locale.English, cancellationToken);
         var facts = new Dictionary<Guid, FoodpediaFacts>();
         foreach (var ingredient in known)
         {
@@ -39,7 +39,8 @@ public sealed class FoodpediaFactsProvider(IFoodpediaCatalog catalog)
                 ContractEnumNames.Parse<ExpiryKind>(ingredient.ExpiryKind),
                 proposal is null ? null : proposal.ExpiresOn.DayNumber - ShelfLifeProbe.DayNumber,
                 proposal is null ? null : ContractEnumNames.Parse<StorageType>(proposal.RecommendedStorage),
-                factors);
+                factors,
+                ingredient.Name);
         }
 
         return facts;

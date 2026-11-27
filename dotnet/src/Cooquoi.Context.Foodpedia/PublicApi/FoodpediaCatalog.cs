@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Cooquoi.Context.Foodpedia.PublicApi;
 
 /// <summary>Reads project from the Foodpedia database (no tracking); conversions and shelf life stay domain logic.</summary>
-internal sealed class FoodpediaCatalog(FoodpediaDbContext db) : IFoodpediaCatalog
+public sealed class FoodpediaCatalog(FoodpediaDbContext db) : IFoodpediaCatalog
 {
     public async Task<IReadOnlyList<CatalogIngredient>> GetIngredientsAsync(
         IReadOnlyCollection<Guid> ingredientIds, Locale locale, CancellationToken cancellationToken)

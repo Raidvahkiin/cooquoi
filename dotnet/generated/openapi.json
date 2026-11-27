@@ -798,6 +798,109 @@
         }
       }
     },
+    "/v1/stock:restock": {
+      "post": {
+        "tags": [
+          "Cooquoi.Context.Foodventory.Features.Restock.RestockEndpoint"
+        ],
+        "summary": "S1: adds one item per line, with no pantry, to the caller's household; one transaction for all lines.",
+        "description": "POST_v1_stock",
+        "operationId": "restock",
+        "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Restock"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Unprocessable Entity",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestockResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/pantries/{pantryId}:rename": {
       "post": {
         "tags": [
@@ -1255,6 +1358,58 @@
           }
         }
       },
+      "ConversionProposal": {
+        "required": [
+          "ingredientId",
+          "unit",
+          "baseUnit"
+        ],
+        "type": "object",
+        "properties": {
+          "ingredientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
+            "type": "string"
+          },
+          "baseUnit": {
+            "enum": [
+              "g",
+              "ml",
+              "piece"
+            ],
+            "type": "string"
+          },
+          "unitAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "baseAmount": {
+            "type": "number",
+            "format": "decimal"
+          }
+        },
+        "description": "Offer to define a household conversion; no amounts, since Foodpedia has no default (it would have normalized the line)."
+      },
       "CreateIngredient": {
         "required": [
           "code",
@@ -1409,6 +1564,26 @@
           }
         },
         "description": "C5: body of `POST /v1/ingredients/{id}:define-conversion`; requires `If-Match`."
+      },
+      "ExpiryView": {
+        "required": [
+          "date",
+          "source"
+        ],
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "source": {
+            "enum": [
+              "proposed",
+              "manual"
+            ],
+            "type": "string"
+          }
+        }
       },
       "FieldError": {
         "required": [
@@ -1587,6 +1762,49 @@
           }
         },
         "description": "One search result; the name is in the requested locale, English when missing."
+      },
+      "Line": {
+        "required": [
+          "ingredientId",
+          "amount",
+          "unit"
+        ],
+        "type": "object",
+        "properties": {
+          "ingredientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
+            "type": "string"
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date"
+          }
+        }
       },
       "MeHousehold": {
         "required": [
@@ -1848,6 +2066,40 @@
           }
         }
       },
+      "QuantityView": {
+        "required": [
+          "amount",
+          "unit"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unit": {
+            "enum": [
+              "g",
+              "kg",
+              "ml",
+              "l",
+              "tsp",
+              "tbsp",
+              "cup",
+              "piece",
+              "pack",
+              "can",
+              "bottle",
+              "slice",
+              "fillet",
+              "clove",
+              "bunch",
+              "pinch"
+            ],
+            "type": "string"
+          }
+        }
+      },
       "RenamePantry": {
         "required": [
           "name"
@@ -1859,6 +2111,43 @@
           }
         },
         "description": "C2: body of `POST /v1/pantries/{pantryId}:rename`; requires `If-Match`."
+      },
+      "Restock": {
+        "required": [
+          "lines"
+        ],
+        "type": "object",
+        "properties": {
+          "lines": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Line"
+            }
+          }
+        },
+        "description": "S1: body of `POST /v1/stock:restock`. Amounts are the domain's (FV4): 422 `foodventory.invalidQuantity`."
+      },
+      "RestockResult": {
+        "required": [
+          "items",
+          "conversionProposals"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StockItemView"
+            }
+          },
+          "conversionProposals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConversionProposal"
+            }
+          }
+        }
       },
       "SetExpiryKind": {
         "required": [
@@ -1942,6 +2231,129 @@
             "type": "string"
           }
         }
+      },
+      "StockItemView": {
+        "required": [
+          "id",
+          "ingredientId",
+          "ingredientName",
+          "entered",
+          "remaining",
+          "expiryKind",
+          "expiryMissing",
+          "expiryUnusual",
+          "ingredientRetired",
+          "addedOn",
+          "stockVersion"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ingredientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "ingredientName": {
+            "type": "string"
+          },
+          "entered": {
+            "$ref": "#/components/schemas/QuantityView"
+          },
+          "remaining": {
+            "$ref": "#/components/schemas/QuantityView"
+          },
+          "expiryKind": {
+            "enum": [
+              "printed",
+              "estimated",
+              "longLife"
+            ],
+            "type": "string"
+          },
+          "expiryMissing": {
+            "type": "boolean"
+          },
+          "expiryUnusual": {
+            "type": "boolean"
+          },
+          "ingredientRetired": {
+            "type": "boolean"
+          },
+          "addedOn": {
+            "type": "string",
+            "format": "date"
+          },
+          "stockVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pantryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "normalized": {
+            "required": [
+              "amount",
+              "unit"
+            ],
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "format": "decimal"
+              },
+              "unit": {
+                "enum": [
+                  "g",
+                  "kg",
+                  "ml",
+                  "l",
+                  "tsp",
+                  "tbsp",
+                  "cup",
+                  "piece",
+                  "pack",
+                  "can",
+                  "bottle",
+                  "slice",
+                  "fillet",
+                  "clove",
+                  "bunch",
+                  "pinch"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          "expiry": {
+            "required": [
+              "date",
+              "source"
+            ],
+            "type": "object",
+            "properties": {
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "source": {
+                "enum": [
+                  "proposed",
+                  "manual"
+                ],
+                "type": "string"
+              }
+            }
+          },
+          "suggestedPantryId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "description": "One stock item as the API shows it; StockVersion is the ETag of its IngredientStock aggregate."
       }
     },
     "securitySchemes": {
@@ -1980,6 +2392,9 @@
     },
     {
       "name": "Cooquoi.Context.Foodventory.Features.SetPantryStorage.SetPantryStorageEndpoint"
+    },
+    {
+      "name": "Cooquoi.Context.Foodventory.Features.Restock.RestockEndpoint"
     },
     {
       "name": "Cooquoi.Context.Foodventory.Features.RenamePantry.RenamePantryEndpoint"

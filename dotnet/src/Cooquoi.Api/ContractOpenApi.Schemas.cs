@@ -29,7 +29,7 @@ internal static partial class ContractOpenApi
             schema.Maximum = null;
         }
 
-        if (context.JsonTypeInfo.Type == typeof(decimal))
+        if (context.JsonTypeInfo.Type == typeof(decimal) || context.JsonTypeInfo.Type == typeof(decimal?))
         {
             schema.Format = "decimal";
         }
