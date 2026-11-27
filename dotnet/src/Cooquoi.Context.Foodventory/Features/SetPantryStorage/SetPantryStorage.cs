@@ -1,4 +1,4 @@
-using Cooquoi.Context.Foodventory.Domain;
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Platform.OpenApi;
 using Cooquoi.Platform.Validation;
 using FluentValidation;

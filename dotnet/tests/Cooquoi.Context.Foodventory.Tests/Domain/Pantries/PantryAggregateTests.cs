@@ -1,4 +1,4 @@
-using Cooquoi.Context.Foodventory.Domain;
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.Pantries;
 using Cooquoi.Context.Foodventory.Domain.Pantries.Events;
 

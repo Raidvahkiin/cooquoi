@@ -1,4 +1,4 @@
-using Cooquoi.Context.Foodventory.Domain;
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 
 namespace Cooquoi.Context.Foodventory.Persistence.Lookups;
 

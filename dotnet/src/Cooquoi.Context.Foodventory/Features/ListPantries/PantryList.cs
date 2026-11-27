@@ -1,4 +1,4 @@
-using Cooquoi.Context.Foodventory.Domain;
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using System.Text.Json.Serialization;
 using Cooquoi.Platform.OpenApi;
 

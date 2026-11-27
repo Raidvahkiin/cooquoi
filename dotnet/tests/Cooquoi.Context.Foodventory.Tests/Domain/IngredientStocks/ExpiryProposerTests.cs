@@ -1,4 +1,4 @@
-using Cooquoi.Context.Foodventory.Domain;
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 
 namespace Cooquoi.Context.Foodventory.Tests.Domain.IngredientStocks;

@@ -115,6 +115,7 @@ Naming: contexts `Cooquoi.Context.<Name>` (project + root namespace), tests `Coo
 | Entity | `<X>Entity : Entity<TId>`, only inside its aggregate |
 | Value object | immutable `sealed record` validated in its constructor (`Ensure.That`); collections with rules are value objects (`ConversionTable`) |
 | Id | `readonly record struct <X>Id(Guid Value)` with `New()` = UUID v7 |
+| Shared within a context | a value object, id or enum used by a second aggregate moves from `Domain/<Aggregate>/` to `Domain/Common/ValueObjects/` (not `Shared`: CA1716); never import one aggregate's folder from another |
 | Domain event | `sealed record <Fact>DomainEvent(…) : IDomainEvent` in `Domain/<Aggregate>/Events/` (namespace `…Domain.<Aggregate>.Events`), one per file, `Raise(...)` in every behaviour |
 | Integration event | `sealed record <Fact>Event(…)` of ids and primitives in `PublicApi/Events/` (never ends in `DomainEvent`); cascaded from the domain event by an `Integration/…Handler` |
 | Errors | `static class <X>Error` of `DomainError(code, kind, template)`; codes `<context>.<camelCase>` (ADR 0021); `common.*` in `CommonError` |

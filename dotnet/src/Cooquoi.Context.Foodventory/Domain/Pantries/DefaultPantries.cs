@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.SharedKernel;
 
 namespace Cooquoi.Context.Foodventory.Domain.Pantries;

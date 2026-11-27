@@ -1,3 +1,5 @@
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
+
 namespace Cooquoi.Context.Foodventory.Domain.IngredientStocks;
 
 /// <summary>FV8: the expiry the system proposes for an item, from the effective kind, its storage and the Foodpedia shelf life.</summary>

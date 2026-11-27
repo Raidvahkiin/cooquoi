@@ -1,5 +1,5 @@
 using Alba;
-using Cooquoi.Context.Foodventory.Domain;
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Features.CreatePantry;
 using Cooquoi.Context.Foodventory.Tests.Support;
 using Cooquoi.Testing;
