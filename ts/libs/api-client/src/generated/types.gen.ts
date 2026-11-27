@@ -213,6 +213,50 @@ export type FoodpediaShelfLife = {
 export type FoodpediaStorageType = 'fridge' | 'freezer' | 'room';
 
 /**
+ * Body of a stock check correction (S6); may exceed the entered amount.
+ */
+export type FoodventoryAdjustStockItem = {
+    /**
+     * At least 0, in the entered unit.
+     */
+    remaining: number;
+};
+
+/**
+ * Body of a consume of one ingredient (S3); `pantryId` limits it to one Pantry aggregate.
+ */
+export type FoodventoryConsumeIngredient = {
+    amount: number;
+    unit: CommonUnit;
+    pantryId?: CommonId;
+};
+
+/**
+ * The items a consume touched, and the amount it could not cover.
+ */
+export type FoodventoryConsumeResult = {
+    consumed: Array<FoodventoryConsumedItem>;
+    shortfall?: FoodventoryQuantity;
+};
+
+/**
+ * Body of a consume of one stock item (S4); `unit` defaults to the entered unit.
+ */
+export type FoodventoryConsumeStockItem = {
+    amount: number;
+    unit?: CommonUnit;
+};
+
+/**
+ * One stock item touched by a consume; `depleted` when nothing remains.
+ */
+export type FoodventoryConsumedItem = {
+    stockItemId: CommonId;
+    amount: FoodventoryQuantity;
+    depleted: boolean;
+};
+
+/**
  * Offer to define a household conversion for an unnormalized line; no amounts when Foodpedia has no default.
  */
 export type FoodventoryConversionProposal = {
@@ -236,6 +280,18 @@ export type FoodventoryCreatePantry = {
  */
 export type FoodventoryCreatedPantry = {
     id: CommonId;
+};
+
+/**
+ * Why a stock item is thrown away (S5).
+ */
+export type FoodventoryDiscardReason = 'expired' | 'spoiled' | 'other';
+
+/**
+ * Body of a discard (S5).
+ */
+export type FoodventoryDiscardStockItem = {
+    reason: FoodventoryDiscardReason;
 };
 
 /**
@@ -343,6 +399,13 @@ export type FoodventoryRestockResult = {
  */
 export type FoodventorySetPantryStorage = {
     storage: FoodventoryStorageType | null;
+};
+
+/**
+ * Body of an expiry change (S7); `null` clears the date.
+ */
+export type FoodventorySetStockItemExpiry = {
+    date: string | null;
 };
 
 /**
@@ -984,6 +1047,165 @@ export type SetPantryStorageResponses = {
 
 export type SetPantryStorageResponse = SetPantryStorageResponses[keyof SetPantryStorageResponses];
 
+export type AdjustStockItemData = {
+    body: FoodventoryAdjustStockItem;
+    headers: {
+        'Idempotency-Key': string;
+        'If-Match': string;
+    };
+    path: {
+        stockItemId: CommonId;
+    };
+    query?: never;
+    url: '/v1/stock-items/{stockItemId}:adjust';
+};
+
+export type AdjustStockItemErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 412 — `If-Match` does not match the current version.
+     */
+    412: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+    /**
+     * 428 — `If-Match` is required.
+     */
+    428: CommonProblemDetails;
+};
+
+export type AdjustStockItemError = AdjustStockItemErrors[keyof AdjustStockItemErrors];
+
+export type AdjustStockItemResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type AdjustStockItemResponse = AdjustStockItemResponses[keyof AdjustStockItemResponses];
+
+export type ConsumeStockItemData = {
+    body: FoodventoryConsumeStockItem;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path: {
+        stockItemId: CommonId;
+    };
+    query?: never;
+    url: '/v1/stock-items/{stockItemId}:consume';
+};
+
+export type ConsumeStockItemErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+};
+
+export type ConsumeStockItemError = ConsumeStockItemErrors[keyof ConsumeStockItemErrors];
+
+export type ConsumeStockItemResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FoodventoryConsumeResult;
+};
+
+export type ConsumeStockItemResponse = ConsumeStockItemResponses[keyof ConsumeStockItemResponses];
+
+export type DiscardStockItemData = {
+    body: FoodventoryDiscardStockItem;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path: {
+        stockItemId: CommonId;
+    };
+    query?: never;
+    url: '/v1/stock-items/{stockItemId}:discard';
+};
+
+export type DiscardStockItemErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+};
+
+export type DiscardStockItemError = DiscardStockItemErrors[keyof DiscardStockItemErrors];
+
+export type DiscardStockItemResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type DiscardStockItemResponse = DiscardStockItemResponses[keyof DiscardStockItemResponses];
+
 export type MoveStockItemData = {
     body: FoodventoryMoveStockItem;
     headers: {
@@ -1033,6 +1255,115 @@ export type MoveStockItemResponses = {
 };
 
 export type MoveStockItemResponse = MoveStockItemResponses[keyof MoveStockItemResponses];
+
+export type SetStockItemExpiryData = {
+    body: FoodventorySetStockItemExpiry;
+    headers: {
+        'Idempotency-Key': string;
+        'If-Match': string;
+    };
+    path: {
+        stockItemId: CommonId;
+    };
+    query?: never;
+    url: '/v1/stock-items/{stockItemId}:set-expiry';
+};
+
+export type SetStockItemExpiryErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 412 — `If-Match` does not match the current version.
+     */
+    412: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+    /**
+     * 428 — `If-Match` is required.
+     */
+    428: CommonProblemDetails;
+};
+
+export type SetStockItemExpiryError = SetStockItemExpiryErrors[keyof SetStockItemExpiryErrors];
+
+export type SetStockItemExpiryResponses = {
+    /**
+     * There is no content to send for this request, but the headers may be useful.
+     */
+    204: void;
+};
+
+export type SetStockItemExpiryResponse = SetStockItemExpiryResponses[keyof SetStockItemExpiryResponses];
+
+export type ConsumeIngredientData = {
+    body: FoodventoryConsumeIngredient;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path: {
+        ingredientId: CommonId;
+    };
+    query?: never;
+    url: '/v1/stock/{ingredientId}:consume';
+};
+
+export type ConsumeIngredientErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+};
+
+export type ConsumeIngredientError = ConsumeIngredientErrors[keyof ConsumeIngredientErrors];
+
+export type ConsumeIngredientResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FoodventoryConsumeResult;
+};
+
+export type ConsumeIngredientResponse = ConsumeIngredientResponses[keyof ConsumeIngredientResponses];
 
 export type RestockData = {
     body: FoodventoryRestock;

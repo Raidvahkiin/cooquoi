@@ -153,3 +153,57 @@ model MoveResult {
   moved: StockItemView;
   remainder?: StockItemView;
 }
+
+/** Path of one Ingredient's stock, named as the backend route names it. */
+alias IngredientStockPath = {
+  @path ingredientId: Id;
+};
+
+/** Body of a consume of one ingredient (S3); `pantryId` limits it to one Pantry aggregate. */
+model ConsumeIngredient {
+  amount: decimal;
+  unit: Unit;
+  pantryId?: Id;
+}
+
+/** Body of a consume of one stock item (S4); `unit` defaults to the entered unit. */
+model ConsumeStockItem {
+  amount: decimal;
+  unit?: Unit;
+}
+
+/** One stock item touched by a consume; `depleted` when nothing remains. */
+model ConsumedItem {
+  stockItemId: Id;
+  amount: Quantity;
+  depleted: boolean;
+}
+
+/** The items a consume touched, and the amount it could not cover. */
+model ConsumeResult {
+  consumed: ConsumedItem[];
+  shortfall?: Quantity;
+}
+
+/** Why a stock item is thrown away (S5). */
+union DiscardReason {
+  expired: "expired",
+  spoiled: "spoiled",
+  other: "other",
+}
+
+/** Body of a discard (S5). */
+model DiscardStockItem {
+  reason: DiscardReason;
+}
+
+/** Body of a stock check correction (S6); may exceed the entered amount. */
+model AdjustStockItem {
+  /** At least 0, in the entered unit. */
+  remaining: decimal;
+}
+
+/** Body of an expiry change (S7); `null` clears the date. */
+model SetStockItemExpiry {
+  date: plainDate | null;
+}

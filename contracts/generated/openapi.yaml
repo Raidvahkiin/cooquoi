@@ -748,6 +748,230 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Foodventory.SetPantryStorage'
+  /v1/stock-items/{stockItemId}:adjust:
+    post:
+      operationId: adjustStockItem
+      description: |-
+        S6: corrects the remaining amount after a stock check; requires `If-Match` (the IngredientStock ETag).
+        Errors: `foodventory.invalidQuantity` (422).
+      parameters:
+        - name: stockItemId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: If-Match
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '412':
+          description: 412 — `If-Match` does not match the current version.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '428':
+          description: 428 — `If-Match` is required.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.AdjustStockItem'
+  /v1/stock-items/{stockItemId}:consume:
+    post:
+      operationId: consumeStockItem
+      description: |-
+        S4: consumes part of one stock item; `unit` defaults to the entered unit.
+        Errors: `foodventory.invalidQuantity` (422), `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+      parameters:
+        - name: stockItemId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foodventory.ConsumeResult'
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.ConsumeStockItem'
+  /v1/stock-items/{stockItemId}:discard:
+    post:
+      operationId: discardStockItem
+      description: 'S5: discards a stock item, with the reason.'
+      parameters:
+        - name: stockItemId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.DiscardStockItem'
   /v1/stock-items/{stockItemId}:move:
     post:
       operationId: moveStockItem
@@ -818,6 +1042,160 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Foodventory.MoveStockItem'
+  /v1/stock-items/{stockItemId}:set-expiry:
+    post:
+      operationId: setStockItemExpiry
+      description: 'S7: sets or clears the expiry date; the source becomes `manual`. Requires `If-Match`.'
+      parameters:
+        - name: stockItemId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: If-Match
+          in: header
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: 'There is no content to send for this request, but the headers may be useful. '
+          headers:
+            ETag:
+              required: true
+              schema:
+                type: string
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '412':
+          description: 412 — `If-Match` does not match the current version.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '428':
+          description: 428 — `If-Match` is required.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.SetStockItemExpiry'
+  /v1/stock/{ingredientId}:consume:
+    post:
+      operationId: consumeIngredient
+      description: |-
+        S3: consumes an ingredient across its stock items; the response lists what was touched and any shortfall.
+        Errors: `foodventory.invalidQuantity` (422), `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+      parameters:
+        - name: ingredientId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foodventory.ConsumeResult'
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.ConsumeIngredient'
   /v1/stock:restock:
     post:
       operationId: restock
@@ -1263,6 +1641,67 @@ components:
         - freezer
         - room
       description: Where an ingredient keeps best.
+    Foodventory.AdjustStockItem:
+      type: object
+      required:
+        - remaining
+      properties:
+        remaining:
+          type: number
+          format: decimal
+          description: At least 0, in the entered unit.
+      description: Body of a stock check correction (S6); may exceed the entered amount.
+    Foodventory.ConsumeIngredient:
+      type: object
+      required:
+        - amount
+        - unit
+      properties:
+        amount:
+          type: number
+          format: decimal
+        unit:
+          $ref: '#/components/schemas/Common.Unit'
+        pantryId:
+          $ref: '#/components/schemas/Common.Id'
+      description: Body of a consume of one ingredient (S3); `pantryId` limits it to one Pantry aggregate.
+    Foodventory.ConsumeResult:
+      type: object
+      required:
+        - consumed
+      properties:
+        consumed:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foodventory.ConsumedItem'
+        shortfall:
+          $ref: '#/components/schemas/Foodventory.Quantity'
+      description: The items a consume touched, and the amount it could not cover.
+    Foodventory.ConsumeStockItem:
+      type: object
+      required:
+        - amount
+      properties:
+        amount:
+          type: number
+          format: decimal
+        unit:
+          $ref: '#/components/schemas/Common.Unit'
+      description: Body of a consume of one stock item (S4); `unit` defaults to the entered unit.
+    Foodventory.ConsumedItem:
+      type: object
+      required:
+        - stockItemId
+        - amount
+        - depleted
+      properties:
+        stockItemId:
+          $ref: '#/components/schemas/Common.Id'
+        amount:
+          $ref: '#/components/schemas/Foodventory.Quantity'
+        depleted:
+          type: boolean
+      description: One stock item touched by a consume; `depleted` when nothing remains.
     Foodventory.ConversionProposal:
       type: object
       required:
@@ -1301,6 +1740,21 @@ components:
         id:
           $ref: '#/components/schemas/Common.Id'
       description: Id of the created Pantry aggregate.
+    Foodventory.DiscardReason:
+      type: string
+      enum:
+        - expired
+        - spoiled
+        - other
+      description: Why a stock item is thrown away (S5).
+    Foodventory.DiscardStockItem:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          $ref: '#/components/schemas/Foodventory.DiscardReason'
+      description: Body of a discard (S5).
     Foodventory.Expiry:
       type: object
       required:
@@ -1472,6 +1926,17 @@ components:
             - $ref: '#/components/schemas/Foodventory.StorageType'
             - type: 'null'
       description: Body of a storage change (C3); `null` clears it.
+    Foodventory.SetStockItemExpiry:
+      type: object
+      required:
+        - date
+      properties:
+        date:
+          anyOf:
+            - type: string
+              format: date
+            - type: 'null'
+      description: Body of an expiry change (S7); `null` clears the date.
     Foodventory.StockItemView:
       type: object
       required:

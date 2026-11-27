@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, CreatePantryData, CreatePantryErrors, CreatePantryResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, DeletePantryData, DeletePantryErrors, DeletePantryResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, ListPantriesData, ListPantriesErrors, ListPantriesResponses, MoveStockItemData, MoveStockItemErrors, MoveStockItemResponses, RenamePantryData, RenamePantryErrors, RenamePantryResponses, RestockData, RestockErrors, RestockResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses, SetPantryStorageData, SetPantryStorageErrors, SetPantryStorageResponses, SignInData, SignInErrors, SignInResponses } from './types.gen';
+import type { AdjustStockItemData, AdjustStockItemErrors, AdjustStockItemResponses, ConsumeIngredientData, ConsumeIngredientErrors, ConsumeIngredientResponses, ConsumeStockItemData, ConsumeStockItemErrors, ConsumeStockItemResponses, CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, CreatePantryData, CreatePantryErrors, CreatePantryResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, DeletePantryData, DeletePantryErrors, DeletePantryResponses, DiscardStockItemData, DiscardStockItemErrors, DiscardStockItemResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, ListPantriesData, ListPantriesErrors, ListPantriesResponses, MoveStockItemData, MoveStockItemErrors, MoveStockItemResponses, RenamePantryData, RenamePantryErrors, RenamePantryResponses, RestockData, RestockErrors, RestockResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses, SetPantryStorageData, SetPantryStorageErrors, SetPantryStorageResponses, SetStockItemExpiryData, SetStockItemExpiryErrors, SetStockItemExpiryResponses, SignInData, SignInErrors, SignInResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -161,6 +161,47 @@ export const setPantryStorage = <ThrowOnError extends boolean = false>(options: 
 });
 
 /**
+ * S6: corrects the remaining amount after a stock check; requires `If-Match` (the IngredientStock ETag).
+ * Errors: `foodventory.invalidQuantity` (422).
+ */
+export const adjustStockItem = <ThrowOnError extends boolean = false>(options: Options<AdjustStockItemData, ThrowOnError>): RequestResult<AdjustStockItemResponses, AdjustStockItemErrors, ThrowOnError> => (options.client ?? client).post<AdjustStockItemResponses, AdjustStockItemErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/stock-items/{stockItemId}:adjust',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * S4: consumes part of one stock item; `unit` defaults to the entered unit.
+ * Errors: `foodventory.invalidQuantity` (422), `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+ */
+export const consumeStockItem = <ThrowOnError extends boolean = false>(options: Options<ConsumeStockItemData, ThrowOnError>): RequestResult<ConsumeStockItemResponses, ConsumeStockItemErrors, ThrowOnError> => (options.client ?? client).post<ConsumeStockItemResponses, ConsumeStockItemErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/stock-items/{stockItemId}:consume',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * S5: discards a stock item, with the reason.
+ */
+export const discardStockItem = <ThrowOnError extends boolean = false>(options: Options<DiscardStockItemData, ThrowOnError>): RequestResult<DiscardStockItemResponses, DiscardStockItemErrors, ThrowOnError> => (options.client ?? client).post<DiscardStockItemResponses, DiscardStockItemErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/stock-items/{stockItemId}:discard',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
  * S2: puts a stock item away in a Pantry aggregate, whole or in part.
  * Errors: `foodventory.quantityExceedsRemaining` (422), `foodventory.invalidQuantity` (422),
  * `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
@@ -168,6 +209,33 @@ export const setPantryStorage = <ThrowOnError extends boolean = false>(options: 
 export const moveStockItem = <ThrowOnError extends boolean = false>(options: Options<MoveStockItemData, ThrowOnError>): RequestResult<MoveStockItemResponses, MoveStockItemErrors, ThrowOnError> => (options.client ?? client).post<MoveStockItemResponses, MoveStockItemErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/v1/stock-items/{stockItemId}:move',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * S7: sets or clears the expiry date; the source becomes `manual`. Requires `If-Match`.
+ */
+export const setStockItemExpiry = <ThrowOnError extends boolean = false>(options: Options<SetStockItemExpiryData, ThrowOnError>): RequestResult<SetStockItemExpiryResponses, SetStockItemExpiryErrors, ThrowOnError> => (options.client ?? client).post<SetStockItemExpiryResponses, SetStockItemExpiryErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/stock-items/{stockItemId}:set-expiry',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * S3: consumes an ingredient across its stock items; the response lists what was touched and any shortfall.
+ * Errors: `foodventory.invalidQuantity` (422), `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+ */
+export const consumeIngredient = <ThrowOnError extends boolean = false>(options: Options<ConsumeIngredientData, ThrowOnError>): RequestResult<ConsumeIngredientResponses, ConsumeIngredientErrors, ThrowOnError> => (options.client ?? client).post<ConsumeIngredientResponses, ConsumeIngredientErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/stock/{ingredientId}:consume',
     ...options,
     headers: {
         'Content-Type': 'application/json',

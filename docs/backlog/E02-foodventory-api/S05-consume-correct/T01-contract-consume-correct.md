@@ -34,9 +34,9 @@ C# (T02–T04); thresholds and conversions (E02.S06.T01)
 
 ## Subtasks
 
-- [ ] T01.1 Models (`ConsumeResult`, `ConsumedItem`, `DiscardReason`, bodies, `IngredientStockPath`)
-- [ ] T01.2 Five routes with doc comments
-- [ ] T01.3 `pnpm nx run @cooquoi/api-client:generate`; commit
+- [x] T01.1 Models (`ConsumeResult`, `ConsumedItem`, `DiscardReason`, bodies, `IngredientStockPath`)
+- [x] T01.2 Five routes with doc comments
+- [x] T01.3 `pnpm nx run @cooquoi/api-client:generate`; commit
 
 ## Done when
 
@@ -44,6 +44,9 @@ C# (T02–T04); thresholds and conversions (E02.S06.T01)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(contracts): Foodventory consume and corrections (E02.S05.T01)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+- Changed: contracts/contexts/foodventory/{models,routes}.tsp (5 routes, ConsumeResult/ConsumedItem/DiscardReason and bodies), regenerated openapi.yaml and ts/libs/api-client.
+- Verified: done-when run-many (typecheck test lint, webapp, api-client, contracts) exits 0.
+- Surprising: none in the contract; C# side not drift-checked (T03/T04). S4 lists only invalidQuantity and unitNotConvertible; whether consume past remaining is clamped or errors is not in the use cases, so no quantityExceedsRemaining was declared.

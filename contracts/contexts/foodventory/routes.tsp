@@ -63,4 +63,38 @@ interface StockOperations {
   @route("/v1/stock-items/{stockItemId}:move")
   @operationId("moveStockItem")
   moveStockItem is ActionWithResultOperation<MoveStockItem, MoveResult, StockItemPath>;
+
+  /**
+   * S3: consumes an ingredient across its stock items; the response lists what was touched and any shortfall.
+   * Errors: `foodventory.invalidQuantity` (422), `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+   */
+  @route("/v1/stock/{ingredientId}:consume")
+  @operationId("consumeIngredient")
+  consumeIngredient is ActionWithResultOperation<ConsumeIngredient, ConsumeResult, IngredientStockPath>;
+
+  /**
+   * S4: consumes part of one stock item; `unit` defaults to the entered unit.
+   * Errors: `foodventory.invalidQuantity` (422), `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+   */
+  @route("/v1/stock-items/{stockItemId}:consume")
+  @operationId("consumeStockItem")
+  consumeStockItem is ActionWithResultOperation<ConsumeStockItem, ConsumeResult, StockItemPath>;
+
+  /** S5: discards a stock item, with the reason. */
+  @route("/v1/stock-items/{stockItemId}:discard")
+  @operationId("discardStockItem")
+  discardStockItem is ActionOperation<DiscardStockItem, StockItemPath>;
+
+  /**
+   * S6: corrects the remaining amount after a stock check; requires `If-Match` (the IngredientStock ETag).
+   * Errors: `foodventory.invalidQuantity` (422).
+   */
+  @route("/v1/stock-items/{stockItemId}:adjust")
+  @operationId("adjustStockItem")
+  adjustStockItem is ReplaceActionOperation<AdjustStockItem, StockItemPath>;
+
+  /** S7: sets or clears the expiry date; the source becomes `manual`. Requires `If-Match`. */
+  @route("/v1/stock-items/{stockItemId}:set-expiry")
+  @operationId("setStockItemExpiry")
+  setStockItemExpiry is ReplaceActionOperation<SetStockItemExpiry, StockItemPath>;
 }
