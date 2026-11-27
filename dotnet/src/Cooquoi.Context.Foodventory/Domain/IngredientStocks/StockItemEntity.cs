@@ -49,4 +49,12 @@ public sealed class StockItemEntity : Entity<StockItemId>
         Remaining -= amount;
         Normalized = normalized;
     }
+
+    internal void Adjust(decimal remaining, decimal? normalized)
+    {
+        Remaining = remaining;
+        Normalized = normalized;
+    }
+
+    internal void SetExpiry(Expiry? expiry) => Expiry = expiry;
 }

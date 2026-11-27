@@ -1,3 +1,4 @@
+using Cooquoi.Context.Foodventory.Domain.Common.ValueObjects;
 using Cooquoi.Context.Foodventory.Domain.IngredientStocks.Events;
 using Cooquoi.SharedKernel;
 using Raidvahkiin.Ddd;
@@ -64,8 +65,7 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
     /// </summary>
     public void MoveItem(StockItemId itemId, PantryTarget target, Quantity? amount, DateOnly? expiry, FoodpediaFacts facts)
     {
-        var item = _items.FirstOrDefault(candidate => candidate.Id == itemId)
-            ?? throw CommonError.NotFound.ToException(("resource", "StockItem"), ("id", itemId.Value));
+        var item = Find(itemId);
         var moved = amount is null ? item.Remaining : ToEnteredUnit(item, amount, facts);
         // FV9
         Ensure.That(
@@ -106,6 +106,85 @@ public sealed class IngredientStockAggregate : AggregateRoot<IngredientStockId>
         _items.Add(split);
         Raise(new StockItemMovedDomainEvent(Id, item.Id, from, target.PantryId, moved, unit, split.Id));
     }
+
+    /// <summary>FV7: consumes <paramref name="amount"/> from the items of <paramref name="pantryId"/> (all when none), earliest expiry first.</summary>
+    public ConsumptionResult Consume(Quantity amount, PantryId? pantryId, FoodpediaFacts facts) =>
+        ConsumeFrom(_items.Where(item => pantryId is null || item.PantryId == pantryId), amount, facts);
+
+    /// <summary>FV7 on one item: a quantity beyond its remaining consumes it all and reports the shortfall.</summary>
+    public ConsumptionResult ConsumeItem(StockItemId itemId, Quantity amount, FoodpediaFacts facts) =>
+        ConsumeFrom([Find(itemId)], amount, facts);
+
+    /// <summary>Removes the item, whatever remains of it, unconsumed.</summary>
+    public void DiscardItem(StockItemId itemId, DiscardReason reason)
+    {
+        var item = Find(itemId);
+        _items.Remove(item);
+        Raise(new StockItemDiscardedDomainEvent(Id, item.Id, reason, item.Remaining, item.Entered.Unit));
+    }
+
+    /// <summary>Corrects what remains, in the entered unit (FV4, FV5): 0 depletes the item, more than entered is allowed.</summary>
+    public void AdjustItem(StockItemId itemId, decimal remaining, FoodpediaFacts facts)
+    {
+        var item = Find(itemId);
+        // FV4, FV5
+        Ensure.That(remaining >= 0 && decimal.Round(remaining, 3) == remaining, IngredientStockError.InvalidQuantity, ("amount", remaining));
+
+        var unit = item.Entered.Unit;
+        if (remaining == 0)
+        {
+            _items.Remove(item);
+        }
+        else
+        {
+            item.Adjust(remaining, StockNormalizer.Normalize(remaining, unit, facts));
+        }
+
+        Raise(new StockItemAdjustedDomainEvent(Id, item.Id, remaining, unit));
+    }
+
+    /// <summary>FV8: a typed date is manual and may be in the past; none clears the expiry.</summary>
+    public void SetItemExpiry(StockItemId itemId, DateOnly? date)
+    {
+        var item = Find(itemId);
+        var expiry = date is { } typed ? new Expiry(typed, ExpirySource.Manual) : null;
+        if (expiry == item.Expiry)
+        {
+            return;
+        }
+
+        item.SetExpiry(expiry);
+        Raise(new StockItemExpiryChangedDomainEvent(Id, item.Id, expiry));
+    }
+
+    private ConsumptionResult ConsumeFrom(IEnumerable<StockItemEntity> candidates, Quantity amount, FoodpediaFacts facts)
+    {
+        var plan = StockConsumption.Prepare(candidates, amount, facts)
+            ?? throw IngredientStockError.UnitNotConvertible.ToException(("ingredientId", IngredientId), ("unit", amount.Unit.Code));
+
+        foreach (var (step, index) in plan.Steps.Select((step, index) => (step, index)))
+        {
+            var item = step.Item;
+            if (step.Depleted)
+            {
+                // FV5
+                _items.Remove(item);
+            }
+            else
+            {
+                item.Reduce(step.Taken, StockNormalizer.Normalize(item.Remaining - step.Taken, item.Entered.Unit, facts));
+            }
+
+            var shortfall = index == plan.Steps.Count - 1 ? plan.Shortfall : null;
+            Raise(new StockItemConsumedDomainEvent(Id, item.Id, step.Taken, item.Entered.Unit, shortfall));
+        }
+
+        return new ConsumptionResult(plan.Shortfall);
+    }
+
+    private StockItemEntity Find(StockItemId itemId) =>
+        _items.FirstOrDefault(candidate => candidate.Id == itemId)
+        ?? throw CommonError.NotFound.ToException(("resource", "StockItem"), ("id", itemId.Value));
 
     private decimal ToEnteredUnit(StockItemEntity item, Quantity amount, FoodpediaFacts facts)
     {

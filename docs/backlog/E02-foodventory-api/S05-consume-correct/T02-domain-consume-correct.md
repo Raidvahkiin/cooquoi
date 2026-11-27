@@ -40,10 +40,10 @@ Endpoints (T03, T04); FV12 threshold transitions on consume (E02.S06.T02)
 
 ## Subtasks
 
-- [ ] T02.1 `Consume` + tests `FV7_…` (order by expiry, tie-break by addedOn, no-expiry last, pantry filter, shortfall clamped, exact entered unit without a path, rejected unit)
-- [ ] T02.2 `ConsumeItem` + tests `FV5_…` (never negative, depleted leaves)
-- [ ] T02.3 `DiscardItem`, `AdjustItem` (above entered allowed, `FV4_…` entered unchanged), `SetItemExpiry` (`FV8_…` manual, cleared, past) + tests
-- [ ] T02.4 Four event records
+- [x] T02.1 `Consume` + tests `FV7_…` (order by expiry, tie-break by addedOn, no-expiry last, pantry filter, shortfall clamped, exact entered unit without a path, rejected unit)
+- [x] T02.2 `ConsumeItem` + tests `FV5_…` (never negative, depleted leaves)
+- [x] T02.3 `DiscardItem`, `AdjustItem` (above entered allowed, `FV4_…` entered unchanged), `SetItemExpiry` (`FV8_…` manual, cleared, past) + tests
+- [x] T02.4 Four event records
 
 ## Done when
 
@@ -51,6 +51,8 @@ Endpoints (T03, T04); FV12 threshold transitions on consume (E02.S06.T02)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(foodventory): consumption and corrections in the domain (E02.S05.T02)`), stop.
 
-Status: todo
+Status: done
 
 Report:
+Added Consume, ConsumeItem, DiscardItem, AdjustItem, SetItemExpiry, 4 events, DiscardReason, ConsumptionResult(Shortfall) and the internal StockConsumption planner (aggregate 198 lines). 13 new tests, 108 green, format clean.
+Unnormalized items in another unit are skipped (comment in StockConsumption); unit with no path and no item in it as entered -> unitNotConvertible. The shortfall rides on the last StockItemConsumed event.
