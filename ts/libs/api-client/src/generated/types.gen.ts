@@ -213,6 +213,17 @@ export type FoodpediaShelfLife = {
 export type FoodpediaStorageType = 'fridge' | 'freezer' | 'room';
 
 /**
+ * Offer to define a household conversion for an unnormalized line; no amounts when Foodpedia has no default.
+ */
+export type FoodventoryConversionProposal = {
+    ingredientId: CommonId;
+    unit: CommonUnit;
+    unitAmount?: number;
+    baseAmount?: number;
+    baseUnit: CommonBaseUnit;
+};
+
+/**
  * Body of a Pantry aggregate creation (C1).
  */
 export type FoodventoryCreatePantry = {
@@ -228,9 +239,45 @@ export type FoodventoryCreatedPantry = {
 };
 
 /**
+ * An expiry date and where it comes from.
+ */
+export type FoodventoryExpiry = {
+    date: string;
+    source: FoodventoryExpirySource;
+};
+
+/**
+ * How the expiry date of an ingredient is known; same values as Foodpedia's.
+ */
+export type FoodventoryExpiryKind = 'printed' | 'estimated' | 'longLife';
+
+/**
+ * Where an expiry date comes from.
+ */
+export type FoodventoryExpirySource = 'proposed' | 'manual';
+
+/**
  * Stable error codes of the Foodventory context (`problem.code`), next to `CommonErrorCode`.
  */
-export type FoodventoryFoodventoryErrorCode = 'foodventory.nameTaken' | 'foodventory.invalidName' | 'foodventory.notEmpty';
+export type FoodventoryFoodventoryErrorCode = 'foodventory.nameTaken' | 'foodventory.invalidName' | 'foodventory.notEmpty' | 'foodventory.ingredientRetired' | 'foodventory.unitNotConvertible' | 'foodventory.quantityExceedsRemaining' | 'foodventory.invalidQuantity';
+
+/**
+ * The moved item, and the source item when a split left a remainder.
+ */
+export type FoodventoryMoveResult = {
+    moved: FoodventoryStockItemView;
+    remainder?: FoodventoryStockItemView;
+};
+
+/**
+ * Body of a stock item move (S2); `amount` and `unit` together move part of it.
+ */
+export type FoodventoryMoveStockItem = {
+    pantryId: CommonId;
+    amount?: number;
+    unit?: CommonUnit;
+    expiry?: string;
+};
 
 /**
  * The household's pantries and how many stock items still wait to be put away (Q1).
@@ -252,6 +299,14 @@ export type FoodventoryPantrySummary = {
 };
 
 /**
+ * An amount in a unit.
+ */
+export type FoodventoryQuantity = {
+    amount: number;
+    unit: CommonUnit;
+};
+
+/**
  * Body of a Pantry aggregate rename (C2).
  */
 export type FoodventoryRenamePantry = {
@@ -259,10 +314,65 @@ export type FoodventoryRenamePantry = {
 };
 
 /**
+ * Body of a restock (S1).
+ */
+export type FoodventoryRestock = {
+    lines: Array<FoodventoryRestockLine>;
+};
+
+/**
+ * One line of a restock.
+ */
+export type FoodventoryRestockLine = {
+    ingredientId: CommonId;
+    amount: number;
+    unit: CommonUnit;
+    expiry?: string;
+};
+
+/**
+ * The created stock items and the conversions worth defining.
+ */
+export type FoodventoryRestockResult = {
+    items: Array<FoodventoryStockItemView>;
+    conversionProposals: Array<FoodventoryConversionProposal>;
+};
+
+/**
  * Body of a storage change (C3); `null` clears it.
  */
 export type FoodventorySetPantryStorage = {
     storage: FoodventoryStorageType | null;
+};
+
+/**
+ * One stock item; `stockVersion` is the IngredientStock aggregate ETag for later `If-Match` writes.
+ */
+export type FoodventoryStockItemView = {
+    id: CommonId;
+    ingredientId: CommonId;
+    ingredientName: string;
+    pantryId?: CommonId;
+    entered: FoodventoryQuantity;
+    remaining: FoodventoryQuantity;
+    /**
+     * In the base unit; absent when the item is unnormalized.
+     */
+    normalized?: FoodventoryQuantity;
+    expiry?: FoodventoryExpiry;
+    /**
+     * Effective kind.
+     */
+    expiryKind: FoodventoryExpiryKind;
+    expiryMissing: boolean;
+    /**
+     * The date is far outside the household's usual range (Q8).
+     */
+    expiryUnusual: boolean;
+    ingredientRetired: boolean;
+    addedOn: string;
+    suggestedPantryId?: CommonId;
+    stockVersion: number;
 };
 
 /**
@@ -873,3 +983,101 @@ export type SetPantryStorageResponses = {
 };
 
 export type SetPantryStorageResponse = SetPantryStorageResponses[keyof SetPantryStorageResponses];
+
+export type MoveStockItemData = {
+    body: FoodventoryMoveStockItem;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path: {
+        stockItemId: CommonId;
+    };
+    query?: never;
+    url: '/v1/stock-items/{stockItemId}:move';
+};
+
+export type MoveStockItemErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+};
+
+export type MoveStockItemError = MoveStockItemErrors[keyof MoveStockItemErrors];
+
+export type MoveStockItemResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FoodventoryMoveResult;
+};
+
+export type MoveStockItemResponse = MoveStockItemResponses[keyof MoveStockItemResponses];
+
+export type RestockData = {
+    body: FoodventoryRestock;
+    headers: {
+        'Idempotency-Key': string;
+    };
+    path?: never;
+    query?: never;
+    url: '/v1/stock:restock';
+};
+
+export type RestockErrors = {
+    /**
+     * 400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.
+     */
+    400: CommonProblemDetails;
+    /**
+     * 401 — missing or invalid access token.
+     */
+    401: CommonProblemDetails;
+    /**
+     * 403 — the caller may not do this.
+     */
+    403: CommonProblemDetails;
+    /**
+     * 404 — the resource does not exist or is not visible to the caller.
+     */
+    404: CommonProblemDetails;
+    /**
+     * 409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.
+     */
+    409: CommonProblemDetails;
+    /**
+     * 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+     */
+    422: CommonProblemDetails;
+};
+
+export type RestockError = RestockErrors[keyof RestockErrors];
+
+export type RestockResponses = {
+    /**
+     * The request has succeeded.
+     */
+    200: FoodventoryRestockResult;
+};
+
+export type RestockResponse = RestockResponses[keyof RestockResponses];

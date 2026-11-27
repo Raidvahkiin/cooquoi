@@ -96,7 +96,11 @@
     "foodventory": {
       "nameTaken": "Un garde-manger nommé « {name} » existe déjà.",
       "invalidName": "« {name} » n’est pas un nom de garde-manger valide.",
-      "notEmpty": "Un garde-manger qui contient encore des articles ne peut pas être supprimé."
+      "notEmpty": "Un garde-manger qui contient encore des articles ne peut pas être supprimé.",
+      "ingredientRetired": "L’ingrédient « {code} » est retiré et ne peut pas être réapprovisionné.",
+      "unitNotConvertible": "Impossible de convertir « {unit} » pour cet ingrédient ; définissez une conversion et réessayez.",
+      "quantityExceedsRemaining": "La quantité dépasse ce qu’il reste.",
+      "invalidQuantity": "La quantité n’est pas valide."
     },
     "validation": {
       "required": "Ce champ est obligatoire.",

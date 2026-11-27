@@ -44,3 +44,23 @@ interface PantryOperations {
   @operationId("deletePantry")
   deletePantry is DeleteOperation<PantryPath>;
 }
+
+@tag("Foodventory")
+interface StockOperations {
+  /**
+   * S1: restocks the household with one or more ingredient lines.
+   * Errors: `foodventory.ingredientRetired` (422), `foodventory.invalidQuantity` (422).
+   */
+  @route("/v1/stock:restock")
+  @operationId("restock")
+  restock is ActionWithResultOperation<Restock, RestockResult>;
+
+  /**
+   * S2: puts a stock item away in a Pantry aggregate, whole or in part.
+   * Errors: `foodventory.quantityExceedsRemaining` (422), `foodventory.invalidQuantity` (422),
+   * `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+   */
+  @route("/v1/stock-items/{stockItemId}:move")
+  @operationId("moveStockItem")
+  moveStockItem is ActionWithResultOperation<MoveStockItem, MoveResult, StockItemPath>;
+}

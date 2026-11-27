@@ -748,6 +748,140 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/Foodventory.SetPantryStorage'
+  /v1/stock-items/{stockItemId}:move:
+    post:
+      operationId: moveStockItem
+      description: |-
+        S2: puts a stock item away in a Pantry aggregate, whole or in part.
+        Errors: `foodventory.quantityExceedsRemaining` (422), `foodventory.invalidQuantity` (422),
+        `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+      parameters:
+        - name: stockItemId
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/Common.Id'
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foodventory.MoveResult'
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.MoveStockItem'
+  /v1/stock:restock:
+    post:
+      operationId: restock
+      description: |-
+        S1: restocks the household with one or more ingredient lines.
+        Errors: `foodventory.ingredientRetired` (422), `foodventory.invalidQuantity` (422).
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: The request has succeeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Foodventory.RestockResult'
+        '400':
+          description: '400 — invalid request: field errors, bad sort, missing `Idempotency-Key`.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '401':
+          description: 401 — missing or invalid access token.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '403':
+          description: 403 — the caller may not do this.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '404':
+          description: 404 — the resource does not exist or is not visible to the caller.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '409':
+          description: '409 — conflicting state: duplicate, lost concurrency race, request still running or already processed.'
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+        '422':
+          description: 422 — a business rule rejects the request, or the `Idempotency-Key` was reused.
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Common.ProblemDetails'
+      tags:
+        - Foodventory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Foodventory.Restock'
 security:
   - BearerAuth: []
 components:
@@ -1129,6 +1263,26 @@ components:
         - freezer
         - room
       description: Where an ingredient keeps best.
+    Foodventory.ConversionProposal:
+      type: object
+      required:
+        - ingredientId
+        - unit
+        - baseUnit
+      properties:
+        ingredientId:
+          $ref: '#/components/schemas/Common.Id'
+        unit:
+          $ref: '#/components/schemas/Common.Unit'
+        unitAmount:
+          type: number
+          format: decimal
+        baseAmount:
+          type: number
+          format: decimal
+        baseUnit:
+          $ref: '#/components/schemas/Common.BaseUnit'
+      description: Offer to define a household conversion for an unnormalized line; no amounts when Foodpedia has no default.
     Foodventory.CreatePantry:
       type: object
       required:
@@ -1147,13 +1301,68 @@ components:
         id:
           $ref: '#/components/schemas/Common.Id'
       description: Id of the created Pantry aggregate.
+    Foodventory.Expiry:
+      type: object
+      required:
+        - date
+        - source
+      properties:
+        date:
+          type: string
+          format: date
+        source:
+          $ref: '#/components/schemas/Foodventory.ExpirySource'
+      description: An expiry date and where it comes from.
+    Foodventory.ExpiryKind:
+      type: string
+      enum:
+        - printed
+        - estimated
+        - longLife
+      description: How the expiry date of an ingredient is known; same values as Foodpedia's.
+    Foodventory.ExpirySource:
+      type: string
+      enum:
+        - proposed
+        - manual
+      description: Where an expiry date comes from.
     Foodventory.FoodventoryErrorCode:
       type: string
       enum:
         - foodventory.nameTaken
         - foodventory.invalidName
         - foodventory.notEmpty
+        - foodventory.ingredientRetired
+        - foodventory.unitNotConvertible
+        - foodventory.quantityExceedsRemaining
+        - foodventory.invalidQuantity
       description: Stable error codes of the Foodventory context (`problem.code`), next to `CommonErrorCode`.
+    Foodventory.MoveResult:
+      type: object
+      required:
+        - moved
+      properties:
+        moved:
+          $ref: '#/components/schemas/Foodventory.StockItemView'
+        remainder:
+          $ref: '#/components/schemas/Foodventory.StockItemView'
+      description: The moved item, and the source item when a split left a remainder.
+    Foodventory.MoveStockItem:
+      type: object
+      required:
+        - pantryId
+      properties:
+        pantryId:
+          $ref: '#/components/schemas/Common.Id'
+        amount:
+          type: number
+          format: decimal
+        unit:
+          $ref: '#/components/schemas/Common.Unit'
+        expiry:
+          type: string
+          format: date
+      description: Body of a stock item move (S2); `amount` and `unit` together move part of it.
     Foodventory.PantryList:
       type: object
       required:
@@ -1189,6 +1398,18 @@ components:
           type: integer
           format: int64
       description: One Pantry aggregate in the list; `version` is sent back as `If-Match`.
+    Foodventory.Quantity:
+      type: object
+      required:
+        - amount
+        - unit
+      properties:
+        amount:
+          type: number
+          format: decimal
+        unit:
+          $ref: '#/components/schemas/Common.Unit'
+      description: An amount in a unit.
     Foodventory.RenamePantry:
       type: object
       required:
@@ -1197,6 +1418,50 @@ components:
         name:
           type: string
       description: Body of a Pantry aggregate rename (C2).
+    Foodventory.Restock:
+      type: object
+      required:
+        - lines
+      properties:
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foodventory.RestockLine'
+          minItems: 1
+      description: Body of a restock (S1).
+    Foodventory.RestockLine:
+      type: object
+      required:
+        - ingredientId
+        - amount
+        - unit
+      properties:
+        ingredientId:
+          $ref: '#/components/schemas/Common.Id'
+        amount:
+          type: number
+          format: decimal
+        unit:
+          $ref: '#/components/schemas/Common.Unit'
+        expiry:
+          type: string
+          format: date
+      description: One line of a restock.
+    Foodventory.RestockResult:
+      type: object
+      required:
+        - items
+        - conversionProposals
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foodventory.StockItemView'
+        conversionProposals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Foodventory.ConversionProposal'
+      description: The created stock items and the conversions worth defining.
     Foodventory.SetPantryStorage:
       type: object
       required:
@@ -1207,6 +1472,57 @@ components:
             - $ref: '#/components/schemas/Foodventory.StorageType'
             - type: 'null'
       description: Body of a storage change (C3); `null` clears it.
+    Foodventory.StockItemView:
+      type: object
+      required:
+        - id
+        - ingredientId
+        - ingredientName
+        - entered
+        - remaining
+        - expiryKind
+        - expiryMissing
+        - expiryUnusual
+        - ingredientRetired
+        - addedOn
+        - stockVersion
+      properties:
+        id:
+          $ref: '#/components/schemas/Common.Id'
+        ingredientId:
+          $ref: '#/components/schemas/Common.Id'
+        ingredientName:
+          type: string
+        pantryId:
+          $ref: '#/components/schemas/Common.Id'
+        entered:
+          $ref: '#/components/schemas/Foodventory.Quantity'
+        remaining:
+          $ref: '#/components/schemas/Foodventory.Quantity'
+        normalized:
+          $ref: '#/components/schemas/Foodventory.Quantity'
+          description: In the base unit; absent when the item is unnormalized.
+        expiry:
+          $ref: '#/components/schemas/Foodventory.Expiry'
+        expiryKind:
+          $ref: '#/components/schemas/Foodventory.ExpiryKind'
+          description: Effective kind.
+        expiryMissing:
+          type: boolean
+        expiryUnusual:
+          type: boolean
+          description: The date is far outside the household's usual range (Q8).
+        ingredientRetired:
+          type: boolean
+        addedOn:
+          type: string
+          format: date
+        suggestedPantryId:
+          $ref: '#/components/schemas/Common.Id'
+        stockVersion:
+          type: integer
+          format: int32
+      description: One stock item; `stockVersion` is the IngredientStock aggregate ETag for later `If-Match` writes.
     Foodventory.StorageType:
       type: string
       enum:

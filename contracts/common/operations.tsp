@@ -65,6 +65,24 @@ op ActionOperation<TBody extends {}, TPath extends {} = { @path id: Id }>(
   | ConflictProblem
   | UnprocessableProblem;
 
+/** Named action that returns a body (`POST /…/{id}:verb`): `200` with the result, no `If-Match`. */
+@post
+op ActionWithResultOperation<TBody extends {}, TResult, TPath extends {} = {}>(
+  ...TPath,
+  ...IdempotencyKeyHeader,
+  @body body: TBody,
+):
+  | {
+      @statusCode _: 200;
+      @body result: TResult;
+    }
+  | BadRequestProblem
+  | UnauthorizedProblem
+  | ForbiddenProblem
+  | NotFoundProblem
+  | ConflictProblem
+  | UnprocessableProblem;
+
 /** Action that replaces state from what the client read: requires `If-Match`. */
 @post
 op ReplaceActionOperation<TBody extends {}, TPath extends {} = { @path id: Id }>(

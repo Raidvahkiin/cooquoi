@@ -96,7 +96,11 @@
     "foodventory": {
       "nameTaken": "Đã có kho tên “{name}”.",
       "invalidName": "“{name}” không phải tên kho hợp lệ.",
-      "notEmpty": "Không thể xóa kho còn chứa mặt hàng."
+      "notEmpty": "Không thể xóa kho còn chứa mặt hàng.",
+      "ingredientRetired": "Nguyên liệu “{code}” đã ngừng dùng và không thể nhập thêm.",
+      "unitNotConvertible": "Không thể quy đổi “{unit}” cho nguyên liệu này; hãy định nghĩa quy đổi rồi thử lại.",
+      "quantityExceedsRemaining": "Số lượng vượt quá phần còn lại.",
+      "invalidQuantity": "Số lượng không hợp lệ."
     },
     "validation": {
       "required": "Trường này là bắt buộc.",

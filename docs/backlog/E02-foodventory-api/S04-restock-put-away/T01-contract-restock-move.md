@@ -42,11 +42,11 @@ C# (T02–T05); consume and corrections (E02.S05.T01); queries (E02.S07.T01)
 
 ## Subtasks
 
-- [ ] T01.1 `ActionWithResultOperation` template
-- [ ] T01.2 `Quantity`, `Expiry`, `ExpiryKind`, `StockItemView`, `ConversionProposal` models
-- [ ] T01.3 `restock` and `moveStockItem` routes and their models
-- [ ] T01.4 Four error codes and webapp messages (en, fr, vi)
-- [ ] T01.5 `pnpm nx run @cooquoi/api-client:generate`; commit
+- [x] T01.1 `ActionWithResultOperation` template
+- [x] T01.2 `Quantity`, `Expiry`, `ExpiryKind`, `StockItemView`, `ConversionProposal` models
+- [x] T01.3 `restock` and `moveStockItem` routes and their models
+- [x] T01.4 Four error codes and webapp messages (en, fr, vi)
+- [x] T01.5 `pnpm nx run @cooquoi/api-client:generate`; commit
 
 ## Done when
 
@@ -54,6 +54,6 @@ C# (T02–T05); consume and corrections (E02.S05.T01); queries (E02.S07.T01)
 
 Then: tick the subtasks, write the report (≤5 lines), set the status, commit (`feat(contracts): Foodventory restock and move (E02.S04.T01)`), stop.
 
-Status: todo
+Status: done
 
-Report:
+Report: contract has ActionWithResultOperation, Quantity/Expiry/ExpiryKind/StockItemView/ConversionProposal, restock + moveStockItem routes, 4 error codes (camelCase) with en/fr/vi messages; client regenerated. Done-when green. Request units typed `Unit` (not string) for enum validation.

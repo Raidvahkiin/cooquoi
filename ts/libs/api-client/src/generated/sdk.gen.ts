@@ -2,7 +2,7 @@
 
 import type { Client, ClientMeta, Options as Options2, RequestResult, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, CreatePantryData, CreatePantryErrors, CreatePantryResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, DeletePantryData, DeletePantryErrors, DeletePantryResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, ListPantriesData, ListPantriesErrors, ListPantriesResponses, RenamePantryData, RenamePantryErrors, RenamePantryResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses, SetPantryStorageData, SetPantryStorageErrors, SetPantryStorageResponses, SignInData, SignInErrors, SignInResponses } from './types.gen';
+import type { CreateIngredientData, CreateIngredientErrors, CreateIngredientResponses, CreatePantryData, CreatePantryErrors, CreatePantryResponses, DefineConversionData, DefineConversionErrors, DefineConversionResponses, DeletePantryData, DeletePantryErrors, DeletePantryResponses, GetIngredientData, GetIngredientErrors, GetIngredientResponses, GetMeData, GetMeErrors, GetMeResponses, ListPantriesData, ListPantriesErrors, ListPantriesResponses, MoveStockItemData, MoveStockItemErrors, MoveStockItemResponses, RenamePantryData, RenamePantryErrors, RenamePantryResponses, RestockData, RestockErrors, RestockResponses, SearchIngredientsData, SearchIngredientsErrors, SearchIngredientsResponses, SetExpiryKindData, SetExpiryKindErrors, SetExpiryKindResponses, SetPantryStorageData, SetPantryStorageErrors, SetPantryStorageResponses, SignInData, SignInErrors, SignInResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean, TResponse = unknown> = Options2<TData, ThrowOnError, TResponse> & {
     /**
@@ -153,6 +153,35 @@ export const renamePantry = <ThrowOnError extends boolean = false>(options: Opti
 export const setPantryStorage = <ThrowOnError extends boolean = false>(options: Options<SetPantryStorageData, ThrowOnError>): RequestResult<SetPantryStorageResponses, SetPantryStorageErrors, ThrowOnError> => (options.client ?? client).post<SetPantryStorageResponses, SetPantryStorageErrors, ThrowOnError>({
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/v1/pantries/{pantryId}:set-storage',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * S2: puts a stock item away in a Pantry aggregate, whole or in part.
+ * Errors: `foodventory.quantityExceedsRemaining` (422), `foodventory.invalidQuantity` (422),
+ * `foodventory.unitNotConvertible` (422; `params.ingredientId`, `params.unit`).
+ */
+export const moveStockItem = <ThrowOnError extends boolean = false>(options: Options<MoveStockItemData, ThrowOnError>): RequestResult<MoveStockItemResponses, MoveStockItemErrors, ThrowOnError> => (options.client ?? client).post<MoveStockItemResponses, MoveStockItemErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/stock-items/{stockItemId}:move',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
+});
+
+/**
+ * S1: restocks the household with one or more ingredient lines.
+ * Errors: `foodventory.ingredientRetired` (422), `foodventory.invalidQuantity` (422).
+ */
+export const restock = <ThrowOnError extends boolean = false>(options: Options<RestockData, ThrowOnError>): RequestResult<RestockResponses, RestockErrors, ThrowOnError> => (options.client ?? client).post<RestockResponses, RestockErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/v1/stock:restock',
     ...options,
     headers: {
         'Content-Type': 'application/json',

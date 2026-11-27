@@ -96,7 +96,11 @@
     "foodventory": {
       "nameTaken": "A pantry named “{name}” already exists.",
       "invalidName": "“{name}” is not a valid pantry name.",
-      "notEmpty": "A pantry that still holds items cannot be deleted."
+      "notEmpty": "A pantry that still holds items cannot be deleted.",
+      "ingredientRetired": "Ingredient “{code}” is retired and cannot be restocked.",
+      "unitNotConvertible": "Cannot convert “{unit}” for this ingredient; define a conversion and retry.",
+      "quantityExceedsRemaining": "The quantity is more than what remains.",
+      "invalidQuantity": "The quantity is not valid."
     },
     "validation": {
       "required": "This field is required.",
